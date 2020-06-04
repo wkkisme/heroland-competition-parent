@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.heroland</groupId>
+    <artifactId>heroland-competition</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <modules>
+        <module>service</module>
+        <module>common</module>
+        <module>dal</module>
+        <module>portal</module>
+        <module>rpc</module>
+    </modules>
+
+    <name>heroland-competition</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.version>1.0.2</project.version>
+        <project.interface.version>1.2.1</project.interface.version>
+        <project.sso.version>1.1.4</project.sso.version>
+        <project.new.sso.version>1.2.4-SNAPSHOT</project.new.sso.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <drolls.version>7.26.0.Final</drolls.version>
+        <bqcommon.version>1.1</bqcommon.version>
+        <bqcommon.schedule.version>1.9</bqcommon.schedule.version>
+        <elasticsearch.version>7.2.0</elasticsearch.version>
+        <dubbo.version>2.7.4.1</dubbo.version>
+        <nacos.version>0.2.4</nacos.version>
+        <harding.jdbc.version>4.0.0</harding.jdbc.version>
+        <bqcommon.search.version>1.4.2</bqcommon.search.version>
+        <spring.version>5.2.4.RELEASE</spring.version>
+    </properties>
+
+    <dependencies>
+    </dependencies>
+
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <dependency>
+                <artifactId>elasticsearch</artifactId>
+                <groupId>org.elasticsearch</groupId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+
+            <dependency>
+
+                <groupId>com.alijk.bqcommon</groupId>
+                <artifactId>bqcommon-search</artifactId>
+                <version>${bqcommon.search.version}</version>
+            </dependency>
+
+            <!--sharding-jdbc-core-->
+            <!--<dependency>-->
+                <!--<groupId>org.apache.shardingsphere</groupId>-->
+                <!--<artifactId>sharding-jdbc-core</artifactId>-->
+                <!--<version>${harding.jdbc.version}</version>-->
+            <!--</dependency>-->
+
+            <!-- ok http-->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>3.14.4</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>27.1-jre</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>com.alijk.bqcommon</groupId>
+                <artifactId>bqcommon-cache</artifactId>
+                <version>2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqcommon</groupId>
+                <artifactId>bqcommon-base</artifactId>
+                <version>1.3.15.1</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>*</artifactId>
+                        <groupId>org.springframework</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- 子应用 -->
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-portal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-dal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-webservice</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.sso</groupId>
+                <artifactId>bqhealth-cloud-sso-client</artifactId>
+                <version>${project.new.sso.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alijk.bqhealth.cloud</groupId>
+                <artifactId>bqhealth-cloud-interface</artifactId>
+                <version>${project.interface.version}</version>
+            </dependency>
+
+            <!-- 子引用 -->
+
+            <dependency>
+                <artifactId>bqhealth-cloud-interface</artifactId>
+                <groupId>com.alijk.bqhealth.sso</groupId>
+                <version>1.0.3</version>
+            </dependency>
+
+
+            <!--spring start-->
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <!--spring end-->
+
+
+            <!-- 过时的jar包，尽量切换下面的 -->
+            <dependency>
+                <groupId>com.alijk.bq</groupId>
+                <artifactId>bq-common</artifactId>
+                <version>2.4-SNAPSHOT</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-codec</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.62</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-codec</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.8.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+
+
+            <!-- https://mvnrepository.com/artifact/org.apache.dubbo/dubbo-spring-boot-starter -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-api</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-dependencies-zookeeper</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>1.2.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-base</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-web</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-annotation</artifactId>
+                <version>4.0.0</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>2.1.6</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- nacos start -->
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-starter</artifactId>
+                <version>${nacos.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-discovery-spring-boot-starter</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+
+            <!-- nacos end -->
+
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>3.4.9</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.bqmiddleware.detector</groupId>
+                <artifactId>detector-mysql</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bqmiddleware.detector</groupId>
+                <artifactId>detector-odps</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.bqmiddleware.detector</groupId>
+                <artifactId>detector-oracle</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.bqmiddleware.detector</groupId>
+                <artifactId>detector-core</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <name>26547-release-5mEjUk</name>
+            <url>https://repo.rdc.aliyun.com/repository/26547-release-5mEjUk</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <name>26547-snapshot-BLPL8p</name>
+            <url>https://repo.rdc.aliyun.com/repository/26547-snapshot-BLPL8p</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+</project>

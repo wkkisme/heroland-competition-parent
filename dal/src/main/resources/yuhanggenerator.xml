@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <!-- 读取外部配置文件 -->
+    <properties resource="zhengzhou.properties"/>
+
+    <context id="testTables" targetRuntime="MyBatis3">
+        <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
+            一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
+        <property name="autoDelimitKeywords" value="false"/>
+        <!-- 生成的Java文件的编码-->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化java代码-->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化XML代码-->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
+        <!--虚拟组件，针对表没有设置主键的时候使用-->
+        <plugin type="org.mybatis.generator.plugins.VirtualPrimaryKeyPlugin"/>
+
+        <!-- 生成pojo 注释,包括类、字段 -->
+        <commentGenerator type="com.heroland.competition.dal.genertor.MySQLCommentGenerator"/>
+
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="${driverClass}"
+                        connectionURL="${connectionURL}"
+                        userId="${userId}"
+                        password="${password}">
+            <!--设置为 true 可以获取 tables 信息, 解决生成文件缺少 xxxByPrimaryKey 的问题 -->
+            <property name="useInformationSchema" value="true"/>
+        </jdbcConnection>
+
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和
+           NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- targetProject:生成POJO类的位置 -->
+        <javaModelGenerator targetPackage="com.alijk.bqhealth.cloud.dal.pojo" targetProject="dal/src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- mapper.xml映射文件生成的位置-->
+        <sqlMapGenerator targetPackage="sqlmapper" targetProject="dal/src/main/resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <!-- targetPackage：mapper接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.alijk.bqhealth.cloud.dal.mapper"
+                             targetProject="dal/src/main/java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+<!--        <table tableName="lung_node_patient" domainObjectName="LungNodePatientDO" mapperName="LungNodePatientMapper">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="bqhealth_cloud_platform_sys_dic_mapping_management" domainObjectName="HealthCloudPlatformSysDicMappingManagementDO" mapperName="HealthCloudPlatformSysDicMappingManagementMapper">-->
+<!--            <property name="rootClass" value="BaseDO"/>-->
+<!--        </table>-->
+        <!--<table tableName="bqhealth_cloud_platform_sys_check" domainObjectName="HealthCloudPlatformSysCheckDO" mapperName="HealthCloudPlatformSysCheckMapper">-->
+            <!--<property name="rootClass" value="BaseDO"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="bqhealth_cloud_platform_upload_log" domainObjectName="HealthCloudPlatformUploadLogDO" mapperName="HealthCloudPlatformUploadLogMapper">-->
+            <!--<property name="rootClass" value="BaseDO"/>-->
+            <!--<generatedKey column="log_id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+
+        <table tableName="bqhealth_cloud_document" domainObjectName="HealthCloudDocumentDO" mapperName="HealthCloudDocumentMapper">
+            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+
+
+        <!--<table tableName="bqhealth_cloud_platform_upload_log_detail" domainObjectName="HealthCloudPlatformUploadLogDetailDO" mapperName="HealthCloudPlatformUploadLogDetailMapper">-->
+            <!--<property name="rootClass" value="BaseDO"/>-->
+        <!--</table>-->
+
+
+    </context>
+</generatorConfiguration>
