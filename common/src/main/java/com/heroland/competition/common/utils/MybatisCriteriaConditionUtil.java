@@ -2,6 +2,8 @@ package com.heroland.competition.common.utils;
 
 
 import com.heroland.competition.common.annotation.MybatisCriteriaAnnotation;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ public class MybatisCriteriaConditionUtil {
                         try {
                             Object param = declaredField.get(qo);
                             if (param != null) {
-                                if (param instanceof String && StringUtil.isBlank((String) param)) {
+                                if (param instanceof String && StringUtils.isBlank((String) param)) {
                                     continue;
                                 }
 
@@ -66,7 +68,7 @@ public class MybatisCriteriaConditionUtil {
                         try {
                             Object param = declaredField.get(qo);
                             if (param != null) {
-                                if (param instanceof String && StringUtil.isBlank((String) param)) {
+                                if (param instanceof String && StringUtils.isBlank((String) param)) {
                                     continue;
                                 }
 
@@ -84,7 +86,7 @@ public class MybatisCriteriaConditionUtil {
                         try {
                             Object param = declaredField.get(qo);
                             if (param != null) {
-                                if (param instanceof String && StringUtil.isBlank((String) param)) {
+                                if (param instanceof String && StringUtils.isBlank((String) param)) {
                                     continue;
                                 }
 

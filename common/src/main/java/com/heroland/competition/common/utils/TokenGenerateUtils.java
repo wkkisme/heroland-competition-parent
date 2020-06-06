@@ -3,7 +3,7 @@ package com.heroland.competition.common.utils;
 import java.util.UUID;
 
 /**
- * @author: peng.zhup
+ * @author: wk
  * @date: 2018/11/4
  * @instructions: 生成 token
  */

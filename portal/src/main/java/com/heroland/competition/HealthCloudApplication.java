@@ -17,14 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: kui.zhouk
  * @date: 2018-10-26
  */
-@SpringBootApplication(scanBasePackages = {
-        "com.alijk.bqhealth.cloud",
-        "com.alijk.bqcommon",
-        "com.alijk.bqhealth.sso"
-}, exclude = {QuartzAutoConfiguration.class})
+@SpringBootApplication
 //@SpringBootApplication
 @ImportResource(locations = {"classpath*:context-*.xml","classpath*:cxf.xml"})
-@MapperScan("com.alijk.bqhealth.cloud.dal")
+@MapperScan("com.heroland.competition.dal")
 @RestController
 @EnableScheduling
 @EnableTransactionManagement

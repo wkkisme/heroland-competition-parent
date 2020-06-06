@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/common/bqhealth-cloud-common.iml" filepath="$PROJECT_DIR$/common/bqhealth-cloud-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/portal/bqhealth-cloud-portal.iml" filepath="$PROJECT_DIR$/portal/bqhealth-cloud-portal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/heroland-competition.iml" filepath="$PROJECT_DIR$/heroland-competition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dal/heroland-competition-dal.iml" filepath="$PROJECT_DIR$/dal/heroland-competition-dal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rpc/heroland-competition-rpc.iml" filepath="$PROJECT_DIR$/rpc/heroland-competition-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service/heroland-competition-service.iml" filepath="$PROJECT_DIR$/service/heroland-competition-service.iml" />
+    </modules>
+  </component>
+</project>

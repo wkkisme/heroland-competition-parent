@@ -5,7 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 
 /**
- * @Author: peng.zhup
+ * @Author: wk
  * @Project: bq-order-proxy
  * @DateTime: 2019/1/18 15:23
  * @Description: MAC地址工具类

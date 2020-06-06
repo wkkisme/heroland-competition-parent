@@ -5,7 +5,7 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.UnsupportedEncodingException;
 
 /**
- * @author: peng.zhup
+ * @author: wk
  * @date: 2019/1/7
  * @instructions: Base64加密工具类
  */

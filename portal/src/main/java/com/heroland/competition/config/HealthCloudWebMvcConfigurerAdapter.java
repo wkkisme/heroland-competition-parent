@@ -1,7 +1,5 @@
 package com.heroland.competition.config;
 
-import com.heroland.competition.competition.common.utils.FileUtils;
-import com.alijk.bqhealth.sso.facade.HealthCloudSsoServiceFacade;
 import com.heroland.competition.filter.RouteCheckFilter;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -26,17 +24,17 @@ import java.util.Locale;
 @Configuration
 public class HealthCloudWebMvcConfigurerAdapter implements WebMvcConfigurer {
 
-    @Resource
-    private CheckUserInterceptor checkUserInterceptor;
-
-
-    @Reference(version = "${health.dubbo.version}",group = "bqhealth-cloud")
-    private HealthCloudSsoServiceFacade healthCloudSsoServiceFacade;
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(checkUserInterceptor).addPathPatterns("/**");
-    }
+//    @Resource
+//    private CheckUserInterceptor checkUserInterceptor;
+//
+//
+//    @Reference(version = "${health.dubbo.version}",group = "bqhealth-cloud")
+//    private HealthCloudSsoServiceFacade healthCloudSsoServiceFacade;
+//
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(checkUserInterceptor).addPathPatterns("/**");
+//    }
 
     @Bean
     public CorsFilter corsFilter() {
@@ -77,26 +75,26 @@ public class HealthCloudWebMvcConfigurerAdapter implements WebMvcConfigurer {
         });
     }
 
-
-    @Bean
-    public FilterRegistrationBean paramFilterRegister() {
-        FilterRegistrationBean<RouteCheckFilter> registration = new FilterRegistrationBean<>();
-        RouteCheckFilter routeCheckFilter = new RouteCheckFilter();
-        routeCheckFilter.setIndexHtml(FileUtils.getString("static/res/index.html"));
-        routeCheckFilter.setPatientHtml(FileUtils.getString("static/patientindex/index.html"));
-        routeCheckFilter.setReportCenter(FileUtils.getString("static/reportcenter/index.html"));
-        routeCheckFilter.setQuestionnaireIndexHtml(FileUtils.getString("static/hot/index.html"));
-        routeCheckFilter.setServerHtml(FileUtils.getString("static/hulianhutongserver/index.html"));
-        routeCheckFilter.setHealthCloudSsoServiceFacade(healthCloudSsoServiceFacade);
-        routeCheckFilter.setKpiHtml(FileUtils.getString("static/kpi/index.html"));
-        routeCheckFilter.setMainIndexHtml(FileUtils.getString("static/mainindex/index.html"));
-        routeCheckFilter.setDocHtml(FileUtils.getString("static/docpost/index.html"));
-        registration.setFilter(routeCheckFilter);
-        registration.addUrlPatterns("/*");
-        registration.setName("cloudRouteFilter");
-        registration.setOrder(FilterRegistrationBean.LOWEST_PRECEDENCE);
-        return registration;
-    }
+//
+//    @Bean
+//    public FilterRegistrationBean paramFilterRegister() {
+//        FilterRegistrationBean<RouteCheckFilter> registration = new FilterRegistrationBean<>();
+//        RouteCheckFilter routeCheckFilter = new RouteCheckFilter();
+//        routeCheckFilter.setIndexHtml(FileUtils.getString("static/res/index.html"));
+//        routeCheckFilter.setPatientHtml(FileUtils.getString("static/patientindex/index.html"));
+//        routeCheckFilter.setReportCenter(FileUtils.getString("static/reportcenter/index.html"));
+//        routeCheckFilter.setQuestionnaireIndexHtml(FileUtils.getString("static/hot/index.html"));
+//        routeCheckFilter.setServerHtml(FileUtils.getString("static/hulianhutongserver/index.html"));
+//        routeCheckFilter.setHealthCloudSsoServiceFacade(healthCloudSsoServiceFacade);
+//        routeCheckFilter.setKpiHtml(FileUtils.getString("static/kpi/index.html"));
+//        routeCheckFilter.setMainIndexHtml(FileUtils.getString("static/mainindex/index.html"));
+//        routeCheckFilter.setDocHtml(FileUtils.getString("static/docpost/index.html"));
+//        registration.setFilter(routeCheckFilter);
+//        registration.addUrlPatterns("/*");
+//        registration.setName("cloudRouteFilter");
+//        registration.setOrder(FilterRegistrationBean.LOWEST_PRECEDENCE);
+//        return registration;
+//    }
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver getCommonsMultipartResolver() {
