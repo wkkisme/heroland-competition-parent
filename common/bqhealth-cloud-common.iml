@@ -65,6 +65,7 @@
     <orderEntry type="library" name="Maven: cn.afterturn:easypoi-web:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: cn.afterturn:easypoi-annotation:4.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:3.4.2" level="project" />
+    <orderEntry type="library" name="Maven: com.anycommon:response-common-base:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.7" level="project" />
   </component>
 </module>

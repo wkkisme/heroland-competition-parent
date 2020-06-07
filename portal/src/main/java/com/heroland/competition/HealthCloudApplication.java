@@ -5,7 +5,6 @@ import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 //@SpringBootApplication
 @ImportResource(locations = {"classpath*:context-*.xml","classpath*:cxf.xml"})
-@MapperScan("com.heroland.competition.dal")
+@MapperScan("com.heroland.competition.domain")
 @RestController
 @EnableScheduling
 @EnableTransactionManagement
