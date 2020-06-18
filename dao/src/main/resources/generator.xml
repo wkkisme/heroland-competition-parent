@@ -92,7 +92,7 @@
 <!--        </table>-->
 
         <table tableName="platform_sys_user" domainObjectName="PlatformSysUser" mapperName="PlatformSysUserMapper">
-            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 

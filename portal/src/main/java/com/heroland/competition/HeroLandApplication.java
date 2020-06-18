@@ -3,6 +3,9 @@ package com.heroland.competition;
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
@@ -13,24 +16,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author: kui.zhouk
- * @date: 2018-10-26
+ * @author wangkai
  */
 @SpringBootApplication
 //@SpringBootApplication
-@ImportResource(locations = {"classpath*:context-*.xml","classpath*:cxf.xml"})
+@ImportResource(locations = {"classpath*:context-*.xml", "classpath*:cxf.xml"})
 @MapperScan("com.heroland.competition.domain")
 @RestController
 @EnableScheduling
 @EnableTransactionManagement
 @EnableAsync
 @EnableDubbo
-@NacosPropertySource(dataId = "bqhealth_cloud_data", groupId = "bqhealth_cloud_group",autoRefreshed = true)
-public class HealthCloudApplication {
+@NacosPropertySource(dataId = "bqhealth_cloud_data", groupId = "bqhealth_cloud_group", autoRefreshed = true)
+public class HeroLandApplication {
+
+    private final Logger logger = LoggerFactory.getLogger(HeroLandApplication.class);
+
+    @Value("${socket.netty.port:19999}")
+    private int nettyPort;
+
+
+
     public static void main(String[] args) {
         try {
             //System.setProperty("org.quartz.properties", "");
-            SpringApplication.run(HealthCloudApplication.class, args);
+            SpringApplication.run(HeroLandApplication.class, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +48,7 @@ public class HealthCloudApplication {
 
 
     @RequestMapping("/healthCheck")
-    public String healthCheck(){
+    public String healthCheck() {
         try {
             return "I'm Ok! \nI'm at ";
         } catch (Exception e) {
