@@ -67,5 +67,6 @@
     <orderEntry type="library" name="Maven: cn.afterturn:easypoi-annotation:4.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.anycommon:response-common-base:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: cn.hutool:hutool-all:5.3.7" level="project" />
+    <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.3" level="project" />
   </component>
 </module>

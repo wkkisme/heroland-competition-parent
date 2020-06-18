@@ -28,6 +28,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.heroland</groupId>
+            <artifactId>heroland-competition-domain</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -141,6 +146,17 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.3</version>
             <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.xiaoju.uemc.tinyid</groupId>
+            <artifactId>tinyid-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.heroland</groupId>
+            <artifactId>heroland-competition-dao</artifactId>
         </dependency>
         <!-- end -->
 

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.heroland.competition.dal.mapper.PlatformSysUserRoleMapper">
-  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.PlatformSysUserRole">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandAccountMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandAccountDP">
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
-    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="balance" jdbcType="BIGINT" property="balance" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
+    <result column="level_name" jdbcType="VARCHAR" property="levelName" />
+    <result column="level_score" jdbcType="INTEGER" property="levelScore" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,15 +73,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, gmt_create, gmt_modified, modifier, is_deleted, creator, user_id, role_id
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, balance, user_id, account_id, 
+    level_name, level_score
   </sql>
-  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRoleExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from platform_sys_user_role
+    from heroland_account
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -89,93 +93,119 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from platform_sys_user_role
+    from heroland_account
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from platform_sys_user_role
+    delete from heroland_account
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRoleExample">
-    delete from platform_sys_user_role
+  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountExample">
+    delete from heroland_account
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRole">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountDP">
+    <selectKey keyProperty="accountId" order="AFTER" resultType="java.lang.String">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into platform_sys_user_role (gmt_create, gmt_modified, modifier, 
-      is_deleted, creator, user_id, 
-      role_id)
-    values (#{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{modifier,jdbcType=VARCHAR}, 
-      #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
-      #{roleId,jdbcType=VARCHAR})
+    insert into heroland_account (id, creator, modifier, 
+      gmt_create, gmt_modified, is_deleted, 
+      balance, user_id, level_name, 
+      level_score)
+    values (#{id,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
+      #{balance,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{levelName,jdbcType=VARCHAR}, 
+      #{levelScore,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRole">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountDP">
+    <selectKey keyProperty="accountId" order="AFTER" resultType="java.lang.String">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into platform_sys_user_role
+    insert into heroland_account
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
       <if test="gmtCreate != null">
         gmt_create,
       </if>
       <if test="gmtModified != null">
         gmt_modified,
       </if>
-      <if test="modifier != null">
-        modifier,
-      </if>
       <if test="isDeleted != null">
         is_deleted,
       </if>
-      <if test="creator != null">
-        creator,
+      <if test="balance != null">
+        balance,
       </if>
       <if test="userId != null">
         user_id,
       </if>
-      <if test="roleId != null">
-        role_id,
+      <if test="levelName != null">
+        level_name,
+      </if>
+      <if test="levelScore != null">
+        level_score,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
       <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="modifier != null">
-        #{modifier,jdbcType=VARCHAR},
-      </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
       </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
+      <if test="balance != null">
+        #{balance,jdbcType=BIGINT},
       </if>
       <if test="userId != null">
         #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=VARCHAR},
+      <if test="levelName != null">
+        #{levelName,jdbcType=VARCHAR},
+      </if>
+      <if test="levelScore != null">
+        #{levelScore,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRoleExample" resultType="java.lang.Long">
-    select count(*) from platform_sys_user_role
+  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountExample" resultType="java.lang.Long">
+    select count(*) from heroland_account
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update platform_sys_user_role
+    update heroland_account
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifier != null">
+        modifier = #{record.modifier,jdbcType=VARCHAR},
       </if>
       <if test="record.gmtCreate != null">
         gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -183,20 +213,23 @@
       <if test="record.gmtModified != null">
         gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.modifier != null">
-        modifier = #{record.modifier,jdbcType=VARCHAR},
-      </if>
       <if test="record.isDeleted != null">
         is_deleted = #{record.isDeleted,jdbcType=BIT},
       </if>
-      <if test="record.creator != null">
-        creator = #{record.creator,jdbcType=VARCHAR},
+      <if test="record.balance != null">
+        balance = #{record.balance,jdbcType=BIGINT},
       </if>
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=VARCHAR},
       </if>
-      <if test="record.roleId != null">
-        role_id = #{record.roleId,jdbcType=VARCHAR},
+      <if test="record.accountId != null">
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.levelName != null">
+        level_name = #{record.levelName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.levelScore != null">
+        level_score = #{record.levelScore,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -204,55 +237,70 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update platform_sys_user_role
+    update heroland_account
     set id = #{record.id,jdbcType=BIGINT},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      modifier = #{record.modifier,jdbcType=VARCHAR},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      modifier = #{record.modifier,jdbcType=VARCHAR},
       is_deleted = #{record.isDeleted,jdbcType=BIT},
-      creator = #{record.creator,jdbcType=VARCHAR},
+      balance = #{record.balance,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=VARCHAR},
-      role_id = #{record.roleId,jdbcType=VARCHAR}
+      account_id = #{record.accountId,jdbcType=VARCHAR},
+      level_name = #{record.levelName,jdbcType=VARCHAR},
+      level_score = #{record.levelScore,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRole">
-    update platform_sys_user_role
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountDP">
+    update heroland_account
     <set>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
       <if test="gmtCreate != null">
         gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
       <if test="gmtModified != null">
         gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
-      <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
+      <if test="balance != null">
+        balance = #{balance,jdbcType=BIGINT},
       </if>
       <if test="userId != null">
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
-      <if test="roleId != null">
-        role_id = #{roleId,jdbcType=VARCHAR},
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="levelName != null">
+        level_name = #{levelName,jdbcType=VARCHAR},
+      </if>
+      <if test="levelScore != null">
+        level_score = #{levelScore,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.PlatformSysUserRole">
-    update platform_sys_user_role
-    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandAccountDP">
+    update heroland_account
+    set creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       is_deleted = #{isDeleted,jdbcType=BIT},
-      creator = #{creator,jdbcType=VARCHAR},
+      balance = #{balance,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},
-      role_id = #{roleId,jdbcType=VARCHAR}
+      account_id = #{accountId,jdbcType=VARCHAR},
+      level_name = #{levelName,jdbcType=VARCHAR},
+      level_score = #{levelScore,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

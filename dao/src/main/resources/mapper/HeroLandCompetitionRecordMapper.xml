@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
+    <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="result" jdbcType="INTEGER" property="result" />
+    <result column="opponent_id" jdbcType="VARCHAR" property="opponentId" />
+    <result column="topic_type" jdbcType="INTEGER" property="topicType" />
+    <result column="record_id" jdbcType="VARCHAR" property="recordId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, topic_id, topic_name, 
+    status, result, opponent_id, topic_type, record_id
+  </sql>
+  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from heroland_competition_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from heroland_competition_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from heroland_competition_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample">
+    delete from heroland_competition_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_competition_record (id, creator, modifier, 
+      gmt_create, gmt_modified, is_deleted, 
+      topic_id, topic_name, status, 
+      result, opponent_id, topic_type
+      )
+    values (#{id,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
+      #{topicId,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{result,jdbcType=INTEGER}, #{opponentId,jdbcType=VARCHAR}, #{topicType,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_competition_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="topicId != null">
+        topic_id,
+      </if>
+      <if test="topicName != null">
+        topic_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="opponentId != null">
+        opponent_id,
+      </if>
+      <if test="topicType != null">
+        topic_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="topicId != null">
+        #{topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null">
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=INTEGER},
+      </if>
+      <if test="opponentId != null">
+        #{opponentId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicType != null">
+        #{topicType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultType="java.lang.Long">
+    select count(*) from heroland_competition_record
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update heroland_competition_record
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifier != null">
+        modifier = #{record.modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDeleted != null">
+        is_deleted = #{record.isDeleted,jdbcType=BIT},
+      </if>
+      <if test="record.topicId != null">
+        topic_id = #{record.topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topicName != null">
+        topic_name = #{record.topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.result != null">
+        result = #{record.result,jdbcType=INTEGER},
+      </if>
+      <if test="record.opponentId != null">
+        opponent_id = #{record.opponentId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topicType != null">
+        topic_type = #{record.topicType,jdbcType=INTEGER},
+      </if>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update heroland_competition_record
+    set id = #{record.id,jdbcType=BIGINT},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      modifier = #{record.modifier,jdbcType=VARCHAR},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
+      topic_id = #{record.topicId,jdbcType=VARCHAR},
+      topic_name = #{record.topicName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      result = #{record.result,jdbcType=INTEGER},
+      opponent_id = #{record.opponentId,jdbcType=VARCHAR},
+      topic_type = #{record.topicType,jdbcType=INTEGER},
+      record_id = #{record.recordId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    update heroland_competition_record
+    <set>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="topicId != null">
+        topic_id = #{topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null">
+        topic_name = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=INTEGER},
+      </if>
+      <if test="opponentId != null">
+        opponent_id = #{opponentId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicType != null">
+        topic_type = #{topicType,jdbcType=INTEGER},
+      </if>
+      <if test="recordId != null">
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    update heroland_competition_record
+    set creator = #{creator,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      topic_id = #{topicId,jdbcType=VARCHAR},
+      topic_name = #{topicName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      result = #{result,jdbcType=INTEGER},
+      opponent_id = #{opponentId,jdbcType=VARCHAR},
+      topic_type = #{topicType,jdbcType=INTEGER},
+      record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -75,31 +75,35 @@
 
 
 
-<!--        <table tableName="platform_sys_role_permission" domainObjectName="PlatformSysRolePermission" mapperName="PlatformRolePermissionMapper">-->
-<!--            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
 
 
-<!--        <table tableName="platform_sys_permission" domainObjectName="PlatformSysPermission" mapperName="PlatformSysPermissionMapper">-->
-<!--            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-
-<!--        <table tableName="platform_sys_role" domainObjectName="PlatformSysRole" mapperName="PlatformSysRoleMapper">-->
-<!--            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
-
-        <table tableName="platform_sys_user" domainObjectName="PlatformSysUser" mapperName="PlatformSysUserMapper">
-            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        <table tableName="heroland_account" domainObjectName="HeroLandAccount" mapperName="HeroLandAccountMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="account_id" sqlStatement="MySql" identity="true"/>
         </table>
 
-<!--        <table tableName="platform_sys_user_role" domainObjectName="PlatformSysUserRole" mapperName="PlatformSysUserRoleMapper">-->
-<!--            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
+
+
+
+
+        <table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">
+            <property name="rootClass" value="com.heroland.competition.dal.pojo.BaseDO"/>
+            <generatedKey column="record_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+      <table tableName="heroland_question" domainObjectName="HeroLandQuestion" mapperName="HeroLandQuestionMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="question_id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="record_id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="heroland_topic_group" domainObjectName="HeroLandTopicGroup" mapperName="HeroLandTopicGroupMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="topic_id" sqlStatement="MySql" identity="true"/>
+        </table>
 
 
 
