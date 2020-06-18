@@ -2,13 +2,15 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.dal.pojo.HeroLandQuestionDP;
+import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandTopicGroup")
 public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
@@ -51,16 +53,39 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="questions题目")
     private List<HeroLandQuestionDP> questions;
 
-    public void addCheck(HeroLandTopicGroupDP dp){
-        if (StringUtils.isAnyBlank(dp.getOrgCode(),dp.getTopicName())){
+
+    public HeroLandTopicGroupDP addCheckAndInit(){
+        if (StringUtils.isAnyBlank(this.getOrgCode(),this.getTopicName())){
             ResponseBodyWrapper.failParamException();
         }
 
-        if (dp.getType() == null){
+        if (this.getType() == null){
             ResponseBodyWrapper.failParamException();
         }
 
+        try {
+            Long topic = TinyId.nextId("topic");
+            this.setTopicId(topic.toString());
+        } catch (Exception e) {
+            this.setTopicId(UUID.randomUUID().toString());
+        }
 
+        this.beforeInsert();
+
+        return this;
+    }
+
+    public HeroLandTopicGroupDP deleteCheck(){
+        if (this.getId() == null){
+            ResponseBodyWrapper.failParamException();
+        }
+        this.beforeDelete();
+
+        return this;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public List<HeroLandQuestionDP> getQuestions() {

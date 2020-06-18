@@ -74,7 +74,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-06-17
+     * heroland_question_record_detail 2020-06-18
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1629,7 +1629,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-06-17
+     * heroland_question_record_detail 2020-06-18
      */
     public static class Criterion {
         private String condition;

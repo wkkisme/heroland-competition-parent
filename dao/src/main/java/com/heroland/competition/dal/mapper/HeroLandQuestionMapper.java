@@ -1,6 +1,6 @@
 package com.heroland.competition.dal.mapper;
 
-import com.heroland.competition.dal.pojo.HeroLandQuestionDP;
+import com.heroland.competition.dal.pojo.HeroLandQuestion;
 import com.heroland.competition.dal.pojo.HeroLandQuestionExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -12,19 +12,19 @@ public interface HeroLandQuestionMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(HeroLandQuestionDP record);
+    int insert(HeroLandQuestion record);
 
-    int insertSelective(HeroLandQuestionDP record);
+    int insertSelective(HeroLandQuestion record);
 
-    List<HeroLandQuestionDP> selectByExample(HeroLandQuestionExample example);
+    List<HeroLandQuestion> selectByExample(HeroLandQuestionExample example);
 
-    HeroLandQuestionDP selectByPrimaryKey(Long id);
+    HeroLandQuestion selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") HeroLandQuestionDP record, @Param("example") HeroLandQuestionExample example);
+    int updateByExampleSelective(@Param("record") HeroLandQuestion record, @Param("example") HeroLandQuestionExample example);
 
-    int updateByExample(@Param("record") HeroLandQuestionDP record, @Param("example") HeroLandQuestionExample example);
+    int updateByExample(@Param("record") HeroLandQuestion record, @Param("example") HeroLandQuestionExample example);
 
-    int updateByPrimaryKeySelective(HeroLandQuestionDP record);
+    int updateByPrimaryKeySelective(HeroLandQuestion record);
 
-    int updateByPrimaryKey(HeroLandQuestionDP record);
+    int updateByPrimaryKey(HeroLandQuestion record);
 }

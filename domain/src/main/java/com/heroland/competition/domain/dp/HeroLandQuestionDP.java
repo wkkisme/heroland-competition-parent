@@ -1,9 +1,14 @@
-package com.heroland.competition.dal.pojo;
+package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
+import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.util.UUID;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandQuestion")
 public class HeroLandQuestionDP extends BaseDO implements Serializable {
@@ -89,6 +94,35 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
      * heroland_question
      */
     private static final long serialVersionUID = 1L;
+
+    public HeroLandQuestionDP addCheck(){
+
+        if (StringUtils.isBlank(this.getTitle())){
+            ResponseBodyWrapper.failParamException();
+        }
+        try {
+            Long question = TinyId.nextId("question");
+            this.setQuestionId(question.toString());
+        } catch (Exception e) {
+            this.setQuestionId(UUID.randomUUID().toString());
+        }
+
+        return this;
+
+    }
+
+     public HeroLandQuestionDP deleteCheck(){
+
+        if (this.getId() == null){
+            ResponseBodyWrapper.failParamException();
+        }
+
+        this.beforeDelete();
+
+        return this;
+
+    }
+
 
     /**
      * 年级code

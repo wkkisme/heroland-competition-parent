@@ -1,5 +1,6 @@
 package com.heroland.competition.dal.pojo;
 
+import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;

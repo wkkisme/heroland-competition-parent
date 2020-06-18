@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-17
+     * heroland_competition_record 2020-06-18
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -969,7 +969,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-17
+     * heroland_competition_record 2020-06-18
      */
     public static class Criterion {
         private String condition;

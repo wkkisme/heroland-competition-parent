@@ -25,19 +25,6 @@ public interface HeroLandTopicGroupService {
      */
     ResponseBody<Boolean> deleteTopic(HeroLandTopicGroupDP dp);
 
-    /**
-     * 题组增加题
-     * @param dp 对象
-     * @return 正确
-     */
-    ResponseBody<Boolean> addTopicQuestions(HeroLandTopicGroupDP dp);
-
-    /**
-     * 获取题组和题
-     * @param qo 对象
-     * @return 值
-     */
-    ResponseBody<List<HeroLandTopicGroupDP>> getTopicQuestions(HeroLandTopicGroupQO qo);
 
   /**
      * 获取题组和题

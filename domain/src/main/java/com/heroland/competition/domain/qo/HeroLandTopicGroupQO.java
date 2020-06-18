@@ -1,8 +1,10 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.common.BaseQO;
-import com.heroland.competition.dal.pojo.HeroLandQuestionDP;
+import com.anycommon.response.utils.MybatisCriteriaMethodEnum;
+import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -15,36 +17,42 @@ public class HeroLandTopicGroupQO extends BaseQO implements Serializable {
      * 机构code
      */
     @ApiModelProperty(value="orgCode机构code")
+    @MybatisCriteriaAnnotation
     private String orgCode;
 
     /**
      * 题目组名称
      */
     @ApiModelProperty(value="topicName题目组名称")
+    @MybatisCriteriaAnnotation(method = MybatisCriteriaMethodEnum.AND_LIKE)
     private String topicName;
 
     /**
      * 年级code
      */
     @ApiModelProperty(value="gradeCode年级code")
+    @MybatisCriteriaAnnotation
     private String gradeCode;
 
     /**
      * 班级code
      */
     @ApiModelProperty(value="classCode班级code")
+    @MybatisCriteriaAnnotation
     private String classCode;
 
     /**
      * 类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛 
      */
     @ApiModelProperty(value="type类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛 ")
+    @MybatisCriteriaAnnotation
     private Integer type;
 
     /**
      * 题目组id
      */
     @ApiModelProperty(value="topicId题目组id")
+    @MybatisCriteriaAnnotation
     private String topicId;
 
     @ApiModelProperty(value="questions题目")

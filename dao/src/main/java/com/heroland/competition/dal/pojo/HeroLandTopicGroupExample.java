@@ -74,7 +74,7 @@ public class HeroLandTopicGroupExample {
     }
 
     /**
-     * heroland_topic_group 2020-06-17
+     * heroland_topic_group 2020-06-18
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -919,7 +919,7 @@ public class HeroLandTopicGroupExample {
     }
 
     /**
-     * heroland_topic_group 2020-06-17
+     * heroland_topic_group 2020-06-18
      */
     public static class Criterion {
         private String condition;

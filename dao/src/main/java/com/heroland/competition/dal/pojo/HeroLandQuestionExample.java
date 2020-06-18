@@ -74,7 +74,7 @@ public class HeroLandQuestionExample {
     }
 
     /**
-     * heroland_question 2020-06-17
+     * heroland_question 2020-06-18
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1419,7 +1419,7 @@ public class HeroLandQuestionExample {
     }
 
     /**
-     * heroland_question 2020-06-17
+     * heroland_question 2020-06-18
      */
     public static class Criterion {
         private String condition;
