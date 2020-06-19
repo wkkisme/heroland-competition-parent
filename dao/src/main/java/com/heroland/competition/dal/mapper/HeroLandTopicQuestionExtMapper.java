@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface HeroLandTopicQuestionExtMapper extends HeroLandTopicQuestionMapper{
 
+    int insertBash(List<HeroLandTopicQuestion> queryListConversion);
 }

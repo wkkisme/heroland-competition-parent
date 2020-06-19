@@ -4,8 +4,12 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.dal.mapper.HeroLandQuestionExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandTopicQuestionExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandQuestion;
+import com.heroland.competition.dal.pojo.HeroLandTopicQuestion;
+import com.heroland.competition.dal.pojo.HeroLandTopicQuestionExample;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
+import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.service.HeroLandQuestionService;
 import org.slf4j.Logger;
@@ -25,7 +29,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Resource
     private HeroLandQuestionExtMapper heroLandQuestionExtMapper;
 
-//    private
+    @Resource
+    private HeroLandTopicQuestionExtMapper heroLandTopicQuestionExtMapper;
 
 
     @Override
@@ -51,7 +56,14 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public ResponseBody<Boolean> addTopicQuestions(HeroLandQuestionDP dp) {
+    public ResponseBody<Boolean> addTopicQuestions(HeroLandTopicGroupDP dp) {
+        dp.addTopicQuestions();
+        try {
+            heroLandTopicQuestionExtMapper.deleteByExample(new HeroLandTopicQuestionExample());
+            heroLandTopicQuestionExtMapper.insertBash(BeanUtil.queryListConversion(dp.getQuestions(), HeroLandTopicQuestion.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

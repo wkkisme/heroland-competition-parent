@@ -10,94 +10,96 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.UUID;
 
-@ApiModel(value="com.heroland.competition.dal.pojo.HeroLandQuestion")
+@ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandQuestion")
 public class HeroLandQuestionDP extends BaseDO implements Serializable {
     /**
      * 年级code
      */
-    @ApiModelProperty(value="gradeCode年级code")
+    @ApiModelProperty(value = "gradeCode年级code")
     private String gradeCode;
 
     /**
      * 班级code
      */
-    @ApiModelProperty(value="classCode班级code")
+    @ApiModelProperty(value = "classCode班级code")
     private String classCode;
 
     /**
      * 全局id
      */
-    @ApiModelProperty(value="questionId全局id")
+    @ApiModelProperty(value = "questionId全局id")
     private String questionId;
 
     /**
      * 题目
      */
-    @ApiModelProperty(value="title题目")
+    @ApiModelProperty(value = "title题目")
     private String title;
 
     /**
      * a选项
      */
-    @ApiModelProperty(value="optionAa选项")
+    @ApiModelProperty(value = "optionAa选项")
     private String optionA;
 
     /**
      * b选项
      */
-    @ApiModelProperty(value="optionBb选项")
+    @ApiModelProperty(value = "optionBb选项")
     private String optionB;
 
     /**
      * c选项
      */
-    @ApiModelProperty(value="optionCc选项")
+    @ApiModelProperty(value = "optionCc选项")
     private String optionC;
 
     /**
      * d选项
      */
-    @ApiModelProperty(value="optionDd选项")
+    @ApiModelProperty(value = "optionDd选项")
     private String optionD;
 
     /**
      * e选项
      */
-    @ApiModelProperty(value="optionEe选项")
+    @ApiModelProperty(value = "optionEe选项")
     private String optionE;
 
     /**
      * 正确答案
      */
-    @ApiModelProperty(value="answer正确答案")
+    @ApiModelProperty(value = "answer正确答案")
     private String answer;
 
     /**
      * 解答
      */
-    @ApiModelProperty(value="solution解答")
+    @ApiModelProperty(value = "solution解答")
     private String solution;
 
     /**
      * 解析
      */
-    @ApiModelProperty(value="parse解析")
+    @ApiModelProperty(value = "parse解析")
     private String parse;
 
     /**
      * 难度code
      */
-    @ApiModelProperty(value="levelCode难度code")
+    @ApiModelProperty(value = "levelCode难度code")
     private String levelCode;
+
+    private String topicId;
 
     /**
      * heroland_question
      */
     private static final long serialVersionUID = 1L;
 
-    public HeroLandQuestionDP addCheck(){
+    public HeroLandQuestionDP addCheck() {
 
-        if (StringUtils.isBlank(this.getTitle())){
+        if (StringUtils.isBlank(this.getTitle())) {
             ResponseBodyWrapper.failParamException();
         }
         try {
@@ -111,9 +113,9 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     }
 
-     public HeroLandQuestionDP deleteCheck(){
+    public HeroLandQuestionDP deleteCheck() {
 
-        if (this.getId() == null){
+        if (this.getId() == null) {
             ResponseBodyWrapper.failParamException();
         }
 
@@ -123,9 +125,30 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     }
 
+    public HeroLandQuestionDP addTopicQuestionsCheck() {
+
+        if (StringUtils.isAnyBlank(this.getTopicId(),this.getQuestionId())) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+        this.beforeInsert();
+
+        return this;
+
+    }
+
+
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
+    }
 
     /**
      * 年级code
+     *
      * @return grade_code 年级code
      */
     public String getGradeCode() {
@@ -134,6 +157,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 年级code
+     *
      * @param gradeCode 年级code
      */
     public void setGradeCode(String gradeCode) {
@@ -142,6 +166,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 班级code
+     *
      * @return class_code 班级code
      */
     public String getClassCode() {
@@ -150,6 +175,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 班级code
+     *
      * @param classCode 班级code
      */
     public void setClassCode(String classCode) {
@@ -158,6 +184,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 全局id
+     *
      * @return question_id 全局id
      */
     public String getQuestionId() {
@@ -166,6 +193,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 全局id
+     *
      * @param questionId 全局id
      */
     public void setQuestionId(String questionId) {
@@ -174,6 +202,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 题目
+     *
      * @return title 题目
      */
     public String getTitle() {
@@ -182,6 +211,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 题目
+     *
      * @param title 题目
      */
     public void setTitle(String title) {
@@ -190,6 +220,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * a选项
+     *
      * @return option_a a选项
      */
     public String getOptionA() {
@@ -198,6 +229,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * a选项
+     *
      * @param optionA a选项
      */
     public void setOptionA(String optionA) {
@@ -206,6 +238,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * b选项
+     *
      * @return option_b b选项
      */
     public String getOptionB() {
@@ -214,6 +247,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * b选项
+     *
      * @param optionB b选项
      */
     public void setOptionB(String optionB) {
@@ -222,6 +256,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * c选项
+     *
      * @return option_c c选项
      */
     public String getOptionC() {
@@ -230,6 +265,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * c选项
+     *
      * @param optionC c选项
      */
     public void setOptionC(String optionC) {
@@ -238,6 +274,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * d选项
+     *
      * @return option_d d选项
      */
     public String getOptionD() {
@@ -246,6 +283,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * d选项
+     *
      * @param optionD d选项
      */
     public void setOptionD(String optionD) {
@@ -254,6 +292,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * e选项
+     *
      * @return option_e e选项
      */
     public String getOptionE() {
@@ -262,6 +301,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * e选项
+     *
      * @param optionE e选项
      */
     public void setOptionE(String optionE) {
@@ -270,6 +310,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 正确答案
+     *
      * @return answer 正确答案
      */
     public String getAnswer() {
@@ -278,6 +319,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 正确答案
+     *
      * @param answer 正确答案
      */
     public void setAnswer(String answer) {
@@ -286,6 +328,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 解答
+     *
      * @return solution 解答
      */
     public String getSolution() {
@@ -294,6 +337,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 解答
+     *
      * @param solution 解答
      */
     public void setSolution(String solution) {
@@ -302,6 +346,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 解析
+     *
      * @return parse 解析
      */
     public String getParse() {
@@ -310,6 +355,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 解析
+     *
      * @param parse 解析
      */
     public void setParse(String parse) {
@@ -318,6 +364,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 难度code
+     *
      * @return level_code 难度code
      */
     public String getLevelCode() {
@@ -326,6 +373,7 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     /**
      * 难度code
+     *
      * @param levelCode 难度code
      */
     public void setLevelCode(String levelCode) {

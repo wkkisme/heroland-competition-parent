@@ -2,6 +2,7 @@ package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
+import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public interface HeroLandQuestionService{
      * @param dp 对象
      * @return 正确
      */
-    ResponseBody<Boolean> addTopicQuestions(HeroLandQuestionDP dp);
+    ResponseBody<Boolean> addTopicQuestions(HeroLandTopicGroupDP dp);
 
     /**
      * 获取题组和题
