@@ -1,6 +1,5 @@
 package com.heroland.competition;
 
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -8,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -20,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @SpringBootApplication
 //@SpringBootApplication
-@ImportResource(locations = {"classpath*:context-*.xml", "classpath*:cxf.xml"})
-@MapperScan("com.heroland.competition.domain")
+//@ImportResource(locations = {"classpath*:context-*.xml", "classpath*:cxf.xml"})
+@MapperScan("com.heroland.competition.dal")
 @RestController
 @EnableScheduling
 @EnableTransactionManagement
 @EnableAsync
 @EnableDubbo
-@NacosPropertySource(dataId = "bqhealth_cloud_data", groupId = "bqhealth_cloud_group", autoRefreshed = true)
+//@NacosPropertySource(dataId = "hero_data", groupId = "hero_group", autoRefreshed = true)
 public class HeroLandApplication {
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandApplication.class);

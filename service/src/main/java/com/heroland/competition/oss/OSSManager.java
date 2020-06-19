@@ -10,7 +10,6 @@ import com.aliyun.oss.model.OSSObject;
 import com.aliyun.oss.model.PutObjectResult;
 import com.google.common.collect.Maps;
 import org.apache.commons.fileupload.FileItem;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
@@ -21,16 +20,14 @@ import java.util.Map;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
-import static org.apache.commons.io.FilenameUtils.getBaseName;
-import static org.apache.commons.io.FilenameUtils.getExtension;
-import static org.apache.commons.io.FilenameUtils.removeExtension;
+import static org.apache.commons.io.FilenameUtils.*;
 
 /**
  * 阿里云上传接口
  *
  * @author wangkai
  */
-@Component
+//@Component
 public class OSSManager {
 
     @Resource

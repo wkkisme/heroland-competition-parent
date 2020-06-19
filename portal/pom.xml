@@ -228,6 +228,16 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.heroland</groupId>
+            <artifactId>heroland-competition-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.heroland</groupId>
+            <artifactId>heroland-competition-service</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

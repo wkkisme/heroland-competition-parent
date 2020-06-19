@@ -77,33 +77,33 @@
 
 
 
-        <table tableName="heroland_account" domainObjectName="HeroLandAccount" mapperName="HeroLandAccountMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="account_id" sqlStatement="MySql" identity="true"/>
-        </table>
-
-
-
-
-
-        <table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">
+        <table tableName="heroland_invite_record" domainObjectName="HeroLandInviteRecord" mapperName="HeroLandInviteRecordMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="record_id" sqlStatement="MySql" identity="true"/>
         </table>
 
-      <table tableName="heroland_question" domainObjectName="HeroLandQuestion" mapperName="HeroLandQuestionMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="question_id" sqlStatement="MySql" identity="true"/>
-        </table>
 
-        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="record_id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="heroland_topic_group" domainObjectName="HeroLandTopicGroup" mapperName="HeroLandTopicGroupMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="topic_id" sqlStatement="MySql" identity="true"/>
-        </table>
+
+
+
+        <!--<table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">-->
+            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+            <!--<generatedKey column="record_id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+
+      <!--<table tableName="heroland_question" domainObjectName="HeroLandQuestion" mapperName="HeroLandQuestionMapper">-->
+            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+            <!--<generatedKey column="question_id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+
+        <!--<table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">-->
+            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+            <!--<generatedKey column="record_id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="heroland_topic_group" domainObjectName="HeroLandTopicGroup" mapperName="HeroLandTopicGroupMapper">-->
+            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+            <!--<generatedKey column="topic_id" sqlStatement="MySql" identity="true"/>-->
+        <!--</table>-->
 
 
 

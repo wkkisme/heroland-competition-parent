@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandTopicQuestionExtMapper">
+
+    <resultMap id="TopicQuestionMap" type="com.heroland.competition.dal.pojo.HeroLandTopicQuestions"
+               extends="com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper.BaseResultMap">
+        <collection property="questions" ofType="com.heroland.competition.dal.pojo.HeroLandQuestion" resultMap="com.heroland.competition.dal.mapper.HeroLandQuestionMapper.BaseResultMap">
+
+
+        </collection>
+
+    </resultMap>
+    <insert id="insertBash">
+        insert into heroland_topic_question (question_id, topic_id, creator,
+        modifier, gmt_create, gmt_modified,
+        is_deleted)
+        values
+        <foreach collection="records" item="record" separator=",">
+            (#{record.questionId,jdbcType=VARCHAR}, #{record.topicId,jdbcType=VARCHAR},
+            #{record.creator,jdbcType=VARCHAR},
+            #{record.modifier,jdbcType=VARCHAR}, #{record.gmtCreate,jdbcType=TIMESTAMP},
+            #{record.gmtModified,jdbcType=TIMESTAMP},
+            #{record.isDeleted,jdbcType=BIT})
+        </foreach>
+    </insert>
+    
+    <select id="selectTopicQuestions"
+            resultMap="TopicQuestionMap">
+       select a.*,c.* from heroland_topic_group a left join  heroland_topic_question  b
+        on a.topic_id= b.topic_id   join heroland_question c on b.question_id= c.question_id
+        where a.is_deleted = 0 and b.is_deleted =0  and c.is_deleted =0
+        <if test="orgCode != null and orgCode != ''">
+            and a.org_code = #{orgCode,jdbcType=VARCHAR}
+        </if>
+
+      <if test="topicId != null and topicId != ''">
+            and a.topic_id = #{topicId,jdbcType=VARCHAR}
+        </if>
+
+        <if test="startRow != null and startRow != -1 and pageSize != null">
+            limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
+    
+    <select id="selectTopicQuestionsCount" resultType="java.lang.Long">
+        select count(a.id) from heroland_topic_group a left join  heroland_topic_question  b
+        on a.topic_id= b.topic_id   join heroland_question c on b.question_id= c.question_id
+        where a.is_deleted = 0 and b.is_deleted =0  and c.is_deleted =0
+        <if test="orgCode != null and orgCode != ''">
+            and a.org_code = #{orgCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="topicId != null and topicId != ''">
+            and a.topic_id = #{topicId,jdbcType=VARCHAR}
+        </if>
+
+
+    </select>
+</mapper>

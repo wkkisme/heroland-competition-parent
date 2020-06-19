@@ -39,7 +39,7 @@ public interface HeroLandQuestionService{
      * @param qo 对象
      * @return 值
      */
-    ResponseBody<List<HeroLandQuestionDP>> getQuestionQuestions(HeroLandQuestionQO qo);
+    ResponseBody<List<HeroLandTopicGroupDP>> getTopicQuestions(HeroLandQuestionQO qo);
 
     /**
      * 获取题组和题
