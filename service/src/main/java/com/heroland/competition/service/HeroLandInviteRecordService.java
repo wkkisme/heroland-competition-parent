@@ -14,7 +14,14 @@ import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 public interface HeroLandInviteRecordService {
 
     /**
-     * 邀请
+     * 新增邀请
+     * @param dp
+     * @return
+     */
+    ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp);
+
+    /**
+     * 新增邀请
      * @param dp
      * @return
      */

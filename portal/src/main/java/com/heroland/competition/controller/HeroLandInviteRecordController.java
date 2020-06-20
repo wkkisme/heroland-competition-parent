@@ -1,9 +1,9 @@
 package com.heroland.competition.controller;
 
-
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
-import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,27 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 /**
- * heroland-competition-parent
- *
- * @author wangkai
- * @date 2020/6/19
+ * 邀请
+ * @author mac
  */
 
 @RestController
-@RequestMapping("/topic")
-public class HeroLandTopicQuestionController {
+@RequestMapping("/invite")
+public class HeroLandInviteRecordController {
 
     @Resource
-    private HeroLandQuestionService heroLandQuestionService;
+    private HeroLandInviteRecordService heroLandInviteRecordService;
 
     /**
      *
-     * @param heroLandQuestionQO h
+     * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/queryQuestions")
-    public ResponseBody<?> getTopicQuestion(@RequestBody HeroLandQuestionQO heroLandQuestionQO){
+    public  ResponseBody<?> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord){
 
-        return heroLandQuestionService.getTopicQuestions(heroLandQuestionQO);
+        return heroLandInviteRecordService.invite(heroLandInviteRecord);
     }
 }

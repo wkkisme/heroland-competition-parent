@@ -63,9 +63,10 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             HeroLandTopicQuestionExample.Criteria criteria = example.createCriteria();
             criteria.andTopicIdEqualTo(dp.getTopicId());
             heroLandTopicQuestionExtMapper.deleteByExample(example);
-            heroLandTopicQuestionExtMapper.insertBash(BeanUtil.queryListConversion(dp.getQuestions(), HeroLandTopicQuestion.class));
+            int count = heroLandTopicQuestionExtMapper.insertBash(BeanUtil.queryListConversion(dp.getQuestions(), HeroLandTopicQuestion.class));
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
+            ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.success();
     }
@@ -79,7 +80,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             heroLandQuestions = heroLandTopicQuestionExtMapper.selectTopicQuestions(qo.topicIdCheck());
             count = heroLandTopicQuestionExtMapper.selectTopicQuestionsCount(qo);
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
@@ -93,11 +94,11 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         try {
             HeroLandQuestionExample example = new HeroLandQuestionExample();
             HeroLandQuestionExample.Criteria criteria = example.createCriteria();
-            MybatisCriteriaConditionUtil.createExample(criteria,qo);
+            MybatisCriteriaConditionUtil.createExample(criteria, qo);
             heroLandQuestions = heroLandQuestionExtMapper.selectByExample(example);
             count = heroLandQuestionExtMapper.countByExample(example);
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
