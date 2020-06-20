@@ -1,20 +1,16 @@
 package com.heroland.competition.config;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisClusterConfiguration;
-import org.springframework.data.redis.connection.RedisNode;
-import org.springframework.data.redis.connection.RedisPassword;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * heroland-competition-parent
@@ -26,72 +22,31 @@ import java.util.List;
 @Configuration
 @ConfigurationProperties("spring.redis.cluster")
 public class RedisConfig {
-
-    private List<Integer> ports;
-
-    private String host;
-
-    private JedisPoolConfig poolConfig;
-
+    /**
+     * 把任何数据保存到redis时，都需要进行序列化，默认使用JdkSerializationRedisSerializer进行序列化。
+     * 默认的序列化会给所有的key,value的原始字符前，都加了一串字符（例如：\xAC\xED\x00\），不具备可读性
+     * 所以需要配置jackson序列化方式
+     */
     @Bean
-    RedisClusterConfiguration redisClusterConfguration(){
-
-        RedisClusterConfiguration configuration=new RedisClusterConfiguration();
-
-        List<RedisNode>nodes=new ArrayList<>();
-
-        for(Integer port:ports){
-
-            nodes.add(new RedisNode(host,port));
-
-        }
-
-        configuration.setPassword(RedisPassword.of("123@123"));
-
-                configuration.setClusterNodes(nodes);
-
-        return configuration;
-
+    public RedisTemplate<String,Object> redisTemplate(LettuceConnectionFactory factory){
+        RedisTemplate<String,Object> template=new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        //key采用String的序列化方式
+        template.setKeySerializer(stringRedisSerializer);
+        //value采用jackson序列化方式
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+        //hash的key采用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
+        //hash的value采用String的序列化方式
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        template.afterPropertiesSet();
+        return template;
     }
-
-    @Bean
-    JedisConnectionFactory jedisConnectionFactory(){
-
-        JedisConnectionFactory factory=new JedisConnectionFactory(redisClusterConfiguration(),poolConfig);
-
-        return factory;
-
-    }
-
-    @Bean
-
-    RedisTemplate redisTemplate(){
-
-        RedisTemplate redisTemplate = new RedisTemplate();
-
-        redisTemplate.setConnectionFactory(jedisConnectionFactory());
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
-
-        return redisTemplate;
-
-    }
-
-    @Bean
-    StringRedisTemplate stringRedisTemplate(){
-
-        StringRedisTemplate stringRedisTemplate=new StringRedisTemplate(jedisConnectionFactory());
-
-        stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        stringRedisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        return stringRedisTemplate;
-
-
-    }
-
 
 }
