@@ -1,7 +1,8 @@
 #!/bin/bash
 
-outPath=../../java
-fileArray=(StockMessageProto)
+#outPath=../../../java
+outPath= ../../hero/heroland-competition-parent/common/src/main/java
+fileArray=(BaseRequestProto BaseResponseProto)
 
 for i in ${fileArray[@]};
 do

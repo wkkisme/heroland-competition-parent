@@ -3,6 +3,9 @@ package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
+import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
+
+import java.util.List;
 
 /**
  * heroland-competition-parent
@@ -37,10 +40,27 @@ public interface HeroLandInviteRecordService {
 
     /**
      * 查询邀请
+     * @param qo
+     * @return
+     */
+    ResponseBody<List<HeroLandInviteRecordDP>> getInvite(HeroLandInviteRecordQO qo);
+
+
+    /**
+     * 同意邀请
      * @param dp
      * @return
      */
-    ResponseBody<Boolean> getInvite(HeroLandInviteRecordDP dp);
+    ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp);
+
+
+
+    /**
+     * 更新邀请
+     * @param dp
+     * @return
+     */
+    ResponseBody<Boolean> updateInvite(HeroLandInviteRecordDP dp);
 
 
 }
