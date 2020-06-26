@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author wangkai
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.heroland.competition")
 //@SpringBootApplication
 //@ImportResource(locations = {"classpath*:context-*.xml", "classpath*:cxf.xml"})
 @MapperScan("com.heroland.competition.dal")
