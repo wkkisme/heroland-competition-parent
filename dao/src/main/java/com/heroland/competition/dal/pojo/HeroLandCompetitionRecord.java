@@ -4,9 +4,16 @@ import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Date;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord")
 public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
+    /**
+     * 记录唯一id
+     */
+    @ApiModelProperty(value="recordId记录唯一id")
+    private String recordId;
+
     /**
      * 题组id
      */
@@ -20,15 +27,15 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String topicName;
 
     /**
-     * 作为 0 邀请方 1 被邀请方
+     * 话题类型（比赛类型）
      */
-    @ApiModelProperty(value="status作为 0 邀请方 1 被邀请方")
-    private Integer status;
+    @ApiModelProperty(value="topicType话题类型（比赛类型）")
+    private Integer topicType;
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局
      */
-    @ApiModelProperty(value="result0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃")
+    @ApiModelProperty(value="result0 邀请方胜利。1 被邀请方胜利。2 平局")
     private Integer result;
 
     /**
@@ -38,21 +45,73 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String opponentId;
 
     /**
-     * 话题类型（比赛类型）
+     * 对手级别
      */
-    @ApiModelProperty(value="topicType话题类型（比赛类型）")
-    private Integer topicType;
+    @ApiModelProperty(value="opponentLevel对手级别")
+    private String opponentLevel;
 
     /**
-     * 记录唯一id
+     * 对手得分
      */
-    @ApiModelProperty(value="recordId记录唯一id")
-    private String recordId;
+    @ApiModelProperty(value="opponentScore对手得分")
+    private Integer opponentScore;
+
+    /**
+     * 邀请人id
+     */
+    @ApiModelProperty(value="inviteId邀请人id")
+    private String inviteId;
+
+    /**
+     * 邀请人得分
+     */
+    @ApiModelProperty(value="inviteScore邀请人得分")
+    private Integer inviteScore;
+
+    /**
+     * 科目code
+     */
+    @ApiModelProperty(value="subjectCode科目code")
+    private String subjectCode;
+
+    /**
+     * 题目id
+     */
+    @ApiModelProperty(value="questionId题目id")
+    private String questionId;
+
+    /**
+     * 比赛开始时间
+     */
+    @ApiModelProperty(value="startTime比赛开始时间")
+    private Date startTime;
+
+    /**
+     * 比赛结束时间
+     */
+    @ApiModelProperty(value="endTime比赛结束时间")
+    private Date endTime;
 
     /**
      * heroland_competition_record
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 记录唯一id
+     * @return record_id 记录唯一id
+     */
+    public String getRecordId() {
+        return recordId;
+    }
+
+    /**
+     * 记录唯一id
+     * @param recordId 记录唯一id
+     */
+    public void setRecordId(String recordId) {
+        this.recordId = recordId == null ? null : recordId.trim();
+    }
 
     /**
      * 题组id
@@ -87,32 +146,32 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     }
 
     /**
-     * 作为 0 邀请方 1 被邀请方
-     * @return status 作为 0 邀请方 1 被邀请方
+     * 话题类型（比赛类型）
+     * @return topic_type 话题类型（比赛类型）
      */
-    public Integer getStatus() {
-        return status;
+    public Integer getTopicType() {
+        return topicType;
     }
 
     /**
-     * 作为 0 邀请方 1 被邀请方
-     * @param status 作为 0 邀请方 1 被邀请方
+     * 话题类型（比赛类型）
+     * @param topicType 话题类型（比赛类型）
      */
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃
-     * @return result 0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局
+     * @return result 0 邀请方胜利。1 被邀请方胜利。2 平局
      */
     public Integer getResult() {
         return result;
     }
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃
-     * @param result 0 邀请方胜利。1 被邀请方胜利。2 平局、3 被邀请方手动放弃 4 被邀请方超时自动放弃
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局
+     * @param result 0 邀请方胜利。1 被邀请方胜利。2 平局
      */
     public void setResult(Integer result) {
         this.result = result;
@@ -135,34 +194,130 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     }
 
     /**
-     * 话题类型（比赛类型）
-     * @return topic_type 话题类型（比赛类型）
+     * 对手级别
+     * @return opponent_level 对手级别
      */
-    public Integer getTopicType() {
-        return topicType;
+    public String getOpponentLevel() {
+        return opponentLevel;
     }
 
     /**
-     * 话题类型（比赛类型）
-     * @param topicType 话题类型（比赛类型）
+     * 对手级别
+     * @param opponentLevel 对手级别
      */
-    public void setTopicType(Integer topicType) {
-        this.topicType = topicType;
+    public void setOpponentLevel(String opponentLevel) {
+        this.opponentLevel = opponentLevel == null ? null : opponentLevel.trim();
     }
 
     /**
-     * 记录唯一id
-     * @return record_id 记录唯一id
+     * 对手得分
+     * @return opponent_score 对手得分
      */
-    public String getRecordId() {
-        return recordId;
+    public Integer getOpponentScore() {
+        return opponentScore;
     }
 
     /**
-     * 记录唯一id
-     * @param recordId 记录唯一id
+     * 对手得分
+     * @param opponentScore 对手得分
      */
-    public void setRecordId(String recordId) {
-        this.recordId = recordId == null ? null : recordId.trim();
+    public void setOpponentScore(Integer opponentScore) {
+        this.opponentScore = opponentScore;
+    }
+
+    /**
+     * 邀请人id
+     * @return invite_id 邀请人id
+     */
+    public String getInviteId() {
+        return inviteId;
+    }
+
+    /**
+     * 邀请人id
+     * @param inviteId 邀请人id
+     */
+    public void setInviteId(String inviteId) {
+        this.inviteId = inviteId == null ? null : inviteId.trim();
+    }
+
+    /**
+     * 邀请人得分
+     * @return invite_score 邀请人得分
+     */
+    public Integer getInviteScore() {
+        return inviteScore;
+    }
+
+    /**
+     * 邀请人得分
+     * @param inviteScore 邀请人得分
+     */
+    public void setInviteScore(Integer inviteScore) {
+        this.inviteScore = inviteScore;
+    }
+
+    /**
+     * 科目code
+     * @return subject_code 科目code
+     */
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    /**
+     * 科目code
+     * @param subjectCode 科目code
+     */
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode == null ? null : subjectCode.trim();
+    }
+
+    /**
+     * 题目id
+     * @return question_id 题目id
+     */
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    /**
+     * 题目id
+     * @param questionId 题目id
+     */
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId == null ? null : questionId.trim();
+    }
+
+    /**
+     * 比赛开始时间
+     * @return start_time 比赛开始时间
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * 比赛开始时间
+     * @param startTime 比赛开始时间
+     */
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * 比赛结束时间
+     * @return end_time 比赛结束时间
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * 比赛结束时间
+     * @param endTime 比赛结束时间
+     */
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

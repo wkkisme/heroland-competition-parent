@@ -10,7 +10,7 @@ public interface HeroLandCompetitionRecordMapper {
 
     int deleteByExample(HeroLandCompetitionRecordExample example);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String recordId);
 
     int insert(HeroLandCompetitionRecord record);
 
@@ -18,7 +18,7 @@ public interface HeroLandCompetitionRecordMapper {
 
     List<HeroLandCompetitionRecord> selectByExample(HeroLandCompetitionRecordExample example);
 
-    HeroLandCompetitionRecord selectByPrimaryKey(Long id);
+    HeroLandCompetitionRecord selectByPrimaryKey(String recordId);
 
     int updateByExampleSelective(@Param("record") HeroLandCompetitionRecord record, @Param("example") HeroLandCompetitionRecordExample example);
 

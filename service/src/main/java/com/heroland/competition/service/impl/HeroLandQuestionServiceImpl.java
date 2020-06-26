@@ -57,7 +57,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Override
     public ResponseBody<Boolean> addTopicQuestions(HeroLandTopicGroupDP dp) {
-        dp.addTopicQuestions();
+        HeroLandTopicGroupDP heroLandTopicGroupDP = dp.addTopicQuestions();
         try {
             HeroLandTopicQuestionExample example = new HeroLandTopicQuestionExample();
             HeroLandTopicQuestionExample.Criteria criteria = example.createCriteria();

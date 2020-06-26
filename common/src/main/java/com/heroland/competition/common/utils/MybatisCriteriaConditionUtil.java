@@ -1,9 +1,8 @@
 package com.heroland.competition.common.utils;
 
 
-import com.heroland.competition.common.annotation.MybatisCriteriaAnnotation;
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

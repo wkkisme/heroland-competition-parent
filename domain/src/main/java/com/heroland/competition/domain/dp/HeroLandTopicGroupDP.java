@@ -93,9 +93,13 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
 
         return this;
     }
+    public HeroLandTopicGroupDP competitionCheck() {
+        if (this.getType() == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+        this.beforeUpdate();
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+        return this;
     }
 
     public List<HeroLandQuestionDP> getQuestions() {

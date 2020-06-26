@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper">
+
+    <resultMap id="CompetitionQuestionsMap" type="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordQuestions">
+        <collection property="details"
+                    resultMap="com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper.BaseResultMap"
+                    ofType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail"/>
+    </resultMap>
+
+    <select id="selectCompetitionRecordsAndQuestions"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+
+        select a.* ,b.* from heroland_competition_record a left join heroland_question_record_detail b
+        on a.record_id = b.record_id
+        where a.is_deleted = 0 and b.is_deleted = 0
+
+        <if test="topic != null and topic != ''">
+            and a.topic = #{topic,jdbcType=VARCHAR}
+        </if>
+
+        <if test="recordId != null and recordId != ''">
+            and a.record_id = #{recordId,jdbcType=VARCHAR}
+        </if>
+
+        <if test="startRow != null and startRow != -1 and pageSize != null">
+            limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+
+    </select>
+
+    <select id="countCompetitionRecordsAndQuestions"
+            resultType="Long">
+
+        select count(a.*) from heroland_competition_record a left join heroland_question_record_detail b
+        on a.record_id = b.record_id
+        where a.is_deleted = 0 and b.is_deleted = 0
+
+        <if test="topic != null and topic != ''">
+            and a.topic = #{topic,jdbcType=VARCHAR}
+        </if>
+
+        <if test="recordId != null and recordId != ''">
+            and a.record_id = #{recordId,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+</mapper>
