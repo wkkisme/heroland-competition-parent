@@ -3,19 +3,20 @@ package com.heroland.competition.domain.dp;
 
 /**
  * 计算结果
+ * @author wangkai
  */
 public class HeroLandCalculatorResultDP {
 
     /**
      * 我的等级
      */
-    private String myLevel;
+    private String inviteLevel;
 
 
     /**
      * 我的得分
      */
-    private Integer myScore;
+    private Integer inviteScore;
 
     /**
      * 对手等级
@@ -28,20 +29,20 @@ public class HeroLandCalculatorResultDP {
      */
     private Integer opponentScore;
 
-    public String getMyLevel() {
-        return myLevel;
+    public String getInviteLevel() {
+        return inviteLevel;
     }
 
-    public void setMyLevel(String myLevel) {
-        this.myLevel = myLevel;
+    public void setInviteLevel(String inviteLevel) {
+        this.inviteLevel = inviteLevel;
     }
 
-    public Integer getMyScore() {
-        return myScore;
+    public Integer getInviteScore() {
+        return inviteScore;
     }
 
-    public void setMyScore(Integer myScore) {
-        this.myScore = myScore;
+    public void setInviteScore(Integer inviteScore) {
+        this.inviteScore = inviteScore;
     }
 
     public String getOpponentLevel() {

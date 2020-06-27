@@ -53,10 +53,10 @@ public interface HeroLandCompetitionRecordService {
 
     /**
      * 获取单次比赛记录
-     * @param qo 对象
+     * @param recordId recordId
      * @return 值
      */
-    ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecord(HeroLandCompetitionRecordQO qo);
+    ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId);
 
 
 

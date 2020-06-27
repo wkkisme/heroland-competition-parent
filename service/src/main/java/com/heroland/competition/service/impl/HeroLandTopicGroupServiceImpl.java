@@ -13,6 +13,7 @@ import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.service.HeroLandTopicGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

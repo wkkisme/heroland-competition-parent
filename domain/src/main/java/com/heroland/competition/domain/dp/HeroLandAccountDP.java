@@ -1,9 +1,10 @@
-package com.heroland.competition.dal.pojo;
+package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Objects;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandAccount")
 public class HeroLandAccountDP extends BaseDO implements Serializable {
@@ -36,6 +37,16 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="levelScore级别分数")
     private Integer levelScore;
+
+    private String competitionType;
+
+    public String getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(String competitionType) {
+        this.competitionType = competitionType;
+    }
 
     /**
      * heroland_account
@@ -120,5 +131,28 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
      */
     public void setLevelScore(Integer levelScore) {
         this.levelScore = levelScore;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        HeroLandAccountDP that = (HeroLandAccountDP) o;
+        return Objects.equals(balance, that.balance) &&
+                Objects.equals(userId, that.userId) &&
+                Objects.equals(accountId, that.accountId) &&
+                Objects.equals(levelName, that.levelName) &&
+                Objects.equals(levelScore, that.levelScore) &&
+                Objects.equals(competitionType, that.competitionType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(balance, userId, accountId, levelName, levelScore, competitionType);
     }
 }

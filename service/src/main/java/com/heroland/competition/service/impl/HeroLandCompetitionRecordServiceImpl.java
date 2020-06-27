@@ -4,6 +4,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.constant.HeroLandRedisConstants;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
@@ -12,6 +13,7 @@ import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,11 +31,20 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     @Resource
     private HeroLandCompetitionRecordExtMapper heroLandCompetitionRecordExtMapper;
 
+    @Resource
+    private RedisTemplate<String, HeroLandCompetitionRecordDP> redisTemplate;
+
     @Override
     public ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         try {
-            result.setData(heroLandCompetitionRecordExtMapper.insert(BeanUtil.insertConversion(dp.addCheck(), new HeroLandCompetitionRecord())) > 0);
+            dp.addSynchronizeCheck();
+            Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
+            if (aBoolean == null || !aBoolean) {
+                result.setData(heroLandCompetitionRecordExtMapper.insert(BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord())) > 0);
+            }else {
+                result.setData(true);
+            }
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -100,7 +111,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecord(HeroLandCompetitionRecordQO qo) {
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO qo) {
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {

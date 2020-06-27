@@ -81,16 +81,28 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String questionId;
 
     /**
-     * 比赛开始时间
+     * 邀请者比赛开始时间
      */
-    @ApiModelProperty(value="startTime比赛开始时间")
-    private Date startTime;
+    @ApiModelProperty(value="inviteStartTime邀请者比赛开始时间")
+    private Date inviteStartTime;
 
     /**
-     * 比赛结束时间
+     * 邀请者比赛结束时间
      */
-    @ApiModelProperty(value="endTime比赛结束时间")
-    private Date endTime;
+    @ApiModelProperty(value="inviteEndTime邀请者比赛结束时间")
+    private Date inviteEndTime;
+
+    /**
+     * 对手比赛开始时间
+     */
+    @ApiModelProperty(value="opponentStartTime对手比赛开始时间")
+    private Date opponentStartTime;
+
+    /**
+     * 对手比赛结束时间
+     */
+    @ApiModelProperty(value="opponentEndTime对手比赛结束时间")
+    private Date opponentEndTime;
 
     /**
      * heroland_competition_record
@@ -290,34 +302,66 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     }
 
     /**
-     * 比赛开始时间
-     * @return start_time 比赛开始时间
+     * 邀请者比赛开始时间
+     * @return invite_start_time 邀请者比赛开始时间
      */
-    public Date getStartTime() {
-        return startTime;
+    public Date getInviteStartTime() {
+        return inviteStartTime;
     }
 
     /**
-     * 比赛开始时间
-     * @param startTime 比赛开始时间
+     * 邀请者比赛开始时间
+     * @param inviteStartTime 邀请者比赛开始时间
      */
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setInviteStartTime(Date inviteStartTime) {
+        this.inviteStartTime = inviteStartTime;
     }
 
     /**
-     * 比赛结束时间
-     * @return end_time 比赛结束时间
+     * 邀请者比赛结束时间
+     * @return invite_end_time 邀请者比赛结束时间
      */
-    public Date getEndTime() {
-        return endTime;
+    public Date getInviteEndTime() {
+        return inviteEndTime;
     }
 
     /**
-     * 比赛结束时间
-     * @param endTime 比赛结束时间
+     * 邀请者比赛结束时间
+     * @param inviteEndTime 邀请者比赛结束时间
      */
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setInviteEndTime(Date inviteEndTime) {
+        this.inviteEndTime = inviteEndTime;
+    }
+
+    /**
+     * 对手比赛开始时间
+     * @return opponent_start_time 对手比赛开始时间
+     */
+    public Date getOpponentStartTime() {
+        return opponentStartTime;
+    }
+
+    /**
+     * 对手比赛开始时间
+     * @param opponentStartTime 对手比赛开始时间
+     */
+    public void setOpponentStartTime(Date opponentStartTime) {
+        this.opponentStartTime = opponentStartTime;
+    }
+
+    /**
+     * 对手比赛结束时间
+     * @return opponent_end_time 对手比赛结束时间
+     */
+    public Date getOpponentEndTime() {
+        return opponentEndTime;
+    }
+
+    /**
+     * 对手比赛结束时间
+     * @param opponentEndTime 对手比赛结束时间
+     */
+    public void setOpponentEndTime(Date opponentEndTime) {
+        this.opponentEndTime = opponentEndTime;
     }
 }

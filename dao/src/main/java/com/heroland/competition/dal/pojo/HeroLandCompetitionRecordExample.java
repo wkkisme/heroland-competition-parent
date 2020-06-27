@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-26
+     * heroland_competition_record 2020-06-27
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1297,123 +1297,243 @@ public class HeroLandCompetitionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeIsNull() {
-            addCriterion("start_time is null");
+        public Criteria andInviteStartTimeIsNull() {
+            addCriterion("invite_start_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeIsNotNull() {
-            addCriterion("start_time is not null");
+        public Criteria andInviteStartTimeIsNotNull() {
+            addCriterion("invite_start_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeEqualTo(Date value) {
-            addCriterion("start_time =", value, "startTime");
+        public Criteria andInviteStartTimeEqualTo(Date value) {
+            addCriterion("invite_start_time =", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeNotEqualTo(Date value) {
-            addCriterion("start_time <>", value, "startTime");
+        public Criteria andInviteStartTimeNotEqualTo(Date value) {
+            addCriterion("invite_start_time <>", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeGreaterThan(Date value) {
-            addCriterion("start_time >", value, "startTime");
+        public Criteria andInviteStartTimeGreaterThan(Date value) {
+            addCriterion("invite_start_time >", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("start_time >=", value, "startTime");
+        public Criteria andInviteStartTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("invite_start_time >=", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeLessThan(Date value) {
-            addCriterion("start_time <", value, "startTime");
+        public Criteria andInviteStartTimeLessThan(Date value) {
+            addCriterion("invite_start_time <", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeLessThanOrEqualTo(Date value) {
-            addCriterion("start_time <=", value, "startTime");
+        public Criteria andInviteStartTimeLessThanOrEqualTo(Date value) {
+            addCriterion("invite_start_time <=", value, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeIn(List<Date> values) {
-            addCriterion("start_time in", values, "startTime");
+        public Criteria andInviteStartTimeIn(List<Date> values) {
+            addCriterion("invite_start_time in", values, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeNotIn(List<Date> values) {
-            addCriterion("start_time not in", values, "startTime");
+        public Criteria andInviteStartTimeNotIn(List<Date> values) {
+            addCriterion("invite_start_time not in", values, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeBetween(Date value1, Date value2) {
-            addCriterion("start_time between", value1, value2, "startTime");
+        public Criteria andInviteStartTimeBetween(Date value1, Date value2) {
+            addCriterion("invite_start_time between", value1, value2, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andStartTimeNotBetween(Date value1, Date value2) {
-            addCriterion("start_time not between", value1, value2, "startTime");
+        public Criteria andInviteStartTimeNotBetween(Date value1, Date value2) {
+            addCriterion("invite_start_time not between", value1, value2, "inviteStartTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeIsNull() {
-            addCriterion("end_time is null");
+        public Criteria andInviteEndTimeIsNull() {
+            addCriterion("invite_end_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeIsNotNull() {
-            addCriterion("end_time is not null");
+        public Criteria andInviteEndTimeIsNotNull() {
+            addCriterion("invite_end_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeEqualTo(Date value) {
-            addCriterion("end_time =", value, "endTime");
+        public Criteria andInviteEndTimeEqualTo(Date value) {
+            addCriterion("invite_end_time =", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeNotEqualTo(Date value) {
-            addCriterion("end_time <>", value, "endTime");
+        public Criteria andInviteEndTimeNotEqualTo(Date value) {
+            addCriterion("invite_end_time <>", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeGreaterThan(Date value) {
-            addCriterion("end_time >", value, "endTime");
+        public Criteria andInviteEndTimeGreaterThan(Date value) {
+            addCriterion("invite_end_time >", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("end_time >=", value, "endTime");
+        public Criteria andInviteEndTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("invite_end_time >=", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeLessThan(Date value) {
-            addCriterion("end_time <", value, "endTime");
+        public Criteria andInviteEndTimeLessThan(Date value) {
+            addCriterion("invite_end_time <", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeLessThanOrEqualTo(Date value) {
-            addCriterion("end_time <=", value, "endTime");
+        public Criteria andInviteEndTimeLessThanOrEqualTo(Date value) {
+            addCriterion("invite_end_time <=", value, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeIn(List<Date> values) {
-            addCriterion("end_time in", values, "endTime");
+        public Criteria andInviteEndTimeIn(List<Date> values) {
+            addCriterion("invite_end_time in", values, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeNotIn(List<Date> values) {
-            addCriterion("end_time not in", values, "endTime");
+        public Criteria andInviteEndTimeNotIn(List<Date> values) {
+            addCriterion("invite_end_time not in", values, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeBetween(Date value1, Date value2) {
-            addCriterion("end_time between", value1, value2, "endTime");
+        public Criteria andInviteEndTimeBetween(Date value1, Date value2) {
+            addCriterion("invite_end_time between", value1, value2, "inviteEndTime");
             return (Criteria) this;
         }
 
-        public Criteria andEndTimeNotBetween(Date value1, Date value2) {
-            addCriterion("end_time not between", value1, value2, "endTime");
+        public Criteria andInviteEndTimeNotBetween(Date value1, Date value2) {
+            addCriterion("invite_end_time not between", value1, value2, "inviteEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeIsNull() {
+            addCriterion("opponent_start_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeIsNotNull() {
+            addCriterion("opponent_start_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeEqualTo(Date value) {
+            addCriterion("opponent_start_time =", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeNotEqualTo(Date value) {
+            addCriterion("opponent_start_time <>", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeGreaterThan(Date value) {
+            addCriterion("opponent_start_time >", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("opponent_start_time >=", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeLessThan(Date value) {
+            addCriterion("opponent_start_time <", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeLessThanOrEqualTo(Date value) {
+            addCriterion("opponent_start_time <=", value, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeIn(List<Date> values) {
+            addCriterion("opponent_start_time in", values, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeNotIn(List<Date> values) {
+            addCriterion("opponent_start_time not in", values, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeBetween(Date value1, Date value2) {
+            addCriterion("opponent_start_time between", value1, value2, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentStartTimeNotBetween(Date value1, Date value2) {
+            addCriterion("opponent_start_time not between", value1, value2, "opponentStartTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeIsNull() {
+            addCriterion("opponent_end_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeIsNotNull() {
+            addCriterion("opponent_end_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeEqualTo(Date value) {
+            addCriterion("opponent_end_time =", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeNotEqualTo(Date value) {
+            addCriterion("opponent_end_time <>", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeGreaterThan(Date value) {
+            addCriterion("opponent_end_time >", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("opponent_end_time >=", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeLessThan(Date value) {
+            addCriterion("opponent_end_time <", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeLessThanOrEqualTo(Date value) {
+            addCriterion("opponent_end_time <=", value, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeIn(List<Date> values) {
+            addCriterion("opponent_end_time in", values, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeNotIn(List<Date> values) {
+            addCriterion("opponent_end_time not in", values, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeBetween(Date value1, Date value2) {
+            addCriterion("opponent_end_time between", value1, value2, "opponentEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOpponentEndTimeNotBetween(Date value1, Date value2) {
+            addCriterion("opponent_end_time not between", value1, value2, "opponentEndTime");
             return (Criteria) this;
         }
     }
@@ -1429,7 +1549,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-26
+     * heroland_competition_record 2020-06-27
      */
     public static class Criterion {
         private String condition;

@@ -18,6 +18,12 @@ import java.util.UUID;
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandCompetitionRecord")
 public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable {
     /**
+     * 记录唯一id
+     */
+    @ApiModelProperty(value = "recordId记录唯一id")
+    private String recordId;
+
+    /**
      * 题组id
      */
     @ApiModelProperty(value = "topicId题组id")
@@ -34,12 +40,6 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
      */
     @ApiModelProperty(value = "topicType话题类型（比赛类型）")
     private Integer topicType;
-
-    /**
-     * 记录唯一id
-     */
-    @ApiModelProperty(value = "recordId记录唯一id")
-    private String recordId;
 
     /**
      * 0 邀请方胜利。1 被邀请方胜利。2 平局
@@ -90,29 +90,65 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     private String questionId;
 
     /**
-     * 比赛开始时间
+     * 邀请者比赛开始时间
      */
-    @ApiModelProperty(value = "startTime比赛开始时间")
-    private Date startTime;
+    @ApiModelProperty(value = "inviteStartTime邀请者比赛开始时间")
+    private Date inviteStartTime;
 
     /**
-     * 比赛结束时间
+     * 邀请者比赛结束时间
      */
-    @ApiModelProperty(value = "endTime比赛结束时间")
-    private Date endTime;
+    @ApiModelProperty(value = "inviteEndTime邀请者比赛结束时间")
+    private Date inviteEndTime;
+
+    /**
+     * 对手比赛开始时间
+     */
+    @ApiModelProperty(value = "opponentStartTime对手比赛开始时间")
+    private Date opponentStartTime;
+
+    /**
+     * 对手比赛结束时间
+     */
+    @ApiModelProperty(value = "opponentEndTime对手比赛结束时间")
+    private Date opponentEndTime;
 
     private List<HeroLandQuestionRecordDetailDP> details;
 
+    private String primaryRedisKey;
+
+    public String getPrimaryRedisKey() {
+        if (primaryRedisKey == null) {
+            primaryRedisKey = topicId + questionId + inviteId + opponentId;
+        }
+        return primaryRedisKey;
+    }
+
+    public void setPrimaryRedisKey(String primaryRedisKey) {
+        this.primaryRedisKey = primaryRedisKey;
+    }
 
     public HeroLandCompetitionRecordDP addCheck() {
         if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
             ResponseBodyWrapper.failParamException();
         }
-        if (this.inviteId == null && this.opponentId == null) {
+        if (this.inviteId == null || this.opponentId == null) {
             ResponseBodyWrapper.failParamException();
         }
         this.beforeInsert();
-        this.startTime = new Date();
+
+        // todo 获取当前人的id
+        String currentUserId = "";
+        if (this.inviteId.equals(currentUserId)) {
+            this.inviteStartTime = new Date();
+        }
+        if (this.opponentId.equals(currentUserId)) {
+            this.opponentStartTime = new Date();
+        }
+        if (this.opponentStartTime == null && this.inviteStartTime == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+
 
         try {
             this.recordId = TinyId.nextId("competitionRecord").toString();
@@ -123,6 +159,17 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
         return this;
     }
+
+
+    public HeroLandCompetitionRecordDP addSynchronizeCheck() {
+
+        if (StringUtils.isAnyBlank(this.questionId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+        return addCheck();
+    }
+
 
     public HeroLandCompetitionRecordDP updateCheck() {
         if (StringUtils.isAnyBlank(this.topicId, this.topicName, this.recordId)) {
@@ -144,21 +191,59 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         return this;
     }
 
+    public HeroLandCompetitionRecordDP doAnswer() {
+        // todo 获取当前人的id
+        String currentUserId = "";
 
-    public Date getStartTime() {
-        return startTime;
+        if (StringUtils.isAnyBlank(this.recordId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (this.inviteId.equals(currentUserId) && this.inviteStartTime == null) {
+            ResponseBodyWrapper.failParamException();
+        } else if (this.inviteId.equals(currentUserId)) {
+            this.inviteEndTime = new Date();
+        }
+
+        if (this.opponentId.equals(currentUserId) && this.opponentStartTime == null) {
+            ResponseBodyWrapper.failParamException();
+        } else if (this.opponentId.equals(currentUserId)) {
+            this.opponentEndTime = new Date();
+        }
+
+
+        return this;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public Date getInviteStartTime() {
+        return inviteStartTime;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public void setInviteStartTime(Date inviteStartTime) {
+        this.inviteStartTime = inviteStartTime;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public Date getInviteEndTime() {
+        return inviteEndTime;
+    }
+
+    public void setInviteEndTime(Date inviteEndTime) {
+        this.inviteEndTime = inviteEndTime;
+    }
+
+    public Date getOpponentStartTime() {
+        return opponentStartTime;
+    }
+
+    public void setOpponentStartTime(Date opponentStartTime) {
+        this.opponentStartTime = opponentStartTime;
+    }
+
+    public Date getOpponentEndTime() {
+        return opponentEndTime;
+    }
+
+    public void setOpponentEndTime(Date opponentEndTime) {
+        this.opponentEndTime = opponentEndTime;
     }
 
     public List<HeroLandQuestionRecordDetailDP> getDetails() {

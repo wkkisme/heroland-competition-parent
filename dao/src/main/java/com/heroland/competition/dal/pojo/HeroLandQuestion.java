@@ -8,6 +8,12 @@ import java.io.Serializable;
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandQuestion")
 public class HeroLandQuestion extends BaseDO implements Serializable {
     /**
+     * 本次题目全局id
+     */
+    @ApiModelProperty(value="questionId本次题目全局id")
+    private String questionId;
+
+    /**
      * 年级code
      */
     @ApiModelProperty(value="gradeCode年级code")
@@ -18,12 +24,6 @@ public class HeroLandQuestion extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="classCode班级code")
     private String classCode;
-
-    /**
-     * 全局id
-     */
-    @ApiModelProperty(value="questionId全局id")
-    private String questionId;
 
     /**
      * 题目
@@ -86,9 +86,55 @@ public class HeroLandQuestion extends BaseDO implements Serializable {
     private String levelCode;
 
     /**
+     * 本身题目的id
+     */
+    @ApiModelProperty(value="formerQuestionId本身题目的id")
+    private String formerQuestionId;
+
+    /**
+     * 某次比赛的id
+     */
+    @ApiModelProperty(value="topicId某次比赛的id")
+    private String topicId;
+
+    /**
+     * 某次比赛的name
+     */
+    @ApiModelProperty(value="topicName某次比赛的name")
+    private String topicName;
+
+    /**
+     * 科目code
+     */
+    @ApiModelProperty(value="subjectCode科目code")
+    private String subjectCode;
+
+    /**
+     * 科目名称
+     */
+    @ApiModelProperty(value="subjectName科目名称")
+    private String subjectName;
+
+    /**
      * heroland_question
      */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 本次题目全局id
+     * @return question_id 本次题目全局id
+     */
+    public String getQuestionId() {
+        return questionId;
+    }
+
+    /**
+     * 本次题目全局id
+     * @param questionId 本次题目全局id
+     */
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId == null ? null : questionId.trim();
+    }
 
     /**
      * 年级code
@@ -120,22 +166,6 @@ public class HeroLandQuestion extends BaseDO implements Serializable {
      */
     public void setClassCode(String classCode) {
         this.classCode = classCode == null ? null : classCode.trim();
-    }
-
-    /**
-     * 全局id
-     * @return question_id 全局id
-     */
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    /**
-     * 全局id
-     * @param questionId 全局id
-     */
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId == null ? null : questionId.trim();
     }
 
     /**
@@ -296,5 +326,85 @@ public class HeroLandQuestion extends BaseDO implements Serializable {
      */
     public void setLevelCode(String levelCode) {
         this.levelCode = levelCode == null ? null : levelCode.trim();
+    }
+
+    /**
+     * 本身题目的id
+     * @return former_question_id 本身题目的id
+     */
+    public String getFormerQuestionId() {
+        return formerQuestionId;
+    }
+
+    /**
+     * 本身题目的id
+     * @param formerQuestionId 本身题目的id
+     */
+    public void setFormerQuestionId(String formerQuestionId) {
+        this.formerQuestionId = formerQuestionId == null ? null : formerQuestionId.trim();
+    }
+
+    /**
+     * 某次比赛的id
+     * @return topic_id 某次比赛的id
+     */
+    public String getTopicId() {
+        return topicId;
+    }
+
+    /**
+     * 某次比赛的id
+     * @param topicId 某次比赛的id
+     */
+    public void setTopicId(String topicId) {
+        this.topicId = topicId == null ? null : topicId.trim();
+    }
+
+    /**
+     * 某次比赛的name
+     * @return topic_name 某次比赛的name
+     */
+    public String getTopicName() {
+        return topicName;
+    }
+
+    /**
+     * 某次比赛的name
+     * @param topicName 某次比赛的name
+     */
+    public void setTopicName(String topicName) {
+        this.topicName = topicName == null ? null : topicName.trim();
+    }
+
+    /**
+     * 科目code
+     * @return subject_code 科目code
+     */
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    /**
+     * 科目code
+     * @param subjectCode 科目code
+     */
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode == null ? null : subjectCode.trim();
+    }
+
+    /**
+     * 科目名称
+     * @return subject_name 科目名称
+     */
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    /**
+     * 科目名称
+     * @param subjectName 科目名称
+     */
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName == null ? null : subjectName.trim();
     }
 }

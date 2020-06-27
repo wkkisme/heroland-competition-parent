@@ -1,6 +1,7 @@
 package com.heroland.competition.service;
 
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
+import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 
 /**
  * 计分器，根据不同方式来计算分
@@ -14,5 +15,5 @@ public interface HeroLandCalculatorService {
      * @param dp
      * @return
      */
-    HeroLandCalculatorResultDP calculate(HeroLandCalculatorResultDP dp);
+    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp);
 }

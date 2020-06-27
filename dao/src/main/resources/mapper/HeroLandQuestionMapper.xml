@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandQuestionMapper">
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandQuestion">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="question_id" jdbcType="VARCHAR" property="questionId" />
+    <result column="id" jdbcType="BIGINT" property="id" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -10,7 +11,6 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
-    <result column="question_id" jdbcType="VARCHAR" property="questionId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="option_a" jdbcType="VARCHAR" property="optionA" />
     <result column="option_b" jdbcType="VARCHAR" property="optionB" />
@@ -21,6 +21,11 @@
     <result column="solution" jdbcType="VARCHAR" property="solution" />
     <result column="parse" jdbcType="VARCHAR" property="parse" />
     <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
+    <result column="former_question_id" jdbcType="VARCHAR" property="formerQuestionId" />
+    <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
+    <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
+    <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
+    <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -81,9 +86,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
-    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
-    parse, level_code
+    question_id, id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, 
+    class_code, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
+    parse, level_code, former_question_id, topic_id, topic_name, subject_code, subject_name
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionExample" resultMap="BaseResultMap">
     select
@@ -99,15 +104,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from heroland_question
-    where id = #{id,jdbcType=BIGINT}
+    where question_id = #{questionId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from heroland_question
-    where id = #{id,jdbcType=BIGINT}
+    where question_id = #{questionId,jdbcType=VARCHAR}
   </delete>
   <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionExample">
     delete from heroland_question
@@ -116,30 +121,31 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestion">
-    <selectKey keyProperty="questionId" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into heroland_question (id, creator, modifier, 
-      gmt_create, gmt_modified, is_deleted, 
-      grade_code, class_code, title, 
-      option_a, option_b, option_c, 
-      option_d, option_e, answer, 
-      solution, parse, level_code
+    insert into heroland_question (question_id, id, creator, 
+      modifier, gmt_create, gmt_modified, 
+      is_deleted, grade_code, class_code, 
+      title, option_a, option_b, 
+      option_c, option_d, option_e, 
+      answer, solution, parse, 
+      level_code, former_question_id, topic_id, 
+      topic_name, subject_code, subject_name
       )
-    values (#{id,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
-      #{gradeCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{optionA,jdbcType=VARCHAR}, #{optionB,jdbcType=VARCHAR}, #{optionC,jdbcType=VARCHAR}, 
-      #{optionD,jdbcType=VARCHAR}, #{optionE,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, 
-      #{solution,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR}
+    values (#{questionId,jdbcType=VARCHAR}, #{id,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR}, 
+      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{optionA,jdbcType=VARCHAR}, #{optionB,jdbcType=VARCHAR}, 
+      #{optionC,jdbcType=VARCHAR}, #{optionD,jdbcType=VARCHAR}, #{optionE,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{solution,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR}, 
+      #{levelCode,jdbcType=VARCHAR}, #{formerQuestionId,jdbcType=VARCHAR}, #{topicId,jdbcType=VARCHAR}, 
+      #{topicName,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestion">
-    <selectKey keyProperty="questionId" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
     insert into heroland_question
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        question_id,
+      </if>
       <if test="id != null">
         id,
       </if>
@@ -194,8 +200,26 @@
       <if test="levelCode != null">
         level_code,
       </if>
+      <if test="formerQuestionId != null">
+        former_question_id,
+      </if>
+      <if test="topicId != null">
+        topic_id,
+      </if>
+      <if test="topicName != null">
+        topic_name,
+      </if>
+      <if test="subjectCode != null">
+        subject_code,
+      </if>
+      <if test="subjectName != null">
+        subject_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        #{questionId,jdbcType=VARCHAR},
+      </if>
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
@@ -250,6 +274,21 @@
       <if test="levelCode != null">
         #{levelCode,jdbcType=VARCHAR},
       </if>
+      <if test="formerQuestionId != null">
+        #{formerQuestionId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicId != null">
+        #{topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null">
+        #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null">
+        #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null">
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionExample" resultType="java.lang.Long">
@@ -261,6 +300,9 @@
   <update id="updateByExampleSelective" parameterType="map">
     update heroland_question
     <set>
+      <if test="record.questionId != null">
+        question_id = #{record.questionId,jdbcType=VARCHAR},
+      </if>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
@@ -284,9 +326,6 @@
       </if>
       <if test="record.classCode != null">
         class_code = #{record.classCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.questionId != null">
-        question_id = #{record.questionId,jdbcType=VARCHAR},
       </if>
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
@@ -318,6 +357,21 @@
       <if test="record.levelCode != null">
         level_code = #{record.levelCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.formerQuestionId != null">
+        former_question_id = #{record.formerQuestionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topicId != null">
+        topic_id = #{record.topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topicName != null">
+        topic_name = #{record.topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectCode != null">
+        subject_code = #{record.subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectName != null">
+        subject_name = #{record.subjectName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -325,7 +379,8 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update heroland_question
-    set id = #{record.id,jdbcType=BIGINT},
+    set question_id = #{record.questionId,jdbcType=VARCHAR},
+      id = #{record.id,jdbcType=BIGINT},
       creator = #{record.creator,jdbcType=VARCHAR},
       modifier = #{record.modifier,jdbcType=VARCHAR},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -333,7 +388,6 @@
       is_deleted = #{record.isDeleted,jdbcType=BIT},
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
-      question_id = #{record.questionId,jdbcType=VARCHAR},
       title = #{record.title,jdbcType=VARCHAR},
       option_a = #{record.optionA,jdbcType=VARCHAR},
       option_b = #{record.optionB,jdbcType=VARCHAR},
@@ -343,7 +397,12 @@
       answer = #{record.answer,jdbcType=VARCHAR},
       solution = #{record.solution,jdbcType=VARCHAR},
       parse = #{record.parse,jdbcType=VARCHAR},
-      level_code = #{record.levelCode,jdbcType=VARCHAR}
+      level_code = #{record.levelCode,jdbcType=VARCHAR},
+      former_question_id = #{record.formerQuestionId,jdbcType=VARCHAR},
+      topic_id = #{record.topicId,jdbcType=VARCHAR},
+      topic_name = #{record.topicName,jdbcType=VARCHAR},
+      subject_code = #{record.subjectCode,jdbcType=VARCHAR},
+      subject_name = #{record.subjectName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -351,6 +410,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestion">
     update heroland_question
     <set>
+      <if test="id != null">
+        id = #{id,jdbcType=BIGINT},
+      </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
       </if>
@@ -371,9 +433,6 @@
       </if>
       <if test="classCode != null">
         class_code = #{classCode,jdbcType=VARCHAR},
-      </if>
-      <if test="questionId != null">
-        question_id = #{questionId,jdbcType=VARCHAR},
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
@@ -405,19 +464,34 @@
       <if test="levelCode != null">
         level_code = #{levelCode,jdbcType=VARCHAR},
       </if>
+      <if test="formerQuestionId != null">
+        former_question_id = #{formerQuestionId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicId != null">
+        topic_id = #{topicId,jdbcType=VARCHAR},
+      </if>
+      <if test="topicName != null">
+        topic_name = #{topicName,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectCode != null">
+        subject_code = #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null">
+        subject_name = #{subjectName,jdbcType=VARCHAR},
+      </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where question_id = #{questionId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestion">
     update heroland_question
-    set creator = #{creator,jdbcType=VARCHAR},
+    set id = #{id,jdbcType=BIGINT},
+      creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       is_deleted = #{isDeleted,jdbcType=BIT},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
-      question_id = #{questionId,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
       option_a = #{optionA,jdbcType=VARCHAR},
       option_b = #{optionB,jdbcType=VARCHAR},
@@ -427,8 +501,13 @@
       answer = #{answer,jdbcType=VARCHAR},
       solution = #{solution,jdbcType=VARCHAR},
       parse = #{parse,jdbcType=VARCHAR},
-      level_code = #{levelCode,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
+      level_code = #{levelCode,jdbcType=VARCHAR},
+      former_question_id = #{formerQuestionId,jdbcType=VARCHAR},
+      topic_id = #{topicId,jdbcType=VARCHAR},
+      topic_name = #{topicName,jdbcType=VARCHAR},
+      subject_code = #{subjectCode,jdbcType=VARCHAR},
+      subject_name = #{subjectName,jdbcType=VARCHAR}
+    where question_id = #{questionId,jdbcType=VARCHAR}
   </update>
 
 </mapper>

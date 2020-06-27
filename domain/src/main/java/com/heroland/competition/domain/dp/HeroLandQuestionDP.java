@@ -13,84 +13,112 @@ import java.util.UUID;
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandQuestion")
 public class HeroLandQuestionDP extends BaseDO implements Serializable {
     /**
+     * 本次题目全局id
+     */
+    @ApiModelProperty(value="questionId本次题目全局id")
+    private String questionId;
+
+    /**
      * 年级code
      */
-    @ApiModelProperty(value = "gradeCode年级code")
+    @ApiModelProperty(value="gradeCode年级code")
     private String gradeCode;
 
     /**
      * 班级code
      */
-    @ApiModelProperty(value = "classCode班级code")
+    @ApiModelProperty(value="classCode班级code")
     private String classCode;
-
-    /**
-     * 全局id
-     */
-    @ApiModelProperty(value = "questionId全局id")
-    private String questionId;
 
     /**
      * 题目
      */
-    @ApiModelProperty(value = "title题目")
+    @ApiModelProperty(value="title题目")
     private String title;
 
     /**
      * a选项
      */
-    @ApiModelProperty(value = "optionAa选项")
+    @ApiModelProperty(value="optionAa选项")
     private String optionA;
 
     /**
      * b选项
      */
-    @ApiModelProperty(value = "optionBb选项")
+    @ApiModelProperty(value="optionBb选项")
     private String optionB;
 
     /**
      * c选项
      */
-    @ApiModelProperty(value = "optionCc选项")
+    @ApiModelProperty(value="optionCc选项")
     private String optionC;
 
     /**
      * d选项
      */
-    @ApiModelProperty(value = "optionDd选项")
+    @ApiModelProperty(value="optionDd选项")
     private String optionD;
 
     /**
      * e选项
      */
-    @ApiModelProperty(value = "optionEe选项")
+    @ApiModelProperty(value="optionEe选项")
     private String optionE;
 
     /**
      * 正确答案
      */
-    @ApiModelProperty(value = "answer正确答案")
+    @ApiModelProperty(value="answer正确答案")
     private String answer;
 
     /**
      * 解答
      */
-    @ApiModelProperty(value = "solution解答")
+    @ApiModelProperty(value="solution解答")
     private String solution;
 
     /**
      * 解析
      */
-    @ApiModelProperty(value = "parse解析")
+    @ApiModelProperty(value="parse解析")
     private String parse;
 
     /**
      * 难度code
      */
-    @ApiModelProperty(value = "levelCode难度code")
+    @ApiModelProperty(value="levelCode难度code")
     private String levelCode;
 
+    /**
+     * 本身题目的id
+     */
+    @ApiModelProperty(value="formerQuestionId本身题目的id")
+    private String formerQuestionId;
+
+    /**
+     * 某次比赛的id
+     */
+    @ApiModelProperty(value="topicId某次比赛的id")
     private String topicId;
+
+    /**
+     * 某次比赛的name
+     */
+    @ApiModelProperty(value="topicName某次比赛的name")
+    private String topicName;
+
+    /**
+     * 科目code
+     */
+    @ApiModelProperty(value="subjectCode科目code")
+    private String subjectCode;
+
+    /**
+     * 科目名称
+     */
+    @ApiModelProperty(value="subjectName科目名称")
+    private String subjectName;
 
     /**
      * heroland_question
@@ -137,6 +165,37 @@ public class HeroLandQuestionDP extends BaseDO implements Serializable {
 
     }
 
+    public String getFormerQuestionId() {
+        return formerQuestionId;
+    }
+
+    public void setFormerQuestionId(String formerQuestionId) {
+        this.formerQuestionId = formerQuestionId;
+    }
+
+    public String getTopicName() {
+        return topicName;
+    }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 
     public String getTopicId() {
         return topicId;

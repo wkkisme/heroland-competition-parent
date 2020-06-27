@@ -10,7 +10,7 @@ public interface HeroLandQuestionMapper {
 
     int deleteByExample(HeroLandQuestionExample example);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(String questionId);
 
     int insert(HeroLandQuestion record);
 
@@ -18,7 +18,7 @@ public interface HeroLandQuestionMapper {
 
     List<HeroLandQuestion> selectByExample(HeroLandQuestionExample example);
 
-    HeroLandQuestion selectByPrimaryKey(Long id);
+    HeroLandQuestion selectByPrimaryKey(String questionId);
 
     int updateByExampleSelective(@Param("record") HeroLandQuestion record, @Param("example") HeroLandQuestionExample example);
 

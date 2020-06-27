@@ -20,7 +20,8 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
         return recordId;
     }
 
-    public void setRecordId(String recordId) {
+    public HeroLandCompetitionRecordQO setRecordId(String recordId) {
         this.recordId = recordId;
+        return this;
     }
 }

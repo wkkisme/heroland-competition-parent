@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
-@RequestMapping("/topic")
+@RequestMapping("/heroland/topic")
 public class HeroLandTopicQuestionController {
 
     @Resource
