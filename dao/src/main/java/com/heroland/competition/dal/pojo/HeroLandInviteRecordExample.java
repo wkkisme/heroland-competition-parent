@@ -74,7 +74,7 @@ public class HeroLandInviteRecordExample {
     }
 
     /**
-     * heroland_invite_record 2020-06-19
+     * heroland_invite_record 2020-06-27
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -115,76 +115,6 @@ public class HeroLandInviteRecordExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
-        }
-
-        public Criteria andRecordIdIsNull() {
-            addCriterion("record_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdIsNotNull() {
-            addCriterion("record_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdEqualTo(String value) {
-            addCriterion("record_id =", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotEqualTo(String value) {
-            addCriterion("record_id <>", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdGreaterThan(String value) {
-            addCriterion("record_id >", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdGreaterThanOrEqualTo(String value) {
-            addCriterion("record_id >=", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLessThan(String value) {
-            addCriterion("record_id <", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLessThanOrEqualTo(String value) {
-            addCriterion("record_id <=", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLike(String value) {
-            addCriterion("record_id like", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotLike(String value) {
-            addCriterion("record_id not like", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdIn(List<String> values) {
-            addCriterion("record_id in", values, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotIn(List<String> values) {
-            addCriterion("record_id not in", values, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdBetween(String value1, String value2) {
-            addCriterion("record_id between", value1, value2, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotBetween(String value1, String value2) {
-            addCriterion("record_id not between", value1, value2, "recordId");
-            return (Criteria) this;
         }
 
         public Criteria andIdIsNull() {
@@ -1116,6 +1046,76 @@ public class HeroLandInviteRecordExample {
             addCriterion("is_deleted not between", value1, value2, "isDeleted");
             return (Criteria) this;
         }
+
+        public Criteria andRecordIdIsNull() {
+            addCriterion("record_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdIsNotNull() {
+            addCriterion("record_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdEqualTo(String value) {
+            addCriterion("record_id =", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotEqualTo(String value) {
+            addCriterion("record_id <>", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdGreaterThan(String value) {
+            addCriterion("record_id >", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdGreaterThanOrEqualTo(String value) {
+            addCriterion("record_id >=", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLessThan(String value) {
+            addCriterion("record_id <", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLessThanOrEqualTo(String value) {
+            addCriterion("record_id <=", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLike(String value) {
+            addCriterion("record_id like", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotLike(String value) {
+            addCriterion("record_id not like", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdIn(List<String> values) {
+            addCriterion("record_id in", values, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotIn(List<String> values) {
+            addCriterion("record_id not in", values, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdBetween(String value1, String value2) {
+            addCriterion("record_id between", value1, value2, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotBetween(String value1, String value2) {
+            addCriterion("record_id not between", value1, value2, "recordId");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1129,7 +1129,7 @@ public class HeroLandInviteRecordExample {
     }
 
     /**
-     * heroland_invite_record 2020-06-19
+     * heroland_invite_record 2020-06-27
      */
     public static class Criterion {
         private String condition;

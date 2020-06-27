@@ -10,7 +10,7 @@ public interface HeroLandInviteRecordMapper {
 
     int deleteByExample(HeroLandInviteRecordExample example);
 
-    int deleteByPrimaryKey(String recordId);
+    int deleteByPrimaryKey(Long id);
 
     int insert(HeroLandInviteRecord record);
 
@@ -18,7 +18,7 @@ public interface HeroLandInviteRecordMapper {
 
     List<HeroLandInviteRecord> selectByExample(HeroLandInviteRecordExample example);
 
-    HeroLandInviteRecord selectByPrimaryKey(String recordId);
+    HeroLandInviteRecord selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") HeroLandInviteRecord record, @Param("example") HeroLandInviteRecordExample example);
 

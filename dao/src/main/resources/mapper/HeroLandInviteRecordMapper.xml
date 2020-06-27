@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandInviteRecordMapper">
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandInviteRecord">
-    <id column="record_id" jdbcType="VARCHAR" property="recordId" />
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
     <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId" />
     <result column="be_invite_user_id" jdbcType="VARCHAR" property="beInviteUserId" />
@@ -17,6 +16,7 @@
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="record_id" jdbcType="VARCHAR" property="recordId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,9 +77,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    record_id, id, topic_name, invite_user_id, be_invite_user_id, topic_type, topic_id, 
-    status, status_remark, question_id, creator, modifier, gmt_create, gmt_modified, 
-    is_deleted
+    id, topic_name, invite_user_id, be_invite_user_id, topic_type, topic_id, status, 
+    status_remark, question_id, creator, modifier, gmt_create, gmt_modified, is_deleted, 
+    record_id
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecordExample" resultMap="BaseResultMap">
     select
@@ -95,15 +95,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from heroland_invite_record
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from heroland_invite_record
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecordExample">
     delete from heroland_invite_record
@@ -112,29 +112,26 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecord">
-    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_invite_record (id, topic_name, invite_user_id, 
-      be_invite_user_id, topic_type, topic_id, 
-      status, status_remark, question_id, 
-      creator, modifier, gmt_create, 
-      gmt_modified, is_deleted)
-    values (#{id,jdbcType=BIGINT}, #{topicName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, 
-      #{beInviteUserId,jdbcType=VARCHAR}, #{topicType,jdbcType=VARCHAR}, #{topicId,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{statusRemark,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, 
-      #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
+    insert into heroland_invite_record (topic_name, invite_user_id, be_invite_user_id, 
+      topic_type, topic_id, status, 
+      status_remark, question_id, creator, 
+      modifier, gmt_create, gmt_modified, 
+      is_deleted, record_id)
+    values (#{topicName,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, #{beInviteUserId,jdbcType=VARCHAR}, 
+      #{topicType,jdbcType=VARCHAR}, #{topicId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{statusRemark,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT}, #{recordId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecord">
-    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into heroland_invite_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="topicName != null">
         topic_name,
       </if>
@@ -174,11 +171,11 @@
       <if test="isDeleted != null">
         is_deleted,
       </if>
+      <if test="recordId != null">
+        record_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="topicName != null">
         #{topicName,jdbcType=VARCHAR},
       </if>
@@ -218,6 +215,9 @@
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
       </if>
+      <if test="recordId != null">
+        #{recordId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecordExample" resultType="java.lang.Long">
@@ -229,9 +229,6 @@
   <update id="updateByExampleSelective" parameterType="map">
     update heroland_invite_record
     <set>
-      <if test="record.recordId != null">
-        record_id = #{record.recordId,jdbcType=VARCHAR},
-      </if>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
@@ -274,6 +271,9 @@
       <if test="record.isDeleted != null">
         is_deleted = #{record.isDeleted,jdbcType=BIT},
       </if>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -281,8 +281,7 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update heroland_invite_record
-    set record_id = #{record.recordId,jdbcType=VARCHAR},
-      id = #{record.id,jdbcType=BIGINT},
+    set id = #{record.id,jdbcType=BIGINT},
       topic_name = #{record.topicName,jdbcType=VARCHAR},
       invite_user_id = #{record.inviteUserId,jdbcType=VARCHAR},
       be_invite_user_id = #{record.beInviteUserId,jdbcType=VARCHAR},
@@ -295,7 +294,8 @@
       modifier = #{record.modifier,jdbcType=VARCHAR},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
-      is_deleted = #{record.isDeleted,jdbcType=BIT}
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
+      record_id = #{record.recordId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -303,9 +303,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecord">
     update heroland_invite_record
     <set>
-      <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
-      </if>
       <if test="topicName != null">
         topic_name = #{topicName,jdbcType=VARCHAR},
       </if>
@@ -345,13 +342,15 @@
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
+      <if test="recordId != null">
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
     </set>
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandInviteRecord">
     update heroland_invite_record
-    set id = #{id,jdbcType=BIGINT},
-      topic_name = #{topicName,jdbcType=VARCHAR},
+    set topic_name = #{topicName,jdbcType=VARCHAR},
       invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
       be_invite_user_id = #{beInviteUserId,jdbcType=VARCHAR},
       topic_type = #{topicType,jdbcType=VARCHAR},
@@ -363,7 +362,9 @@
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT}
-    where record_id = #{recordId,jdbcType=VARCHAR}
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

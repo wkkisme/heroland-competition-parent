@@ -8,12 +8,6 @@ import java.io.Serializable;
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandInviteRecord")
 public class HeroLandInviteRecord extends BaseDO implements Serializable {
     /**
-     * 记录id
-     */
-    @ApiModelProperty(value="recordId记录id")
-    private String recordId;
-
-    /**
      * 题组名称
      */
     @ApiModelProperty(value="topicName题组名称")
@@ -62,25 +56,15 @@ public class HeroLandInviteRecord extends BaseDO implements Serializable {
     private String questionId;
 
     /**
+     * 记录id
+     */
+    @ApiModelProperty(value="recordId记录id")
+    private String recordId;
+
+    /**
      * heroland_invite_record
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 记录id
-     * @return record_id 记录id
-     */
-    public String getRecordId() {
-        return recordId;
-    }
-
-    /**
-     * 记录id
-     * @param recordId 记录id
-     */
-    public void setRecordId(String recordId) {
-        this.recordId = recordId == null ? null : recordId.trim();
-    }
 
     /**
      * 题组名称
@@ -208,5 +192,21 @@ public class HeroLandInviteRecord extends BaseDO implements Serializable {
      */
     public void setQuestionId(String questionId) {
         this.questionId = questionId == null ? null : questionId.trim();
+    }
+
+    /**
+     * 记录id
+     * @return record_id 记录id
+     */
+    public String getRecordId() {
+        return recordId;
+    }
+
+    /**
+     * 记录id
+     * @param recordId 记录id
+     */
+    public void setRecordId(String recordId) {
+        this.recordId = recordId == null ? null : recordId.trim();
     }
 }

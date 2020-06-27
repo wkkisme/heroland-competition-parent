@@ -77,9 +77,9 @@
 
 
 
-        <table tableName="heroland_question" domainObjectName="HeroLandQuestion" mapperName="HeroLandQuestionMapper">
+        <table tableName="heroland_invite_record" domainObjectName="HeroLandInviteRecord" mapperName="HeroLandInviteRecordMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="record_id" sqlStatement="MySql" identity="true"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
 

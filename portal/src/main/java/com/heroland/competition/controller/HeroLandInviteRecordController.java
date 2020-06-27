@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 邀请
@@ -29,61 +31,67 @@ public class HeroLandInviteRecordController {
     @Resource
     private HeroLandAccountService heroLandAccountService;
     /**
+     * 邀请人
      * @param heroLandInviteRecord h
      * @return e
      */
-    @RequestMapping("/invite")
-    public ResponseBody<?> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    @RequestMapping("/toInvite")
+    public ResponseBody<Boolean> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.invite(heroLandInviteRecord);
     }
 
     /**
+     * 拒绝邀请
      * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/cancelInvite")
-    public ResponseBody<?> cancelInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    public ResponseBody<Boolean> cancelInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.cancelInvite(heroLandInviteRecord);
     }
 
     /**
+     * 获取邀请信息
      * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/getInvite")
-    public ResponseBody<?> getInvite(@RequestBody HeroLandInviteRecordQO heroLandInviteRecord) {
+    public ResponseBody<List<HeroLandInviteRecordDP>> getInvite(@RequestBody HeroLandInviteRecordQO heroLandInviteRecord) {
 
         return heroLandInviteRecordService.getInvite(heroLandInviteRecord);
     }
 
     /**
+     * 同意邀请
      * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/agreeInvite")
-    public ResponseBody<?> agreeInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    public ResponseBody<Boolean> agreeInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.agreeInvite(heroLandInviteRecord);
     }
 
     /**
+     * 更新邀请信息
      * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/updateInvite")
-    public ResponseBody<?> updateInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    public ResponseBody<Boolean> updateInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.updateInvite(heroLandInviteRecord);
     }
 
     /**
+     * 获取邀请者列表
      * @param heroLandAccountDP h
      * @return e
      */
     @RequestMapping("/getCanInviteList")
-    public ResponseBody<?> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP) {
+    public ResponseBody<Set<HeroLandAccountDP>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP) {
 
         return heroLandAccountService.getOnLineUserByType(heroLandAccountDP);
     }
