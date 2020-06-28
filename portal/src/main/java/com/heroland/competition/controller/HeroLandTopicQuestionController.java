@@ -13,10 +13,11 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * heroland-competition-parent
+ * 題目組
  *
  * @author wangkai
  * @date 2020/6/19
+ * @module 題目組
  */
 
 @RestController
@@ -30,11 +31,13 @@ public class HeroLandTopicQuestionController {
      * 查询某个题组下的所有题目
      * @param heroLandQuestionQO h
      * @return e
+     * @module 題目組
      */
     @RequestMapping("/queryQuestions")
     public ResponseBody<List<HeroLandTopicGroupDP>> getTopicQuestion(@RequestBody HeroLandQuestionQO heroLandQuestionQO){
 
         return heroLandQuestionService.getTopicQuestions(heroLandQuestionQO);
     }
+
 
 }

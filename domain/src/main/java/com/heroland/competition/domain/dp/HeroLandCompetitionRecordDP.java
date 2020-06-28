@@ -113,6 +113,12 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value = "opponentEndTime对手比赛结束时间")
     private Date opponentEndTime;
 
+    @ApiModelProperty(value = "winRate胜率")
+    private String winRate;
+
+    @ApiModelProperty(value = "finishQuestions完成题数")
+    private Integer finishQuestions;
+
     private List<HeroLandQuestionRecordDetailDP> details;
 
     private String primaryRedisKey;
@@ -212,6 +218,22 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
 
         return this;
+    }
+
+    public String getWinRate() {
+        return winRate;
+    }
+
+    public void setWinRate(String winRate) {
+        this.winRate = winRate;
+    }
+
+    public Integer getFinishQuestions() {
+        return finishQuestions;
+    }
+
+    public void setFinishQuestions(Integer finishQuestions) {
+        this.finishQuestions = finishQuestions;
     }
 
     public Date getInviteStartTime() {

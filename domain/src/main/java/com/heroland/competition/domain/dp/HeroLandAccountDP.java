@@ -1,9 +1,13 @@
 package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandAccount")
@@ -38,7 +42,24 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="levelScore级别分数")
     private Integer levelScore;
 
+    @ApiModelProperty(value="competitionType比赛类型")
     private String competitionType;
+
+    private List<HeroLandCompetitionRecordDP> records;
+
+    public HeroLandAccountDP queryCheck(){
+        if (StringUtils.isBlank(this.userId)){
+            ResponseBodyWrapper.failParamException();
+        }
+        return this;
+    }
+    public List<HeroLandCompetitionRecordDP> getRecords() {
+        return records;
+    }
+
+    public void setRecords(List<HeroLandCompetitionRecordDP> records) {
+        this.records = records;
+    }
 
     public String getCompetitionType() {
         return competitionType;
