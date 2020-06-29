@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +46,12 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="competitionType比赛类型")
     private String competitionType;
 
+    private Date startTime;
+
+    private Date endTime;
+
+
+
     private List<HeroLandCompetitionRecordDP> records;
 
     public HeroLandAccountDP queryCheck(){
@@ -67,6 +74,22 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
 
     public void setCompetitionType(String competitionType) {
         this.competitionType = competitionType;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     /**

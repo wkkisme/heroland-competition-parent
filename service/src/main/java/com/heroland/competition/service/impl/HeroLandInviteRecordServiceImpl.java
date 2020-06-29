@@ -11,10 +11,7 @@ import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
-import com.heroland.competition.dal.pojo.HeroLandQuestion;
-import com.heroland.competition.dal.pojo.HeroLandQuestionExample;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
-import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.slf4j.Logger;
@@ -55,7 +52,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Override
     public ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp) {
-        //todo  定时修改超时或者自己完成比赛的 清楚redis
+        //todo  定时修改超时或者自己完成比赛的 清除redis
         return addInvite(dp.inviteCheck(redisTemplate));
     }
 
