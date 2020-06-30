@@ -7,6 +7,7 @@ import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandCalculatorService;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandCompetitionService;
@@ -28,6 +29,9 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
 
     @Resource
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
+
+    @Resource
+    private HeroLandAccountService heroLandAccountService;
 
     /**
      * type类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
@@ -60,6 +64,8 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP dp) {
+        // 查出两个人的信息
+        heroLandAccountService.getCurrentUserCompetition()
         // 1 更新记录，插入详细
         HeroLandCompetitionRecordDP record = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
         // 先缓存查

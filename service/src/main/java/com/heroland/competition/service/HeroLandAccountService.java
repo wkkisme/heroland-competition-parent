@@ -1,9 +1,10 @@
 package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.dal.pojo.HeroLandAccount;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.qo.HeroLandAccountQO;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,6 +25,13 @@ public interface HeroLandAccountService {
      * @return
      */
     ResponseBody<HeroLandAccountDP> getCurrentUserCompetition(HeroLandAccountDP dp);
+
+     /**
+     * 查询当前人账户信息
+     * @param qo
+     * @return
+     */
+    ResponseBody<List<HeroLandAccountDP>> getAccount(HeroLandAccountQO qo);
 
 
 
