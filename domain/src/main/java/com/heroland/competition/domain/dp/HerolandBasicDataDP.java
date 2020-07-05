@@ -10,10 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Objects;
 
-/**
- * @author smjyouzan
- * @date 2020/6/23
- */
+
 @Data
 public class HerolandBasicDataDP extends BaseDO implements Serializable {
     /**

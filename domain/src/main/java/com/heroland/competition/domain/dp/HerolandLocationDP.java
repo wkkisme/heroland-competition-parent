@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @author smjyouzan
  * @date 2020/6/23
  */
 @Data

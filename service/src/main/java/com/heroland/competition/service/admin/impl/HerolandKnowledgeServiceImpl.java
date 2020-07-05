@@ -25,8 +25,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @author smjyouzan
- * @date 2020/7/5
  */
 @Component
 @Slf4j

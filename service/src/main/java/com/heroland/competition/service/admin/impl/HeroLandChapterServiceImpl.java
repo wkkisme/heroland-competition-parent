@@ -20,8 +20,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author smjyouzan
- * @date 2020/7/4
  */
 @Component
 @Slf4j

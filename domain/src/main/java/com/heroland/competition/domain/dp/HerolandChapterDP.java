@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * @author smjyouzan
- * @date 2020/7/4
  */
 @Data
 public class HerolandChapterDP extends BaseDO implements Serializable {

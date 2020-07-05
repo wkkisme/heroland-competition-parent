@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author smjyouzan
- * @date 2020/7/4
  */
 @Data
 public class HerolandKnowledgeDP extends BaseDO implements Serializable {

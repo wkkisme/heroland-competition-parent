@@ -11,8 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author smjyouzan
- * @date 2020/7/5
+
  */
 @RestController
 @RequestMapping("/heroland/knowledge")

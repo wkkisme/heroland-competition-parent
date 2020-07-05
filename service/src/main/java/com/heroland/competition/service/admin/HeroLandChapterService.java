@@ -7,8 +7,6 @@ import com.heroland.competition.domain.qo.HerolandChapterQO;
 import java.util.List;
 
 /**
- * @author smjyouzan
- * @date 2020/7/4
  */
 public interface HeroLandChapterService {
 

@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author smjyouzan
- * @date 2020/6/28
  */
 @Component
 @Slf4j

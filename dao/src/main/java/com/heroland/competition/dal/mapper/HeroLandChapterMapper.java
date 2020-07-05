@@ -8,8 +8,6 @@ import java.util.List;
 
 
 /**
- * @author smjyouzan
- * @date 2020/7/4
  */
 public interface HeroLandChapterMapper {
 

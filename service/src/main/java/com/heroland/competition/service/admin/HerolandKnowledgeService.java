@@ -1,16 +1,12 @@
 package com.heroland.competition.service.admin;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
-import com.heroland.competition.domain.qo.HerolandChapterQO;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 
 import java.util.List;
 
 /**
- * @author smjyouzan
- * @date 2020/7/5
  */
 public interface HerolandKnowledgeService {
 
