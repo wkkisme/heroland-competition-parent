@@ -134,8 +134,7 @@
             </dependency>
             <!-- 子引用 -->
 
-            <!--            分布式id-->
-
+            <!-- 分布式id -->
             <dependency>
                 <groupId>com.xiaoju.uemc.tinyid</groupId>
                 <artifactId>tinyid-client</artifactId>
