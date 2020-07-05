@@ -11,10 +11,21 @@
     <select id="getCurrentUserCompetition"
             resultMap="UserCompetitionMap">
         <!-- 查出个人账户信息，根据个人userid 去record中查出inviteuserid 和opponentuserid =个人的userid     -->
-        select a.* ,b.*  from heroland_account a left join heroland_competition_record b
+        select a.*,b.*  from heroland_account a left join heroland_competition_record b
         on a.user_id = b.invite_user_id or a.user_id = b.opponent_user_id
 
-        where a.user_id =#{userId}
+        where a.user_id =#{userId} and a.is_deleted =0 and b.is_deleted =0
+        <if test="startTime != null">
+
+          b.gmt_create >= #{startTime}
+        </if>
+
+        <if test="endTime != null">
+            <![CDATA[
+            b.gmt_create  <= #{endTime}
+            ]]>
+        </if>
+
 
 
         <if test="startRow != null and startRow != -1 and pageSize != null">
