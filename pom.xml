@@ -44,6 +44,7 @@
         <grpc.version>1.15.0</grpc.version>
         <protobuf.version>3.8.0</protobuf.version>
         <redis.version>2.3.1.RELEASE</redis.version>
+        <lombok.version>1.16.16</lombok.version>
     </properties>
 
     <dependencies>
@@ -79,6 +80,12 @@
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
                 <version>${protobuf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
 
 

@@ -1,5 +1,4 @@
 package com.heroland.competition.domain.dp;
-
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import io.swagger.annotations.ApiModel;
