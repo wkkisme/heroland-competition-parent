@@ -24,6 +24,11 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
     private String field;
 
     /**
+     * 中文名称
+     */
+    private String chName;
+
+    /**
      * 字典数据key
      */
     private String dictKey;
@@ -42,9 +47,9 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
         if (Objects.isNull(adminFieldEnum)){
             ResponseBodyWrapper.failParamException();
         }
-        this.setField(adminFieldEnum.getName());
+        this.setField(adminFieldEnum.getField());
+        this.setChName(adminFieldEnum.getChName());
         this.setDictKey(IDGenerateUtils.getKey(adminFieldEnum));
-
         return this;
     }
 }

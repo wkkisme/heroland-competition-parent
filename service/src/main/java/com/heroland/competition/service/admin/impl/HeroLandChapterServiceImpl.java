@@ -33,7 +33,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
     public ResponseBody<Boolean> add(HerolandChapterDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         try {
-            result.setData(heroLandChapterMapper.insert(BeanUtil.insertConversion(dp, new HerolandChapter())) > 0);
+            result.setData(heroLandChapterMapper.insertSelective(BeanUtil.insertConversion(dp, new HerolandChapter())) > 0);
         } catch (Exception e) {
             log.error("addSubject error, [{}]", JSON.toJSONString(dp));
             ResponseBodyWrapper.failSysException();
@@ -48,7 +48,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
             add(dp);
         }else {
             try {
-                result.setData(heroLandChapterMapper.updateByPrimaryKey(BeanUtil.updateConversion(dp, new HerolandChapter())) > 0);
+                result.setData(heroLandChapterMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp, new HerolandChapter())) > 0);
             } catch (Exception e) {
                 log.error("editSubject error", e);
                 ResponseBodyWrapper.failSysException();

@@ -3,9 +3,11 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandBasicDataMapper">
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="subject" jdbcType="INTEGER" property="subject" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="field" jdbcType="VARCHAR" property="field" />
+    <result column="ch_name" jdbcType="VARCHAR" property="chName" />
+    <result column="dict_key" jdbcType="VARCHAR" property="dictKey" />
+    <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
     <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
@@ -13,7 +15,7 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, subject, `name`, data_type, description, is_delete, has_parent, parent, creator, 
+    id, code, `field`,ch_name, dict_key, dict_value, is_deleted, creator,
     modifier, gmt_create, gmt_modified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -31,13 +33,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_basic_data (subject, `name`, data_type, 
-      description, is_delete, has_parent, 
-      parent, creator, modifier, 
-      gmt_create, gmt_modified)
-    values (#{subject,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{isDelete,jdbcType=INTEGER}, #{hasParent,jdbcType=INTEGER}, 
-      #{parent,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
+    insert into heroland_basic_data (code, `field`,ch_name, dict_key,
+    dict_value, is_deleted, creator, modifier, gmt_create, gmt_modified)
+    values (#{code,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR},#{chName,jdbcType=VARCHAR}, #{dictKey,jdbcType=VARCHAR},
+      #{dictValue,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
@@ -46,26 +45,23 @@
     </selectKey>
     insert into heroland_basic_data
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="subject != null">
-        subject,
+      <if test="code != null">
+        code,
       </if>
-      <if test="name != null">
-        `name`,
+      <if test="field != null">
+        `field`,
       </if>
-      <if test="dataType != null">
-        data_type,
+      <if test="chName != null">
+        `ch_name`,
       </if>
-      <if test="description != null">
-        description,
+      <if test="dictKey != null">
+        dict_key,
       </if>
-      <if test="isDelete != null">
-        is_delete,
+      <if test="dictValue != null">
+        dict_value,
       </if>
-      <if test="hasParent != null">
-        has_parent,
-      </if>
-      <if test="parent != null">
-        parent,
+      <if test="isDeleted != null">
+        is_deleted,
       </if>
       <if test="creator != null">
         creator,
@@ -81,26 +77,23 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="subject != null">
-        #{subject,jdbcType=INTEGER},
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="field != null">
+        #{field,jdbcType=VARCHAR},
       </if>
-      <if test="dataType != null">
-        #{dataType,jdbcType=VARCHAR},
+      <if test="chName != null">
+        #{chName,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
+      <if test="dictKey != null">
+        #{dictKey,jdbcType=VARCHAR},
       </if>
-      <if test="isDelete != null">
-        #{isDelete,jdbcType=INTEGER},
+      <if test="dictValue != null">
+        #{dictValue,jdbcType=VARCHAR},
       </if>
-      <if test="hasParent != null">
-        #{hasParent,jdbcType=INTEGER},
-      </if>
-      <if test="parent != null">
-        #{parent,jdbcType=INTEGER},
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=INTEGER},
       </if>
       <if test="creator != null">
         #{creator,jdbcType=VARCHAR},
@@ -119,26 +112,23 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
     update heroland_basic_data
     <set>
-      <if test="subject != null">
-        subject = #{subject,jdbcType=INTEGER},
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
+      <if test="field != null">
+        `field` = #{field,jdbcType=VARCHAR},
       </if>
-      <if test="dataType != null">
-        data_type = #{dataType,jdbcType=VARCHAR},
+      <if test="chName != null">
+        `ch_name`= #{chName,jdbcType=VARCHAR},
       </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
+      <if test="dictKey != null">
+        dict_key = #{dictKey,jdbcType=VARCHAR},
       </if>
-      <if test="isDelete != null">
-        is_delete = #{isDelete,jdbcType=INTEGER},
+      <if test="dictValue != null">
+        dict_value = #{dictValue,jdbcType=VARCHAR},
       </if>
-      <if test="hasParent != null">
-        has_parent = #{hasParent,jdbcType=INTEGER},
-      </if>
-      <if test="parent != null">
-        parent = #{parent,jdbcType=INTEGER},
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
       </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
@@ -157,13 +147,12 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
     update heroland_basic_data
-    set subject = #{subject,jdbcType=INTEGER},
-      `name` = #{name,jdbcType=VARCHAR},
-      data_type = #{dataType,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      is_delete = #{isDelete,jdbcType=INTEGER},
-      has_parent = #{hasParent,jdbcType=INTEGER},
-      parent = #{parent,jdbcType=INTEGER},
+    set code = #{code,jdbcType=VARCHAR},
+      `field` = #{field,jdbcType=VARCHAR},
+      `ch_name` = #{chName,jdbcType=VARCHAR},
+      dict_key = #{dictKey,jdbcType=VARCHAR},
+      dict_value = #{dictValue,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
       creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
@@ -171,31 +160,22 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <update id="updateBySubject" parameterType="java.lang.Long">
-    update heroland_basic_data
-    <set>
-      <if test="name != null">
-        `name` = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="isDeleted != null">
-        is_delete = #{isDelete,jdbcType=INTEGER},
-      </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where subject = #{subject,jdbcType=BIGINT}
-  </update>
+  <select id="selectByDictKeys" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_basic_data
+    where dict_key in
+    <foreach collection="keys" separator="," close=")" open="(" item="key">
+      #{key,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
+  <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_basic_data
+    where code = #{code,jdbcType=VARCHAR}
+    and is_deleted = 0
+  </select>
+
 </mapper>

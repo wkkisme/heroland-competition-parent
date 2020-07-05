@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HerolandKnowledgeMapper">
+    <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.basic.HerolandKnowledge">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="chapter_id" jdbcType="BIGINT" property="chapterId" />
+        <result column="knowledge" jdbcType="VARCHAR" property="knowledge" />
+        <result column="is_root" jdbcType="INTEGER" property="isRoot" />
+        <result column="root_knowledge_id" jdbcType="BIGINT" property="rootKnowledgeId" />
+        <result column="parent_knowledge_id" jdbcType="BIGINT" property="parentKnowledgeId" />
+        <result column="diff" jdbcType="INTEGER" property="diff" />
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, chapter_id, knowledge ,is_root, root_knowledge_id, parent_knowledge_id,  diff, is_deleted, creator,
+    modifier, gmt_create, gmt_modified
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update heroland_knowledge
+    set is_delete = 1
+    where id = #{id,jdbcType=BIGINT}
+    </update>
+    <insert id="insert" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into heroland_knowledge (grade, course ,edition, chapter,unit,section,chapter_order,unit_order,section_order,diff,
+        is_deleted, creator, modifier, gmt_create, gmt_modified)
+        values (#{area,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR}, #{clas,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+        #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+    <!--<insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">-->
+        <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
+        <!--insert into heroland_chapter-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="grade != null">-->
+                <!--grade,-->
+            <!--</if>-->
+            <!--<if test="course != null">-->
+                <!--course,-->
+            <!--</if>-->
+            <!--<if test="edition != null">-->
+                <!--edition,-->
+            <!--</if>-->
+            <!--<if test="chapter != null">-->
+                <!--chapter,-->
+            <!--</if>-->
+            <!--<if test="unit != null">-->
+                <!--unit,-->
+            <!--</if>-->
+            <!--<if test="section != null">-->
+                <!--section,-->
+            <!--</if>-->
+            <!--<if test="chapterOrder != null">-->
+                <!--chapter_order,-->
+            <!--</if>-->
+            <!--<if test="unitOrder != null">-->
+                <!--unit_order,-->
+            <!--</if>-->
+            <!--<if test="sectionOrder != null">-->
+                <!--section_order,-->
+            <!--</if>-->
+            <!--<if test="diff != null">-->
+                <!--diff,-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--is_deleted,-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator,-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--modifier,-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--gmt_create,-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--gmt_modified,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="grade != null">-->
+                <!--#{grade,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="course != null">-->
+                <!--#{course,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="edition != null">-->
+                <!--#{edition,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="chapter != null">-->
+                <!--#{chapter,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="unit != null">-->
+                <!--#{unit,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="section != null">-->
+                <!--#{section,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="chapterOrder != null">-->
+                <!--#{chapterOrder,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="unitOrder != null">-->
+                <!--#{unitOrder,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="sectionOrder != null">-->
+                <!--#{sectionOrder,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="diff != null">-->
+                <!--#{diff,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--#{isDeleted,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--#{creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--#{modifier,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--#{gmtCreate,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--#{gmtModified,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+    <!--<update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">-->
+        <!--update heroland_chapter-->
+        <!--<set>-->
+            <!--<if test="area != null">-->
+                <!--area = #{area,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="school != null">-->
+                <!--school = #{school,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="grade != null">-->
+                <!--grade = #{grade,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="clas != null">-->
+                <!--clas = #{clas,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--is_deleted = #{isDeleted,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator = #{creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--modifier = #{modifier,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--where id = #{id,jdbcType=BIGINT}-->
+    <!--</update>-->
+
+    <select id="getByParentId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        and is_deleted = 0
+    </select>
+</mapper>

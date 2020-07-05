@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HerolandLocationMapper">
+    <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.basic.HerolandLocation">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="area" jdbcType="VARCHAR" property="area" />
+        <result column="school" jdbcType="VARCHAR" property="school" />
+        <result column="grade" jdbcType="VARCHAR" property="grade" />
+        <result column="clas" jdbcType="VARCHAR" property="clas" />
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, area, school ,grade, clas, is_deleted, creator,
+    modifier, gmt_create, gmt_modified
+  </sql>
+    <!--<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">-->
+        <!--select-->
+        <!--<include refid="Base_Column_List" />-->
+        <!--from heroland_location-->
+        <!--where id = #{id,jdbcType=BIGINT}-->
+    <!--</select>-->
+    <!--<update id="deleteByPrimaryKey" parameterType="java.lang.Long">-->
+    <!--update heroland_location-->
+    <!--set is_delete = 1-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+    <insert id="insert" parameterType="com.heroland.competition.dal.pojo.basic.HerolandLocation">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into heroland_location (area, school ,grade, clas,
+       is_deleted, creator, modifier, gmt_create, gmt_modified)
+        values (#{area,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR}, #{clas,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+        #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
+    </insert>
+    <!--<insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandLocation">-->
+        <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">-->
+            <!--SELECT LAST_INSERT_ID()-->
+        <!--</selectKey>-->
+        <!--insert into heroland_location-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="area != null">-->
+                <!--area,-->
+            <!--</if>-->
+            <!--<if test="school != null">-->
+                <!--school,-->
+            <!--</if>-->
+            <!--<if test="grade != null">-->
+                <!--grade,-->
+            <!--</if>-->
+            <!--<if test="clas != null">-->
+                <!--clas,-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--is_deleted,-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator,-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--modifier,-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--gmt_create,-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--gmt_modified,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="area != null">-->
+                <!--#{area,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="school != null">-->
+                <!--#{school,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="grade != null">-->
+                <!--#{grade,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="clas != null">-->
+                <!--#{clas,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--#{isDeleted,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--#{creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--#{modifier,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--#{gmtCreate,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--#{gmtModified,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</trim>-->
+    <!--</insert>-->
+    <!--<update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandLocation">-->
+        <!--update heroland_location-->
+        <!--<set>-->
+            <!--<if test="area != null">-->
+                <!--area = #{area,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="school != null">-->
+                <!--school = #{school,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="grade != null">-->
+                <!--grade = #{grade,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="clas != null">-->
+                <!--clas = #{clas,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="isDeleted != null">-->
+                <!--is_deleted = #{isDeleted,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="creator != null">-->
+                <!--creator = #{creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="modifier != null">-->
+                <!--modifier = #{modifier,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="gmtCreate != null">-->
+                <!--gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="gmtModified != null">-->
+                <!--gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--where id = #{id,jdbcType=BIGINT}-->
+    <!--</update>-->
+    <!--<update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.basic.HerolandLocation">-->
+    <!--update heroland_location-->
+    <!--set area = #{area,jdbcType=VARCHAR},-->
+      <!--school = #{school,jdbcType=VARCHAR},-->
+      <!--grade = #{grade,jdbcType=VARCHAR},-->
+      <!--clas = #{clas,jdbcType=VARCHAR},-->
+      <!--is_deleted = #{isDeleted,jdbcType=INTEGER},-->
+      <!--creator = #{creator,jdbcType=VARCHAR},-->
+      <!--modifier = #{modifier,jdbcType=VARCHAR},-->
+      <!--gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},-->
+      <!--gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
+
+    <select id="getLocationByKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_location
+        where dict_key in
+        <foreach collection="keys" separator="," close=")" open="(" item="key">
+            #{key,jdbcType=VARCHAR}
+        </foreach>
+    </select>
+
+</mapper>

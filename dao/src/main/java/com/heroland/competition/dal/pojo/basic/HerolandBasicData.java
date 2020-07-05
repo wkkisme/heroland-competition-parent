@@ -19,6 +19,11 @@ public class HerolandBasicData extends BaseDO implements Serializable {
     private String field;
 
     /**
+     * 中文名称
+     */
+    private String chName;
+
+    /**
      * 字典数据key
      */
     private String dictKey;

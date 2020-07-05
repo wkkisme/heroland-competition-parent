@@ -12,19 +12,19 @@ public class HerolandChapter extends BaseDO implements Serializable {
      * 年级
      */
     private String grade;
-    private String gradeName;
+//    private String gradeName;
 
     /**
      * 科目
      */
     private String course;
-    private String courseName;
+//    private String courseName;
 
     /**
      * 版本
      */
     private String edition;
-    private String editionName;
+//    private String editionName;
 
     /**
      * 章

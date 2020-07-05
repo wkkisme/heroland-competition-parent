@@ -14,11 +14,12 @@ public interface HeroLandChapterMapper {
     int deleteByPrimaryKey(@Param("id") Long id);
 
     int insert(HerolandChapter chapter);
+    int insertSelective(HerolandChapter chapter);
 
 
     HerolandChapter selectByPrimaryKey(@Param("id") Long id);
 
-    int updateByPrimaryKey(HerolandChapter record);
+    int updateByPrimaryKeySelective(HerolandChapter record);
 
     List<HerolandChapter> selectByQuery(HerolandChapterQO qo);
 }

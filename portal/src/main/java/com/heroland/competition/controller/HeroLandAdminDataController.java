@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
-
+ * 字典数据
  */
 @RestController
 @RequestMapping("/heroland/admin")
@@ -24,6 +24,11 @@ public class HeroLandAdminDataController {
     @Resource
     private HeroLandAdminService heroLandAdminService;
 
+    /**
+     * 增加字典数据
+     * @param qo
+     * @return
+     */
     @RequestMapping(value = "/addDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> addDict(HeroLandClassQO qo) {
@@ -44,30 +49,57 @@ public class HeroLandAdminDataController {
         return heroLandAdminService.addClass(locationDP);
     }
 
+    /**
+     * 编辑字典数据
+     * @param dp
+     * @return
+     */
     @RequestMapping(value = "/editDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> editDict(HerolandBasicDataDP dp) {
         return heroLandAdminService.editDict(dp);
     }
 
+    /**
+     * 删除某一字典数据
+     * @param dp
+     * @return
+     */
     @RequestMapping(value = "/deleteDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> deleteDict(HerolandBasicDataDP dp) {
         return heroLandAdminService.deleteDict(dp);
     }
 
+    /**
+     * 查询某一字典组下面的所有字典详情数据
+     * 比如地区管路下的所有地区名称
+     * @param qo
+     * @return
+     */
     @RequestMapping(value = "/pageQueryDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<List<HerolandBasicDataDP>> pageQueryDict(HerolandBasicDataQO qo) {
         return heroLandAdminService.pageQueryDict(qo);
     }
 
+    /**
+     * 查看某一空间物理结构下的层级结构
+     * 比如某一地区下的学校，年级，班级
+     * @param qo
+     * @return
+     */
     @RequestMapping(value = "/listQueryLocale", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandBasicDataQO qo) {
         return heroLandAdminService.listQueryLocale(qo);
     }
 
+    /**
+     * 查看字典数据详情
+     * @param qo
+     * @return
+     */
     @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<HerolandBasicDataDP> getDictInfoById(HerolandBasicDataQO qo) {

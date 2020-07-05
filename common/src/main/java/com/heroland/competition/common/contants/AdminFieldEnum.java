@@ -10,49 +10,52 @@ import org.apache.commons.lang3.StringUtils;
  */
 public enum AdminFieldEnum {
     //地区
-    AREA("AE", "area"),
+    AREA("AE", "area","地区"),
     //学校
-    SCHOOL("SH", "school"),
+    SCHOOL("SH", "school","学校"),
     //班级
-    CLASS("CA", "class"),
+    CLASS("CA", "class","班级"),
 
 
     //阶段
-    PHASE("PA", "phase"),
+    PHASE("PA", "phase","阶段"),
     //年级
-    GRADE("GA", "grade"),
+    GRADE("GA", "grade","年级"),
     //科目
-    COURSE("CU", "course"),
+    COURSE("CU", "course","科目"),
     //版本
-    EDITION("ED", "edition"),
+    EDITION("ED", "edition","版本"),
     //章节
-    CHAPTER("CP", "chapter"),
+    CHAPTER("CP", "chapter","章节"),
     //难度
-    DIFFICULTY("DF", "diff"),
+    DIFFICULTY("DF", "diff","难度"),
     //知识点
-    KNOWEDGE("KL", "knowledge"),
+    KNOWEDGE("KL", "knowledge","知识点"),
 
             ;
 
 
 
     @Getter
-    private String name;
+    private String field;
+    @Getter
+    private String chName;
 
     @Getter
     private String code;
 
-    AdminFieldEnum(String code, String name) {
-        this.name = name;
+    AdminFieldEnum(String code, String chName, String field) {
+        this.chName = chName;
+        this.field = field;
         this.code = code;
     }
 
-    public static AdminFieldEnum valueOfName(String name) {
-        if (name == null) {
+    public static AdminFieldEnum valueOfName(String field) {
+        if (field == null) {
             return null;
         }
         for (AdminFieldEnum subjectEnum : values()){
-            if (subjectEnum.name.equals(name)){
+            if (subjectEnum.field.equals(field)){
                 return subjectEnum;
             }
         }
