@@ -153,10 +153,47 @@
         select
         <include refid="Base_Column_List" />
         from heroland_location
-        where dict_key in
-        <foreach collection="keys" separator="," close=")" open="(" item="key">
-            #{key,jdbcType=VARCHAR}
-        </foreach>
+        where
+        <choose>
+            <when test="code == 'AE' and key != null">
+                area = #{key,jdbcType=VARCHAR}
+            </when>
+            <when test="code == 'SH' and key != null">
+                school = #{key,jdbcType=VARCHAR}
+            </when>
+            <when test="code == 'GA' and key != null">
+                grade = #{key,jdbcType=VARCHAR}
+            </when>
+            <when test="code == 'CA' and key != null">
+                clas = #{key,jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+                1 = 1
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getDistinctLocationByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <choose>
+            <when test="code == 'AE' ">
+                distinct area
+            </when>
+            <when test="code == 'SH' ">
+                distinct school
+            </when>
+            <when test="code == 'GA' ">
+                distinct  grade
+            </when>
+            <when test="code == 'CA' ">
+                distinct clas
+            </when>
+            <otherwise>
+                <include refid="Base_Column_List" />
+            </otherwise>
+        </choose>
+        from heroland_location
+        where is_deleted = 0
     </select>
 
 </mapper>

@@ -4,6 +4,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
+import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 
 import java.util.List;
 
@@ -62,12 +63,15 @@ public interface HeroLandAdminService {
      * @param qo
      * @return
      */
-    ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandBasicDataQO qo);
+    ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandLocationDataQO qo);
+
+
+    ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code);
 
     /**
      * 获取学校管理的相关内容
      * 层级关系
-     * @param qo
+     * @param dp
      * @return
      */
     ResponseBody<Boolean> addClass(HerolandLocationDP dp);

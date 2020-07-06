@@ -5,6 +5,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandBasicDataMapper;
 import com.heroland.competition.dal.mapper.HerolandLocationMapper;
@@ -13,6 +14,7 @@ import com.heroland.competition.dal.pojo.basic.HerolandLocation;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
+import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -88,19 +90,19 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     }
 
     @Override
-    public ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandBasicDataQO qo) {
+    public ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandLocationDataQO qo) {
         ResponseBody<List<HerolandLocationDP>> result = new ResponseBody();
         List<HerolandLocation> locationList = herolandLocationMapper.getLocationByKey(qo.getDictKey(), qo.getCode());
-        List<String> dictKeys = Lists.newArrayList();
-        locationList.stream().forEach(e -> {
-           dictKeys.add(e.getArea());
-            dictKeys.add(e.getSchool());
-            dictKeys.add(e.getGrade());
-            dictKeys.add(e.getClas());
-        });
-        List<String> validDictKeys = dictKeys.stream().filter(e -> StringUtils.isNotBlank(e)).collect(Collectors.toList());
-        ResponseBody<List<HerolandBasicDataDP>> dictInfoByKeys = getDictInfoByKeys(validDictKeys);
-        Map<String, List<HerolandBasicDataDP>> keysMap = dictInfoByKeys.getData().stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+//        List<String> dictKeys = Lists.newArrayList();
+//        locationList.stream().forEach(e -> {
+//           dictKeys.add(e.getArea());
+//            dictKeys.add(e.getSchool());
+//            dictKeys.add(e.getGrade());
+//            dictKeys.add(e.getClas());
+//        });
+//        List<String> validDictKeys = dictKeys.stream().filter(e -> StringUtils.isNotBlank(e)).collect(Collectors.toList());
+//        ResponseBody<List<HerolandBasicDataDP>> dictInfoByKeys = getDictInfoByKeys(validDictKeys);
+//        Map<String, List<HerolandBasicDataDP>> keysMap = dictInfoByKeys.getData().stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
         List<HerolandLocationDP> locationDPS = Lists.newArrayList();
         locationList.stream().forEach(e -> {
             HerolandLocationDP locationDP = new HerolandLocationDP();
@@ -108,21 +110,41 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
             locationDP.setGrade(e.getGrade());
             locationDP.setSchool(e.getSchool());
             locationDP.setClas(e.getClas());
-            if (keysMap.containsKey(e.getArea())){
-                locationDP.setAreaName(keysMap.get(e.getArea()).get(0).getDictValue());
-            }
-            if (keysMap.containsKey(e.getGrade())){
-                locationDP.setGradeName(keysMap.get(e.getGrade()).get(0).getDictValue());
-            }
-            if (keysMap.containsKey(e.getClas())){
-                locationDP.setClasName(keysMap.get(e.getClas()).get(0).getDictValue());
-            }
-            if (keysMap.containsKey(e.getSchool())){
-                locationDP.setSchoolName(keysMap.get(e.getSchool()).get(0).getDictValue());
-            }
+//            if (keysMap.containsKey(e.getArea())){
+//                locationDP.setAreaName(keysMap.get(e.getArea()).get(0).getDictValue());
+//            }
+//            if (keysMap.containsKey(e.getGrade())){
+//                locationDP.setGradeName(keysMap.get(e.getGrade()).get(0).getDictValue());
+//            }
+//            if (keysMap.containsKey(e.getClas())){
+//                locationDP.setClasName(keysMap.get(e.getClas()).get(0).getDictValue());
+//            }
+//            if (keysMap.containsKey(e.getSchool())){
+//                locationDP.setSchoolName(keysMap.get(e.getSchool()).get(0).getDictValue());
+//            }
             locationDPS.add(locationDP);
         });
         result.setData(locationDPS);
+        return result;
+    }
+
+    @Override
+    public ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code) {
+        ResponseBody<List<HerolandBasicDataDP>> result = new ResponseBody();
+        List<HerolandLocation> location = herolandLocationMapper.getDistinctLocationByCode(code);
+        List<String> keys = Lists.newArrayList();
+        if (AdminFieldEnum.AREA.getCode().equals(code)){
+            keys = location.stream().map(HerolandLocation::getArea).collect(Collectors.toList());
+        }else if (AdminFieldEnum.SCHOOL.getCode().equals(code)){
+            keys = location.stream().map(HerolandLocation::getSchool).collect(Collectors.toList());
+        }else if(AdminFieldEnum.GRADE.getCode().equals(code)){
+            keys = location.stream().map(HerolandLocation::getGrade).collect(Collectors.toList());
+        }else if(AdminFieldEnum.CLASS.getCode().equals(code)){
+            keys = location.stream().map(HerolandLocation::getClas).collect(Collectors.toList());
+        }
+        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
+        List<HerolandBasicDataDP> dpList = herolandBasicData.stream().map(this::convertToDP).collect(Collectors.toList());
+        result.setData(dpList);
         return result;
     }
 

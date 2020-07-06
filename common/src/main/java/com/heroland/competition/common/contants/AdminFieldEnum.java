@@ -1,7 +1,10 @@
 package com.heroland.competition.common.contants;
 
+import com.google.common.collect.Lists;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.LinkedList;
 
 
 /**
@@ -34,7 +37,13 @@ public enum AdminFieldEnum {
 
             ;
 
-
+    public static LinkedList<AdminFieldEnum> location = Lists.newLinkedList();
+    static {
+        location.add(0,AREA);
+        location.add(1,SCHOOL);
+        location.add(2,GRADE);
+        location.add(3,CLASS);
+    }
 
     @Getter
     private String field;
@@ -72,6 +81,34 @@ public enum AdminFieldEnum {
             }
         }
         return null;
+    }
+
+    public static AdminFieldEnum preAdminFieldEnumForLocation(String code){
+        AdminFieldEnum adminFieldEnum = valueOfCode(code);
+        if (adminFieldEnum == null){
+            return null;
+        }
+        if (!location.contains(adminFieldEnum)){
+            return null;
+        }
+        if (AdminFieldEnum.AREA.code == code){
+            return null;
+        }
+        return location.get(location.indexOf(adminFieldEnum)-1);
+    }
+
+    public static AdminFieldEnum afterAdminFieldEnumForLocation(String code){
+        AdminFieldEnum adminFieldEnum = valueOfCode(code);
+        if (adminFieldEnum == null){
+            return null;
+        }
+        if (!location.contains(adminFieldEnum)){
+            return null;
+        }
+        if (AdminFieldEnum.CLASS.code == code){
+            return null;
+        }
+        return location.get(location.indexOf(adminFieldEnum)+1);
     }
 
 }

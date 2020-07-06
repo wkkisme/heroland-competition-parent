@@ -1,6 +1,7 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.basic.HerolandLocation;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,7 +11,9 @@ import java.util.List;
  */
 public interface HerolandLocationMapper {
 
-    List<HerolandLocation> getLocationByKey(String key, String code);
+    List<HerolandLocation> getLocationByKey(@Param("key") String key, @Param("code") String code);
+
+    List<HerolandLocation> getDistinctLocationByCode(@Param("code") String code);
 
     int insert(HerolandLocation location);
 }
