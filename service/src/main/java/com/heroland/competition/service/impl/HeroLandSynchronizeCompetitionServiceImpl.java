@@ -65,7 +65,7 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP dp) {
         // 查出两个人的信息
-        heroLandAccountService.getCurrentUserCompetition()
+//        heroLandAccountService.getCurrentUserCompetition();
         // 1 更新记录，插入详细
         HeroLandCompetitionRecordDP record = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
         // 先缓存查

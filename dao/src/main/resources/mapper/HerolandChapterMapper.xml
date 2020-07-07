@@ -13,7 +13,7 @@
         <result column="unit_order" jdbcType="INTEGER" property="unitOrder" />
         <result column="section_order" jdbcType="INTEGER" property="sectionOrder" />
         <result column="diff" jdbcType="INTEGER" property="diff" />
-        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />
         <result column="modifier" jdbcType="VARCHAR" property="modifier" />
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -41,7 +41,7 @@
         insert into heroland_chapter (grade, course ,edition, chapter,unit,section,chapter_order,unit_order,section_order,diff,
         is_deleted, creator, modifier, gmt_create, gmt_modified)
         values (#{area,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR}, #{clas,jdbcType=VARCHAR},
-        #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
         #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
     </insert>
     <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">
@@ -128,7 +128,7 @@
         #{diff,jdbcType=INTEGER},
     </if>
     <if test="isDeleted != null">
-    #{isDeleted,jdbcType=INTEGER},
+    #{isDeleted,jdbcType=TINYINT},
     </if>
     <if test="creator != null">
     #{creator,jdbcType=VARCHAR},
@@ -160,7 +160,7 @@
     clas = #{clas,jdbcType=VARCHAR},
     </if>
     <if test="isDeleted != null">
-    is_deleted = #{isDeleted,jdbcType=INTEGER},
+    is_deleted = #{isDeleted,jdbcType=TINYINT},
     </if>
     <if test="creator != null">
     creator = #{creator,jdbcType=VARCHAR},

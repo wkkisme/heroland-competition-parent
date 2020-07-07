@@ -9,7 +9,7 @@
         <result column="root_knowledge_id" jdbcType="BIGINT" property="rootKnowledgeId" />
         <result column="parent_knowledge_id" jdbcType="BIGINT" property="parentKnowledgeId" />
         <result column="diff" jdbcType="INTEGER" property="diff" />
-        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+        <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
         <result column="creator" jdbcType="VARCHAR" property="creator" />
         <result column="modifier" jdbcType="VARCHAR" property="modifier" />
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -37,7 +37,7 @@
         insert into heroland_knowledge (grade, course ,edition, chapter,unit,section,chapter_order,unit_order,section_order,diff,
         is_deleted, creator, modifier, gmt_create, gmt_modified)
         values (#{area,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR}, #{clas,jdbcType=VARCHAR},
-        #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+        #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
         #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
     </insert>
     <!--<insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">-->

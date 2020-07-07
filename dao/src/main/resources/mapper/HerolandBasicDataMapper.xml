@@ -8,7 +8,7 @@
     <result column="ch_name" jdbcType="VARCHAR" property="chName" />
     <result column="dict_key" jdbcType="VARCHAR" property="dictKey" />
     <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
-    <result column="is_deleted" jdbcType="INTEGER" property="isDeleted" />
+    <result column="is_deleted" jdbcType="TINYINT" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -36,7 +36,7 @@
     insert into heroland_basic_data (code, `field`,ch_name, dict_key,
     dict_value, is_deleted, creator, modifier, gmt_create, gmt_modified)
     values (#{code,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR},#{chName,jdbcType=VARCHAR}, #{dictKey,jdbcType=VARCHAR},
-      #{dictValue,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
+      #{dictValue,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
@@ -93,7 +93,7 @@
         #{dictValue,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
-        #{isDeleted,jdbcType=INTEGER},
+        #{isDeleted,jdbcType=TINYINT},
       </if>
       <if test="creator != null">
         #{creator,jdbcType=VARCHAR},
@@ -128,7 +128,7 @@
         dict_value = #{dictValue,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=INTEGER},
+        is_deleted = #{isDeleted,jdbcType=TINYINT},
       </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
@@ -152,7 +152,7 @@
       `ch_name` = #{chName,jdbcType=VARCHAR},
       dict_key = #{dictKey,jdbcType=VARCHAR},
       dict_value = #{dictValue,jdbcType=VARCHAR},
-      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      is_deleted = #{isDeleted,jdbcType=TINYINT},
       creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
