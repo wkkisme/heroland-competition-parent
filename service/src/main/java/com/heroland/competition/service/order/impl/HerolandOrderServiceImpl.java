@@ -10,6 +10,7 @@ import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
+import com.heroland.competition.domain.qo.PayOrderQO;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +65,7 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     }
 
     @Override
-    public HerolandOrderDP payOrderCallBack(long payOrder, int orderState) {
+    public HerolandOrderDP payOrderCallBack(PayOrderQO payOrderQO) {
 
         return null;
     }

@@ -1,6 +1,7 @@
 package com.heroland.competition.service.order;
 
 import com.heroland.competition.domain.dp.HerolandOrderDP;
+import com.heroland.competition.domain.qo.PayOrderQO;
 
 import java.util.List;
 
@@ -18,11 +19,9 @@ public interface HerolandOrderService {
 
     /**
      * 支付回调
-     * @param orderId
-     * @param orderState
      * @return
      */
-    HerolandOrderDP payOrderCallBack(long orderId, int orderState);
+    HerolandOrderDP payOrderCallBack(PayOrderQO qo);
 
     /**
      * 获取用户的订单列表
