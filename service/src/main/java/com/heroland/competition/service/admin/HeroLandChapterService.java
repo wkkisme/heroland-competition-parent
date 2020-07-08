@@ -34,9 +34,9 @@ public interface HeroLandChapterService {
 
     /**
      * 获取某一个章节条目
-     * @param qo 对象
+     * @param id
      */
-    ResponseBody<HerolandChapterDP> getById(HerolandChapterQO qo);
+    ResponseBody<HerolandChapterDP> getById(Long id);
 
 
     /**

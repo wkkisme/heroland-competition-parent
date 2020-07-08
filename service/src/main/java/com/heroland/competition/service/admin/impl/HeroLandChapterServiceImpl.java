@@ -68,13 +68,13 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
     }
 
     @Override
-    public ResponseBody<HerolandChapterDP> getById(HerolandChapterQO qo) {
+    public ResponseBody<HerolandChapterDP> getById(Long id) {
         HerolandChapter herolandChapter = null;
-        if (NumberUtils.nullOrZeroLong(qo.getId())){
+        if (NumberUtils.nullOrZeroLong(id)){
             ResponseBodyWrapper.failSysException();
         }
         try {
-            herolandChapter = heroLandChapterMapper.selectByPrimaryKey(qo.getId());
+            herolandChapter = heroLandChapterMapper.selectByPrimaryKey(id);
         } catch (Exception e) {
             log.error("", e);
             ResponseBodyWrapper.failSysException();

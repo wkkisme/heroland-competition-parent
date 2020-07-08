@@ -4,7 +4,9 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -27,7 +29,7 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<Boolean> add(HerolandKnowledgeDP dp){
+    ResponseBody<Boolean> add(@RequestBody HerolandKnowledgeDP dp){
         return herolandKnowledgeService.add(dp);
     }
 
@@ -38,7 +40,7 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/edit", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<Boolean> edit(HerolandKnowledgeDP dp){
+    ResponseBody<Boolean> edit(@RequestBody HerolandKnowledgeDP dp){
         return herolandKnowledgeService.edit(dp);
     }
 
@@ -50,7 +52,7 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/deleteAllByNode", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<Boolean> deleteAllByNode(HerolandKnowledgeQO qo){
+    ResponseBody<Boolean> deleteAllByNode(@RequestParam("id") Long id){
         return null;
     }
 
@@ -62,8 +64,8 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/deleteOneNode", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<Boolean> deleteOneNode(HerolandKnowledgeQO qo){
-        return herolandKnowledgeService.deleteOneNode(qo);
+    ResponseBody<Boolean> deleteOneNode(@RequestParam("id") Long id){
+        return herolandKnowledgeService.deleteOneNode(id);
     }
 
     /**
@@ -73,7 +75,7 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<HerolandKnowledgeDP> getById(HerolandKnowledgeQO qo){
+    ResponseBody<HerolandKnowledgeDP> getById(@RequestBody HerolandKnowledgeQO qo){
         return herolandKnowledgeService.getById(qo);
     }
 
@@ -85,7 +87,7 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/pageQuery", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<List<HerolandKnowledgeDP>> pageQuery(HerolandKnowledgeQO qo){
+    ResponseBody<List<HerolandKnowledgeDP>> pageQuery(@RequestBody HerolandKnowledgeQO qo){
         return herolandKnowledgeService.pageQuery(qo);
     }
 }

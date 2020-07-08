@@ -161,13 +161,13 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     }
 
     @Override
-    public ResponseBody<HerolandBasicDataDP> getDictInfoById(HerolandBasicDataQO qo) {
+    public ResponseBody<HerolandBasicDataDP> getDictInfoById(Long id) {
         HerolandBasicData herolandBasicData = null;
-        if (NumberUtils.nullOrZeroLong(qo.getId())){
+        if (NumberUtils.nullOrZeroLong(id)){
             ResponseBodyWrapper.failSysException();
         }
         try {
-            herolandBasicData = herolandBasicDataMapper.selectByPrimaryKey(qo.getId());
+            herolandBasicData = herolandBasicDataMapper.selectByPrimaryKey(id);
         } catch (Exception e) {
             log.error("", e);
             ResponseBodyWrapper.failSysException();

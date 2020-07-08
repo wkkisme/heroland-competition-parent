@@ -11,7 +11,9 @@ import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -36,7 +38,7 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/addDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> addDict(HeroLandClassQO qo) {
+    public ResponseBody<Boolean> addDict(@RequestBody HeroLandClassQO qo) {
         //如果是学校的
         if (!Objects.equals(AdminFieldEnum.CLASS.getCode(),qo.getCode())){
             HerolandBasicDataDP herolandBasicDataDP = new HerolandBasicDataDP();
@@ -61,7 +63,7 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/editDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> editDict(HerolandBasicDataDP dp) {
+    public ResponseBody<Boolean> editDict(@RequestBody HerolandBasicDataDP dp) {
         return heroLandAdminService.editDict(dp);
     }
 
@@ -72,7 +74,7 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/deleteDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> deleteDict(HerolandBasicDataDP dp) {
+    public ResponseBody<Boolean> deleteDict(@RequestBody HerolandBasicDataDP dp) {
         return heroLandAdminService.deleteDict(dp);
     }
 
@@ -84,7 +86,7 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/pageQueryDict", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandBasicDataDP>> pageQueryDict(HerolandBasicDataQO qo) {
+    public ResponseBody<List<HerolandBasicDataDP>> pageQueryDict(@RequestBody HerolandBasicDataQO qo) {
         return heroLandAdminService.pageQueryDict(qo);
     }
 
@@ -96,7 +98,7 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/listQueryLocale", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandLocationDto> listQueryLocale(HerolandLocationDataQO qo) {
+    public ResponseBody<HerolandLocationDto> listQueryLocale(@RequestBody HerolandLocationDataQO qo) {
         ResponseBody<HerolandLocationDto> result = new ResponseBody<HerolandLocationDto>();
         HerolandLocationDto dto = new HerolandLocationDto();
         result.setData(dto);
@@ -128,13 +130,13 @@ public class HeroLandAdminDataController {
 
     /**
      * 查看字典数据详情
-     * @param qo
+     * @param id
      * @return
      */
     @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandBasicDataDP> getDictInfoById(HerolandBasicDataQO qo) {
-        return heroLandAdminService.getDictInfoById(qo);
+    public ResponseBody<HerolandBasicDataDP> getDictInfoById(@RequestParam("id") Long id) {
+        return heroLandAdminService.getDictInfoById(id);
     }
 
 

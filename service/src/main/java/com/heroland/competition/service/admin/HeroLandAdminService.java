@@ -39,7 +39,7 @@ public interface HeroLandAdminService {
      * @param qo 对象
      * @return 正确
      */
-    ResponseBody<HerolandBasicDataDP> getDictInfoById(HerolandBasicDataQO qo);
+    ResponseBody<HerolandBasicDataDP> getDictInfoById(Long id);
 
 
     /**

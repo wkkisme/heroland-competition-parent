@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HerolandOrderMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.order.HerolandOrder">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="biz_no" jdbcType="VARCHAR" property="bizNo" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="is_visible" jdbcType="TINYINT" property="isVisible" />
+    <result column="buyer_id" jdbcType="VARCHAR" property="buyerId" />
+    <result column="buyer_name" jdbcType="VARCHAR" property="buyerName" />
+    <result column="spu_id" jdbcType="VARCHAR" property="spuId" />
+    <result column="spu_name" jdbcType="VARCHAR" property="spuName" />
+    <result column="sku_id" jdbcType="VARCHAR" property="skuId" />
+    <result column="sku_price" jdbcType="BIGINT" property="skuPrice" />
+    <result column="sku_num" jdbcType="INTEGER" property="skuNum" />
+    <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
+    <result column="orig_price" jdbcType="BIGINT" property="origPrice" />
+    <result column="currency_amt" jdbcType="BIGINT" property="currencyAmt" />
+    <result column="currency_type" jdbcType="VARCHAR" property="currencyType" />
+    <result column="paid_time" jdbcType="TIMESTAMP" property="paidTime" />
+    <result column="close_reason" jdbcType="VARCHAR" property="closeReason" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="biz_ext" jdbcType="VARCHAR" property="bizExt" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, biz_no, `state`, is_visible, buyer_id, buyer_name, spu_id, spu_name, sku_id, sku_price,
+    sku_num, sku_name, orig_price, currency_amt, currency_type, paid_time, close_reason, 
+    close_time, biz_ext, is_deleted, creator, modifier, gmt_create, gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from heroland_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from heroland_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.order.HerolandOrder">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_order (biz_no, `state`, is_visible, 
+      buyer_id, buyer_name, spu_id, 
+      spu_name, sku_id, sku_price,sku_num,
+      sku_name, orig_price, currency_amt, 
+      currency_type, paid_time, close_reason, 
+      close_time, biz_ext, is_deleted, 
+      creator, modifier, gmt_create, 
+      gmt_modified)
+    values (#{bizNo,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{isVisible,jdbcType=TINYINT}, 
+      #{buyerId,jdbcType=VARCHAR}, #{buyerName,jdbcType=VARCHAR}, #{spuId,jdbcType=VARCHAR}, 
+      #{spuName,jdbcType=VARCHAR}, #{skuId,jdbcType=VARCHAR},#{skuPrice,jdbcType=BIGINT}, #{skuNum,jdbcType=INTEGER},
+      #{skuName,jdbcType=VARCHAR}, #{origPrice,jdbcType=BIGINT}, #{currencyAmt,jdbcType=BIGINT}, 
+      #{currencyType,jdbcType=VARCHAR}, #{paidTime,jdbcType=TIMESTAMP}, #{closeReason,jdbcType=VARCHAR}, 
+      #{closeTime,jdbcType=TIMESTAMP}, #{bizExt,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, 
+      #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.order.HerolandOrder">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bizNo != null">
+        biz_no,
+      </if>
+      <if test="state != null">
+        `state`,
+      </if>
+      <if test="isVisible != null">
+        is_visible,
+      </if>
+      <if test="buyerId != null">
+        buyer_id,
+      </if>
+      <if test="buyerName != null">
+        buyer_name,
+      </if>
+      <if test="spuId != null">
+        spu_id,
+      </if>
+      <if test="spuName != null">
+        spu_name,
+      </if>
+      <if test="skuId != null">
+        sku_id,
+      </if>
+      <if test="skuPrice != null">
+        sku_price,
+      </if>
+      <if test="skuNum != null">
+        sku_num,
+      </if>
+      <if test="skuName != null">
+        sku_name,
+      </if>
+      <if test="origPrice != null">
+        orig_price,
+      </if>
+      <if test="currencyAmt != null">
+        currency_amt,
+      </if>
+      <if test="currencyType != null">
+        currency_type,
+      </if>
+      <if test="paidTime != null">
+        paid_time,
+      </if>
+      <if test="closeReason != null">
+        close_reason,
+      </if>
+      <if test="closeTime != null">
+        close_time,
+      </if>
+      <if test="bizExt != null">
+        biz_ext,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bizNo != null">
+        #{bizNo,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="isVisible != null">
+        #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="buyerId != null">
+        #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null">
+        #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="spuId != null">
+        #{spuId,jdbcType=VARCHAR},
+      </if>
+      <if test="spuName != null">
+        #{spuName,jdbcType=VARCHAR},
+      </if>
+      <if test="skuId != null">
+        #{skuId,jdbcType=VARCHAR},
+      </if>
+      <if test="skuPrice != null">
+        #{skuPrice,jdbcType=BIGINT},
+      </if>
+      <if test="skuNum != null">
+        #{skuNum,jdbcType=INTEGER},
+      </if>
+      <if test="skuName != null">
+        #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="origPrice != null">
+        #{origPrice,jdbcType=BIGINT},
+      </if>
+      <if test="currencyAmt != null">
+        #{currencyAmt,jdbcType=BIGINT},
+      </if>
+      <if test="currencyType != null">
+        #{currencyType,jdbcType=VARCHAR},
+      </if>
+      <if test="paidTime != null">
+        #{paidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeReason != null">
+        #{closeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="closeTime != null">
+        #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bizExt != null">
+        #{bizExt,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.order.HerolandOrder">
+    update heroland_order
+    <set>
+      <if test="bizNo != null">
+        biz_no = #{bizNo,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="isVisible != null">
+        is_visible = #{isVisible,jdbcType=TINYINT},
+      </if>
+      <if test="buyerId != null">
+        buyer_id = #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerName != null">
+        buyer_name = #{buyerName,jdbcType=VARCHAR},
+      </if>
+      <if test="spuId != null">
+        spu_id = #{spuId,jdbcType=VARCHAR},
+      </if>
+      <if test="spuName != null">
+        spu_name = #{spuName,jdbcType=VARCHAR},
+      </if>
+      <if test="skuId != null">
+        sku_id = #{skuId,jdbcType=VARCHAR},
+      </if>
+      <if test="skuPrice != null">
+        sku_price = #{skuPrice,jdbcType=BIGINT},
+      </if>
+      <if test="skuNum != null">
+        sku_num = #{skuNum,jdbcType=INTEGER},
+      </if>
+      <if test="skuName != null">
+        sku_name = #{skuName,jdbcType=VARCHAR},
+      </if>
+      <if test="origPrice != null">
+        orig_price = #{origPrice,jdbcType=BIGINT},
+      </if>
+      <if test="currencyAmt != null">
+        currency_amt = #{currencyAmt,jdbcType=BIGINT},
+      </if>
+      <if test="currencyType != null">
+        currency_type = #{currencyType,jdbcType=VARCHAR},
+      </if>
+      <if test="paidTime != null">
+        paid_time = #{paidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closeReason != null">
+        close_reason = #{closeReason,jdbcType=VARCHAR},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bizExt != null">
+        biz_ext = #{bizExt,jdbcType=VARCHAR},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.order.HerolandOrder">
+    update heroland_order
+    set biz_no = #{bizNo,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=VARCHAR},
+      is_visible = #{isVisible,jdbcType=TINYINT},
+      buyer_id = #{buyerId,jdbcType=VARCHAR},
+      buyer_name = #{buyerName,jdbcType=VARCHAR},
+      spu_id = #{spuId,jdbcType=VARCHAR},
+      spu_name = #{spuName,jdbcType=VARCHAR},
+      sku_id = #{skuId,jdbcType=VARCHAR},
+      sku_price = #{skuPrice,jdbcType=BIGINT},
+      sku_num = #{skuNum,jdbcType=INTEGER},
+      sku_name = #{skuName,jdbcType=VARCHAR},
+      orig_price = #{origPrice,jdbcType=BIGINT},
+      currency_amt = #{currencyAmt,jdbcType=BIGINT},
+      currency_type = #{currencyType,jdbcType=VARCHAR},
+      paid_time = #{paidTime,jdbcType=TIMESTAMP},
+      close_reason = #{closeReason,jdbcType=VARCHAR},
+      close_time = #{closeTime,jdbcType=TIMESTAMP},
+      biz_ext = #{bizExt,jdbcType=VARCHAR},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      creator = #{creator,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="listOrderByBuyer"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_order
+    where buyer_id = #{userId,jdbcType=VARCHAR}
+    <if test="states != null">
+      and state IN
+      <foreach collection="status" open="(" close=")" item="state" separator=",">
+        #{state}
+      </foreach>
+    </if>
+  </select>
+</mapper>

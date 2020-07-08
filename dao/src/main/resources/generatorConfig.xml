@@ -28,7 +28,7 @@
 
 
         <!--jdbc的数据库连接 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://58.87.125.225:3306/heroland_competition?characterEncoding=utf8" userId="root" password="58.87.125.225">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://106.53.244.106:3306/heroland_competition?characterEncoding=utf8" userId="hero" password="hero@123">
         </jdbcConnection>
 
 
@@ -95,7 +95,7 @@
         </javaClientGenerator>
 
 
-        <table tableName="heroland_basic_data_value" schema="heroland_competition"  domainObjectName="HerolandBasicDataValue"  enableCountByExample="false" enableUpdateByExample="false"
+        <table tableName="heroland_pay" schema="heroland_competition"  domainObjectName="HerolandPay"  enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post"/>

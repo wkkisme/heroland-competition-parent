@@ -33,7 +33,7 @@ public interface HerolandKnowledgeService {
      * @param qo 对象
      * @return 正确
      */
-    ResponseBody<Boolean> deleteAllByNode(HerolandKnowledgeQO qo);
+    ResponseBody<Boolean> deleteAllByNode(Long id);
 
     /**
      * 删除知识点
@@ -42,7 +42,7 @@ public interface HerolandKnowledgeService {
      * @param qo 对象
      * @return 正确
      */
-    ResponseBody<Boolean> deleteOneNode(HerolandKnowledgeQO qo);
+    ResponseBody<Boolean> deleteOneNode(Long id);
 
     /**
      * 获取某一个知识点

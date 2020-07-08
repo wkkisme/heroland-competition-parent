@@ -71,22 +71,22 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
 
     //看需要再补充
     @Override
-    public ResponseBody<Boolean> deleteAllByNode(HerolandKnowledgeQO qo) {
+    public ResponseBody<Boolean> deleteAllByNode(Long id) {
         return null;
     }
 
     @Override
-    public ResponseBody<Boolean> deleteOneNode(HerolandKnowledgeQO qo) {
+    public ResponseBody<Boolean> deleteOneNode(Long id) {
         ResponseBody<Boolean> result = new ResponseBody<>();
-        if (NumberUtils.nullOrZeroLong(qo.getId())){
+        if (NumberUtils.nullOrZeroLong(id)){
             ResponseBodyWrapper.failSysException();
         }
-        result.setData(herolandKnowledgeMapper.deleteByPrimaryKey(qo.getId()) > 0);
-        HerolandKnowledge herolandKnowledge = herolandKnowledgeMapper.selectByPrimaryKey(qo.getId());
+        result.setData(herolandKnowledgeMapper.deleteByPrimaryKey(id) > 0);
+        HerolandKnowledge herolandKnowledge = herolandKnowledgeMapper.selectByPrimaryKey(id);
         if (Objects.equals(Boolean.TRUE,herolandKnowledge.getIsRoot())){
             return result;
         }
-        List<HerolandKnowledge> list = herolandKnowledgeMapper.getByParentId(qo.getId());
+        List<HerolandKnowledge> list = herolandKnowledgeMapper.getByParentId(id);
         list.stream().forEach(e -> e.setParentKnowledgeId(herolandKnowledge.getParentKnowledgeId()));
         list.stream().forEach(e -> herolandKnowledgeMapper.updateByPrimaryKey(e));
         result.setData(true);

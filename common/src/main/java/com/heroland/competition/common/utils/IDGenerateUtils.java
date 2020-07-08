@@ -26,6 +26,10 @@ public class IDGenerateUtils {
 
         ADMIN("1", "后台数据管理"),
 
+        ORDER("6", "订单"),
+
+        PAY("3", "支付单"),
+
         ;
 
         private String code;
@@ -77,5 +81,13 @@ public class IDGenerateUtils {
         StringBuilder sb = new StringBuilder();
         sb.append(subjectEnum.getCode()).append("-").append(getIdByRandom(ModelEnum.ADMIN));
         return sb.toString();
+    }
+
+    /**
+     * 获取订单业务单号
+     * @return
+     */
+    public static String getOrderBizNo(){
+        return getIdByRandom(ModelEnum.ORDER)+"";
     }
 }

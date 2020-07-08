@@ -4,7 +4,9 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.qo.HerolandChapterQO;
 import com.heroland.competition.service.admin.HeroLandChapterService;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -28,7 +30,7 @@ public class HeroLandAdminChapterController {
      */
     @RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> add(HerolandChapterDP dp) {
+    public ResponseBody<Boolean> add(@RequestBody HerolandChapterDP dp) {
         return heroLandChapterService.add(dp);
     }
 
@@ -39,7 +41,7 @@ public class HeroLandAdminChapterController {
      */
     @RequestMapping(value = "/edit", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> edit(HerolandChapterDP dp) {
+    public ResponseBody<Boolean> edit(@RequestBody HerolandChapterDP dp) {
         return heroLandChapterService.edit(dp);
     }
 
@@ -50,20 +52,20 @@ public class HeroLandAdminChapterController {
      */
     @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> delete(HerolandChapterDP dp) {
+    public ResponseBody<Boolean> delete(@RequestBody HerolandChapterDP dp) {
 
         return heroLandChapterService.delete(dp);
     }
 
     /**
      * 查看详情
-     * @param qo
+     * @param id
      * @return
      */
     @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandChapterDP> getById(HerolandChapterQO qo) {
-        return heroLandChapterService.getById(qo);
+    public ResponseBody<HerolandChapterDP> getById(@RequestParam("id") Long id) {
+        return heroLandChapterService.getById(id);
     }
 
     /**
@@ -73,7 +75,7 @@ public class HeroLandAdminChapterController {
      */
     @RequestMapping(value = "/pageQuery", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandChapterDP>> pageQuery(HerolandChapterQO qo) {
+    public ResponseBody<List<HerolandChapterDP>> pageQuery(@RequestBody HerolandChapterQO qo) {
        return heroLandChapterService.pageQuery(qo);
     }
 
