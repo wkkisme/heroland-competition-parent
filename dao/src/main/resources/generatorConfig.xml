@@ -95,7 +95,7 @@
         </javaClientGenerator>
 
 
-        <table tableName="heroland_pay" schema="heroland_competition"  domainObjectName="HerolandPay"  enableCountByExample="false" enableUpdateByExample="false"
+        <table tableName="heroland_sku" schema="heroland_competition"  domainObjectName="HerolandSku"  enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
             <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true" type="post"/>

@@ -1,16 +1,17 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
-import com.heroland.competition.domain.qo.HerolandChapterQO;
+import com.heroland.competition.domain.dp.HerolandPayDP;
+import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.HerolandOrderQO;
 import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
-import com.heroland.competition.service.admin.HeroLandChapterService;
+import com.heroland.competition.domain.qo.PrePayQO;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -68,6 +69,21 @@ public class HeroLandOrderController {
         return result;
     }
 
+    @RequestMapping(value = "/prePay", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<PrePayDto> prePay(@RequestBody PrePayQO prePayQO){
+        ResponseBody<PrePayDto> result = new ResponseBody<>();
+        result.setData(herolandPayService.prePay(prePayQO));
+        return result;
+    }
+
+    @RequestMapping(value = "/id", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HerolandPayDP> prePay(@RequestParam("id") Long id){
+        ResponseBody<HerolandPayDP> result = new ResponseBody<>();
+        result.setData(herolandPayService.getPayById(id));
+        return result;
+    }
 
 
 }
