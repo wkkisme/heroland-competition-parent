@@ -5,10 +5,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
+    <!--<dubbo:registry id="zookeeper" address="${dubbo.demo.registry}" file="${dubbo.registry.file.path}" protocol="dubbo" version="1.0.0"/>-->
 
-
-    <dubbo:reference id="goodsIdMappingRemoteService" interface="com.youzan.ycm.goods.api.GoodsIdMappingRemoteService" check="false"
-                     protocol="dubbo" registry="zookeeper" timeout="2000"/>
+    <dubbo:reference id="prePayRemoteService" interface="com.platfrom.payment.api.PrePayRemoteService" check="false"
+                     protocol="dubbo" registry="zookeeper" />
 
 
 </beans>

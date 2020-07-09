@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.contants.OrderStateEnum;
+import com.heroland.competition.common.contants.PayCurrencyTypeEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -14,6 +15,9 @@ import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.PrePayQO;
 import com.heroland.competition.service.order.HerolandPayService;
+import com.platfrom.payment.api.PrePayRemoteService;
+import com.platfrom.payment.request.PrePayRequest;
+import com.platfrom.payment.response.PrePayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -29,6 +33,9 @@ public class HerolandPayServiceImpl implements HerolandPayService {
 
     @Resource
     private HerolandPayMapper herolandPayMapper;
+
+    @Resource
+    private PrePayRemoteService prePayRemoteService;
 
     @Override
     public Long createPay(HerolandPayDP herolandPayDP) {
@@ -84,10 +91,19 @@ public class HerolandPayServiceImpl implements HerolandPayService {
         if (OrderStateEnum.CREATED.getCode() != payById.getState()){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
         }
-        //todo 调用预支付
-
+        //调用预支付
+        //fixme mock的数据
+        PrePayRequest request = new PrePayRequest();
+        request.setPayEnv("PC");
+        request.setPayChannel("ALIPAY");
+        request.setCurrencyType(PayCurrencyTypeEnum.HKD.getType());
+        request.setCurrencyAmt(payById.getSettleAmt());
+        request.setBizId(payById.getId()+"");
+        request.setBizType("英雄比赛");
+        PrePayResponse prePayResponse = prePayRemoteService.prePay(request);
         //todo 如果是0元则不用拉出收银台
         prePayDto.setPayId(prePayQO.getPayId());
+        prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
         return prePayDto;
     }
 }

@@ -115,6 +115,11 @@
         </dependency>
         <!-- nacos end -->
 
+        <dependency>
+            <groupId>com.platform.payment</groupId>
+            <artifactId>platform-payment-rpc</artifactId>
+        </dependency>
+
 
 
         <dependency>
