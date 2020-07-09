@@ -24,7 +24,7 @@ import java.util.List;
 
 
 /**
- * 宝石
+ * 宝石管理
  */
 @RestController
 @RequestMapping("/heroland/diamond")
@@ -82,7 +82,7 @@ public class HeroLandDiamondController {
 
     /**
      * 删除某一个规格
-     * @param prePayQO
+     * @param id
      * @return
      */
     @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
@@ -94,6 +94,11 @@ public class HeroLandDiamondController {
         return result;
     }
 
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/get", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<HerolandSkuDP> get(@RequestParam("id") Long id){
