@@ -7,6 +7,9 @@ import java.io.Serializable;
 @Data
 public class HerolandSkuAddRequest implements Serializable {
 
+    /**
+     * id
+     */
     private Long id;
 
     /**

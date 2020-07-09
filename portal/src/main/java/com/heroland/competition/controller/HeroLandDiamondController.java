@@ -35,7 +35,7 @@ public class HeroLandDiamondController {
 
 
     /**
-     * 创建订单
+     * 创建规格
      * @param
      * @return
      */
@@ -65,7 +65,7 @@ public class HeroLandDiamondController {
     }
 
     /**
-     * 删除某一个规格
+     * 更新某一个规格
      * @param request
      * @return
      */
