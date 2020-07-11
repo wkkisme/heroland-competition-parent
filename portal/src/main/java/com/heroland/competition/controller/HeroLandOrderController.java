@@ -69,6 +69,11 @@ public class HeroLandOrderController {
         return result;
     }
 
+    /**
+     *
+     * @param prePayQO
+     * @return
+     */
     @RequestMapping(value = "/prePay", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<PrePayDto> prePay(@RequestBody PrePayQO prePayQO){
@@ -77,9 +82,19 @@ public class HeroLandOrderController {
         return result;
     }
 
+//    @RequestMapping(value = "/prePay", produces = "application/json;charset=UTF-8")
+//    @org.springframework.web.bind.annotation.ResponseBody
+//    public ResponseBody<PrePayDto> prePay(@RequestParam("payId") Long payId){
+//        ResponseBody<PrePayDto> result = new ResponseBody<>();
+//        PrePayQO prePayQO = new PrePayQO();
+//        prePayQO.setPayId(payId);
+//        result.setData(herolandPayService.prePay(prePayQO));
+//        return result;
+//    }
+
     @RequestMapping(value = "/id", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandPayDP> prePay(@RequestParam("id") Long id){
+    public ResponseBody<HerolandPayDP> get(@RequestParam("id") Long id){
         ResponseBody<HerolandPayDP> result = new ResponseBody<>();
         result.setData(herolandPayService.getPayById(id));
         return result;

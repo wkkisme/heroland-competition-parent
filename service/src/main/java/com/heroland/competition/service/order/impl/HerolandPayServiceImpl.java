@@ -88,13 +88,13 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     public PrePayDto prePay(PrePayQO prePayQO) {
         PrePayDto prePayDto = new PrePayDto();
         HerolandPayDP payById = getPayById(prePayQO.getPayId());
-        if (OrderStateEnum.CREATED.getCode() != payById.getState()){
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
-        }
+//        if (OrderStateEnum.CREATED.getCode() != payById.getState()){
+//            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
+//        }
         //调用预支付
         //fixme mock的数据
         PrePayRequest request = new PrePayRequest();
-        request.setPayEnv("PC");
+        request.setPayEnv("WEB");
         request.setPayChannel("ALIPAY");
         request.setCurrencyType(PayCurrencyTypeEnum.HKD.getType());
         request.setCurrencyAmt(payById.getSettleAmt());

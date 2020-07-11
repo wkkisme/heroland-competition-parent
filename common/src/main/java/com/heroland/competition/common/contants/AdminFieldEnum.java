@@ -46,17 +46,16 @@ public enum AdminFieldEnum {
     }
 
     @Getter
+    private String code;
+    @Getter
     private String field;
     @Getter
     private String chName;
 
-    @Getter
-    private String code;
-
-    AdminFieldEnum(String code, String chName, String field) {
-        this.chName = chName;
-        this.field = field;
+    AdminFieldEnum(String code, String field,String chName) {
         this.code = code;
+        this.field = field;
+        this.chName = chName;
     }
 
     public static AdminFieldEnum valueOfName(String field) {
@@ -76,7 +75,7 @@ public enum AdminFieldEnum {
             return null;
         }
         for (AdminFieldEnum subjectEnum : values()){
-            if (subjectEnum.code == code){
+            if (subjectEnum.code .equals(code)){
                 return subjectEnum;
             }
         }
@@ -91,7 +90,7 @@ public enum AdminFieldEnum {
         if (!location.contains(adminFieldEnum)){
             return null;
         }
-        if (AdminFieldEnum.AREA.code == code){
+        if (AdminFieldEnum.AREA.code.equals(code)){
             return null;
         }
         return location.get(location.indexOf(adminFieldEnum)-1);
@@ -105,7 +104,7 @@ public enum AdminFieldEnum {
         if (!location.contains(adminFieldEnum)){
             return null;
         }
-        if (AdminFieldEnum.CLASS.code == code){
+        if (AdminFieldEnum.CLASS.code.equals(code)){
             return null;
         }
         return location.get(location.indexOf(adminFieldEnum)+1);

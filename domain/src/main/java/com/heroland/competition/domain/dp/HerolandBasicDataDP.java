@@ -4,6 +4,7 @@ import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +40,7 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
     private String dictValue;
 
 
-    public HerolandBasicDataDP checkAndBuild() {
+    public HerolandBasicDataDP checkAndBuildBeforeCreate() {
         if (StringUtils.isBlank(this.getCode()) || StringUtils.isBlank(this.getDictValue())) {
             ResponseBodyWrapper.failParamException();
         }
@@ -50,6 +51,13 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
         this.setField(adminFieldEnum.getField());
         this.setChName(adminFieldEnum.getChName());
         this.setDictKey(IDGenerateUtils.getKey(adminFieldEnum));
+        return this;
+    }
+
+    public HerolandBasicDataDP checkAndBuildBeforeUpdate() {
+        if (NumberUtils.nullOrZeroLong(this.getId())) {
+            ResponseBodyWrapper.failParamException();
+        }
         return this;
     }
 }

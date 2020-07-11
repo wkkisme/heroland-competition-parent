@@ -20,9 +20,9 @@ public class HerolandLocationDataQO implements Serializable {
      */
     private String dictKey;
 
-    /**
-     * 字典详情数据名称
-     * 该字段支持模糊查询
-     */
-    private String childDictName;
+//    /**
+//     * 字典详情数据名称
+//     * 该字段支持模糊查询
+//     */
+//    private String childDictName;
 }

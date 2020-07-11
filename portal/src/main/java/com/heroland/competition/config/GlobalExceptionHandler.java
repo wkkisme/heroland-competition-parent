@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public com.anycommon.response.common.ResponseBody defaultExceptionHandler(HttpServletRequest request, Exception e) {
         logger.error("异常信息：",e);
         if (e instanceof AppSystemException){
-            ResponseBodyWrapper.fail(e.getMessage(),"50000");
+          return  ResponseBodyWrapper.fail(e.getMessage(),"50000");
         }
         return ResponseBodyWrapper.fail(ErrMsgEnum.SERVER_ERROR);
     }

@@ -42,9 +42,9 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     public ResponseBody<Boolean> addDict(HerolandBasicDataDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         try {
-            result.setData(herolandBasicDataMapper.insert(BeanUtil.insertConversion(dp.checkAndBuild(), new HerolandBasicData())) > 0);
+            result.setData(herolandBasicDataMapper.insert(BeanUtil.insertConversion(dp.checkAndBuildBeforeCreate(), new HerolandBasicData())) > 0);
         } catch (Exception e) {
-            log.error("addSubject error, [{}]", JSON.toJSONString(dp));
+            log.error("addDict error, [{}]", JSON.toJSONString(dp));
             ResponseBodyWrapper.failSysException();
         }
         return result;
@@ -53,15 +53,11 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     @Override
     public ResponseBody<Boolean> editDict(HerolandBasicDataDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
-        if (NumberUtils.nullOrZeroLong(dp.getId())){
-            addDict(dp);
-        }else {
-            try {
-                result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp, new HerolandBasicData())) > 0);
-            } catch (Exception e) {
-                log.error("editSubject error", e);
-                ResponseBodyWrapper.failSysException();
-            }
+        try {
+            result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.checkAndBuildBeforeUpdate(), new HerolandBasicData())) > 0);
+        } catch (Exception e) {
+            log.error("editDict error", e);
+            ResponseBodyWrapper.failSysException();
         }
         return result;
     }
@@ -131,6 +127,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     @Override
     public ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code) {
         ResponseBody<List<HerolandBasicDataDP>> result = new ResponseBody();
+        List<HerolandBasicData> herolandBasicData = Lists.newArrayList();
         List<HerolandLocation> location = herolandLocationMapper.getDistinctLocationByCode(code);
         List<String> keys = Lists.newArrayList();
         if (AdminFieldEnum.AREA.getCode().equals(code)){
@@ -142,7 +139,9 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         }else if(AdminFieldEnum.CLASS.getCode().equals(code)){
             keys = location.stream().map(HerolandLocation::getClas).collect(Collectors.toList());
         }
-        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
+        if (!CollectionUtils.isEmpty(keys)){
+            herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
+        }
         List<HerolandBasicDataDP> dpList = herolandBasicData.stream().map(this::convertToDP).collect(Collectors.toList());
         result.setData(dpList);
         return result;
@@ -181,7 +180,8 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         List<HerolandBasicData> herolandBasicData = Lists.newArrayList();
         List<HerolandBasicDataDP> list = Lists.newArrayList();
         if (CollectionUtils.isEmpty(keys)){
-            ResponseBodyWrapper.failSysException();
+            result.setData(Lists.newArrayList());
+            return result;
         }
         try {
             herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);

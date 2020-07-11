@@ -160,7 +160,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <select id="selectByDictKeys" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByDictKeys"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from heroland_basic_data
