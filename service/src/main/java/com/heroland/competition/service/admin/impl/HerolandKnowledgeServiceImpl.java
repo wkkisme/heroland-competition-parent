@@ -145,7 +145,7 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
     private HerolandKnowledgeDP convert(HerolandKnowledge herolandKnowledge){
         HerolandKnowledgeDP herolandKnowledgeDP = new HerolandKnowledgeDP();
         herolandKnowledgeDP.setId(herolandKnowledge.getId());
-        herolandKnowledgeDP.setChapterId(herolandKnowledge.getChapterId());
+//        herolandKnowledgeDP.setChapterId(herolandKnowledge.getChapterId());
         herolandKnowledgeDP.setDiff(herolandKnowledge.getDiff());
         herolandKnowledgeDP.setIsRoot(herolandKnowledge.getIsRoot());
         herolandKnowledgeDP.setKnowledge(herolandKnowledge.getKnowledge());

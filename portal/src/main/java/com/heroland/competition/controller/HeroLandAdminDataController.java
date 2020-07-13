@@ -1,15 +1,19 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.dto.HerolandLocationDto;
+import com.heroland.competition.domain.dto.HerolandSchoolDto;
 import com.heroland.competition.domain.qo.HeroLandClassQO;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
+import com.heroland.competition.domain.qo.HerolandSchoolQO;
 import com.heroland.competition.service.admin.HeroLandAdminService;
+import com.heroland.competition.service.admin.HeroLandSchoolService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +34,9 @@ public class HeroLandAdminDataController {
 
     @Resource
     private HeroLandAdminService heroLandAdminService;
+
+    @Resource
+    private HeroLandSchoolService heroLandSchoolService;
 
     /**
      * 增加字典数据
@@ -98,33 +105,13 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/listQueryLocale", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandLocationDto> listQueryLocale(@RequestBody HerolandLocationDataQO qo) {
-        ResponseBody<HerolandLocationDto> result = new ResponseBody<HerolandLocationDto>();
-        HerolandLocationDto dto = new HerolandLocationDto();
-        result.setData(dto);
-        if (StringUtils.isNotBlank(qo.getCode()) && AdminFieldEnum.AREA.getCode().equals(qo.getCode())){
-            ResponseBody<List<HerolandBasicDataDP>> listResponseBody = heroLandAdminService.listValidLoation(qo.getCode());
-            dto.setCode(qo.getCode());
-            dto.setField(AdminFieldEnum.AREA.getField());
-            dto.setAreaList(listResponseBody.getData());
-            return result;
+    public ResponseBody<List<HerolandSchoolDto>> listQueryLocale(@RequestBody HerolandSchoolQO qo) {
+        ResponseBody<List<HerolandSchoolDto>> result = new ResponseBody<>();
+        if (StringUtils.isBlank(qo.getCode()) && StringUtils.isBlank(qo.getKey())){
+            ResponseBodyWrapper.failParamException();
         }
-        ResponseBody<List<HerolandLocationDP>> listResponseBody = heroLandAdminService.listQueryLocale(qo);
-        List<HerolandLocationDP> data = listResponseBody.getData();
-        AdminFieldEnum adminFieldEnum = AdminFieldEnum.afterAdminFieldEnumForLocation(qo.getCode());
-        List<String> keys = Lists.newArrayList();
-        if (AdminFieldEnum.SCHOOL.equals(adminFieldEnum)){
-            keys = data.stream().map(HerolandLocationDP::getSchool).collect(Collectors.toList());
-        }else if(AdminFieldEnum.GRADE.equals(adminFieldEnum)){
-            keys = data.stream().map(HerolandLocationDP::getGrade).collect(Collectors.toList());
-        }else if(AdminFieldEnum.CLASS.equals(adminFieldEnum)){
-            keys = data.stream().map(HerolandLocationDP::getClas).collect(Collectors.toList());
-        }
-        ResponseBody<List<HerolandBasicDataDP>> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
-        dto.setCode(qo.getCode());
-        dto.setField(AdminFieldEnum.valueOfCode(qo.getCode()).getField());
-        dto.setCurrentKey(qo.getDictKey());
-        dto.setChildLocation(dictInfoByKeys.getData());
+        List<HerolandSchoolDto> herolandSchoolDtos = heroLandSchoolService.queryChild(qo);
+        result.setData(herolandSchoolDtos);
         return result;
     }
 

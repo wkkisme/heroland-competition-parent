@@ -15,9 +15,9 @@ public class HerolandChapterQO extends BaseQO implements Serializable {
     private Long id;
 
     /**
-     * 年级
+     * 阶段
      */
-    private String gradeName;
+    private String phaseName;
 
     /**
      * 科目

@@ -15,9 +15,14 @@ import java.util.Objects;
 public class HerolandKnowledgeDP extends BaseDO implements Serializable {
 
     /**
-     * 章节id
+     * 年级
      */
-    private Long chapterId;
+    private String grade;
+
+    /**
+     * 科目
+     */
+    private String course;
 
     /**
      * 知识点

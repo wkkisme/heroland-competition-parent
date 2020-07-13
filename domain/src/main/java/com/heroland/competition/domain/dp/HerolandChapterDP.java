@@ -13,7 +13,7 @@ import java.util.Objects;
 public class HerolandChapterDP extends BaseDO implements Serializable {
 
     /**
-     * 年级
+     * 阶段
      */
     private String grade;
 

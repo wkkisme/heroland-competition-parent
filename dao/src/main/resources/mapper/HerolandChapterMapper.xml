@@ -3,7 +3,7 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandChapterMapper">
     <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.basic.HerolandChapter">
         <id column="id" jdbcType="BIGINT" property="id" />
-        <result column="grade" jdbcType="VARCHAR" property="grade" />
+        <result column="phase" jdbcType="VARCHAR" property="phase" />
         <result column="course" jdbcType="VARCHAR" property="course" />
         <result column="edition" jdbcType="VARCHAR" property="edition" />
         <result column="chapter" jdbcType="VARCHAR" property="chapter" />
@@ -20,7 +20,7 @@
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     </resultMap>
     <sql id="Base_Column_List">
-    id, grade, course ,edition, chapter, unit, section, chapter_order,unit_order, section_order, diff, is_deleted, creator,
+    id, phase, course ,edition, chapter, unit, section, chapter_order,unit_order, section_order, diff, is_deleted, creator,
     modifier, gmt_create, gmt_modified
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -38,7 +38,7 @@
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        insert into heroland_chapter (grade, course ,edition, chapter,unit,section,chapter_order,unit_order,section_order,diff,
+        insert into heroland_chapter (phase, course ,edition, chapter,unit,section,chapter_order,unit_order,section_order,diff,
         is_deleted, creator, modifier, gmt_create, gmt_modified)
         values (#{area,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR},#{grade,jdbcType=VARCHAR}, #{clas,jdbcType=VARCHAR},
         #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
@@ -50,8 +50,8 @@
     </selectKey>
     insert into heroland_chapter
     <trim prefix="(" suffix=")" suffixOverrides=",">
-    <if test="grade != null">
-    grade,
+    <if test="phase != null">
+        phase,
     </if>
     <if test="course != null">
         course,
@@ -97,8 +97,8 @@
     </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-    <if test="grade != null">
-        #{grade,jdbcType=VARCHAR},
+    <if test="phase != null">
+        #{phase,jdbcType=VARCHAR},
     </if>
     <if test="course != null">
         #{course,jdbcType=VARCHAR},
@@ -153,8 +153,8 @@
     <if test="school != null">
     school = #{school,jdbcType=VARCHAR},
     </if>
-    <if test="grade != null">
-    grade = #{grade,jdbcType=VARCHAR},
+    <if test="phase != null">
+        phase = #{phase,jdbcType=VARCHAR},
     </if>
     <if test="clas != null">
     clas = #{clas,jdbcType=VARCHAR},

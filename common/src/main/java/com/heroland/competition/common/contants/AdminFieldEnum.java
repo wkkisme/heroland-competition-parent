@@ -17,7 +17,7 @@ public enum AdminFieldEnum {
     //学校
     SCHOOL("SH", "school","学校"),
     //班级
-    CLASS("CA", "class","班级"),
+    CLASS("CA", "clazz","班级"),
 
 
     //阶段
