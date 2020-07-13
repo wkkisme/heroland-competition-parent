@@ -2,15 +2,12 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
-import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
-import com.heroland.competition.domain.qo.HeroLandQuestionQO;
-import com.heroland.competition.service.HeroLandAccountService;
+import com.heroland.competition.api.HeroLandAccountService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 个人信息

@@ -10,7 +10,7 @@ import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
-import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import com.heroland.competition.api.HeroLandCompetitionRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;

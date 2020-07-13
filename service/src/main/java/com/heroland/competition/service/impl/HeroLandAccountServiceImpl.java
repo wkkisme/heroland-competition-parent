@@ -9,7 +9,7 @@ import com.heroland.competition.dal.pojo.HeroLandAccount;
 import com.heroland.competition.dal.pojo.HeroLandAccountExample;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
-import com.heroland.competition.service.HeroLandAccountService;
+import com.heroland.competition.api.HeroLandAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;

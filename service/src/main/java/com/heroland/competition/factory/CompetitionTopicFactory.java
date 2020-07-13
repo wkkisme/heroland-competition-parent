@@ -1,13 +1,11 @@
 package com.heroland.competition.factory;
 
 import com.google.common.collect.Maps;
-import com.heroland.competition.service.HeroLandCompetitionService;
-import io.swagger.models.auth.In;
+import com.heroland.competition.api.HeroLandCompetitionService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

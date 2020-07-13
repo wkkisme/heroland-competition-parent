@@ -2,7 +2,7 @@ package com.heroland.competition.service.impl;
 
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
-import com.heroland.competition.service.HeroLandCalculatorService;
+import com.heroland.competition.api.HeroLandCalculatorService;
 import org.springframework.stereotype.Component;
 
 @Component
