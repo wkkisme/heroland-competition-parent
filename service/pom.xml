@@ -180,7 +180,11 @@
             <scope>compile</scope>
         </dependency>
         <!-- end -->
-
+        <dependency>
+            <artifactId>heroland-competition-rpc</artifactId>
+            <groupId>com.heroland.competition</groupId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

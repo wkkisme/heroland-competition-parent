@@ -18,8 +18,11 @@
 
     <dependencies>
 
-
-
+        <dependency>
+            <groupId>com.heroland</groupId>
+            <artifactId>heroland-competition-domain</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
     </dependencies>
 

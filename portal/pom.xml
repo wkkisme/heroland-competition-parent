@@ -237,7 +237,11 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+            <artifactId>heroland-competition-rpc</artifactId>
+            <groupId>com.heroland.competition</groupId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 

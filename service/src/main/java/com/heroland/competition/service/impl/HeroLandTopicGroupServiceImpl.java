@@ -4,16 +4,14 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.dal.mapper.HeroLandQuestionExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandTopicGroupExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroupExample;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
-import com.heroland.competition.service.HeroLandTopicGroupService;
+import com.heroland.competition.api.HeroLandTopicGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

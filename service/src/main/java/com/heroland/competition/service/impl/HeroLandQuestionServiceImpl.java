@@ -11,7 +11,7 @@ import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
-import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.api.HeroLandQuestionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
