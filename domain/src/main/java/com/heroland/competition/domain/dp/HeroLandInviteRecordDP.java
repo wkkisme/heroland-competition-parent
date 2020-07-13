@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;

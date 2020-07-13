@@ -9,7 +9,7 @@ import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroupExample;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
-import com.heroland.competition.api.HeroLandTopicGroupService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

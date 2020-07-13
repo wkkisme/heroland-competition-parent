@@ -2,7 +2,6 @@ package com.heroland.competition.domain.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**

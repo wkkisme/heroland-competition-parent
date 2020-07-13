@@ -2,8 +2,9 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroupExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HeroLandTopicGroupMapper {
     long countByExample(HeroLandTopicGroupExample example);

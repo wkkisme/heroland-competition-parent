@@ -13,7 +13,7 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
-import com.heroland.competition.api.HeroLandInviteRecordService;
+import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;

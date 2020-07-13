@@ -1,12 +1,14 @@
-package com.heroland.competition.service.impl;
+package com.heroland.competition.remote;
 
+import com.heroland.competition.api.HeroLandCalculatorRemoteService;
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
-import com.heroland.competition.service.HeroLandCalculatorService;
-import org.springframework.stereotype.Component;
 
-@Component
-public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService {
+/**
+ * @author wushuaiping
+ * @date 2020/7/13 6:15 下午
+ */
+public class HeroLandCalculatorRemoteServiceImpl implements HeroLandCalculatorRemoteService {
     @Override
     public HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp) {
         return null;

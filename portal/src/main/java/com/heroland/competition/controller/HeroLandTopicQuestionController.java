@@ -2,9 +2,9 @@ package com.heroland.competition.controller;
 
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.api.HeroLandQuestionService;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
+import com.heroland.competition.service.HeroLandQuestionService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

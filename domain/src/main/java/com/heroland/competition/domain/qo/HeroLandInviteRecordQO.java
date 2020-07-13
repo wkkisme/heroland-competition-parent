@@ -1,18 +1,10 @@
 package com.heroland.competition.domain.qo;
 
-import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.common.BaseQO;
-import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.io.Serializable;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
 public class HeroLandInviteRecordQO extends BaseQO implements Serializable {

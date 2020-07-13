@@ -9,30 +9,31 @@ import java.util.Set;
 
 /**
  * 账户服务
+ *
  * @author wangkai
  */
-public interface HeroLandAccountService {
+public interface HeroLandAccountRemoteService {
     /**
      * 查询所有的在线用户
+     *
      * @param dp
      * @return
      */
     ResponseBody<Set<HeroLandAccountDP>> getOnLineUserByType(HeroLandAccountDP dp);
 
-     /**
+    /**
      * 查询当前人的比赛记录
+     *
      * @param dp
      * @return
      */
     ResponseBody<HeroLandAccountDP> getCurrentUserCompetition(HeroLandAccountDP dp);
 
-     /**
+    /**
      * 查询当前人账户信息
+     *
      * @param qo
      * @return
      */
     ResponseBody<List<HeroLandAccountDP>> getAccount(HeroLandAccountQO qo);
-
-
-
 }

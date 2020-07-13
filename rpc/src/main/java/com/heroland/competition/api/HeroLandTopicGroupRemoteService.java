@@ -10,7 +10,7 @@ import java.util.List;
  *  题组服务（赛事、比赛服务）
  * @author wangkai
  */
-public interface HeroLandTopicGroupService {
+public interface HeroLandTopicGroupRemoteService {
     /**
      * 题组增加
      * @param dp 对象

@@ -1,4 +1,4 @@
-package com.heroland.competition.api;
+package com.heroland.competition.service;
 
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;

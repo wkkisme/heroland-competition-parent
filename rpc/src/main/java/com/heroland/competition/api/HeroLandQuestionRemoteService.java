@@ -11,7 +11,7 @@ import java.util.List;
  *  试卷题目服务
  * @author mac
  */
-public interface HeroLandQuestionService{
+public interface HeroLandQuestionRemoteService{
 
     /**
      * 题增加

@@ -1,7 +1,6 @@
 package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
-import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.common.BaseQO;
 import com.anycommon.response.utils.MybatisCriteriaMethodEnum;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
