@@ -1,4 +1,4 @@
-package com.heroland.competition.remote;
+package com.heroland.competition.provider;
 
 import com.heroland.competition.api.HeroLandCalculatorRemoteService;
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;

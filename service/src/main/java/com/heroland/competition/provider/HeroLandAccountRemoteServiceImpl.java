@@ -1,4 +1,4 @@
-package com.heroland.competition.remote;
+package com.heroland.competition.provider;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.api.HeroLandAccountRemoteService;
