@@ -19,9 +19,9 @@ public interface HeroLandInviteRecordRemoteService {
     /**
      * 新增邀请
      * @param dp
-     * @return
+     * @return 返回recordId
      */
-    ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp);
+    ResponseBody<String> addInvite(HeroLandInviteRecordDP dp);
 
     /**
      * 新增邀请

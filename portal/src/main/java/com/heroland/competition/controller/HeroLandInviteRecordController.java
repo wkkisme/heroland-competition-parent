@@ -35,7 +35,7 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/toInvite")
-    public ResponseBody<Boolean> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    public ResponseBody<String> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.invite(heroLandInviteRecord);
     }

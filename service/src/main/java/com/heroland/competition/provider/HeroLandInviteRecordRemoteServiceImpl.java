@@ -4,6 +4,9 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.api.HeroLandInviteRecordRemoteService;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
+import com.heroland.competition.service.HeroLandInviteRecordService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,10 +14,15 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
+@Service
+@AllArgsConstructor
 public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteRecordRemoteService {
+
+    private final HeroLandInviteRecordService inviteRecordService;
+
     @Override
-    public ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp) {
-        return null;
+    public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
+        return inviteRecordService.addInvite(dp);
     }
 
     @Override
@@ -29,7 +37,7 @@ public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteReco
 
     @Override
     public ResponseBody<List<HeroLandInviteRecordDP>> getInvite(HeroLandInviteRecordQO qo) {
-        return null;
+        return inviteRecordService.getInvite(qo);
     }
 
     @Override

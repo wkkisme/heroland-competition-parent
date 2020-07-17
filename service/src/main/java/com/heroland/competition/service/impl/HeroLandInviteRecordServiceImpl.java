@@ -39,27 +39,28 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     private HeroLandInviteRecordMapper heroLandInviteRecordMapper;
 
     @Override
-    public ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp) {
+    public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
         logger.info("邀请记录：{}", JSON.toJSONString(dp));
+        HeroLandInviteRecord heroLandInviteRecord = null;
         try {
-            heroLandInviteRecordMapper.insert(BeanUtil.insertConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecord = BeanUtil.insertConversion(dp.addCheck(), new HeroLandInviteRecord());
+            heroLandInviteRecordMapper.insert(heroLandInviteRecord);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
-        return ResponseBodyWrapper.success();
+        return ResponseBodyWrapper.successWrapper(heroLandInviteRecord.getRecordId());
     }
 
     @Override
-    public ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp) {
-        //todo  定时修改超时或者自己完成比赛的 清除redis
+    public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
         return addInvite(dp.inviteCheck(redisTemplate));
     }
 
     @Override
     public ResponseBody<Boolean> cancelInvite(HeroLandInviteRecordDP dp) {
         dp.setStatus(InviteStatusEnum.DO_NOT_AGREE.getStatus());
-        if (updateInvite(dp).isSuccess()){
+        if (updateInvite(dp).isSuccess()) {
             dp.finishBeInviteUserCompetition(redisTemplate);
             dp.finishInviteUserCompetition(redisTemplate);
         }
