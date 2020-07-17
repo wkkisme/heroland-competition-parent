@@ -39,6 +39,16 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
      */
     private String dictValue;
 
+    /**
+     * 业务编号，如香港的学校编号
+     */
+    private String bizNo;
+
+    /**
+     * 国际化表示--比如学校的英文表示
+     */
+    private String bizI18N;
+
 
     public HerolandBasicDataDP checkAndBuildBeforeCreate() {
         if (StringUtils.isBlank(this.getCode()) || StringUtils.isBlank(this.getDictValue())) {
@@ -50,7 +60,7 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
         }
         this.setField(adminFieldEnum.getField());
         this.setChName(adminFieldEnum.getChName());
-        this.setDictKey(IDGenerateUtils.getKey(adminFieldEnum));
+        this.setDictKey(StringUtils.isNotBlank(this.getDictKey())? this.getDictKey() : IDGenerateUtils.getKey(adminFieldEnum));
         return this;
     }
 

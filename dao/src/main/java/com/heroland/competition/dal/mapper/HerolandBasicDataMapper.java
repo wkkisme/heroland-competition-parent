@@ -8,6 +8,8 @@ import java.util.List;
 public interface HerolandBasicDataMapper {
     int deleteByPrimaryKey(@Param("id")Long id);
 
+    int deleteByDictKey(@Param("dictKeys")List<String> dictKeys);
+
     int insert(HerolandBasicData record);
 
     int insertSelective(HerolandBasicData record);
@@ -23,4 +25,6 @@ public interface HerolandBasicDataMapper {
 
 
     List<HerolandBasicData> selectByDictKeys(@Param("keys") List<String> keys);
+
+    List<HerolandBasicData> selectByCodeAndBizNo(@Param("code")String code, @Param("bizNo")String bizNo);
 }

@@ -19,7 +19,7 @@ public enum SPUEnum {
     @Getter
     private String desc;
 
-    SPUEnum(String desc, String name) {
+    SPUEnum(String name, String desc) {
         this.name = name;
         this.desc = desc;
     }

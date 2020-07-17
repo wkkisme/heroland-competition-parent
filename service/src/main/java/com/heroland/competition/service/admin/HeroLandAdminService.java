@@ -1,10 +1,14 @@
 package com.heroland.competition.service.admin;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
+import com.heroland.competition.domain.dto.HerolandSchoolSimpleDto;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
+import com.heroland.competition.domain.request.HerolandDataPageRequest;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ public interface HeroLandAdminService {
      * @param dp 对象
      * @return 正确
      */
-    ResponseBody<Boolean> addDict(HerolandBasicDataDP dp);
+    HerolandBasicData addDict(HerolandBasicDataDP dp);
 
     /**
      * 编辑后台管理类别
@@ -28,11 +32,11 @@ public interface HeroLandAdminService {
 
     /**
      * 删除后台管理字典值
-     * 原则上不支持删除，一旦删除，相应的业务数据都会受到影响，不可见
-     * @param dp 对象
+     *
+     * @param keys
      * @return 正确
      */
-    ResponseBody<Boolean> deleteDict(HerolandBasicDataDP dp);
+   Boolean deleteDict(List<String> keys);
 
     /**
      * 获取某一个subject
@@ -47,7 +51,7 @@ public interface HeroLandAdminService {
      * @param keys
      * @return
      */
-    ResponseBody<List<HerolandBasicDataDP>> getDictInfoByKeys(List<String> keys);
+    List<HerolandBasicDataDP> getDictInfoByKeys(List<String> keys);
 
     /**
      * 获取所有的管理类别
@@ -67,6 +71,9 @@ public interface HeroLandAdminService {
 
 
     ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code);
+
+
+    PageResponse<HerolandBasicDataDP> pageDataByCode(HerolandDataPageRequest request);
 
     /**
      * 获取学校管理的相关内容

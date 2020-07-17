@@ -15,5 +15,5 @@ public class HerolandSchool extends BaseDO {
 
     private String parentKey;
 
-    private String rootKey;
+    private String name;
 }

@@ -1,25 +1,29 @@
 package com.heroland.competition.service.admin.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.anycommon.response.common.ResponseBody;
-import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandSchoolMapper;
 import com.heroland.competition.dal.pojo.HerolandSchool;
+import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
-import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.dp.HerolandSchoolDP;
 import com.heroland.competition.domain.dto.HerolandSchoolDto;
-import com.heroland.competition.domain.qo.HerolandSchoolQO;
+import com.heroland.competition.domain.dto.HerolandSchoolSimpleDto;
+import com.heroland.competition.domain.request.HerolandSchoolPageRequest;
+import com.heroland.competition.domain.request.HerolandSchoolRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandSchoolService;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -33,7 +37,7 @@ import java.util.stream.Collectors;
  * @author smjyouzan
  * @date 2020/7/13
  */
-@Data
+@Component
 @Slf4j
 public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
 
@@ -45,14 +49,57 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
 
     @Override
     public Boolean addNode(HerolandSchoolDP schoolDP) {
-        try {
-           return herolandSchoolMapper.insert(BeanUtil.insertConversion(schoolDP.checkAndBuildBeforeCreate(), new HerolandSchool())) > 0;
-        } catch (Exception e) {
-            log.error("addDict error, [{}]", JSON.toJSONString(schoolDP));
-            ResponseBodyWrapper.failException(e.getMessage());
+        HerolandBasicDataDP dataDP = convertToHerolandBasicDataDP(schoolDP);
+        HerolandBasicData basicData = heroLandAdminService.addDict(dataDP);
+        if (Objects.isNull(basicData) || NumberUtils.nullOrZeroLong(basicData.getId())){
+            ResponseBodyWrapper.failSysException();
         }
-        return true;
+        schoolDP = schoolDP.checkAndBuildBeforeCreate();
+        HerolandSchool herolandSchool = new HerolandSchool();
+        //如果节点已经添加过则可以修改名称
+        List<HerolandSchool> byParentAndKey = herolandSchoolMapper.getByParentAndKey(schoolDP.getParentKey(), basicData.getDictKey());
+        //说明已经添加过
+        if (!CollectionUtils.isEmpty(byParentAndKey)){
+            //更新 主要是更新名称 和字典数据保持一致
+            HerolandSchool hasCreate = byParentAndKey.get(0);
+            hasCreate.setName(schoolDP.getName());
+            return herolandSchoolMapper.updateByPrimaryKeySelective(hasCreate) > 0;
+        }
+        herolandSchool.setKey(basicData.getDictKey());
+        herolandSchool.setCode(schoolDP.getCode());
+        herolandSchool.setName(schoolDP.getName());
+        herolandSchool.setParentKey(schoolDP.getParentKey());
+        herolandSchool.setHasParent(schoolDP.getHasParent());
+        return herolandSchoolMapper.insertSelective(herolandSchool) > 0;
 
+    }
+
+    @Override
+    public Boolean updateNode(HerolandSchoolDP schoolDP) {
+        AssertUtils.notNull(schoolDP.getId());
+        HerolandSchool herolandSchool = new HerolandSchool();
+        herolandSchool.setId(schoolDP.getId());
+        herolandSchool.setName(schoolDP.getName());
+        herolandSchoolMapper.updateByPrimaryKeySelective(herolandSchool);
+        HerolandSchool school = herolandSchoolMapper.selectByPrimaryKey(herolandSchool.getId());
+        List<HerolandBasicDataDP> data = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(school.getKey()));
+        if (CollectionUtils.isEmpty(data)){
+            //如果没有这个数据，理论上应该向字典库里新加一个
+            HerolandBasicDataDP insert = new HerolandBasicDataDP();
+            insert.setCode(school.getCode());
+            insert.setDictKey(school.getKey());
+            insert.setDictValue(schoolDP.getName());
+            insert.setBizNo(schoolDP.getBizNo());
+            insert.setBizI18N(schoolDP.getBizI18N());
+            heroLandAdminService.addDict(insert);
+            return true;
+        }
+        HerolandBasicDataDP dataDP = data.get(0);
+        dataDP.setBizI18N(schoolDP.getBizI18N());
+        dataDP.setDictValue(schoolDP.getName());
+        dataDP.setBizNo(schoolDP.getBizNo());
+        heroLandAdminService.editDict(dataDP);
+        return true;
     }
 
     @Override
@@ -66,33 +113,46 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         }
         //如果是非叶子节点，则下面的所有子节点都需要删除
         List<HerolandSchool> list = herolandSchoolMapper.getByParent(herolandSchool.getKey());
+        herolandSchoolMapper.deleteByPrimaryKey(herolandSchool.getId());
+        heroLandAdminService.deleteDict(Lists.newArrayList(herolandSchool.getKey()));
         if (CollectionUtils.isEmpty(list)){
-           return herolandSchoolMapper.deleteByPrimaryKey(herolandSchool.getId()) > 0;
+           return true;
         }
         List<HerolandSchool> children = Lists.newArrayList();
         getChildren(herolandSchool.getKey(), children);
         List<Long> ids = children.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList());
         herolandSchoolMapper.batchDeleteByIds(ids);
+        List<String> keys = children.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
+        heroLandAdminService.deleteDict(keys);
         return true;
 
     }
 
     @Override
-    public List<HerolandSchoolDto> queryChild(HerolandSchoolQO qo) {
+    public List<HerolandSchoolDto> queryChild(HerolandSchoolRequest qo) {
         List<HerolandSchoolDto> result = new ArrayList<>();
-        if (StringUtils.isBlank(qo.getCode())){
-            return null;
+        //如果为空查询所有的地区
+        List<HerolandSchool> herolandSchool = Lists.newArrayList();
+        boolean queryArea = false;
+        if (StringUtils.isBlank(qo.getNodeKey())){
+            queryArea = true;
+            herolandSchool = herolandSchoolMapper.getByKeyAndCode(null,AdminFieldEnum.AREA.getCode());
+        }else {
+            herolandSchool = herolandSchoolMapper.getByKeyAndCode(qo.getNodeKey(),null);
         }
-        List<HerolandSchool> herolandSchool = herolandSchoolMapper.getByKeyAndCode(qo.getKey(),qo.getCode());
-        if (Objects.isNull(herolandSchool)){
-            return null;
+        if (CollectionUtils.isEmpty(herolandSchool)){
+            return result;
         }
         result = BeanCopyUtils.copyArrayByJSON(herolandSchool, HerolandSchoolDto.class);
+        //如果是查询的地区，则不再查询他的子节点
+        if (queryArea){
+            return result;
+        }
         List<String> keys = herolandSchool.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
         //如果是非叶子节点，则下面的所有子节点都需要删除
         List<HerolandSchool> list = herolandSchoolMapper.getByParents(keys);
         if (!CollectionUtils.isEmpty(list)){
-            Map<String, List<HerolandSchool>> keyMap = list.stream().collect(Collectors.groupingBy(HerolandSchool::getKey));
+            Map<String, List<HerolandSchool>> keyMap = list.stream().collect(Collectors.groupingBy(HerolandSchool::getParentKey));
             for (HerolandSchoolDto dto : result){
                 if (keyMap.keySet().contains(dto.getKey())){
                     List<HerolandSchoolDto> child = BeanCopyUtils.copyArrayByJSON(keyMap.get(dto.getKey()), HerolandSchoolDto.class);
@@ -105,18 +165,71 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             allKeys.add(dto.getKey());
             dto.getChild().stream().forEach(e -> allKeys.add(e.getKey()));
         }
-        ResponseBody<List<HerolandBasicDataDP>> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
-        if (!dictInfoByKeys.isSuccess() || CollectionUtils.isEmpty(dictInfoByKeys.getData())){
-            log.error("query DictInfoByKeys error", JSON.toJSONString(keys));
-            return null;
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(allKeys);
+        if (CollectionUtils.isEmpty(dictInfoByKeys)){
+            log.error("query DictInfoByKeys error", JSON.toJSONString(allKeys));
+            return result;
         }
-        Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.getData().stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-        result.stream().forEach(e -> {
-            if (basic.keySet().contains(e.getKey())){
-                e.setName(basic.get(e.getKey()).get(0).getDictValue());
+        Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        for (HerolandSchoolDto dto : result){
+            if (basic.keySet().contains(dto.getKey())){
+                dto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
+                dto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
             }
-        });
+            dto.getChild().stream().forEach(e -> {
+                if (basic.keySet().contains(e.getKey())){
+                    e.setBizNo(basic.get(e.getKey()).get(0).getBizNo());
+                    e.setBizI18N(basic.get(e.getKey()).get(0).getBizI18N());
+                }
+            });
+        }
         return result;
+    }
+
+    @Override
+    public PageResponse<HerolandSchoolSimpleDto> pageQuery(HerolandSchoolPageRequest request) {
+        List<HerolandSchoolSimpleDto> result = new ArrayList<>();
+        PageResponse<HerolandSchoolSimpleDto> pageResult = new PageResponse<>();
+        Page<HerolandSchool> dataPage = null;
+//        List<HerolandSchool> byCodeAndName = herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(), request.getName());
+        if (StringUtils.isBlank(request.getParentKey())){
+            dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                    () -> herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(),request.getName()));
+        }else {
+            dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                    () -> herolandSchoolMapper.getByParentAndName(request.getParentKey(),request.getName()));
+        }
+
+        if (CollectionUtils.isEmpty(dataPage)){
+            return  pageResult;
+        }
+
+        List<String> allKeys = Lists.newArrayList();
+        dataPage.getResult().stream().forEach(e -> allKeys.add(e.getKey()));
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(allKeys);
+        if (CollectionUtils.isEmpty(dictInfoByKeys)){
+            log.error("query DictInfoByKeys error", JSON.toJSONString(allKeys));
+            return pageResult;
+        }
+        Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        for (HerolandSchool dto : dataPage.getResult()){
+            HerolandSchoolSimpleDto simpleDto = new HerolandSchoolSimpleDto();
+            simpleDto.setName(dto.getName());
+            simpleDto.setCode(dto.getCode());
+            simpleDto.setId(dto.getId());
+            simpleDto.setKey(dto.getKey());
+            if (basic.keySet().contains(dto.getKey())){
+                simpleDto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
+                simpleDto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
+            }
+            result.add(simpleDto);
+        }
+        pageResult.setItems(result);
+        pageResult.setPageSize(dataPage.getPageSize());
+        pageResult.setPage(dataPage.getPageNum());
+        pageResult.setTotal((int) dataPage.getTotal());
+        pageResult.setTotal((int) dataPage.getTotal());
+        return pageResult;
     }
 
     private void getChildren(String parent, List<HerolandSchool> children){
@@ -127,6 +240,15 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
                 getChildren(sh.getKey(), children);
             }
         }
+    }
+
+    private HerolandBasicDataDP convertToHerolandBasicDataDP(HerolandSchoolDP schoolDP){
+        HerolandBasicDataDP dataDP = new HerolandBasicDataDP();
+        dataDP.setCode(schoolDP.getCode());
+        dataDP.setDictValue(schoolDP.getName());
+        dataDP.setBizI18N(schoolDP.getBizI18N());
+        dataDP.setBizNo(schoolDP.getBizNo());
+        return dataDP;
     }
 
 

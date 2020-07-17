@@ -84,7 +84,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
 
     @Override
     public ResponseBody<List<HerolandChapterDP>> pageQuery(HerolandChapterQO qo) {
-        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageNum(), qo.getPageSize(), true).doSelectPage(
+        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                 () -> heroLandChapterMapper.selectByQuery(qo));
         return ResponseBodyWrapper.successListWrapper(dataPage.getResult(), dataPage.getTotal(), qo, HerolandChapterDP.class);
     }

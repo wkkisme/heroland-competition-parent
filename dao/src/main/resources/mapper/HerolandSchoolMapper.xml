@@ -7,7 +7,7 @@
     <result column="key" jdbcType="VARCHAR" property="key" />
     <result column="has_parent" jdbcType="BIT" property="hasParent" />
     <result column="parent_key" jdbcType="VARCHAR" property="parentKey" />
-    <result column="root_key" jdbcType="VARCHAR" property="rootKey" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
@@ -15,7 +15,7 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, code, `key`, has_parent, parent_key, root_key, is_deleted, creator, modifier, 
+    id, code, `key`, has_parent, parent_key, name, is_deleted, creator, modifier, 
     gmt_create, gmt_modified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -36,11 +36,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into heroland_school (code, `key`, has_parent, 
-      parent_key, root_key, is_deleted, 
+      parent_key, name, is_deleted, 
       creator, modifier, gmt_create, 
       gmt_modified)
     values (#{code,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR}, #{hasParent,jdbcType=BIT}, 
-      #{parentKey,jdbcType=VARCHAR}, #{rootKey,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, 
+      #{parentKey,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, 
       #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
@@ -62,8 +62,8 @@
       <if test="parentKey != null">
         parent_key,
       </if>
-      <if test="rootKey != null">
-        root_key,
+      <if test="name != null">
+        name,
       </if>
       <if test="isDeleted != null">
         is_deleted,
@@ -94,8 +94,8 @@
       <if test="parentKey != null">
         #{parentKey,jdbcType=VARCHAR},
       </if>
-      <if test="rootKey != null">
-        #{rootKey,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
@@ -129,8 +129,8 @@
       <if test="parentKey != null">
         parent_key = #{parentKey,jdbcType=VARCHAR},
       </if>
-      <if test="rootKey != null">
-        root_key = #{rootKey,jdbcType=VARCHAR},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
@@ -156,7 +156,7 @@
       `key` = #{key,jdbcType=VARCHAR},
       has_parent = #{hasParent,jdbcType=BIT},
       parent_key = #{parentKey,jdbcType=VARCHAR},
-      root_key = #{rootKey,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       is_deleted = #{isDeleted,jdbcType=BIT},
       creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
@@ -169,7 +169,7 @@
     select
     <include refid="Base_Column_List" />
     from heroland_school
-    where `key` = #{key,jdbcType=VARCHAR}
+    where `key` = #{key,jdbcType=VARCHAR} and is_deleted = 0
   </select>
 
   <select id="getByKeyAndCode"  resultMap="BaseResultMap">
@@ -186,10 +186,37 @@
     </if>
   </select>
 
-  <select id="getByParent"  resultMap="BaseResultMap">
+  <select id="getByParentAndName"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from heroland_school
+    where is_deleted = 0
+    <if test="parentKey != null">
+      and  `parent_key` = #{parentKey,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      and  name like concat('%',#{name},'%')
+    </if>
+  </select>
+
+  <select id="getByCodeAndName"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school
+    where is_deleted = 0
+
+    <if test="code != null">
+      and  code = #{code,jdbcType=VARCHAR}
+    </if>
+    <if test="name != null">
+      and  name like concat('%',#{name},'%')
+    </if>
+  </select>
+
+  <select id="getByParent"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school and is_deleted = 0
     where `parent_key` = #{parent,jdbcType=VARCHAR}
   </select>
 
@@ -205,6 +232,14 @@
         #{parent}
       </foreach>
     </if>
+  </select>
+
+  <select id="getByParentAndKey"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school
+    where `parent_key` = #{parentKey,jdbcType=VARCHAR} and `key` = #{key,jdbcType=VARCHAR}
+    and is_deleted = 0
   </select>
 
   <update id="batchDeleteByIds" parameterType="java.lang.Long">

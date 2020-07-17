@@ -5,36 +5,40 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ */
 @Data
-public class HerolandSkuAddRequest implements Serializable {
+public class HerolandKnowledgeEditRequest implements Serializable {
 
     /**
      * id
      */
+    @NotNull
     private Long id;
 
     /**
-     * spuId
+     * 年级
      */
     @NotNull
-    private String spuId;
+    private String grade;
 
     /**
-     * 单价
+     * 科目
      */
     @NotNull
-    private Long skuPrice;
+    private String course;
 
     /**
-     * 单位
+     * 知识点
      */
     @NotNull
-    private Integer unit;
+    private String knowledge;
 
 
     /**
-     * 货币类型
+     * 知识点难度level
      */
     @NotNull
-    private String currencyType;
+    private Integer diff;
+
 }

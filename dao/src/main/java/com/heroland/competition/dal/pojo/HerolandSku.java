@@ -12,7 +12,7 @@ public class HerolandSku extends BaseDO {
 
     private String skuId;
 
-    private Byte isVisible;
+    private Boolean isVisible = true;
 
     private Long skuPrice;
 

@@ -33,4 +33,14 @@ public class HerolandBasicData extends BaseDO implements Serializable {
      */
     private String dictValue;
 
+    /**
+     * 业务编号，如香港的学校编号
+     */
+    private String bizNo;
+
+    /**
+     * 国际化表示--比如学校的英文表示
+     */
+    private String bizI18N;
+
 }

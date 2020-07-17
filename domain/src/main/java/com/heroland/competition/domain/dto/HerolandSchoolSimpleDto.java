@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2020/7/13
  */
 @Data
-public class HerolandSchoolDto implements Serializable {
+public class HerolandSchoolSimpleDto implements Serializable {
 
     /**
      * id
@@ -43,9 +43,33 @@ public class HerolandSchoolDto implements Serializable {
      */
     private String name;
 
+    /**
+     * 联系人
+     */
+    private String linkedMan;
 
     /**
-     * 孩子节点
+     * 电话
      */
-    private List<HerolandSchoolDto> child = Lists.newArrayList();
+    private String mobile;
+
+    /**
+     * email
+     */
+    private String email;
+
+    /**
+     * 地理坐标
+     */
+    private String axis;
+
+    /**
+     * 描述 简介
+     */
+    private String desc;
+
+    /**
+     * 如果是学校列表则需要带上它的地区名称
+     */
+    private String areaName;
 }

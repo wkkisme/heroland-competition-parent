@@ -6,11 +6,12 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class HerolandSkuAddRequest implements Serializable {
+public class HerolandSkuEditRequest implements Serializable {
 
     /**
      * id
      */
+    @NotNull
     private Long id;
 
     /**
@@ -30,7 +31,6 @@ public class HerolandSkuAddRequest implements Serializable {
      */
     @NotNull
     private Integer unit;
-
 
     /**
      * 货币类型

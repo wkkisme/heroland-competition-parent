@@ -9,6 +9,9 @@ public enum HerolandErrMsgEnum {
     ERROR_PAY_STATE("70002", "支付状态错误"),
     ERROR_CURRENCY("70003", "暂不支持该汇率，请联系配置"),
     ERROR_DIMOND("70004", "暂不支持该类型宝石，请联系配置"),
+
+
+    ERROR_PARAM("70100", "同一类型下不支持相同编号"),
    ;
 
     private String errorCode;

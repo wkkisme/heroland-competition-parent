@@ -16,32 +16,44 @@ import java.util.List;
 public class HerolandLocationDto implements Serializable {
 
     /**
-     * 编号
+     * 地区key
      */
-    private String code;
+    private String areaKey;
 
     /**
-     * 编号值
+     * 地区名称
      */
-    private String field;
-
-    private Boolean isArea;
-
-    private List<HerolandBasicDataDP> areaList;
+    private String areaName;
 
     /**
-     * 当前空间编号
+     * 学校key
      */
-    private String currentKey;
-
+    private String schoolKey;
 
     /**
-     * 下一层级的空间列表
+     * 学校名称
      */
-    private List<HerolandBasicDataDP> childLocation;
+    private String schoolName;
 
-    public Boolean getIsArea(){
-        return (StringUtils.isNotBlank(code) && AdminFieldEnum.AREA.getCode().equals(code)) ? Boolean.TRUE : Boolean.FALSE;
-    }
+    /**
+     * 年级key
+     */
+    private String gradeKey;
+
+    /**
+     * 年级名称
+     */
+    private String gradeName;
+
+    /**
+     * 班级key
+     */
+    private String classKey;
+
+    /**
+     * 班级名称
+     */
+    private String className;
+
 
 }

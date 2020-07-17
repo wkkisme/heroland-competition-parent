@@ -10,6 +10,7 @@ import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
 import com.heroland.competition.domain.qo.PrePayQO;
 import com.heroland.competition.domain.request.HerolandSkuAddRequest;
+import com.heroland.competition.domain.request.HerolandSkuEditRequest;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
@@ -71,7 +72,7 @@ public class HeroLandDiamondController {
      */
     @RequestMapping(value = "/update", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> prePay(@RequestBody HerolandSkuAddRequest request){
+    public ResponseBody<Boolean> update(@RequestBody HerolandSkuEditRequest request){
         ResponseBody<Boolean> result = new ResponseBody<>();
         HerolandSkuDP herolandSkuDP = new HerolandSkuDP();
         BeanUtils.copyProperties(request,herolandSkuDP);

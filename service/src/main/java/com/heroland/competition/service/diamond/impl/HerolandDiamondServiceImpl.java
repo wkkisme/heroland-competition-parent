@@ -30,10 +30,9 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
 
     @Override
     public void createDiamondSku(HerolandSkuDP herolandSkuDP) {
-        HerolandOrderDP orderDP = null;
         try {
             HerolandSku sku = BeanUtil.insertConversion(herolandSkuDP.checkAndBuildBeforeCreate(), new HerolandSku());
-            skuMapper.insert(sku);
+            skuMapper.insertSelective(sku);
         } catch (Exception e) {
             log.error("createOrder error, [{}]", JSON.toJSONString(herolandSkuDP));
             ResponseBodyWrapper.failSysException();
@@ -42,11 +41,8 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
 
     @Override
     public void updateDiamondSku(HerolandSkuDP dp) {
-        if (NumberUtils.nullOrZeroLong(dp.getId())){
-            ResponseBodyWrapper.failSysException();
-        }
         try {
-            skuMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp, new HerolandSku()));
+            skuMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.checkAndBuildBeforeEdit(), new HerolandSku()));
         } catch (Exception e) {
             log.error("editSubject error", e);
             ResponseBodyWrapper.failSysException();
@@ -78,12 +74,11 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
 
     @Override
     public List<HerolandSkuDP> listSku(HerolandSkuQO skuQO) {
-        List<HerolandSku> list = skuMapper.list(skuQO);
+        List<HerolandSku> list = skuMapper.list(skuQO.getSpuId(),skuQO.getSkuId());
         try {
             List<HerolandSkuDP> herolandSkuDPS = BeanUtil.mappingListConversion(list, HerolandSkuDP.class);
-            return null;
+            return herolandSkuDPS;
         } catch (Exception e) {
-
 
         }
         return new ArrayList<>();
