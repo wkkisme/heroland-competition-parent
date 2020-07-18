@@ -4,6 +4,9 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.api.HeroLandCompetitionRecordRemoteService;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,10 +14,15 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:15 下午
  */
+@Service
+@AllArgsConstructor
 public class HeroLandCompetitionRecordRemoteServiceImpl implements HeroLandCompetitionRecordRemoteService {
+
+    private final HeroLandCompetitionRecordService heroLandCompetitionRecordService;
+
     @Override
-    public ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
-        return null;
+    public ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
+        return heroLandCompetitionRecordService.addCompetitionRecord(dp);
     }
 
     @Override

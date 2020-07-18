@@ -8,6 +8,7 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.InviteStatusEnum;
+import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
@@ -36,7 +37,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandInviteRecordServiceImpl.class);
     @Resource
-    private HeroLandInviteRecordMapper heroLandInviteRecordMapper;
+    private HeroLandInviteRecordExtMapper heroLandInviteRecordMapper;
 
     @Override
     public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
@@ -96,7 +97,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         try {
 
-            heroLandInviteRecordMapper.updateByPrimaryKey(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecordMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

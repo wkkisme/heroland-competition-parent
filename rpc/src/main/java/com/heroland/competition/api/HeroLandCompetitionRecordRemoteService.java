@@ -17,7 +17,7 @@ public interface HeroLandCompetitionRecordRemoteService {
      * @param dp 对象
      * @return 正确
      */
-    ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp);
+    ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp);
 
     /**
      * 比赛记录更新

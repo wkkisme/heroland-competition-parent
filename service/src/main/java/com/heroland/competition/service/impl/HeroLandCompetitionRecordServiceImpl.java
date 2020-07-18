@@ -35,15 +35,20 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private RedisTemplate<String, HeroLandCompetitionRecordDP> redisTemplate;
 
     @Override
-    public ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
-        ResponseBody<Boolean> result = new ResponseBody<>();
+    public ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
+        ResponseBody<String> result = new ResponseBody<>();
+        String recordId;
         try {
             dp.addSynchronizeCheck();
             Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
             if (aBoolean == null || !aBoolean) {
-                result.setData(heroLandCompetitionRecordExtMapper.insert(BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord())) > 0);
+                HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
+                recordId = heroLandCompetitionRecord.getRecordId();
+                heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
+                result.setData(recordId);
             }else {
-                result.setData(true);
+                dp = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
+                result.setData(dp.getRecordId());
             }
         } catch (Exception e) {
             logger.error("", e);
