@@ -43,7 +43,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
      * 比赛类型
      */
     @ApiModelProperty(value = "topicType比赛类型")
-    private String topicType;
+    private Integer topicType;
 
     /**
      * 题组id
@@ -72,7 +72,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
     private static final String INVITE_KEY = "invite_competition";
 
     public HeroLandInviteRecordDP addCheck() {
-        if (StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicType, this.topicName)) {
+        if (this.topicType == null || StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicName)) {
             ResponseBodyWrapper.failParamException();
         }
 
@@ -152,7 +152,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
 
 
     public HeroLandInviteRecordDP updateCheck() {
-        if (StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicType, this.topicName, this.recordId)) {
+        if ( this.topicType == null || StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicName, this.recordId)) {
             ResponseBodyWrapper.failParamException();
         }
         this.beforeUpdate();
@@ -251,7 +251,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
      *
      * @return topic_type 比赛类型
      */
-    public String getTopicType() {
+    public Integer getTopicType() {
         return topicType;
     }
 
@@ -260,8 +260,8 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
      *
      * @param topicType 比赛类型
      */
-    public void setTopicType(String topicType) {
-        this.topicType = topicType == null ? null : topicType.trim();
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 
     /**
