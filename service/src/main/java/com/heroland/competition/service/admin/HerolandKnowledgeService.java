@@ -1,7 +1,9 @@
 package com.heroland.competition.service.admin;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
+import com.heroland.competition.domain.dto.HerolandKnowledgeDto;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 
 import java.util.List;
@@ -39,16 +41,16 @@ public interface HerolandKnowledgeService {
      * 删除知识点
      * 删除某一知识点，则挂在下一级知识点内容向上挂，树节点向上偏移
      *
-     * @param qo 对象
+     * @param id 对象
      * @return 正确
      */
     ResponseBody<Boolean> deleteOneNode(Long id);
 
     /**
      * 获取某一个知识点
-     * @param qo 对象
+     * @param id 对象
      */
-    ResponseBody<HerolandKnowledgeDP> getById(HerolandKnowledgeQO qo);
+    HerolandKnowledgeDto getById(Long id);
 
 
     /**
@@ -56,5 +58,5 @@ public interface HerolandKnowledgeService {
      *
      * 分页获取
      */
-    ResponseBody<List<HerolandKnowledgeDP>> pageQuery(HerolandKnowledgeQO qo);
+    PageResponse<HerolandKnowledgeDto> pageQuery(HerolandKnowledgeQO qo);
 }

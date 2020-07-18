@@ -3,10 +3,9 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandSchoolCourseMapper">
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandSchoolCourse">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="school" jdbcType="VARCHAR" property="school" />
-    <result column="phase" jdbcType="VARCHAR" property="phase" />
-    <result column="course" jdbcType="VARCHAR" property="course" />
-    <result column="edition" jdbcType="VARCHAR" property="edition" />
+    <result column="school_key" jdbcType="VARCHAR" property="schoolKey" />
+    <result column="course_id" jdbcType="BIGINT" property="courseId" />
+    <result column="obligatory" jdbcType="INTEGER" property="obligatory" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
@@ -14,8 +13,14 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, school, phase, course, edition, is_deleted, creator, modifier, gmt_create, gmt_modified
+    id, school_key, course_id, obligatory, is_deleted, creator, modifier, gmt_create, 
+    gmt_modified
   </sql>
+
+  <sql id="Insert_Column_List">
+        school_key, course_id
+    </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -30,14 +35,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_school_course (school, phase, course, 
-      edition, is_deleted, creator, 
-      modifier, gmt_create, gmt_modified
-      )
-    values (#{school,jdbcType=VARCHAR}, #{phase,jdbcType=VARCHAR}, #{course,jdbcType=VARCHAR}, 
-      #{edition,jdbcType=VARCHAR}, #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, 
-      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
-      )
+    insert into heroland_school_course (school_key, course_id, obligatory, 
+      is_deleted, creator, modifier, 
+      gmt_create, gmt_modified)
+    values (#{schoolKey,jdbcType=VARCHAR}, #{courseId,jdbcType=BIGINT}, #{obligatory,jdbcType=INTEGER}, 
+      #{isDeleted,jdbcType=BIT}, #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, 
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandSchoolCourse">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -45,17 +48,14 @@
     </selectKey>
     insert into heroland_school_course
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="school != null">
-        school,
+      <if test="schoolKey != null">
+        school_key,
       </if>
-      <if test="phase != null">
-        phase,
+      <if test="courseId != null">
+        course_id,
       </if>
-      <if test="course != null">
-        course,
-      </if>
-      <if test="edition != null">
-        edition,
+      <if test="obligatory != null">
+        obligatory,
       </if>
       <if test="isDeleted != null">
         is_deleted,
@@ -74,17 +74,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="school != null">
-        #{school,jdbcType=VARCHAR},
+      <if test="schoolKey != null">
+        #{schoolKey,jdbcType=VARCHAR},
       </if>
-      <if test="phase != null">
-        #{phase,jdbcType=VARCHAR},
+      <if test="courseId != null">
+        #{courseId,jdbcType=BIGINT},
       </if>
-      <if test="course != null">
-        #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="edition != null">
-        #{edition,jdbcType=VARCHAR},
+      <if test="obligatory != null">
+        #{obligatory,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
@@ -103,20 +100,18 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandSchoolCourse">
     update heroland_school_course
     <set>
-      <if test="school != null">
-        school = #{school,jdbcType=VARCHAR},
+      <if test="schoolKey != null">
+        school_key = #{schoolKey,jdbcType=VARCHAR},
       </if>
-      <if test="phase != null">
-        phase = #{phase,jdbcType=VARCHAR},
+      <if test="courseId != null">
+        course_id = #{courseId,jdbcType=BIGINT},
       </if>
-      <if test="course != null">
-        course = #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="edition != null">
-        edition = #{edition,jdbcType=VARCHAR},
+      <if test="obligatory != null">
+        obligatory = #{obligatory,jdbcType=INTEGER},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
@@ -138,10 +133,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandSchoolCourse">
     update heroland_school_course
-    set school = #{school,jdbcType=VARCHAR},
-      phase = #{phase,jdbcType=VARCHAR},
-      course = #{course,jdbcType=VARCHAR},
-      edition = #{edition,jdbcType=VARCHAR},
+    set school_key = #{schoolKey,jdbcType=VARCHAR},
+      course_id = #{courseId,jdbcType=BIGINT},
+      obligatory = #{obligatory,jdbcType=INTEGER},
       is_deleted = #{isDeleted,jdbcType=BIT},
       creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
@@ -149,4 +143,44 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="batchSave" parameterType="java.util.List">
+    insert into heroland_school_course
+    (<include refid="Insert_Column_List"/>)
+    values
+    <foreach collection="records" item="item" index="index" separator=",">
+      (#{item.schoolKey,jdbcType=VARCHAR},
+      #{item.courseId,jdbcType=BIGINT})
+    </foreach>
+  </insert>
+
+  <update id="deleteBySchoolAndCourse" >
+    update heroland_school_course
+    set is_deleted = 1
+    where 1=1
+    <if test="schoolCode != null">
+     and  school_key = #{schoolCode,jdbcType=VARCHAR}
+    </if>
+    <if test="courseId != null">
+     and course_id = #{courseId,jdbcType=BIGINT}
+    </if>
+  </update>
+
+  <select id="getBySchoolListAndCourse" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school_course
+    where is_deleted = 0
+    <if test="schoolCodes != null">
+     and school_key IN (
+      <foreach collection="schoolCodes" item="schoolCode" index="index" separator=",">
+        #{schoolCode,jdbcType=VARCHAR}
+      </foreach>
+      )
+    </if>
+    <if test="courseId != null">
+    and  course_id = #{courseId,jdbcType=BIGINT}
+    </if>
+  </select>
+
 </mapper>

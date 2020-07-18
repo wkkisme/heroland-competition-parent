@@ -3,7 +3,10 @@ package com.heroland.competition.domain.dp;
 import com.anycommon.response.common.BaseDO;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.contants.DiffEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.utils.AssertUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -52,14 +55,13 @@ public class HerolandKnowledgeDP extends BaseDO implements Serializable {
     private String diffName;
 
 
-    public String getDiffName(){
+    public HerolandKnowledgeDP checkAndBuildBeforeCreate(){
+        AssertUtils.notBlank(course, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(grade, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(knowledge, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         DiffEnum diffEnum = DiffEnum.valueOfLevel(diff);
-        if (Objects.nonNull(diffEnum)){
-            this.diffName = diffEnum.getName();
-            return this.diffName;
-        }
-
-        return null;
+        AssertUtils.notNull(diffEnum, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        return this;
     }
 
     private List<HerolandKnowledgeDP> children = Lists.newArrayList();

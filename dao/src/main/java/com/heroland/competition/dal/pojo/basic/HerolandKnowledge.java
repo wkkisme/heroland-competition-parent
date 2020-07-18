@@ -23,20 +23,20 @@ public class HerolandKnowledge extends BaseDO implements Serializable {
      */
     private String knowledge;
 
-    /**
-     * 是否是页子级别
-     */
-    private Boolean isRoot;
-
-    /**
-     * 根级别知识点
-     */
-    private Long rootKnowledgeId;
-
-    /**
-     * 父级别知识点
-     */
-    private Long parentKnowledgeId;
+//    /**
+//     * 是否是页子级别
+//     */
+//    private Boolean isRoot;
+//
+//    /**
+//     * 根级别知识点
+//     */
+//    private Long rootKnowledgeId;
+//
+//    /**
+//     * 父级别知识点
+//     */
+//    private Long parentKnowledgeId;
 
     /**
      * 知识点难度

@@ -2,6 +2,7 @@ package com.heroland.competition.service.admin.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
@@ -63,7 +64,11 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
             return basicData;
         } catch (Exception e) {
             log.error("addDict error, [{}]", JSON.toJSONString(dp));
-            ResponseBodyWrapper.failSysException();
+            if (e instanceof AppSystemException){
+                ResponseBodyWrapper.failException(e.getMessage());
+            }else {
+                ResponseBodyWrapper.failSysException();
+            }
         }
         return null;
     }
@@ -82,7 +87,11 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
             result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.checkAndBuildBeforeUpdate(), new HerolandBasicData())) > 0);
         } catch (Exception e) {
             log.error("editDict error", e);
-            ResponseBodyWrapper.failSysException();
+            if (e instanceof AppSystemException){
+                ResponseBodyWrapper.failException(e.getMessage());
+            }else {
+                ResponseBodyWrapper.failSysException();
+            }
         }
         return result;
     }

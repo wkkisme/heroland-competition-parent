@@ -5,6 +5,12 @@ package com.heroland.competition.common.enums;
  * @date 2020/7/8
  */
 public enum HerolandErrMsgEnum {
+
+    EMPTY_PARAM("10000", "参数为空"),
+    PARAM_ERROR("10001", "参数格式不对"),
+    PARAM_DUP("10002", "数据库内已存在相同版本科目"),
+
+
     EMPTY_PAY("70001", "支付单不存在"),
     ERROR_PAY_STATE("70002", "支付状态错误"),
     ERROR_CURRENCY("70003", "暂不支持该汇率，请联系配置"),

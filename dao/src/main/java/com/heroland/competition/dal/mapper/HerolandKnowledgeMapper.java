@@ -13,7 +13,9 @@ public interface HerolandKnowledgeMapper {
 
     int deleteByPrimaryKey(@Param("id") Long id);
 
-    int insert(HerolandKnowledge chapter);
+    int insertSelective(HerolandKnowledge knowledge);
+
+    int updateByPrimaryKeySelective(HerolandKnowledge knowledge);
 
     HerolandKnowledge selectByPrimaryKey(@Param("id") Long id);
 

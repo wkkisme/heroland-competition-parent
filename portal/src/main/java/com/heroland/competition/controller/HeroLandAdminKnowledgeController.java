@@ -1,7 +1,11 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.page.Pagination;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
+import com.heroland.competition.domain.dto.HerolandCourseDto;
+import com.heroland.competition.domain.dto.HerolandKnowledgeDto;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 import com.heroland.competition.domain.request.HerolandKnowledgeAddRequest;
 import com.heroland.competition.domain.request.HerolandKnowledgeEditRequest;
@@ -26,37 +30,24 @@ public class HeroLandAdminKnowledgeController {
     private HerolandKnowledgeService herolandKnowledgeService;
 
     /**
-     * 增加知识点
+     * 增加|编辑知识点
      * @param request
      * @return
      */
-    @RequestMapping(value = "/add", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addAndEdit", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     ResponseBody<Boolean> add(@RequestBody HerolandKnowledgeAddRequest request){
-        HerolandKnowledgeDP herolandKnowledgeDP = new HerolandKnowledgeDP();
-        herolandKnowledgeDP.setDiff(request.getDiff());
-        herolandKnowledgeDP.setKnowledge(request.getKnowledge());
-        herolandKnowledgeDP.setCourse(request.getCourse());
-        herolandKnowledgeDP.setGrade(request.getGrade());
-        return herolandKnowledgeService.add(herolandKnowledgeDP);
-    }
-
-    /**
-     * 编辑知识点
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/edit", produces = "application/json;charset=UTF-8")
-    @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<Boolean> edit(@RequestBody HerolandKnowledgeEditRequest request){
+        ResponseBody<Boolean> result = new ResponseBody<>();
         HerolandKnowledgeDP herolandKnowledgeDP = new HerolandKnowledgeDP();
         herolandKnowledgeDP.setDiff(request.getDiff());
         herolandKnowledgeDP.setKnowledge(request.getKnowledge());
         herolandKnowledgeDP.setCourse(request.getCourse());
         herolandKnowledgeDP.setGrade(request.getGrade());
         herolandKnowledgeDP.setId(request.getId());
-        return herolandKnowledgeService.edit(herolandKnowledgeDP);
+        herolandKnowledgeService.edit(herolandKnowledgeDP);
+        return result;
     }
+
 
 
     /**
@@ -70,15 +61,19 @@ public class HeroLandAdminKnowledgeController {
         return herolandKnowledgeService.deleteOneNode(id);
     }
 
+
+
     /**
      * 查看单个知识点
-     * @param qo
+     * @param id
      * @return
      */
     @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<HerolandKnowledgeDP> getById(@RequestBody HerolandKnowledgeQO qo){
-        return herolandKnowledgeService.getById(qo);
+    ResponseBody<HerolandKnowledgeDto> getById(@RequestParam("id") Long id){
+        ResponseBody<HerolandKnowledgeDto> result = new ResponseBody<HerolandKnowledgeDto>();
+        result.setData(herolandKnowledgeService.getById(id));
+        return result;
     }
 
 
@@ -89,7 +84,16 @@ public class HeroLandAdminKnowledgeController {
      */
     @RequestMapping(value = "/pageQuery", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    ResponseBody<List<HerolandKnowledgeDP>> pageQuery(@RequestBody HerolandKnowledgeQO qo){
-        return herolandKnowledgeService.pageQuery(qo);
+    ResponseBody<List<HerolandKnowledgeDto>> pageQuery(@RequestBody HerolandKnowledgeQO qo){
+        ResponseBody<List<HerolandKnowledgeDto>> result = new ResponseBody<>();
+        PageResponse<HerolandKnowledgeDto> pageResponse = herolandKnowledgeService.pageQuery(qo);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
+        return result;
     }
 }

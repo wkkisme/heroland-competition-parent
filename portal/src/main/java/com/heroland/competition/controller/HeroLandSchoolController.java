@@ -89,6 +89,11 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setBizNo(request.getBizNo());
         herolandSchoolDP.setName(request.getName());
         herolandSchoolDP.setParentKey(request.getParentKey());
+        herolandSchoolDP.setLinkedMan(request.getLinkedMan());
+        herolandSchoolDP.setMobile(request.getMobile());
+        herolandSchoolDP.setEmail(request.getEmail());
+        herolandSchoolDP.setAxis(request.getAxis());
+        herolandSchoolDP.setDesc(request.getDesc());
         heroLandSchoolService.addNode(herolandSchoolDP);
         result.setData(true);
         return result;
@@ -124,6 +129,11 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setId(request.getId());
         herolandSchoolDP.setBizNo(request.getBizNo());
         herolandSchoolDP.setName(request.getName());
+        herolandSchoolDP.setLinkedMan(request.getLinkedMan());
+        herolandSchoolDP.setMobile(request.getMobile());
+        herolandSchoolDP.setEmail(request.getEmail());
+        herolandSchoolDP.setAxis(request.getAxis());
+        herolandSchoolDP.setDesc(request.getDesc());
         heroLandSchoolService.updateNode(herolandSchoolDP);
         result.setData(true);
         return result;

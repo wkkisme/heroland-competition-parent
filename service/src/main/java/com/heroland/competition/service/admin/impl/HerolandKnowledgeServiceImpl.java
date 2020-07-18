@@ -7,20 +7,31 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.contants.DiffEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandKnowledgeMapper;
+import com.heroland.competition.dal.pojo.HerolandCourse;
 import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
+import com.heroland.competition.domain.dto.HerolandCourseDto;
+import com.heroland.competition.domain.dto.HerolandKnowledgeDto;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
+import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
+import com.heroland.competition.service.diamond.HerolandDiamondService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -33,19 +44,18 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
     @Resource
     private HerolandKnowledgeMapper herolandKnowledgeMapper;
 
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
+
     @Override
     @Transactional
     public ResponseBody<Boolean> add(HerolandKnowledgeDP dp) {
+
         ResponseBody<Boolean> result = new ResponseBody<>();
         try {
+            dp = dp.checkAndBuildBeforeCreate();
             HerolandKnowledge herolandKnowledge = BeanUtil.insertConversion(dp, new HerolandKnowledge());
-            herolandKnowledgeMapper.insert(herolandKnowledge);
-            if (NumberUtils.nullOrZeroLong(dp.getParentKnowledgeId()) && !NumberUtils.nullOrZeroLong(herolandKnowledge.getId())){
-                herolandKnowledge.setRootKnowledgeId(herolandKnowledge.getId());
-                herolandKnowledge.setParentKnowledgeId(0L);
-                herolandKnowledgeMapper.updateByPrimaryKey(herolandKnowledge);
-                result.setData(true);
-            }
+            herolandKnowledgeMapper.insertSelective(herolandKnowledge);
         } catch (Exception e) {
             log.error("add error, [{}]", JSON.toJSONString(dp));
             ResponseBodyWrapper.failSysException();
@@ -82,54 +92,78 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
             ResponseBodyWrapper.failSysException();
         }
         result.setData(herolandKnowledgeMapper.deleteByPrimaryKey(id) > 0);
-//        HerolandKnowledge herolandKnowledge = herolandKnowledgeMapper.selectByPrimaryKey(id);
-//        if (Objects.equals(Boolean.TRUE,herolandKnowledge.getIsRoot())){
-//            return result;
-//        }
-//        List<HerolandKnowledge> list = herolandKnowledgeMapper.getByParentId(id);
-//        list.stream().forEach(e -> e.setParentKnowledgeId(herolandKnowledge.getParentKnowledgeId()));
-//        list.stream().forEach(e -> herolandKnowledgeMapper.updateByPrimaryKey(e));
-//        result.setData(true);
         return result;
     }
 
 
     @Override
-    public ResponseBody<HerolandKnowledgeDP> getById(HerolandKnowledgeQO qo) {
-        ResponseBody<HerolandKnowledgeDP> result = new ResponseBody<>();
-        HerolandKnowledge herolandKnowledge = null;
-        if (NumberUtils.nullOrZeroLong(qo.getId())){
-            ResponseBodyWrapper.failSysException();
+    public HerolandKnowledgeDto getById(Long id) {
+        if (NumberUtils.nullOrZeroLong(id)){
+            return null;
         }
-        try {
-            herolandKnowledge = herolandKnowledgeMapper.selectByPrimaryKey(qo.getId());
-        } catch (Exception e) {
-            log.error("", e);
-            ResponseBodyWrapper.failSysException();
+        HerolandKnowledge herolandKnowledge = herolandKnowledgeMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(herolandKnowledge)){
+            return null;
         }
-        List<HerolandKnowledge> children = Lists.newArrayList();
-//        if (!Objects.equals(Boolean.TRUE, qo.getIncludeChildren())){
-//            return ResponseBodyWrapper.successWrapper(herolandKnowledge, HerolandKnowledgeDP.class);
-//        }
-        HerolandKnowledgeDP herolandKnowledgeDP = null;
-        try {
-            herolandKnowledgeDP = BeanUtil.conversion(herolandKnowledge, new HerolandKnowledgeDP());
-            getChildren(qo.getId(),children);
-            List<HerolandKnowledgeDP> dpList = children.stream().map(e -> convert(e)).collect(Collectors.toList());
-            herolandKnowledgeDP.setChildren(dpList);
-        } catch (Exception e) {
-            log.error("convert error", e);
-            ResponseBodyWrapper.failSysException();
+        HerolandKnowledgeDto dto = new HerolandKnowledgeDto();
+        dto.setCourse(herolandKnowledge.getCourse());
+        dto.setGrade(herolandKnowledge.getGrade());
+        List<String> keys = Lists.newArrayList();
+        keys.add(herolandKnowledge.getCourse());
+        keys.add(herolandKnowledge.getGrade());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        if (keyMap.containsKey(herolandKnowledge.getCourse())){
+            dto.setCourseName(keyMap.get(herolandKnowledge.getCourse()).get(0).getDictValue());
         }
-        result.setData(herolandKnowledgeDP);
-        return result;
+        if (keyMap.containsKey(herolandKnowledge.getGrade())){
+            dto.setGradeName(keyMap.get(herolandKnowledge.getGrade()).get(0).getDictValue());
+        }
+        dto.setDiff(herolandKnowledge.getDiff());
+        DiffEnum diffEnum = DiffEnum.valueOfLevel(herolandKnowledge.getDiff());
+        dto.setDiffName(Objects.isNull(diffEnum) ? null : diffEnum.getName());
+        return dto;
+    }
+
+    private HerolandKnowledgeDto getAdminData(HerolandKnowledge herolandKnowledge){
+        HerolandKnowledgeDto dto = new HerolandKnowledgeDto();
+        dto.setCourse(herolandKnowledge.getCourse());
+        dto.setGrade(herolandKnowledge.getGrade());
+        List<String> keys = Lists.newArrayList();
+        keys.add(herolandKnowledge.getCourse());
+        keys.add(herolandKnowledge.getGrade());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        if (keyMap.containsKey(herolandKnowledge.getCourse())){
+            dto.setCourseName(keyMap.get(herolandKnowledge.getCourse()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(herolandKnowledge.getGrade())){
+            dto.setGradeName(keyMap.get(herolandKnowledge.getGrade()).get(0).getDictValue());
+        }
+        dto.setDiff(herolandKnowledge.getDiff());
+        DiffEnum diffEnum = DiffEnum.valueOfLevel(herolandKnowledge.getDiff());
+        dto.setDiffName(Objects.isNull(diffEnum) ? null : diffEnum.getName());
+        return dto;
     }
 
     @Override
-    public ResponseBody<List<HerolandKnowledgeDP>> pageQuery(HerolandKnowledgeQO qo) {
-        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
+    public PageResponse<HerolandKnowledgeDto> pageQuery(HerolandKnowledgeQO qo) {
+        List<HerolandKnowledgeDto> result = new ArrayList<>();
+        PageResponse<HerolandKnowledgeDto> pageResult = new PageResponse<>();
+        Page<HerolandKnowledge> data= PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                 () -> herolandKnowledgeMapper.selectByQuery(qo));
-        return ResponseBodyWrapper.successListWrapper(dataPage.getResult(), dataPage.getTotal(), qo,  HerolandKnowledgeDP.class);
+        if (!CollectionUtils.isEmpty(data.getResult())){
+            data.getResult().stream().forEach(e -> {
+                HerolandKnowledgeDto knowledgeDto = getAdminData(e);
+                result.add(knowledgeDto);
+            });
+        }
+        pageResult.setItems(result);
+        pageResult.setPageSize(data.getPageSize());
+        pageResult.setPage(data.getPageNum());
+        pageResult.setTotal((int) data.getTotal());
+        return pageResult;
+
     }
 
     private void getChildren(Long parentId, List<HerolandKnowledge> children){
@@ -141,18 +175,5 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
             }
         }
     }
-
-    private HerolandKnowledgeDP convert(HerolandKnowledge herolandKnowledge){
-        HerolandKnowledgeDP herolandKnowledgeDP = new HerolandKnowledgeDP();
-        herolandKnowledgeDP.setId(herolandKnowledge.getId());
-//        herolandKnowledgeDP.setChapterId(herolandKnowledge.getChapterId());
-        herolandKnowledgeDP.setDiff(herolandKnowledge.getDiff());
-        herolandKnowledgeDP.setIsRoot(herolandKnowledge.getIsRoot());
-        herolandKnowledgeDP.setKnowledge(herolandKnowledge.getKnowledge());
-        herolandKnowledgeDP.setParentKnowledgeId(herolandKnowledge.getParentKnowledgeId());
-        herolandKnowledgeDP.setRootKnowledgeId(herolandKnowledge.getRootKnowledgeId());
-        return herolandKnowledgeDP;
-    }
-
 
 }

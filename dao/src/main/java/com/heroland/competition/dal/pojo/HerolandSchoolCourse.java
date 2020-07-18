@@ -5,13 +5,11 @@ import java.util.Date;
 public class HerolandSchoolCourse {
     private Long id;
 
-    private String school;
+    private String schoolKey;
 
-    private String phase;
+    private Long courseId;
 
-    private String course;
-
-    private String edition;
+    private Integer obligatory;
 
     private Boolean isDeleted;
 
@@ -31,36 +29,28 @@ public class HerolandSchoolCourse {
         this.id = id;
     }
 
-    public String getSchool() {
-        return school;
+    public String getSchoolKey() {
+        return schoolKey;
     }
 
-    public void setSchool(String school) {
-        this.school = school == null ? null : school.trim();
+    public void setSchoolKey(String schoolKey) {
+        this.schoolKey = schoolKey == null ? null : schoolKey.trim();
     }
 
-    public String getPhase() {
-        return phase;
+    public Long getCourseId() {
+        return courseId;
     }
 
-    public void setPhase(String phase) {
-        this.phase = phase == null ? null : phase.trim();
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 
-    public String getCourse() {
-        return course;
+    public Integer getObligatory() {
+        return obligatory;
     }
 
-    public void setCourse(String course) {
-        this.course = course == null ? null : course.trim();
-    }
-
-    public String getEdition() {
-        return edition;
-    }
-
-    public void setEdition(String edition) {
-        this.edition = edition == null ? null : edition.trim();
+    public void setObligatory(Integer obligatory) {
+        this.obligatory = obligatory;
     }
 
     public Boolean getIsDeleted() {

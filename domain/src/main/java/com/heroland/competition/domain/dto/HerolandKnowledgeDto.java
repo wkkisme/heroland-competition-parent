@@ -25,11 +25,6 @@ public class HerolandKnowledgeDto extends BaseDO implements Serializable {
     private String gradeName;
 
     /**
-     * 阶段名称
-     */
-    private String phaseName;
-
-    /**
      * 科目
      */
     private String course;
@@ -52,16 +47,5 @@ public class HerolandKnowledgeDto extends BaseDO implements Serializable {
      * 知识点难度
      */
     private String diffName;
-
-
-    public String getDiffName(){
-        DiffEnum diffEnum = DiffEnum.valueOfLevel(diff);
-        if (Objects.nonNull(diffEnum)){
-            this.diffName = diffEnum.getName();
-            return this.diffName;
-        }
-
-        return null;
-    }
 
 }

@@ -69,7 +69,12 @@ public class HerolandSchoolSimpleDto implements Serializable {
     private String desc;
 
     /**
-     * 如果是学校列表则需要带上它的地区名称
+     * 学校节点下的地区名称
      */
     private String areaName;
+
+    /**
+     *  学校节点下的地区key
+     */
+    private String areaKey;
 }

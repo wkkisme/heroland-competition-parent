@@ -51,6 +51,31 @@ public class HerolandSchoolDP extends BaseDO implements Serializable {
      */
     private String bizI18N;
 
+    /**
+     * 联系人
+     */
+    private String linkedMan;
+
+    /**
+     * 电话
+     */
+    private String mobile;
+
+    /**
+     * email
+     */
+    private String email;
+
+    /**
+     * 地理坐标
+     */
+    private String axis;
+
+    /**
+     * 描述 简介
+     */
+    private String desc;
+
 
     public HerolandSchoolDP checkAndBuildBeforeCreate(){
         AssertUtils.notBlank(code);

@@ -1,0 +1,208 @@
+package com.heroland.competition.service.admin.impl;
+
+import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.NumberUtils;
+import com.heroland.competition.dal.mapper.HerolandCourseMapper;
+import com.heroland.competition.dal.mapper.HerolandSchoolCourseMapper;
+import com.heroland.competition.dal.pojo.HerolandCourse;
+import com.heroland.competition.dal.pojo.HerolandSchoolCourse;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
+import com.heroland.competition.domain.dp.HerolandCourseDP;
+import com.heroland.competition.domain.dp.HerolandSchoolCourseDP;
+import com.heroland.competition.domain.dto.HerolandCourseDto;
+import com.heroland.competition.domain.dto.HerolandSchoolDto;
+import com.heroland.competition.domain.request.HerolandCoursePageRequest;
+import com.heroland.competition.service.admin.HeroLandAdminService;
+import com.heroland.competition.service.admin.HeroLandCourseService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+/**
+ * @author smjyouzan
+ * @date 2020/7/18
+ */
+@Component
+@Slf4j
+public class HeroLandCourseServiceImpl implements HeroLandCourseService {
+    @Resource
+    private HerolandCourseMapper herolandCourseMapper;
+
+    @Resource
+    private HerolandSchoolCourseMapper herolandSchoolCourseMapper;
+
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
+
+
+    @Override
+    public Boolean addCourse(HerolandCourseDP courseDP) {
+
+            if (!NumberUtils.nullOrZeroLong(courseDP.getId())){
+                updateCourse(courseDP);
+            }else {
+                Long id = null;
+                courseDP = courseDP.checkAndBuildBeforeCreate();
+                HerolandCourse course = new HerolandCourse();
+                course.setCourse(courseDP.getCourse());
+                course.setEdition(courseDP.getEdition());
+                course.setGradeSlice(courseDP.getGradeSlice());
+                course.setSubType(courseDP.getSubType());
+                course.setGrade(courseDP.getGrade());
+                List<HerolandCourse> herolandCourses = herolandCourseMapper.get(courseDP.getGrade(), courseDP.getGradeSlice(), courseDP.getCourse(), courseDP.getEdition(), courseDP.getSubType());
+                if (CollectionUtils.isEmpty(herolandCourses)){
+                    herolandCourseMapper.insertSelective(course);
+                    id = course.getId();
+                }else {
+                    id = herolandCourses.get(0).getId();
+                }
+                Long courseId = id;
+                List<HerolandSchoolCourse> schoolCourses = Lists.newArrayList();
+                if (!CollectionUtils.isEmpty(courseDP.getSchoolCourseDPS())){
+                    List<String> schoolCodes = courseDP.getSchoolCourseDPS().stream().map(HerolandSchoolCourseDP::getSchoolCode).collect(Collectors.toList());
+                    List<HerolandSchoolCourse> bySchoolListAndCourse = herolandSchoolCourseMapper.getBySchoolListAndCourse(schoolCodes, courseId);
+                    Map<String, List<HerolandSchoolCourse>> schoolMap = bySchoolListAndCourse.stream().collect(Collectors.groupingBy(HerolandSchoolCourse::getSchoolKey));
+                    courseDP.getSchoolCourseDPS().stream().forEach(e -> {
+                        if (!schoolMap.containsKey(e.getSchoolCode())){
+                            HerolandSchoolCourse schoolCourse = new HerolandSchoolCourse();
+                            schoolCourse.setSchoolKey(e.getSchoolCode());
+                            schoolCourse.setCourseId(courseId);
+                            schoolCourses.add(schoolCourse);
+                        }
+                    });
+                    if (!CollectionUtils.isEmpty(schoolCourses)){
+                        herolandSchoolCourseMapper.batchSave(schoolCourses);
+                    }
+                }
+            }
+        return true;
+    }
+
+    @Override
+    public Boolean updateCourse(HerolandCourseDP courseDP) {
+        AssertUtils.notNull(courseDP.getId());
+        HerolandCourse course = new HerolandCourse();
+        course.setId(courseDP.getId());
+        course.setCourse(courseDP.getCourse());
+        course.setEdition(courseDP.getEdition());
+        course.setGradeSlice(courseDP.getGradeSlice());
+        course.setSubType(courseDP.getSubType());
+        course.setGrade(courseDP.getGrade());
+        List<HerolandCourse> herolandCourses = herolandCourseMapper.get(courseDP.getGrade(), courseDP.getGradeSlice(), courseDP.getCourse(), courseDP.getEdition(), courseDP.getSubType());
+        if (!CollectionUtils.isEmpty(herolandCourses) && !Objects.equals(herolandCourses.get(0).getId(), course.getId())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.PARAM_DUP.getErrorMessage());
+        }
+        herolandCourseMapper.updateByPrimaryKeySelective(course);
+        List<HerolandSchoolCourse> schoolCourses = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(courseDP.getSchoolCourseDPS())){
+            courseDP.getSchoolCourseDPS().stream().forEach(e -> {
+                HerolandSchoolCourse schoolCourse = new HerolandSchoolCourse();
+                schoolCourse.setCourseId(course.getId());
+                schoolCourse.setSchoolKey(e.getSchoolCode());
+                schoolCourses.add(schoolCourse);
+            });
+        }
+        herolandSchoolCourseMapper.deleteBySchoolAndCourse(null,courseDP.getId());
+        if (!CollectionUtils.isEmpty(schoolCourses)){
+            herolandSchoolCourseMapper.batchSave(schoolCourses);
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean deleteCourse(Long id) {
+        if (NumberUtils.nullOrZeroLong(id)){
+            return true;
+        }
+        herolandCourseMapper.deleteByPrimaryKey(id);
+        herolandSchoolCourseMapper.deleteBySchoolAndCourse(null,id);
+        return true;
+    }
+
+    @Override
+    public HerolandCourseDto getById(Long id) {
+        if (NumberUtils.nullOrZeroLong(id)){
+            return null;
+        }
+        HerolandCourse herolandCourse = herolandCourseMapper.selectByPrimaryKey(id);
+        if (Objects.isNull(herolandCourse)){
+            return null;
+        }
+        List<HerolandSchoolCourse> schoolCourses = herolandSchoolCourseMapper.getBySchoolListAndCourse(null, id);
+        List<String> schoolKeys = schoolCourses.stream().map(HerolandSchoolCourse::getSchoolKey).collect(Collectors.toList());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(schoolKeys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        HerolandCourseDto dto = getAdminData(herolandCourse);
+        List<HerolandSchoolDto> schoolDtoList = Lists.newArrayList();
+        schoolKeys.stream().forEach(school -> {
+            HerolandSchoolDto dto1 = new HerolandSchoolDto();
+            dto1.setKey(school);
+            dto1.setName(keyMap.get(school).get(0).getDictValue());
+            schoolDtoList.add(dto1);
+        });
+        dto.setSchoolDtoList(schoolDtoList);
+        return dto;
+    }
+
+    private HerolandCourseDto getAdminData(HerolandCourse herolandCourse){
+        HerolandCourseDto dto = new HerolandCourseDto();
+        dto.setCourse(herolandCourse.getCourse());
+        dto.setEdition(herolandCourse.getEdition());
+        dto.setEditionType(herolandCourse.getSubType());
+        dto.setGrade(herolandCourse.getGrade());
+        dto.setUnit(herolandCourse.getGradeSlice());
+        dto.setId(herolandCourse.getId());
+        List<String> keys = Lists.newArrayList();
+        keys.add(herolandCourse.getCourse());
+        keys.add(herolandCourse.getGrade());
+        keys.add(herolandCourse.getSubType());
+        keys.add(herolandCourse.getEdition());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        if (keyMap.containsKey(herolandCourse.getCourse())){
+            dto.setCourseName(keyMap.get(herolandCourse.getCourse()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(herolandCourse.getEdition())){
+            dto.setEditionName(keyMap.get(herolandCourse.getEdition()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(herolandCourse.getGrade())){
+            dto.setGradeName(keyMap.get(herolandCourse.getGrade()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(herolandCourse.getSubType())){
+            dto.setEditionTypeName(keyMap.get(herolandCourse.getSubType()).get(0).getDictValue());
+        }
+       return dto;
+    }
+
+    @Override
+    public PageResponse<HerolandCourseDto> pageQuery(HerolandCoursePageRequest request) {
+        List<HerolandCourseDto> result = new ArrayList<>();
+        PageResponse<HerolandCourseDto> pageResult = new PageResponse<>();
+        Page<HerolandCourse> data = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                () -> herolandCourseMapper.get(request.getGrade(), request.getUnit(), request.getCourse(), request.getEdition(), request.getEditionType()));
+        if (!CollectionUtils.isEmpty(data.getResult())){
+           data.getResult().stream().forEach(e -> {
+               HerolandCourseDto courseDto = getAdminData(e);
+               result.add(courseDto);
+           });
+        }
+        pageResult.setItems(result);
+        pageResult.setPageSize(data.getPageSize());
+        pageResult.setPage(data.getPageNum());
+        pageResult.setTotal((int) data.getTotal());
+        return pageResult;
+    }
+}

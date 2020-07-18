@@ -35,6 +35,8 @@ public enum AdminFieldEnum {
     //知识点
     KNOWEDGE("KL", "knowledge","知识点"),
 
+    BXEDTION("BX", "oblig","必修选修"),
+
 
     DIAMOND("DA", "diamond","宝石"),
 

@@ -12,7 +12,7 @@ public interface HerolandSchoolMapper {
 
     int batchDeleteByIds(@Param("ids") List<Long> ids);
 
-    int insert(HerolandSchool record);
+//    int insert(HerolandSchool record);
 
     int insertSelective(HerolandSchool record);
 
@@ -20,7 +20,6 @@ public interface HerolandSchoolMapper {
 
     int updateByPrimaryKeySelective(HerolandSchool record);
 
-    int updateByPrimaryKey(HerolandSchool record);
 
 
     HerolandSchool getByKey(@Param("key") String key);

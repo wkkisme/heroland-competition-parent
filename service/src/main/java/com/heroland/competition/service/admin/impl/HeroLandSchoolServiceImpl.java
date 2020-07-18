@@ -5,6 +5,8 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -27,10 +29,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,6 +69,27 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setName(schoolDP.getName());
         herolandSchool.setParentKey(schoolDP.getParentKey());
         herolandSchool.setHasParent(schoolDP.getHasParent());
+        herolandSchool.setLinkedMan(schoolDP.getLinkedMan());
+        herolandSchool.setMobile(schoolDP.getMobile());
+        herolandSchool.setEmail(schoolDP.getEmail());
+        herolandSchool.setAxis(schoolDP.getAxis());
+        herolandSchool.setDesc(schoolDP.getDesc());
+        //如果父节点在school表中没有则也需要增加上
+        if (Objects.equals(AdminFieldEnum.SCHOOL.getCode(),schoolDP.getCode())){
+            HerolandSchool area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
+            if (Objects.isNull(area)){
+                List<HerolandBasicDataDP> areaData = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(schoolDP.getParentKey()));
+                if (CollectionUtils.isEmpty(areaData)){
+                    ResponseBodyWrapper.failException("无地区数据，请联系管理人员");
+                }
+                HerolandSchool areaNode = new HerolandSchool();
+                areaNode.setKey(areaData.get(0).getDictKey());
+                areaNode.setCode(areaData.get(0).getCode());
+                areaNode.setName(areaData.get(0).getDictValue());
+                areaNode.setHasParent(false);
+                herolandSchoolMapper.insertSelective(areaNode);
+            }
+        }
         return herolandSchoolMapper.insertSelective(herolandSchool) > 0;
 
     }
@@ -80,6 +100,11 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         HerolandSchool herolandSchool = new HerolandSchool();
         herolandSchool.setId(schoolDP.getId());
         herolandSchool.setName(schoolDP.getName());
+        herolandSchool.setLinkedMan(schoolDP.getLinkedMan());
+        herolandSchool.setMobile(schoolDP.getMobile());
+        herolandSchool.setEmail(schoolDP.getEmail());
+        herolandSchool.setAxis(schoolDP.getAxis());
+        herolandSchool.setDesc(schoolDP.getDesc());
         herolandSchoolMapper.updateByPrimaryKeySelective(herolandSchool);
         HerolandSchool school = herolandSchoolMapper.selectByPrimaryKey(herolandSchool.getId());
         List<HerolandBasicDataDP> data = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(school.getKey()));
@@ -133,56 +158,18 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         List<HerolandSchoolDto> result = new ArrayList<>();
         //如果为空查询所有的地区
         List<HerolandSchool> herolandSchool = Lists.newArrayList();
-        boolean queryArea = false;
-        if (StringUtils.isBlank(qo.getNodeKey())){
-            queryArea = true;
+        if (StringUtils.isBlank(qo.getParentKey())){
             herolandSchool = herolandSchoolMapper.getByKeyAndCode(null,AdminFieldEnum.AREA.getCode());
         }else {
-            herolandSchool = herolandSchoolMapper.getByKeyAndCode(qo.getNodeKey(),null);
+            herolandSchool = herolandSchoolMapper.getByParentAndName(qo.getParentKey(),null);
         }
         if (CollectionUtils.isEmpty(herolandSchool)){
             return result;
         }
         result = BeanCopyUtils.copyArrayByJSON(herolandSchool, HerolandSchoolDto.class);
         //如果是查询的地区，则不再查询他的子节点
-        if (queryArea){
-            return result;
-        }
         List<String> keys = herolandSchool.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
         //如果是非叶子节点，则下面的所有子节点都需要删除
-        List<HerolandSchool> list = herolandSchoolMapper.getByParents(keys);
-        if (!CollectionUtils.isEmpty(list)){
-            Map<String, List<HerolandSchool>> keyMap = list.stream().collect(Collectors.groupingBy(HerolandSchool::getParentKey));
-            for (HerolandSchoolDto dto : result){
-                if (keyMap.keySet().contains(dto.getKey())){
-                    List<HerolandSchoolDto> child = BeanCopyUtils.copyArrayByJSON(keyMap.get(dto.getKey()), HerolandSchoolDto.class);
-                    dto.setChild(child);
-                }
-            }
-        }
-        List<String> allKeys = Lists.newArrayList();
-        for (HerolandSchoolDto dto : result){
-            allKeys.add(dto.getKey());
-            dto.getChild().stream().forEach(e -> allKeys.add(e.getKey()));
-        }
-        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(allKeys);
-        if (CollectionUtils.isEmpty(dictInfoByKeys)){
-            log.error("query DictInfoByKeys error", JSON.toJSONString(allKeys));
-            return result;
-        }
-        Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-        for (HerolandSchoolDto dto : result){
-            if (basic.keySet().contains(dto.getKey())){
-                dto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
-                dto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
-            }
-            dto.getChild().stream().forEach(e -> {
-                if (basic.keySet().contains(e.getKey())){
-                    e.setBizNo(basic.get(e.getKey()).get(0).getBizNo());
-                    e.setBizI18N(basic.get(e.getKey()).get(0).getBizI18N());
-                }
-            });
-        }
         return result;
     }
 
@@ -191,7 +178,6 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         List<HerolandSchoolSimpleDto> result = new ArrayList<>();
         PageResponse<HerolandSchoolSimpleDto> pageResult = new PageResponse<>();
         Page<HerolandSchool> dataPage = null;
-//        List<HerolandSchool> byCodeAndName = herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(), request.getName());
         if (StringUtils.isBlank(request.getParentKey())){
             dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
                     () -> herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(),request.getName()));
@@ -211,6 +197,17 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             log.error("query DictInfoByKeys error", JSON.toJSONString(allKeys));
             return pageResult;
         }
+        //如果是学校列表则需要返回地区的key和name
+        Map<String, HerolandBasicDataDP> areaMap = Maps.newHashMap();
+        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(dataPage.getResult().get(0).getCode())){
+            Set<String> parentKeys = Sets.newHashSet();
+            dataPage.getResult().stream().forEach(e -> parentKeys.add(e.getParentKey()));
+            List<HerolandBasicDataDP> area = heroLandAdminService.getDictInfoByKeys(new ArrayList<>(parentKeys));
+            if (!CollectionUtils.isEmpty(area)){
+                area.stream().forEach(e -> areaMap.put(e.getDictKey(),e));
+            }
+        }
+
         Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
         for (HerolandSchool dto : dataPage.getResult()){
             HerolandSchoolSimpleDto simpleDto = new HerolandSchoolSimpleDto();
@@ -218,16 +215,24 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             simpleDto.setCode(dto.getCode());
             simpleDto.setId(dto.getId());
             simpleDto.setKey(dto.getKey());
+            simpleDto.setLinkedMan(dto.getLinkedMan());
+            simpleDto.setMobile(dto.getMobile());
+            simpleDto.setEmail(dto.getEmail());
+            simpleDto.setAxis(dto.getAxis());
+            simpleDto.setDesc(dto.getDesc());
             if (basic.keySet().contains(dto.getKey())){
                 simpleDto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
                 simpleDto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
+            }
+            if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(dataPage.getResult().get(0).getCode()) && areaMap.containsKey(dto.getParentKey())){
+                simpleDto.setAreaName(areaMap.get(dto.getParentKey()).getDictValue());
+                simpleDto.setAreaKey(areaMap.get(dto.getParentKey()).getDictKey());
             }
             result.add(simpleDto);
         }
         pageResult.setItems(result);
         pageResult.setPageSize(dataPage.getPageSize());
         pageResult.setPage(dataPage.getPageNum());
-        pageResult.setTotal((int) dataPage.getTotal());
         pageResult.setTotal((int) dataPage.getTotal());
         return pageResult;
     }
