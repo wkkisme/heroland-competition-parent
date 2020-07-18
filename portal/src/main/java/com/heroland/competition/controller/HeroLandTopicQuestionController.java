@@ -39,5 +39,17 @@ public class HeroLandTopicQuestionController {
         return heroLandQuestionService.getTopicQuestions(heroLandQuestionQO);
     }
 
+    /**
+     * 增加比赛
+     * @param dp h
+     * @return e
+     * @module 題目組
+     */
+    @RequestMapping("/addCompetition")
+    public ResponseBody<Boolean> addTopicQuestions(@RequestBody HeroLandTopicGroupDP dp){
+
+        return heroLandQuestionService.addTopicQuestions(dp);
+    }
+
 
 }
