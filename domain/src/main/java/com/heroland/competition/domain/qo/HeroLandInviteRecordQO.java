@@ -36,7 +36,7 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      * 比赛类型
      */
     @ApiModelProperty(value = "topicType比赛类型")
-    private String topicType;
+    private Integer topicType;
 
     /**
      * 题组id
@@ -145,7 +145,7 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      *
      * @return topic_type 比赛类型
      */
-    public String getTopicType() {
+    public Integer getTopicType() {
         return topicType;
     }
 
@@ -154,8 +154,8 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      *
      * @param topicType 比赛类型
      */
-    public void setTopicType(String topicType) {
-        this.topicType = topicType == null ? null : topicType.trim();
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 
     /**
