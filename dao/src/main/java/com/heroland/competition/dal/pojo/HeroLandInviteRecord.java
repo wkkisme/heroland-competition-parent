@@ -30,7 +30,7 @@ public class HeroLandInviteRecord extends BaseDO implements Serializable {
      * 比赛类型
      */
     @ApiModelProperty(value="topicType比赛类型")
-    private String topicType;
+    private Integer topicType;
 
     /**
      * 题组id
@@ -119,7 +119,7 @@ public class HeroLandInviteRecord extends BaseDO implements Serializable {
      * 比赛类型
      * @return topic_type 比赛类型
      */
-    public String getTopicType() {
+    public Integer getTopicType() {
         return topicType;
     }
 
@@ -127,8 +127,8 @@ public class HeroLandInviteRecord extends BaseDO implements Serializable {
      * 比赛类型
      * @param topicType 比赛类型
      */
-    public void setTopicType(String topicType) {
-        this.topicType = topicType == null ? null : topicType.trim();
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 
     /**
