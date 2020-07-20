@@ -27,6 +27,7 @@ import com.heroland.competition.service.admin.HeroLandAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -49,6 +50,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     private HerolandLocationMapper herolandLocationMapper;
 
     @Override
+    @Transactional
     public HerolandBasicData addDict(HerolandBasicDataDP dp) {
         try {
             // 针对同一个bizNo和code 不能重复添加
@@ -74,6 +76,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     }
 
     @Override
+    @Transactional
     public ResponseBody<Boolean> editDict(HerolandBasicDataDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         if (StringUtils.isNotBlank(dp.getBizNo())){
@@ -97,6 +100,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteDict(List<String> keys) {
        if(!CollectionUtils.isEmpty(keys)){
           return  herolandBasicDataMapper.deleteByDictKey(keys) > 0;

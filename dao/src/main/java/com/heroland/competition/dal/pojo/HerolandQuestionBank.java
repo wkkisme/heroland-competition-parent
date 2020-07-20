@@ -3,6 +3,7 @@ package com.heroland.competition.dal.pojo;
 import com.anycommon.response.common.BaseDO;
 import lombok.Data;
 
+
 @Data
 public class HerolandQuestionBank extends BaseDO {
 
@@ -10,15 +11,11 @@ public class HerolandQuestionBank extends BaseDO {
 
     private String course;
 
-    private String qbId;
+    private Integer type;
 
-    private String title;
+    private Integer subType;
 
-    private String type;
-
-    private String subType;
-
-    private String diff;
+    private Integer diff;
 
     private String year;
 
@@ -26,5 +23,8 @@ public class HerolandQuestionBank extends BaseDO {
 
     private String source;
 
+    private Integer paperTpye;
+
+    private String title;
 
 }

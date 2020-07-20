@@ -8,21 +8,16 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.contants.DiffEnum;
-import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandKnowledgeMapper;
-import com.heroland.competition.dal.pojo.HerolandCourse;
-import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
-import com.heroland.competition.domain.dto.HerolandCourseDto;
 import com.heroland.competition.domain.dto.HerolandKnowledgeDto;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
-import com.heroland.competition.service.diamond.HerolandDiamondService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,13 +59,14 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
     }
 
     @Override
+    @Transactional
     public ResponseBody<Boolean> edit(HerolandKnowledgeDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         if (NumberUtils.nullOrZeroLong(dp.getId())){
             add(dp);
         }else {
             try {
-                result.setData(herolandKnowledgeMapper.updateByPrimaryKey(BeanUtil.updateConversion(dp, new HerolandKnowledge())) > 0);
+                result.setData(herolandKnowledgeMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp, new HerolandKnowledge())) > 0);
             } catch (Exception e) {
                 log.error("edit error", e);
                 ResponseBodyWrapper.failSysException();
@@ -86,6 +82,7 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
     }
 
     @Override
+    @Transactional
     public ResponseBody<Boolean> deleteOneNode(Long id) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         if (NumberUtils.nullOrZeroLong(id)){
@@ -125,6 +122,18 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
         return dto;
     }
 
+    @Override
+    public List<HerolandKnowledgeDto> getByIds(List<Long> ids) {
+//        if (CollectionUtils.isEmpty(ids)){
+//            return Lists.newArrayList();
+//        }
+//        List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(ids);
+//        if (!CollectionUtils.isEmpty(herolandKnowledges)){
+//
+//        }
+        return null;
+    }
+
     private HerolandKnowledgeDto getAdminData(HerolandKnowledge herolandKnowledge){
         HerolandKnowledgeDto dto = new HerolandKnowledgeDto();
         dto.setCourse(herolandKnowledge.getCourse());
@@ -140,6 +149,8 @@ public class HerolandKnowledgeServiceImpl implements HerolandKnowledgeService {
         if (keyMap.containsKey(herolandKnowledge.getGrade())){
             dto.setGradeName(keyMap.get(herolandKnowledge.getGrade()).get(0).getDictValue());
         }
+        dto.setKnowledge(herolandKnowledge.getKnowledge());
+        dto.setId(herolandKnowledge.getId());
         dto.setDiff(herolandKnowledge.getDiff());
         DiffEnum diffEnum = DiffEnum.valueOfLevel(herolandKnowledge.getDiff());
         dto.setDiffName(Objects.isNull(diffEnum) ? null : diffEnum.getName());

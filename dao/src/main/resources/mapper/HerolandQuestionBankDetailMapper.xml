@@ -8,15 +8,14 @@
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="qb_id" jdbcType="VARCHAR" property="qbId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="qb_id" jdbcType="BIGINT" property="qbId" />
     <result column="option" jdbcType="VARCHAR" property="option" />
     <result column="option_answer" jdbcType="VARCHAR" property="optionAnswer" />
     <result column="answer" jdbcType="VARCHAR" property="answer" />
     <result column="parse" jdbcType="VARCHAR" property="parse" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, qb_id, title, `option`, 
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, qb_id,  `option`,
     option_answer, answer, parse
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -29,19 +28,7 @@
     delete from heroland_question_bank_detail
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBankDetail">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into heroland_question_bank_detail (creator, modifier, gmt_create, 
-      gmt_modified, is_deleted, qb_id, 
-      title, `option`, option_answer, 
-      answer, parse)
-    values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{qbId,jdbcType=VARCHAR}, 
-      #{title,jdbcType=VARCHAR}, #{option,jdbcType=VARCHAR}, #{optionAnswer,jdbcType=VARCHAR}, 
-      #{answer,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR})
-  </insert>
+
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBankDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
@@ -65,9 +52,6 @@
       </if>
       <if test="qbId != null">
         qb_id,
-      </if>
-      <if test="title != null">
-        title,
       </if>
       <if test="option != null">
         `option`,
@@ -99,19 +83,16 @@
         #{isDeleted,jdbcType=BIT},
       </if>
       <if test="qbId != null">
-        #{qbId,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
+        #{qbId,jdbcType=BIGINT},
       </if>
       <if test="option != null">
-        #{option,jdbcType=VARCHAR},
+        #{option,jdbcType=LONGVARCHAR},
       </if>
       <if test="optionAnswer != null">
         #{optionAnswer,jdbcType=VARCHAR},
       </if>
       <if test="answer != null">
-        #{answer,jdbcType=VARCHAR},
+        #{answer,jdbcType=LONGVARCHAR},
       </if>
       <if test="parse != null">
         #{parse,jdbcType=VARCHAR},
@@ -137,19 +118,17 @@
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
       <if test="qbId != null">
-        qb_id = #{qbId,jdbcType=VARCHAR},
+        qb_id = #{qbId,jdbcType=BIGINT},
       </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
+
       <if test="option != null">
-        `option` = #{option,jdbcType=VARCHAR},
+        `option` = #{option,jdbcType=LONGVARCHAR},
       </if>
       <if test="optionAnswer != null">
         option_answer = #{optionAnswer,jdbcType=VARCHAR},
       </if>
       <if test="answer != null">
-        answer = #{answer,jdbcType=VARCHAR},
+        answer = #{answer,jdbcType=LONGVARCHAR},
       </if>
       <if test="parse != null">
         parse = #{parse,jdbcType=VARCHAR},
@@ -157,19 +136,18 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBankDetail">
-    update heroland_question_bank_detail
-    set creator = #{creator,jdbcType=VARCHAR},
-      modifier = #{modifier,jdbcType=VARCHAR},
-      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT},
-      qb_id = #{qbId,jdbcType=VARCHAR},
-      title = #{title,jdbcType=VARCHAR},
-      `option` = #{option,jdbcType=VARCHAR},
-      option_answer = #{optionAnswer,jdbcType=VARCHAR},
-      answer = #{answer,jdbcType=VARCHAR},
-      parse = #{parse,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
+  <select id="getByQtId"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_question_bank_detail
+    where is_deleted = 0
+    <if test="qtIds != null and qtIds.size > 0">
+      and qb_id IN
+      <foreach collection="qtIds" item="qtId" open="(" close=")" separator=",">
+        #{qtId}
+      </foreach>
+    </if>
+  </select>
+
 </mapper>

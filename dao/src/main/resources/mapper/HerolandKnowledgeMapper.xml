@@ -29,7 +29,7 @@
     where id = #{id,jdbcType=BIGINT}
     </update>
 
-    <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">
+    <insert id="insertSelective" >
         <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -93,7 +93,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandChapter">
+    <update id="updateByPrimaryKeySelective" >
         update heroland_knowledge
         <set>
 
@@ -151,6 +151,19 @@
         </if>
         <if test="knowledge != null">
           and  knowledge like concat('%',#{knowledge},'%')
+        </if>
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        where is_deleted = 0
+        <if test="ids != null and ids.size > 0">
+            and id IN
+            <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
         </if>
     </select>
 </mapper>

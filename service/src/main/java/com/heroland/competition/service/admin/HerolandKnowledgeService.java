@@ -53,6 +53,9 @@ public interface HerolandKnowledgeService {
     HerolandKnowledgeDto getById(Long id);
 
 
+    List<HerolandKnowledgeDto> getByIds(List<Long> ids);
+
+
     /**
      * 获取所有的知识点
      *

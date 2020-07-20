@@ -22,13 +22,11 @@ import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandCourseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +47,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
 
 
     @Override
+    @Transactional
     public Boolean addCourse(HerolandCourseDP courseDP) {
 
             if (!NumberUtils.nullOrZeroLong(courseDP.getId())){
@@ -92,6 +91,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
     }
 
     @Override
+    @Transactional
     public Boolean updateCourse(HerolandCourseDP courseDP) {
         AssertUtils.notNull(courseDP.getId());
         HerolandCourse course = new HerolandCourse();
@@ -105,7 +105,10 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         if (!CollectionUtils.isEmpty(herolandCourses) && !Objects.equals(herolandCourses.get(0).getId(), course.getId())){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.PARAM_DUP.getErrorMessage());
         }
-        herolandCourseMapper.updateByPrimaryKeySelective(course);
+        int i = herolandCourseMapper.updateByPrimaryKeySelective(course);
+        if (i == 0){
+            return false;
+        }
         List<HerolandSchoolCourse> schoolCourses = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(courseDP.getSchoolCourseDPS())){
             courseDP.getSchoolCourseDPS().stream().forEach(e -> {
@@ -123,6 +126,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteCourse(Long id) {
         if (NumberUtils.nullOrZeroLong(id)){
             return true;
@@ -194,8 +198,26 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         Page<HerolandCourse> data = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
                 () -> herolandCourseMapper.get(request.getGrade(), request.getUnit(), request.getCourse(), request.getEdition(), request.getEditionType()));
         if (!CollectionUtils.isEmpty(data.getResult())){
-           data.getResult().stream().forEach(e -> {
-               HerolandCourseDto courseDto = getAdminData(e);
+            List<Long> courseIds = data.getResult().stream().map(HerolandCourse::getId).collect(Collectors.toList());
+            List<HerolandSchoolCourse> schoolCourses = herolandSchoolCourseMapper.getByCourses(courseIds);
+            Set<String> schoolKeys = schoolCourses.stream().map(HerolandSchoolCourse::getSchoolKey).collect(Collectors.toSet());
+            Map<Long, List<HerolandSchoolCourse>> courseMap = schoolCourses.stream().collect(Collectors.groupingBy(HerolandSchoolCourse::getCourseId));
+            List<HerolandBasicDataDP> schoolDatas = heroLandAdminService.getDictInfoByKeys(new ArrayList<>(schoolKeys));
+            Map<String, List<HerolandBasicDataDP>> keyMap = schoolDatas.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+            data.getResult().stream().forEach(e -> {
+                HerolandCourseDto courseDto = getAdminData(e);
+                List<HerolandSchoolDto> schoolDtoList = Lists.newArrayList();
+                List<HerolandSchoolCourse> schoolCourses1 = courseMap.get(e.getId());
+                if (!CollectionUtils.isEmpty(schoolCourses1)){
+                    schoolCourses1.stream().forEach(school -> {
+                        HerolandSchoolDto dto1 = new HerolandSchoolDto();
+                        dto1.setKey(school.getSchoolKey());
+                        List<HerolandBasicDataDP> dpList = keyMap.get(school.getSchoolKey());
+                        dto1.setName(CollectionUtils.isEmpty(dpList)? null : dpList.get(0).getDictValue());
+                        schoolDtoList.add(dto1);
+                    });
+                    courseDto.setSchoolDtoList(schoolDtoList);
+                }
                result.add(courseDto);
            });
         }

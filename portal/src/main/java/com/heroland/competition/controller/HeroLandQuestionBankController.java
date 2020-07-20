@@ -1,16 +1,16 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.domain.dp.HerolandOrderDP;
-import com.heroland.competition.domain.dp.HerolandPayDP;
-import com.heroland.competition.domain.dto.PrePayDto;
-import com.heroland.competition.domain.qo.HerolandOrderQO;
-import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
-import com.heroland.competition.domain.qo.PrePayQO;
+import com.anycommon.response.page.Pagination;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
+import com.heroland.competition.domain.dto.HeroLandQuestionBankDto;
+import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
+import com.heroland.competition.domain.request.HerolandQuestionBankPageRequest;
 import com.heroland.competition.domain.request.HerolandQuestionBankRequest;
-import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
-import com.heroland.competition.service.questionBank.HeroLandQuestionBankService;
+import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +27,7 @@ import java.util.List;
 @RequestMapping("/heroland/quesBank")
 public class HeroLandQuestionBankController {
 
-//    @Resource
+    @Resource
     private HeroLandQuestionBankService heroLandQuestionBankService;
 
     @Resource
@@ -38,12 +38,59 @@ public class HeroLandQuestionBankController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/create", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/addAndEdit", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> createQuestion(@RequestBody HerolandQuestionBankRequest request) {
         ResponseBody<Boolean> result = new ResponseBody<>();
-//         herolandOrderService.createQuestion(orderDP);
+        HerolandQuestionBankDP bankDP = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankDP.class);
+        heroLandQuestionBankService.createQuestion(bankDP);
         result.setData(true);
+        return result;
+    }
+
+    /**
+     * 删除
+     * @return
+     */
+    @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> delete(@RequestParam("id") Long id) {
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        result.setData(heroLandQuestionBankService.delete(id));
+        return result;
+    }
+
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HeroLandQuestionBankDto> getById(@RequestParam("id") Long id) {
+        ResponseBody<HeroLandQuestionBankDto> result = new ResponseBody<>();
+        result.setData(heroLandQuestionBankService.getById(id));
+        return result;
+    }
+
+    /**
+     * 分页查询
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pageQuery", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<List<HeroLandQuestionBankSimpleDto>> pageQuery(@RequestBody HerolandQuestionBankPageRequest request) {
+
+        ResponseBody<List<HeroLandQuestionBankSimpleDto>> result = new ResponseBody<>();
+        PageResponse<HeroLandQuestionBankSimpleDto> pageResponse = heroLandQuestionBankService.pageQuery(request);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
         return result;
     }
 

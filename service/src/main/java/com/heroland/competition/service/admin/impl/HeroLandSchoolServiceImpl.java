@@ -26,6 +26,7 @@ import com.heroland.competition.service.admin.HeroLandSchoolService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -47,6 +48,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     private HeroLandAdminService heroLandAdminService;
 
     @Override
+    @Transactional
     public Boolean addNode(HerolandSchoolDP schoolDP) {
         HerolandBasicDataDP dataDP = convertToHerolandBasicDataDP(schoolDP);
         HerolandBasicData basicData = heroLandAdminService.addDict(dataDP);
@@ -95,6 +97,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     }
 
     @Override
+    @Transactional
     public Boolean updateNode(HerolandSchoolDP schoolDP) {
         AssertUtils.notNull(schoolDP.getId());
         HerolandSchool herolandSchool = new HerolandSchool();
@@ -128,6 +131,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     }
 
     @Override
+    @Transactional
     public Boolean deleteNode(String key) {
         if (StringUtils.isBlank(key)){
             return true;

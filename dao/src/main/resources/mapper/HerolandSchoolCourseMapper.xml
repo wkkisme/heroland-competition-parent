@@ -183,4 +183,19 @@
     </if>
   </select>
 
+  <select id="getByCourses" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school_course
+    where is_deleted = 0
+    <if test="courseIds != null and courseIds.size > 0">
+      and course_id IN (
+      <foreach collection="courseIds" item="courseId" index="index" separator=",">
+        #{courseId,jdbcType=BIGINT}
+      </foreach>
+      )
+    </if>
+  </select>
+
+
 </mapper>

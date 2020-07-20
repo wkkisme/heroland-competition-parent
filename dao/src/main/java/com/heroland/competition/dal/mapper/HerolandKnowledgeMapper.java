@@ -25,4 +25,5 @@ public interface HerolandKnowledgeMapper {
 
     List<HerolandKnowledge> selectByQuery(HerolandKnowledgeQO qo);
 
+    List<HerolandKnowledge> selectByIds(@Param("ids")List<Long> ids);
 }

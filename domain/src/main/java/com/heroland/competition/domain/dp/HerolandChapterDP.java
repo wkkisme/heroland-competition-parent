@@ -1,10 +1,16 @@
 package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
+import com.google.common.collect.Lists;
+import com.heroland.competition.common.contants.ChapterEnum;
 import com.heroland.competition.common.contants.DiffEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,69 +18,65 @@ import java.util.Objects;
 @Data
 public class HerolandChapterDP extends BaseDO implements Serializable {
 
+
     /**
-     * 阶段
+     * 年级
      */
     private String grade;
-
-    private String gradeName;
 
     /**
      * 科目
      */
     private String course;
-    private String courseName;
 
     /**
      * 版本
      */
     private String edition;
-    private String editionName;
 
     /**
-     * 章
+     * 类型：
+     * 1 章|单元 2 课节 3 小节
      */
-    private String chapter;
-    /**
-     * 单元
-     */
-    private String unit;
+    private Integer contentType;
 
     /**
-     * 节
+     * 内容
      */
-    private String section;
+    private String content;
 
     /**
-     * 章顺序
+     * 父的节点id
      */
-    private Integer chapterOrder;
+    private Long parentId;
 
     /**
-     * 单元顺序
+     * 顺序
      */
-    private Integer unitOrder;
+    private Integer order;
 
     /**
-     * 节顺序
+     * 关联的知识点列表
      */
-    private Integer sectionOrder;
+    private List<Long> knowledges = Lists.newArrayList();
 
-    /**
-     * 难度 （章节的难度和知识点的难度单独定义）
-     */
-    private Integer diff;
 
-    private String diffName;
-
-    private String getDiffName(){
-        DiffEnum diffEnum = DiffEnum.valueOfLevel(diff);
-        if (Objects.nonNull(diffEnum)){
-            this.diffName = diffEnum.getName();
-            return this.diffName;
+    public HerolandChapterDP checkAndBuildBeforeCreate(){
+        AssertUtils.notBlank(course, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(edition, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(grade, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(content, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notNull(contentType, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notNull(order, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        ChapterEnum chapterEnum = ChapterEnum.valueOfLevel(contentType);
+        AssertUtils.notNull(chapterEnum, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        if (ChapterEnum.ZHANG.getType().equals(contentType)){
+            parentId = 0L;
         }
-
-        return null;
+        if (ChapterEnum.JIE.getType().equals(contentType) || ChapterEnum.KEJIE.getType().equals(contentType)){
+            AssertUtils.assertThat(!NumberUtils.nullOrZeroLong(parentId), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        }
+        return this;
     }
 
 }

@@ -10,22 +10,29 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="course" jdbcType="VARCHAR" property="course" />
-    <result column="qb_id" jdbcType="VARCHAR" property="qbId" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="type" jdbcType="VARCHAR" property="type" />
-    <result column="sub_type" jdbcType="VARCHAR" property="subType" />
-    <result column="diff" jdbcType="VARCHAR" property="diff" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="sub_type" jdbcType="INTEGER" property="subType" />
+    <result column="diff" jdbcType="INTEGER" property="diff" />
     <result column="year" jdbcType="VARCHAR" property="year" />
     <result column="area" jdbcType="VARCHAR" property="area" />
     <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="paper_tpye" jdbcType="INTEGER" property="paperTpye" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
   </resultMap>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, 
-    qb_id, title, `type`, sub_type, diff, `year`, area, `source`
+    `type`, sub_type, diff, `year`, area, `source`, paper_tpye
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <sql id="Blob_Column_List">
+    title
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from heroland_question_bank
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -39,14 +46,14 @@
     </selectKey>
     insert into heroland_question_bank (creator, modifier, gmt_create, 
       gmt_modified, is_deleted, grade_code, 
-      course, qb_id, title, 
-      `type`, sub_type, diff, 
-      `year`, area, `source`)
+      course, `type`, sub_type, 
+      diff, `year`, area, `source`, 
+      paper_tpye, title)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
-      #{course,jdbcType=VARCHAR}, #{qbId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{type,jdbcType=VARCHAR}, #{subType,jdbcType=VARCHAR}, #{diff,jdbcType=VARCHAR}, 
-      #{year,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR})
+      #{course,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{subType,jdbcType=INTEGER}, 
+      #{diff,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{paperTpye,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -75,12 +82,6 @@
       <if test="course != null">
         course,
       </if>
-      <if test="qbId != null">
-        qb_id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
       <if test="type != null">
         `type`,
       </if>
@@ -98,6 +99,12 @@
       </if>
       <if test="source != null">
         `source`,
+      </if>
+      <if test="paperTpye != null">
+        paper_tpye,
+      </if>
+      <if test="title != null">
+        title,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -122,20 +129,14 @@
       <if test="course != null">
         #{course,jdbcType=VARCHAR},
       </if>
-      <if test="qbId != null">
-        #{qbId,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
       <if test="type != null">
-        #{type,jdbcType=VARCHAR},
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="subType != null">
-        #{subType,jdbcType=VARCHAR},
+        #{subType,jdbcType=INTEGER},
       </if>
       <if test="diff != null">
-        #{diff,jdbcType=VARCHAR},
+        #{diff,jdbcType=INTEGER},
       </if>
       <if test="year != null">
         #{year,jdbcType=VARCHAR},
@@ -145,6 +146,12 @@
       </if>
       <if test="source != null">
         #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="paperTpye != null">
+        #{paperTpye,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -172,20 +179,14 @@
       <if test="course != null">
         course = #{course,jdbcType=VARCHAR},
       </if>
-      <if test="qbId != null">
-        qb_id = #{qbId,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
       <if test="type != null">
-        `type` = #{type,jdbcType=VARCHAR},
+        `type` = #{type,jdbcType=INTEGER},
       </if>
       <if test="subType != null">
-        sub_type = #{subType,jdbcType=VARCHAR},
+        sub_type = #{subType,jdbcType=INTEGER},
       </if>
       <if test="diff != null">
-        diff = #{diff,jdbcType=VARCHAR},
+        diff = #{diff,jdbcType=INTEGER},
       </if>
       <if test="year != null">
         `year` = #{year,jdbcType=VARCHAR},
@@ -196,7 +197,32 @@
       <if test="source != null">
         `source` = #{source,jdbcType=VARCHAR},
       </if>
+      <if test="paperTpye != null">
+        paper_tpye = #{paperTpye,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+    update heroland_question_bank
+    set creator = #{creator,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      grade_code = #{gradeCode,jdbcType=VARCHAR},
+      course = #{course,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      sub_type = #{subType,jdbcType=INTEGER},
+      diff = #{diff,jdbcType=VARCHAR},
+      `year` = #{year,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      `source` = #{source,jdbcType=VARCHAR},
+      paper_tpye = #{paperTpye,jdbcType=INTEGER},
+      title = #{title,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
@@ -208,14 +234,52 @@
       is_deleted = #{isDeleted,jdbcType=BIT},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       course = #{course,jdbcType=VARCHAR},
-      qb_id = #{qbId,jdbcType=VARCHAR},
-      title = #{title,jdbcType=VARCHAR},
-      `type` = #{type,jdbcType=VARCHAR},
-      sub_type = #{subType,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      sub_type = #{subType,jdbcType=INTEGER},
       diff = #{diff,jdbcType=VARCHAR},
       `year` = #{year,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
-      `source` = #{source,jdbcType=VARCHAR}
+      `source` = #{source,jdbcType=VARCHAR},
+      paper_tpye = #{paperTpye,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="getByQuery"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_question_bank
+    where is_deleted = 0
+    <if test="grade != null">
+     and grade_code = #{grade,jdbcType=VARCHAR}
+    </if>
+    <if test="course != null">
+     and course = #{course,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+     and `type` = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="subType != null">
+     and sub_type = #{subType,jdbcType=INTEGER}
+    </if>
+    <if test="diff != null">
+     and diff = #{diff,jdbcType=INTEGER}
+    </if>
+    <if test="year != null">
+     and `year` = #{year,jdbcType=VARCHAR}
+    </if>
+    <if test="area != null">
+     and area = #{area,jdbcType=VARCHAR}
+    </if>
+    <if test="source != null">
+     and `source` = #{source,jdbcType=VARCHAR}
+    </if>
+    <if test="paperTpye != null">
+     and paper_tpye = #{paperTpye,jdbcType=INTEGER}
+    </if>
+    <if test="title != null">
+      and title like concat('%',#{title},'%')
+    </if>
+  </select>
+
 </mapper>

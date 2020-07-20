@@ -1,15 +1,18 @@
-package com.heroland.competition.domain.dp;
+package com.heroland.competition.domain.qo;
 
-import com.anycommon.response.common.BaseDO;
-import com.google.common.collect.Lists;
+import com.anycommon.response.common.BaseQO;
 import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author smjyouzan
+ * @date 2020/7/20
+ */
 @Data
-public class HerolandQuestionBankDP extends BaseDO implements Serializable {
+public class HerolandQuestionBankQo extends BaseQO implements Serializable {
 
     /**
      * 年级
@@ -23,6 +26,7 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
 
     /**
      * 题目
+     * 模糊搜索
      */
     private String title;
 
@@ -60,39 +64,5 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
      * 试题类型
      */
     private Integer paperType;
-
-    /**
-     * 选项内容
-     */
-    private List<QuestionOptionDto> options = Lists.newArrayList();
-
-    /**
-     * 选项答案
-     */
-    private String optionAnswer;
-
-    /**
-     * 解答题答案
-     */
-    private String answer;
-
-    /**
-     * 答案解析
-     */
-    private String parse;
-
-    /**
-     * 关联知识点
-     */
-    private List<Long> knowledges = Lists.newArrayList();
-
-
-    //todo 补全
-    public HerolandQuestionBankDP checkAndBuildBeforeCreate(){
-
-
-        return this;
-    }
-
 
 }
