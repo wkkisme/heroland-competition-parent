@@ -242,6 +242,12 @@
             <groupId>com.heroland.competition</groupId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.platform.sso</groupId>
+            <artifactId>platform-sso-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 
