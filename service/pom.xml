@@ -183,7 +183,7 @@
         <dependency>
             <artifactId>heroland-competition-rpc</artifactId>
             <groupId>com.heroland.competition</groupId>
-            <version>1.0.0</version>
+            <version>1.0.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
