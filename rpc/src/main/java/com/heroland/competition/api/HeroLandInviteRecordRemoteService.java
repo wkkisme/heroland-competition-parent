@@ -28,7 +28,7 @@ public interface HeroLandInviteRecordRemoteService {
      * @param dp
      * @return
      */
-    ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp);
+    ResponseBody<String> invite(HeroLandInviteRecordDP dp);
 
 
     /**

@@ -1,4 +1,4 @@
-package com.heroland.competition.provider;
+package com.heroland.competition.remote;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.api.HeroLandCompetitionRecordRemoteService;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:15 下午
  */
-@DubboService
+@DubboService(version = "1.0.0")
 @AllArgsConstructor
 public class HeroLandCompetitionRecordRemoteServiceImpl implements HeroLandCompetitionRecordRemoteService {
 
@@ -47,6 +47,6 @@ public class HeroLandCompetitionRecordRemoteServiceImpl implements HeroLandCompe
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId) {
-        return null;
+        return heroLandCompetitionRecordService.getCompetitionRecordById(recordId);
     }
 }

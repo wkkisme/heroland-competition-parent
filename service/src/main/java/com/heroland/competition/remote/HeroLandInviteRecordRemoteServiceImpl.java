@@ -1,4 +1,4 @@
-package com.heroland.competition.provider;
+package com.heroland.competition.remote;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.api.HeroLandInviteRecordRemoteService;
@@ -7,7 +7,6 @@ import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import lombok.AllArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
-@DubboService
+@DubboService(version = "1.0.0")
 @AllArgsConstructor
 public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteRecordRemoteService {
 
@@ -27,13 +26,13 @@ public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteReco
     }
 
     @Override
-    public ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp) {
-        return null;
+    public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
+        return inviteRecordService.invite(dp);
     }
 
     @Override
     public ResponseBody<Boolean> cancelInvite(HeroLandInviteRecordDP dp) {
-        return null;
+        return inviteRecordService.cancelInvite(dp);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteReco
 
     @Override
     public ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp) {
-        return null;
+        return inviteRecordService.agreeInvite(dp);
     }
 
     @Override
