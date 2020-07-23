@@ -17,6 +17,7 @@ import java.util.Date;
 
 public class HeroLandAccountQO extends BaseQO {
     @MybatisCriteriaAnnotation
+    @ApiModelProperty(value = "userId用户id",required = true)
     private String userId;
 
     @ApiModelProperty(value = "startTime开始时间")
