@@ -5,6 +5,7 @@ import com.heroland.competition.api.HeroLandQuestionRemoteService;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
+import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
+@DubboService
 public class HeroLandQuestionRemoteServiceImpl implements HeroLandQuestionRemoteService {
     @Override
     public ResponseBody<Boolean> addQuestion(HeroLandQuestionDP dp) {

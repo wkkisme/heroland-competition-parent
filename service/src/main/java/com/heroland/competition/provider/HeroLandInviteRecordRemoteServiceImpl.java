@@ -6,6 +6,7 @@ import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import lombok.AllArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
-@Service
+@DubboService
 @AllArgsConstructor
 public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteRecordRemoteService {
 

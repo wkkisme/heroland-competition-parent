@@ -68,11 +68,13 @@
     <distributionManagement>
         <repository>
             <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2016345-release-JqDblY/</url>
+            <name>26547-release-5mEjUk</name>
+            <url>https://repo.rdc.aliyun.com/repository/26547-release-5mEjUk</url>
         </repository>
         <snapshotRepository>
             <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2016345-snapshot-zGnJ30/</url>
+            <name>26547-snapshot-BLPL8p</name>
+            <url>https://repo.rdc.aliyun.com/repository/26547-snapshot-BLPL8p</url>
         </snapshotRepository>
     </distributionManagement>
 
