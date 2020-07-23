@@ -37,7 +37,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandInviteRecordServiceImpl.class);
     @Resource
-    private HeroLandInviteRecordExtMapper heroLandInviteRecordMapper;
+    private HeroLandInviteRecordExtMapper heroLandInviteRecordExtMapper;
 
     @Override
     public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
@@ -45,7 +45,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         HeroLandInviteRecord heroLandInviteRecord = null;
         try {
             heroLandInviteRecord = BeanUtil.insertConversion(dp.addCheck(), new HeroLandInviteRecord());
-            heroLandInviteRecordMapper.insert(heroLandInviteRecord);
+            heroLandInviteRecordExtMapper.insert(heroLandInviteRecord);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -76,8 +76,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             HeroLandInviteRecordExample example = new HeroLandInviteRecordExample();
             HeroLandInviteRecordExample.Criteria criteria = example.createCriteria();
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
-            heroLandQuestions = heroLandInviteRecordMapper.selectByExample(example);
-            count = heroLandInviteRecordMapper.countByExample(example);
+            heroLandQuestions = heroLandInviteRecordExtMapper.selectByExample(example);
+            count = heroLandInviteRecordExtMapper.countByExample(example);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -97,7 +97,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         try {
 
-            heroLandInviteRecordMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecordExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
