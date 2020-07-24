@@ -17,7 +17,7 @@ public interface HeroLandAccountService {
      * @param dp
      * @return
      */
-    ResponseBody<Set<HeroLandAccountDP>> getOnLineUserByType(HeroLandAccountDP dp);
+    ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp);
 
      /**
      * 查询当前人的比赛记录

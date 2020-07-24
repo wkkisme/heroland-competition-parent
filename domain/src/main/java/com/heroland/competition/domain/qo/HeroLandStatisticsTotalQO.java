@@ -108,6 +108,16 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private String groupBy;
 
+    private String rankField;
+
+    public String getRankField() {
+        return rankField;
+    }
+
+    public void setRankField(String rankField) {
+        this.rankField = rankField;
+    }
+
     public String getGroupBy() {
         return groupBy;
     }
@@ -147,6 +157,15 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
      */
     private OrderByEnum orderByFiled;
 
+    private String orderFiled;
+
+    public String getOrderFiled() {
+        return orderFiled;
+    }
+
+    public void setOrderFiled(String orderFiled) {
+        this.orderFiled = orderFiled;
+    }
 
     public String getOrgCode() {
         return orgCode;

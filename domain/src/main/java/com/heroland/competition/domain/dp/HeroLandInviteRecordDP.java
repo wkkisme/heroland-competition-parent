@@ -1,13 +1,12 @@
 package com.heroland.competition.domain.dp;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -88,7 +87,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
         return this;
     }
 
-    public HeroLandInviteRecordDP inviteCheck(RedisTemplate<String, Object> redisTemplate){
+    public HeroLandInviteRecordDP inviteCheck(RedisService redisTemplate){
         if (isInvited(redisTemplate)){
             // todo 国际化
             ResponseBodyWrapper.fail("同学你已经邀请人了,请不要重复邀请哟 ！！","50000");
@@ -101,28 +100,28 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
     /**
      * 是否被邀请
      *
-     * @param redisTemplate redis
+     * @param redisService redis
      * @return if
      */
-    public Boolean isInvited(RedisTemplate<String, Object> redisTemplate) {
-        return getInviteStatus(redisTemplate, this.getInviteUserId());
+    public Boolean isInvited(RedisService redisService) {
+        return getInviteStatus(redisService, this.getInviteUserId());
 
     }
     /**
      * 是否被邀请
      *
-     * @param redisTemplate redis
+     * @param redisService redis
      * @return if
      */
-    public Boolean isBeInvited(RedisTemplate<String, Object> redisTemplate) {
-        return getInviteStatus(redisTemplate, this.getBeInviteUserId());
+    public Boolean isBeInvited(RedisService redisService) {
+        return getInviteStatus(redisService, this.getBeInviteUserId());
 
     }
 
-    private Boolean getInviteStatus(RedisTemplate<String, Object> redisTemplate, String userId) {
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+    private Boolean getInviteStatus(RedisService redisService, String userId) {
+
         boolean isInvited = true;
-        Boolean aBoolean = valueOperations.setIfAbsent(INVITE_KEY + userId, this, 10L, TimeUnit.HOURS);
+        Boolean aBoolean = redisService.setNx(INVITE_KEY + userId, this, "10h");
         if (aBoolean != null) {
             isInvited = aBoolean;
         }
@@ -133,21 +132,21 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
     /**
      * 邀请者比赛结束
      *
-     * @param redisTemplate
+     * @param redisService
      * @return
      */
-    public Boolean finishInviteUserCompetition(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.delete(INVITE_KEY+this.getInviteUserId());
+    public Boolean finishInviteUserCompetition(RedisService redisService) {
+        return redisService.del(INVITE_KEY+this.getInviteUserId());
     }
 
     /**
      * 被邀请者比赛结束 可以重新被邀请
      *
-     * @param redisTemplate
+     * @param redisService
      * @return
      */
-    public Boolean finishBeInviteUserCompetition(RedisTemplate<String, Object> redisTemplate) {
-        return redisTemplate.delete(INVITE_KEY+this.getBeInviteUserId());
+    public Boolean finishBeInviteUserCompetition(RedisService redisService) {
+        return redisService.del(INVITE_KEY+this.getBeInviteUserId());
     }
 
 

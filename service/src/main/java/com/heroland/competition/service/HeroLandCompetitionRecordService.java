@@ -63,8 +63,15 @@ public interface HeroLandCompetitionRecordService {
     ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId);
 
 
-    List<HeroLandStatisticsTotalDP> getSyncTotalScore(HeroLandStatisticsTotalQO qo);
+    List<HeroLandStatisticsTotalDP> getTotalScore(HeroLandStatisticsTotalQO qo);
 
-    List<HeroLandStatisticsDetailDP> getSyncTotalScoreDetail(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
 
+    List<HeroLandStatisticsTotalDP> getAnswerRightRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+
+    List<HeroLandStatisticsTotalDP> getCompleteRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+
+    List<HeroLandStatisticsTotalDP> getWinRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+
+    List<HeroLandStatisticsTotalDP> getTotalTime(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
 }

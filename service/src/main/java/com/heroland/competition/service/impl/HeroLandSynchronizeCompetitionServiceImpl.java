@@ -2,6 +2,7 @@ package com.heroland.competition.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.HeroLandRedisConstants;
@@ -11,7 +12,6 @@ import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.*;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,7 +26,7 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
     @Resource
     private HeroLandCalculatorService heroLandCalculatorService;
     @Resource
-    private RedisTemplate<String, HeroLandCompetitionRecordDP> redisTemplate;
+    private RedisService redisService;
 
     @Resource
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
@@ -75,7 +75,7 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
         String recordId = dp.getRecordId();
 
         // 1 更新记录，插入详细
-        HeroLandCompetitionRecordDP record = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
+        HeroLandCompetitionRecordDP record = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
 
         // 先缓存查
         if (record == null) {
@@ -108,7 +108,7 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
         });
 
         heroLandCompetitionRecordService.updateCompetitionRecord(dp.doAnswer());
-        redisTemplate.opsForValue().set(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
+        redisService.set(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
         // 查看当前时间谁先答 然后计算开始时间和结束时间，分别更新和加分
         HeroLandCalculatorResultDP calculate = heroLandCalculatorService.calculate(dp);
         // todo 账户加分

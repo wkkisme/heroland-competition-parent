@@ -56,18 +56,36 @@ public class StatisticsTask {
          * 同步作业赛总分数 、总平均分、 总场次
          */
 
-        List<HeroLandStatisticsTotalDP> totalSyncTotalScore = heroLandCompetitionRecordService.getSyncTotalScore(heroLandStatisticsTotalQO);
+        List<HeroLandStatisticsTotalDP> totalSyncTotalScore = heroLandCompetitionRecordService.getTotalScore(heroLandStatisticsTotalQO);
 
         /*
-         *        3 完成率
-         *      * 4 答对率
-         *      * 5 胜率
-         *      * 6 总时长
+         *
+         *   4 答对率
+         *
          */
-//        heroLandCompetitionRecordService.answerRightRate(heroLandStatisticsTotalQO);
+        List<HeroLandStatisticsTotalDP> answerRightRate =  heroLandCompetitionRecordService.getAnswerRightRate(heroLandStatisticsTotalQO);
 
-        List<HeroLandStatisticsDetailDP> detailSyncTotalScore = heroLandCompetitionRecordService.getSyncTotalScoreDetail(heroLandStatisticsTotalQO);
+        /*
+         *  3 完成率
+         */
+        List<HeroLandStatisticsTotalDP> completeRate=  heroLandCompetitionRecordService.getCompleteRate(heroLandStatisticsTotalQO);
 
+        /*
+         *5 胜率
+         */
+        List<HeroLandStatisticsTotalDP> winRate=  heroLandCompetitionRecordService.getWinRate(heroLandStatisticsTotalQO);
+        /*
+         * 6 总时长
+         */
+        List<HeroLandStatisticsTotalDP> totalTime=  heroLandCompetitionRecordService.getTotalTime(heroLandStatisticsTotalQO);
+
+
+
+
+
+
+
+        List<HeroLandStatisticsDetailDP> detailSyncTotalScore = heroLandCompetitionRecordService.getTotalScoreDetail(heroLandStatisticsTotalQO);
 
 
 

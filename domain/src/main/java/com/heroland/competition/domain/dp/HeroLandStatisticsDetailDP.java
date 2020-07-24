@@ -86,13 +86,35 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="history是否历史")
     private Boolean history;
 
-    public String getOrgCode() {
-        return orgCode;
+    /**
+     * 排名情况
+     */
+    private Long rank;
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
     }
 
     public Boolean getHistory() {
         return history;
     }
+
+    public void setHistory(Boolean history) {
+        this.history = history;
+    }
+
+    public Long getRank() {
+        return rank;
+    }
+
+    public void setRank(Long rank) {
+        this.rank = rank;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
 
     /**
      * userid

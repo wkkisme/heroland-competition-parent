@@ -24,7 +24,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
     private final Logger logger = LoggerFactory.getLogger(HeroLandQuestionRecordDetailServiceImpl.class);
 
     @Resource
-    private HeroLandQuestionRecordDetailMapper questionRecordDetailMapper;
+    private HeroLandQuestionRecordDetailMapper heroLandQuestionRecordDetailMapper;
 
     @Override
     public ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP) {
@@ -32,7 +32,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
         HeroLandQuestionRecordDetail heroLandQuestionRecordDetail = null;
         try {
             heroLandQuestionRecordDetail = BeanUtil.insertConversion(recordDetailDP.addCheck(), new HeroLandQuestionRecordDetail());
-            questionRecordDetailMapper.insert(heroLandQuestionRecordDetail);
+            heroLandQuestionRecordDetailMapper.insert(heroLandQuestionRecordDetail);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

@@ -2,6 +2,7 @@ package com.heroland.competition.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
@@ -17,7 +18,6 @@ import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,7 +33,7 @@ import java.util.List;
 @Service
 public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordService {
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisService redisService;
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandInviteRecordServiceImpl.class);
     @Resource
@@ -55,15 +55,15 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Override
     public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
-        return addInvite(dp.inviteCheck(redisTemplate));
+        return addInvite(dp.inviteCheck(redisService));
     }
 
     @Override
     public ResponseBody<Boolean> cancelInvite(HeroLandInviteRecordDP dp) {
         dp.setStatus(InviteStatusEnum.DO_NOT_AGREE.getStatus());
         if (updateInvite(dp).isSuccess()) {
-            dp.finishBeInviteUserCompetition(redisTemplate);
-            dp.finishInviteUserCompetition(redisTemplate);
+            dp.finishBeInviteUserCompetition(redisService);
+            dp.finishInviteUserCompetition(redisService);
         }
         return ResponseBodyWrapper.success();
     }

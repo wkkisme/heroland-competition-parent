@@ -115,6 +115,11 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
     private Boolean history;
 
     /**
+     * 排名情况
+     */
+    private Long rank;
+
+    /**
      * 详情
      */
     private List<HeroLandStatisticsDetailDP> details;
@@ -191,6 +196,14 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
 
     public void setDetails(List<HeroLandStatisticsDetailDP> details) {
         this.details = details;
+    }
+
+    public Long getRank() {
+        return rank;
+    }
+
+    public void setRank(Long rank) {
+        this.rank = rank;
     }
 
     /**

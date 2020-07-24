@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
@@ -12,7 +13,6 @@ import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.service.HeroLandAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,15 +26,15 @@ import java.util.Set;
 public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     private final Logger logger = LoggerFactory.getLogger(HeroLandAccountServiceImpl.class);
     @Resource
-    private RedisTemplate<String, HeroLandAccountDP> redisTemplate;
+    private RedisService redisService;
 
     @Resource
     private HeroLandAccountExtMapper heroLandAccountExtMapper;
 
     @Override
-    public ResponseBody<Set<HeroLandAccountDP>> getOnLineUserByType(HeroLandAccountDP dp) {
-        Set<HeroLandAccountDP> members = redisTemplate.opsForSet().members(dp.getCompetitionType());
-        ResponseBody<Set<HeroLandAccountDP>> objectResponseBody = new ResponseBody<>();
+    public ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp) {
+        Set<Object> members = redisService.sMembers(dp.getCompetitionType());
+        ResponseBody<Set<Object>> objectResponseBody = new ResponseBody<>();
         objectResponseBody.setData(members);
         return objectResponseBody;
     }
