@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper">
+    <resultMap id="DetailRankBaseMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll" extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+        <result column="rank" property="rank" />
 
-    <select id="selectStatisticsByRank" resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+    </resultMap>
+    <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
         SELECT
         <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
         ,
