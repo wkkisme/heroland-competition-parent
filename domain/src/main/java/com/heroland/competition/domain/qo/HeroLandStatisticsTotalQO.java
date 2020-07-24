@@ -106,9 +106,20 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     @MybatisCriteriaAnnotation
     private Boolean history;
 
+    private String subjectCode;
+
+
     private String groupBy;
 
     private String rankField;
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
 
     public String getRankField() {
         return rankField;
