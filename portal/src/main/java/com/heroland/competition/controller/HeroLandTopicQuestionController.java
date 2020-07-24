@@ -56,7 +56,7 @@ public class HeroLandTopicQuestionController {
     }
 
     /**
-     * 查询某个题组下的所有题目
+     * 查询某个题组信息
      * @return e
      * @module 題目組
      */
