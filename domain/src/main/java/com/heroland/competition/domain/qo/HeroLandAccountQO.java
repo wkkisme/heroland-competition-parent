@@ -16,14 +16,23 @@ import java.util.Date;
  */
 
 public class HeroLandAccountQO extends BaseQO {
+    /**
+     * userId用户id 必须
+     */
     @MybatisCriteriaAnnotation
     @ApiModelProperty(value = "userId用户id",required = true)
     private String userId;
 
+    /**
+     * 开始时间
+     */
     @ApiModelProperty(value = "startTime开始时间")
     @MybatisCriteriaAnnotation(method = MybatisCriteriaMethodEnum.AND_GREATER_THAN_OR_EQUAL_TO)
     private Date startTime;
 
+    /**
+     * 结束时间
+     */
     @ApiModelProperty(value = "endTime结束时间")
     private Date endTime;
 

@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DubboInitConfig {
 
-    @DubboReference(group = "heroland-competition",version = "1.0.0")
+    @DubboReference(group = "heroland-competition",version = "1.0.0",check = false)
     private PrePayRemoteService prePayRemoteService;
 
-    @Bean
+    @Bean("prePayRemoteService")
     public PrePayRemoteService getPrePayRemoteService(){
         return prePayRemoteService;
     }

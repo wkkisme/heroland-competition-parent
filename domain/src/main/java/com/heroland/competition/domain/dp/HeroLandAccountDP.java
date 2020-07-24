@@ -7,11 +7,9 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandAccount")
@@ -58,83 +56,11 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     @ApiModelProperty(value = "endTime结束时间")
     private Date endTime;
 
-    @ApiModelProperty(value = "currentTotalScore当前数据总分数")
-    private Integer currentTotalScore;
-
-    @ApiModelProperty(value = "winRate当前数据总胜率")
-    private String winRate;
-
-
-    @ApiModelProperty(value = "records比赛记录")
-    private List<HeroLandCompetitionRecordDP> records;
-
     public HeroLandAccountDP queryCheck() {
         if (StringUtils.isBlank(this.userId)) {
             ResponseBodyWrapper.failParamException();
         }
         return this;
-    }
-
-    public Integer getCurrentTotalScore() {
-        if (!CollectionUtils.isEmpty(records) && currentTotalScore == null) {
-            for (HeroLandCompetitionRecordDP record : records) {
-                this.currentTotalScore += record.getInviteScore();
-                this.currentTotalScore += record.getOpponentScore();
-            }
-        }
-        return currentTotalScore;
-    }
-
-    public String getWinRate() {
-        if (!CollectionUtils.isEmpty(records)) {
-            int totalCount = records.size();
-            int winCount = 0;
-            for (HeroLandCompetitionRecordDP record : records) {
-                /*
-                 * 0 邀请方胜利。1 被邀请方胜利。2 平局
-                 */
-                if (record.getInviteId().equals(this.userId) && record.getResult() == 0) {
-                    winCount += 1;
-                }
-                if (record.getOpponentId().equals(this.userId) && record.getResult() == 1) {
-                    winCount += 1;
-                }
-
-            }
-            return (winCount / totalCount) + "";
-        }
-
-        return winRate;
-    }
-
-    public void setWinRate(String winRate) {
-        this.winRate = winRate;
-    }
-
-    public void setCurrentTotalScore(Integer currentTotalScore) {
-//        if (!CollectionUtils.isEmpty(records)) {
-//            for (HeroLandCompetitionRecordDP record : records) {
-//                currentTotalScore += record.getInviteScore();
-//                currentTotalScore += record.getOpponentScore();
-//            }
-//        }
-        this.currentTotalScore = currentTotalScore;
-    }
-
-    public List<HeroLandCompetitionRecordDP> getRecords() {
-        return records;
-    }
-
-    public void setRecords(List<HeroLandCompetitionRecordDP> records) {
-        this.records = records;
-    }
-
-    public String getCompetitionType() {
-        return competitionType;
-    }
-
-    public void setCompetitionType(String competitionType) {
-        this.competitionType = competitionType;
     }
 
     public Date getStartTime() {
@@ -262,12 +188,19 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
                 Objects.equals(userId, that.userId) &&
                 Objects.equals(accountId, that.accountId) &&
                 Objects.equals(levelName, that.levelName) &&
-                Objects.equals(levelScore, that.levelScore) &&
-                Objects.equals(competitionType, that.competitionType);
+                Objects.equals(levelScore, that.levelScore);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(balance, userId, accountId, levelName, levelScore, competitionType);
+        return Objects.hash(balance, userId, accountId, levelName, levelScore);
+    }
+
+    public String getCompetitionType() {
+        return competitionType;
+    }
+
+    public void setCompetitionType(String competitionType) {
+        this.competitionType = competitionType;
     }
 }

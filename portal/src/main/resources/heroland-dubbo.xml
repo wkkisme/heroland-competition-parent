@@ -7,8 +7,8 @@
 
     <!--<dubbo:registry id="zookeeper" address="${dubbo.demo.registry}" file="${dubbo.registry.file.path}" protocol="dubbo" version="1.0.0"/>-->
 
-    <dubbo:reference id="prePayRemoteService" interface="com.platfrom.payment.api.PrePayRemoteService" check="false"
-                     protocol="dubbo" registry="zookeeper" />
+<!--    <dubbo:reference id="prePayRemoteService" interface="com.platfrom.payment.api.PrePayRemoteService" check="false"-->
+<!--                     protocol="dubbo" registry="zookeeper" />-->
 
 
 </beans>

@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 个人信息
+ * 个人账户信息
  *
  * @author mac
  */
