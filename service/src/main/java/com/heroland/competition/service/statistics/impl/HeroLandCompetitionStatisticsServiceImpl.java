@@ -63,11 +63,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Override
     public ResponseBody<List<HeroLandStatisticsTotalDP>> getCompetitionsTatal(HeroLandStatisticsTotalQO qo) {
-        if (qo.getOrderByFiled() != null) {
-            qo.setOrderFiled(qo.getOrderByFiled().getOrderByFiled());
-            qo.setRankField(qo.getOrderByFiled().getFiled());
+        if (qo.getOrderByField() != null) {
+            qo.setOrderField(qo.getOrderByField().getOrderByFiled());
+            qo.setRankField(qo.getOrderByField().getFiled());
         } else {
-            qo.setOrderFiled(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
+            qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
 
@@ -178,11 +178,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        if (qo.getOrderByFiled() != null) {
-            qo.setOrderFiled(qo.getOrderByFiled().getOrderByFiled());
-            qo.setRankField(qo.getOrderByFiled().getFiled());
+        if (qo.getOrderByField() != null) {
+            qo.setOrderField(qo.getOrderByField().getOrderByFiled());
+            qo.setRankField(qo.getOrderByField().getFiled());
         } else {
-            qo.setOrderFiled(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
+            qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
 

@@ -36,7 +36,7 @@
       and grade_code = #{gradeCode,jdbcType=VARCHAR}
     </if>
 
-    ORDER BY ${orderField}
+    ORDER BY ${orderByField}
 
 
     <if test="startRow != null and startRow != -1 and pageSize != null">
