@@ -6,9 +6,8 @@ import com.anycommon.response.page.Pagination;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
-import com.heroland.competition.domain.dto.HeroLandQuestionBankListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.qo.HeroLandQuestionQO;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicGroupRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -53,6 +52,19 @@ public class HeroLandTopicQuestionController {
         pagination.setTotalCount(pageResponse.getTotal());
         pagination.setTotalPage(pageResponse.getTotalPages());
         result.setPage(pagination);
+        return result;
+    }
+
+    /**
+     * 查询某个题组下的所有题目
+     * @return e
+     * @module 題目組
+     */
+    @RequestMapping("/getTopic")
+    public ResponseBody<HeroLandTopicDto> getTopic(@RequestBody HeroLandTopicQuestionsPageRequest request){
+        ResponseBody<HeroLandTopicDto> result = new ResponseBody<>();
+        HeroLandTopicDto topic = heroLandQuestionService.getTopic(request);
+        result.setData(topic);
         return result;
     }
 

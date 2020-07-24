@@ -1,12 +1,10 @@
 package com.heroland.competition.service;
 
-import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.dto.HeroLandTopicQuestionsDto;
-import com.heroland.competition.domain.qo.HeroLandQuestionQO;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
@@ -49,6 +47,8 @@ public interface HeroLandQuestionService{
     PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request);
 
     Boolean saveAssign(HeroLandTopicAssignRequest request);
+
+    HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request);
 
     /**
      * 获取题组和题

@@ -7,6 +7,7 @@
     <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="course_code" jdbcType="VARCHAR" property="courseCode" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
@@ -73,7 +74,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, org_code, topic_name, grade_code, class_code, type, creator, modifier,
+    id, org_code, topic_name, grade_code, class_code,course_code, type, creator, modifier,
     gmt_create, gmt_modified, is_deleted
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
@@ -127,6 +128,9 @@
       <if test="classCode != null">
         class_code,
       </if>
+      <if test="courseCode != null">
+        course_code,
+      </if>
       <if test="type != null">
         type,
       </if>
@@ -161,6 +165,9 @@
       </if>
       <if test="classCode != null">
         #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null">
+        #{courseCode,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
@@ -205,6 +212,9 @@
       </if>
       <if test="record.classCode != null">
         class_code = #{record.classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseCode != null">
+        course_code = #{record.courseCode,jdbcType=VARCHAR},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
@@ -260,6 +270,9 @@
       </if>
       <if test="classCode != null">
         class_code = #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null">
+        course_code = #{courseCode,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},

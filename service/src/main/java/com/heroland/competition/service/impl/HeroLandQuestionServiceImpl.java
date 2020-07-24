@@ -17,6 +17,7 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.dto.QuestionOptionDto;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -179,6 +180,35 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             list.add(topicQuestion);
         });
         return herolandTopicQuestionMapper.saveBatch(list) > 0;
+    }
+
+    @Override
+    public HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request) {
+        if (NumberUtils.nullOrZeroLong(request.getTopicId())){
+            return null;
+        }
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(request.getTopicId());
+        HeroLandTopicDto heroLandTopicDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicDto.class);
+        List<String> keys = Lists.newArrayList();
+        keys.add(heroLandTopicDto.getCourseCode());
+        keys.add(heroLandTopicDto.getGradeCode());
+        keys.add(heroLandTopicDto.getClassCode());
+        keys.add(heroLandTopicDto.getOrgCode());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        if (keyMap.containsKey(heroLandTopicDto.getCourseCode())){
+            heroLandTopicDto.setCourseName(keyMap.get(heroLandTopicDto.getCourseCode()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(heroLandTopicDto.getGradeCode())){
+            heroLandTopicDto.setGradeName(keyMap.get(heroLandTopicDto.getGradeCode()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(heroLandTopicDto.getClassCode())){
+            heroLandTopicDto.setClassName(keyMap.get(heroLandTopicDto.getClassCode()).get(0).getDictValue());
+        }
+        if (keyMap.containsKey(heroLandTopicDto.getOrgCode())){
+            heroLandTopicDto.setOrgCode(keyMap.get(heroLandTopicDto.getOrgCode()).get(0).getDictValue());
+        }
+        return heroLandTopicDto;
     }
 
 }
