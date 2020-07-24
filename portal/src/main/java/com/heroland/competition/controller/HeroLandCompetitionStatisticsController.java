@@ -5,8 +5,8 @@ import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,7 +29,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsTotalDP>> getSyncCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSyncCompetitions")
+    ResponseBody<List<HeroLandStatisticsTotalDP>> getSyncCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSyncCompetitions(qo);
     }
 
@@ -39,7 +40,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitionsDetail(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSyncCompetitionsDetail")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitionsDetail(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSyncCompetitionsDetail(qo);
     }
 
@@ -49,7 +51,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getCompetitionsDetail")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
 
@@ -59,7 +62,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getWinterVacationCompetitionsDetail(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getWinterVacationCompetitionsDetail")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getWinterVacationCompetitionsDetail(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getWinterVacationCompetitionsDetail(qo);
     }
 
@@ -69,7 +73,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsTotalDP>> getWinterVacationCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getWinterVacationCompetitions")
+    ResponseBody<List<HeroLandStatisticsTotalDP>> getWinterVacationCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getWinterVacationCompetitions(qo);
     }
 
@@ -79,7 +84,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getSummerVacationCompetitionsDetail(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSummerVacationCompetitionsDetail")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getSummerVacationCompetitionsDetail(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSummerVacationCompetitionsDetail(qo);
     }
 
@@ -89,7 +95,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsTotalDP>> getSummerVacationCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSummerVacationCompetitions")
+    ResponseBody<List<HeroLandStatisticsTotalDP>> getSummerVacationCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSummerVacationCompetitions(qo);
     }
 
@@ -99,7 +106,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getWorldCompetitionsDetail(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getWorldCompetitionsDetail")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getWorldCompetitionsDetail(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getWorldCompetitionsDetail(qo);
     }
 
@@ -109,7 +117,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsTotalDP>> getWorldCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getWorldCompetitions")
+    ResponseBody<List<HeroLandStatisticsTotalDP>> getWorldCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getWorldCompetitions(qo);
     }
 
@@ -119,7 +128,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsTotalDP>> getSchoolsCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSchoolsCompetitions")
+    ResponseBody<List<HeroLandStatisticsTotalDP>> getSchoolsCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSchoolsCompetitions(qo);
     }
 
@@ -129,7 +139,8 @@ public class HeroLandCompetitionStatisticsController {
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getSchoolCompetitions(HeroLandStatisticsTotalQO qo){
+    @PostMapping("/getSchoolCompetitions")
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getSchoolCompetitions(@RequestBody HeroLandStatisticsTotalQO qo){
         return heroLandCompetitionStatisticsService.getSchoolCompetitions(qo);
     }
 }
