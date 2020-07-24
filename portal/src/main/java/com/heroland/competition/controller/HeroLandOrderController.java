@@ -1,6 +1,7 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.contants.SPUEnum;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dto.PrePayDto;
@@ -41,16 +42,14 @@ public class HeroLandOrderController {
     public ResponseBody<Long> createOrder(@RequestBody HerolandOrderQO qo) {
         ResponseBody<Long> result = new ResponseBody<Long>();
         HerolandOrderDP orderDP = new HerolandOrderDP();
-        orderDP.setBuyerName("XX");
-        orderDP.setSpuId("diamond");
-        orderDP.setSpuName("diamond");
+        orderDP.setBuyerName(qo.getBuyerName());
+        orderDP.setSpuId(SPUEnum.DIAMOND.getDesc());
+        orderDP.setSpuName(SPUEnum.DIAMOND.getName());
         orderDP.setSkuId(qo.getSkuId());
-        orderDP.setSkuName(qo.getSkuId());
         orderDP.setSkuNum(qo.getSkuNum());
-        orderDP.setSkuCurrencyType("HKD");
-        orderDP.setSkuPrice(100L);
-        HerolandOrderDP order = herolandOrderService.createOrder(orderDP);
-        result.setData(herolandOrderService.createPayOrder(order));
+        orderDP.setBuyerId(qo.getBuyerId());
+//        HerolandOrderDP order = herolandOrderService.createOrder(orderDP);
+        result.setData(herolandOrderService.createPayOrder(orderDP));
         return result;
     }
 
@@ -70,7 +69,7 @@ public class HeroLandOrderController {
     }
 
     /**
-     *
+     * 预支付
      * @param prePayQO
      * @return
      */
@@ -92,6 +91,11 @@ public class HeroLandOrderController {
 //        return result;
 //    }
 
+    /**
+     * 获取一条充值记录的详细
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/id", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<HerolandPayDP> get(@RequestParam("id") Long id){
@@ -99,6 +103,9 @@ public class HeroLandOrderController {
         result.setData(herolandPayService.getPayById(id));
         return result;
     }
+
+
+
 
 
 }

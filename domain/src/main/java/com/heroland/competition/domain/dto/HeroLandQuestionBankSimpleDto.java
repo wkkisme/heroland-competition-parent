@@ -14,7 +14,7 @@ import java.util.List;
 public class HeroLandQuestionBankSimpleDto implements Serializable {
 
     /**
-     *题库id 编辑时必传
+     * id
      */
     private Long id;
 

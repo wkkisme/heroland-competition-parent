@@ -5,8 +5,10 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.contants.OrderStateEnum;
 import com.heroland.competition.common.contants.PayCurrencyTypeEnum;
+import com.heroland.competition.common.contants.PayEnvEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandPayMapper;
 import com.heroland.competition.dal.pojo.order.HerolandPay;
@@ -39,16 +41,8 @@ public class HerolandPayServiceImpl implements HerolandPayService {
 
     @Override
     public Long createPay(HerolandPayDP herolandPayDP) {
-
-        HerolandOrderDP orderDP = null;
-        try {
-            HerolandPay herolandOrder = BeanUtil.insertConversion(herolandPayDP.checkAndBuildBeforeCreate(), new HerolandPay());
-            herolandPayMapper.insert(herolandOrder);
-            BeanUtil.conversion(herolandOrder, orderDP);
-        } catch (Exception e) {
-            log.error("createPay error, [{}]", JSON.toJSONString(herolandPayMapper));
-            ResponseBodyWrapper.failSysException();
-        }
+        HerolandPay herolandOrder = BeanCopyUtils.copyByJSON(herolandPayDP.checkAndBuildBeforeCreate(), HerolandPay.class);
+        herolandPayMapper.insertSelective(herolandOrder);
         return herolandPayDP.getId();
     }
 
@@ -88,22 +82,25 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     public PrePayDto prePay(PrePayQO prePayQO) {
         PrePayDto prePayDto = new PrePayDto();
         HerolandPayDP payById = getPayById(prePayQO.getPayId());
-//        if (OrderStateEnum.CREATED.getCode() != payById.getState()){
-//            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
-//        }
+        if (!OrderStateEnum.CREATED.getCode().equalsIgnoreCase(payById.getState())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
+        }
         //调用预支付
-        //fixme mock的数据
         PrePayRequest request = new PrePayRequest();
-        request.setPayEnv("WEB");
-        request.setPayChannel("ALIPAY");
-        request.setCurrencyType(PayCurrencyTypeEnum.HKD.getType());
+        request.setPayEnv(PayEnvEnum.PC.getEnv());
+        request.setPayChannel(prePayQO.getPayTool());
+        request.setCurrencyType(payById.getCurrencyType());
         request.setCurrencyAmt(payById.getSettleAmt());
         request.setBizId(payById.getId()+"");
-        request.setBizType("英雄比赛");
+        request.setBizType("competition");
         PrePayResponse prePayResponse = prePayRemoteService.prePay(request);
         //todo 如果是0元则不用拉出收银台
         prePayDto.setPayId(prePayQO.getPayId());
-        prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
+        if (NumberUtils.nullOrZeroLong(payById.getSettleAmt())){
+            prePayDto.setNeedRedirect(false);
+        }else {
+            prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
+        }
         return prePayDto;
     }
 }

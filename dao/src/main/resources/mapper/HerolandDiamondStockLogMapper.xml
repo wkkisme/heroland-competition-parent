@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HerolandDiamondStockLogMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandDiamondStockLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="biz_group" jdbcType="VARCHAR" property="bizGroup" />
+    <result column="biz_type" jdbcType="VARCHAR" property="bizType" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, `type`, num, biz_group, biz_type, creator, modifier, gmt_create, gmt_modified, 
+    is_deleted
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from heroland_diamond_stock_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_diamond_stock_log set is_deleted = 1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HerolandDiamondStockLog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_diamond_stock_log (user_id, `type`, num, 
+      biz_group, biz_type, creator, 
+      modifier, gmt_create, gmt_modified, 
+      is_deleted)
+    values (#{userId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, 
+      #{bizGroup,jdbcType=VARCHAR}, #{bizType,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandDiamondStockLog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_diamond_stock_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="bizGroup != null">
+        biz_group,
+      </if>
+      <if test="bizType != null">
+        biz_type,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="bizGroup != null">
+        #{bizGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandDiamondStockLog">
+    update heroland_diamond_stock_log
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="bizGroup != null">
+        biz_group = #{bizGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="bizType != null">
+        biz_type = #{bizType,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandDiamondStockLog">
+    update heroland_diamond_stock_log
+    set user_id = #{userId,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      biz_group = #{bizGroup,jdbcType=VARCHAR},
+      biz_type = #{bizType,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getByQuery"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_diamond_stock_log
+    where is_deleted = 0
+    <if test="item.userId != null">
+      and user_id = #{item.userId,jdbcType=VARCHAR}
+    </if>
+    <if test="item.bizGroup != null">
+      and biz_group = #{item.bizGroup,jdbcType=VARCHAR}
+    </if>
+    <if test="item.bizType != null">
+      and biz_type = #{item.bizType,jdbcType=VARCHAR}
+    </if>
+    <if test="item.type != null">
+      and `type` = #{item.type,jdbcType=INTEGER}
+    </if>
+    <if test="item.beginTime != null">
+      and `gmt_create` >= #{item.beginTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="item.endTime != null">
+      <![CDATA[
+        and `gmt_create` <= #{item.endTime,jdbcType=TIMESTAMP}
+        ]]>
+
+    </if>
+
+  </select>
+
+
+</mapper>

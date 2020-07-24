@@ -26,10 +26,10 @@
     from heroland_knowledge_refer
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from heroland_knowledge_refer
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_knowledge_refer set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
 
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandKnowledgeRefer">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -160,6 +160,20 @@
       and refer_id IN
       <foreach collection="referIds" item="referId" open="(" close=")" separator=",">
         #{referId}
+      </foreach>
+    </if>
+    and `type` = #{type,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByKnowledgeIds"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_knowledge_refer
+    where is_deleted = 0
+    <if test="knowledgeIdIds != null and knowledgeIdIds.size > 0">
+      and knowledge_id IN
+      <foreach collection="knowledgeIdIds" item="knowledgeIdId" open="(" close=")" separator=",">
+        #{knowledgeIdId}
       </foreach>
     </if>
     and `type` = #{type,jdbcType=INTEGER}

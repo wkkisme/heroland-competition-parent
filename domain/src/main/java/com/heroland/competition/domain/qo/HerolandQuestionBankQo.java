@@ -5,6 +5,7 @@ import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,5 +65,11 @@ public class HerolandQuestionBankQo extends BaseQO implements Serializable {
      * 试题类型
      */
     private Integer paperType;
+
+    private Date beginTime;
+
+    private Date endTime;
+
+    private List<Long> bankIds;
 
 }

@@ -1,6 +1,7 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandSku;
+import com.heroland.competition.domain.dp.HerolandSkuDP;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,9 +16,13 @@ public interface HerolandSkuMapper {
 
     HerolandSku selectByPrimaryKey(Long id);
 
+    HerolandSku selectByPrimaryKeyExcludeDel(Long id);
+
     int updateByPrimaryKeySelective(HerolandSku record);
 
     int updateByPrimaryKey(HerolandSku record);
 
     List<HerolandSku> list(@Param("spuId") String spuId,@Param("skuId") String  skuId);
+
+    HerolandSku getBySkuId(@Param("skuId") String skuId);
 }

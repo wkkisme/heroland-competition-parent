@@ -1,5 +1,6 @@
 package com.heroland.competition.controller;
 
+import com.spreada.utils.chinese.ZHConverter;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,15 @@ public class HealthCloudHomeController {
 //        List<Long> ids = TinyId.nextId("test", 10);
         return "/res/index.html";
 
+    }
+
+
+        public static void main(String[] args) {
+            ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
+            String simplifiedStr = converter.convert("鄧麗君");
+            System.out.println(simplifiedStr);
+
+        System.out.println("***************");
     }
 
 

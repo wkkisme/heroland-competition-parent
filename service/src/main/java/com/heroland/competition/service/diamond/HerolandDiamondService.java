@@ -1,7 +1,10 @@
 package com.heroland.competition.service.diamond;
 
 import com.heroland.competition.domain.dp.HerolandSkuDP;
+import com.heroland.competition.domain.dto.HerolandDiamondStockDto;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
+import com.heroland.competition.domain.request.HerolandDiamMonthRecordRequest;
+import com.heroland.competition.domain.request.HerolandDiamRequest;
 
 import java.util.List;
 
@@ -31,4 +34,7 @@ public interface HerolandDiamondService {
     List<HerolandSkuDP> listSku(HerolandSkuQO skuQO);
 
 
+    Boolean createDiamondRecord(HerolandDiamRequest request);
+
+    HerolandDiamondStockDto recordList(HerolandDiamMonthRecordRequest request);
 }

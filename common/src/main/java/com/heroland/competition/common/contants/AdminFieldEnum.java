@@ -40,6 +40,10 @@ public enum AdminFieldEnum {
 
     DIAMOND("DA", "diamond","宝石"),
 
+    QUEST("QE", "question","题目"),
+
+    TOPIC("TP", "topic","题目组"),
+
             ;
 
     public static LinkedList<AdminFieldEnum> location = Lists.newLinkedList();

@@ -26,4 +26,6 @@ public interface HerolandKnowledgeReferMapper {
     int batchDeleteByReferIds(@Param("referIds") List<Long> referIds,@Param("type")  Integer type);
 
     List<HerolandKnowledgeRefer> selectByReferIds(@Param("referIds") List<Long> referIds,@Param("type")  Integer type);
+
+    List<HerolandKnowledgeRefer> selectByKnowledgeIds(@Param("knowledgeIdIds") List<Long> knowledgeIdIds,@Param("type")  Integer type);
 }

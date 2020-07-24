@@ -58,6 +58,7 @@ public class HerolandOrderDP extends BaseDO implements Serializable {
         AssertUtils.assertThat(!NumberUtils.nullOrZero(skuNum));
         AssertUtils.assertThat(!NumberUtils.nullOrZero(skuPrice));
         this.origPrice = this.skuPrice * this.skuNum;
+        //暂时没有优惠
         this.currencyAmt = this.origPrice;
         this.currencyType = skuCurrencyType;
         this.state = OrderStateEnum.CREATED.getCode();

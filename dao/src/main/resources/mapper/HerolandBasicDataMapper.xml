@@ -28,7 +28,7 @@
   </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update heroland_basic_data
-    set is_delete = 1
+    set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
   </update>
 

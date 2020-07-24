@@ -12,14 +12,23 @@ import java.io.Serializable;
 @Data
 public class HerolandOrderQO implements Serializable {
 
+    /**
+     * 用户id
+     */
     @NotNull
     private String buyerId;
 
     private String buyerName;
 
+    /**
+     * 购买的宝石id
+     */
     @NotNull
     private String skuId;
 
+    /**
+     * 默认为1
+     */
     @NotNull
     private Integer skuNum;
 

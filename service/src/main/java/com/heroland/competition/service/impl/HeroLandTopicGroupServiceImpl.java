@@ -37,7 +37,7 @@ public class HeroLandTopicGroupServiceImpl implements HeroLandTopicGroupService 
     public ResponseBody<Boolean> addTopic(HeroLandTopicGroupDP dp) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         try {
-            result.setData(heroLandTopicGroupExtMapper.insert(BeanUtil.insertConversion(dp.addCheckAndInit(), new HeroLandTopicGroup())) > 0);
+            result.setData(heroLandTopicGroupExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheckAndInit(), new HeroLandTopicGroup())) > 0);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

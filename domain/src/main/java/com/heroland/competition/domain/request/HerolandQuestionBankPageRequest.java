@@ -10,10 +10,6 @@ import java.util.List;
 @Data
 public class HerolandQuestionBankPageRequest extends BaseQO implements Serializable {
 
-    /**
-     *题库id 编辑时必传
-     */
-    private Long id;
 
     /**
      * 年级
@@ -64,26 +60,6 @@ public class HerolandQuestionBankPageRequest extends BaseQO implements Serializa
      * 试题类型
      */
     private Integer paperType;
-
-    /**
-     * 选项内容
-     */
-    private List<QuestionOptionDto> options;
-
-    /**
-     * 选项答案
-     */
-    private String optionAnswer;
-
-    /**
-     * 解答题答案
-     */
-    private String answer;
-
-    /**
-     * 答案解析
-     */
-    private String parse;
 
 
 }

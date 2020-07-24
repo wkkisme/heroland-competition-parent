@@ -118,6 +118,17 @@ public class DateUtils {
         return String.valueOf(c.get(Calendar.YEAR));
     }
 
+    public static String dateToYear(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return String.valueOf(c.get(Calendar.YEAR));
+    }
+
+    public static void main(String[] args) {
+        String s = dateToYear(new Date());
+        System.out.println(s);
+    }
+
     public static String stringToMonth(String strDest) {
         if (strDest == null || strDest.equals("")) {
             throw new IllegalArgumentException("str dest null");
@@ -277,7 +288,7 @@ public class DateUtils {
         return Integer.parseInt(String.valueOf(between_days));
     }
 
-    public static void main(String[] args) {
+    public static void main3(String[] args) {
         System.out.println("#######################");
         int i = Integer.parseInt(String.valueOf(10));
 

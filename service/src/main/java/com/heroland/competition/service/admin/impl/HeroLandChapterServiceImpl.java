@@ -236,7 +236,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
     public List<HerolandChapterSimpleDto> getChapterList(HerolandPreChapterRequest request) {
 
         List<HerolandChapterSimpleDto> list = new ArrayList<>();
-        List<HerolandChapter> byQuery = heroLandChapterMapper.getByQuery(request.getGrade(), request.getCourse(), request.getEdition(), request.getContentType(), null, null);
+        List<HerolandChapter> byQuery = heroLandChapterMapper.getByQuery(request.getGrade(), request.getCourse(), request.getEdition(), request.getContentType(), null, request.getParentId());
         byQuery.stream().forEach(e -> {
             HerolandChapterSimpleDto simpleDto = new HerolandChapterSimpleDto();
             simpleDto.setContent(e.getContent());
@@ -289,6 +289,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
         }
         dto.setContent(chapter.getContent());
         dto.setContentType(chapter.getContentType());
+        dto.setOrder(chapter.getOrder());
         return dto;
     }
 }

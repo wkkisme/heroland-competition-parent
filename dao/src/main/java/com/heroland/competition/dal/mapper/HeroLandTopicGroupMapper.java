@@ -12,7 +12,6 @@ public interface HeroLandTopicGroupMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(HeroLandTopicGroup record);
 
     int insertSelective(HeroLandTopicGroup record);
 

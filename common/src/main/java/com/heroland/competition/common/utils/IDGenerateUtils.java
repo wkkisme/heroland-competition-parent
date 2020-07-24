@@ -66,7 +66,7 @@ public class IDGenerateUtils {
 
         sb.append(marchStr);
 
-        return NumberUtils.parseLong(sb);
+        return NumberUtils.parseLong(sb.toString().replace("-",""));
     }
 
     /**

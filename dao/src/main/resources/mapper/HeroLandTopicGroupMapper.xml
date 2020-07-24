@@ -8,7 +8,6 @@
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
     <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -74,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, org_code, topic_name, grade_code, class_code, type, topic_id, creator, modifier, 
+    id, org_code, topic_name, grade_code, class_code, type, creator, modifier,
     gmt_create, gmt_modified, is_deleted
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
@@ -97,31 +96,18 @@
     from heroland_topic_group
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from heroland_topic_group
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_topic_group set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample">
     delete from heroland_topic_group
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroup">
-    <selectKey keyProperty="topicId" order="AFTER" resultType="java.lang.String">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into heroland_topic_group (id, org_code, topic_name, 
-      grade_code, class_code, type, 
-      creator, modifier, gmt_create, 
-      gmt_modified, is_deleted)
-    values (#{id,jdbcType=BIGINT}, #{orgCode,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, 
-      #{gradeCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
-      #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
-  </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroup">
-    <selectKey keyProperty="topicId" order="AFTER" resultType="java.lang.String">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into heroland_topic_group
@@ -223,9 +209,6 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
-      <if test="record.topicId != null">
-        topic_id = #{record.topicId,jdbcType=VARCHAR},
-      </if>
       <if test="record.creator != null">
         creator = #{record.creator,jdbcType=VARCHAR},
       </if>
@@ -254,7 +237,6 @@
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
-      topic_id = #{record.topicId,jdbcType=VARCHAR},
       creator = #{record.creator,jdbcType=VARCHAR},
       modifier = #{record.modifier,jdbcType=VARCHAR},
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
@@ -282,9 +264,6 @@
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="topicId != null">
-        topic_id = #{topicId,jdbcType=VARCHAR},
-      </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
       </if>
@@ -310,7 +289,6 @@
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
-      topic_id = #{topicId,jdbcType=VARCHAR},
       creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},

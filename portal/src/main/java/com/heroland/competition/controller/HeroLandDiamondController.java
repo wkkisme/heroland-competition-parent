@@ -1,19 +1,14 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.domain.dp.HerolandOrderDP;
-import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dp.HerolandSkuDP;
-import com.heroland.competition.domain.dto.PrePayDto;
-import com.heroland.competition.domain.qo.HerolandOrderQO;
-import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
+import com.heroland.competition.domain.dto.HerolandDiamondStockDto;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
-import com.heroland.competition.domain.qo.PrePayQO;
+import com.heroland.competition.domain.request.HerolandDiamMonthRecordRequest;
+import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.domain.request.HerolandSkuAddRequest;
 import com.heroland.competition.domain.request.HerolandSkuEditRequest;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
-import com.heroland.competition.service.order.HerolandOrderService;
-import com.heroland.competition.service.order.HerolandPayService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -106,6 +101,34 @@ public class HeroLandDiamondController {
         ResponseBody<HerolandSkuDP> result = new ResponseBody<>();
         HerolandSkuDP byId = herolandDiamondService.getById(id);
         result.setData(byId);
+        return result;
+    }
+
+
+
+    /**
+     * 扣减或者增加库存
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/record", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> record(@RequestBody HerolandDiamRequest request){
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        result.setData(herolandDiamondService.createDiamondRecord(request));
+        return result;
+    }
+
+    /**
+     * 按月进行聚合统计
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/recordList", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HerolandDiamondStockDto> recordList(@RequestBody HerolandDiamMonthRecordRequest request){
+        ResponseBody<HerolandDiamondStockDto> result = new ResponseBody<>();
+        result.setData(herolandDiamondService.recordList(request));
         return result;
     }
 

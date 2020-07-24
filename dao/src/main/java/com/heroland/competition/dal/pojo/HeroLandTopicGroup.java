@@ -38,12 +38,6 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
     private Integer type;
 
     /**
-     * 题目组id
-     */
-    @ApiModelProperty(value="topicId题目组id")
-    private String topicId;
-
-    /**
      * heroland_topic_group
      */
     private static final long serialVersionUID = 1L;
@@ -128,19 +122,4 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
         this.type = type;
     }
 
-    /**
-     * 题目组id
-     * @return topic_id 题目组id
-     */
-    public String getTopicId() {
-        return topicId;
-    }
-
-    /**
-     * 题目组id
-     * @param topicId 题目组id
-     */
-    public void setTopicId(String topicId) {
-        this.topicId = topicId == null ? null : topicId.trim();
-    }
 }

@@ -24,10 +24,10 @@
     from heroland_question_bank_detail
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from heroland_question_bank_detail
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_question_bank_detail set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
 
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBankDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -149,5 +149,17 @@
       </foreach>
     </if>
   </select>
+
+  <update id="deleteByQtId" >
+   update heroland_question_bank_detail
+    set is_deleted = 1
+    where 1 =1
+    <if test="qtIds != null and qtIds.size > 0">
+      and qb_id IN
+      <foreach collection="qtIds" item="qtId" open="(" close=")" separator=",">
+        #{qtId}
+      </foreach>
+    </if>
+  </update>
 
 </mapper>

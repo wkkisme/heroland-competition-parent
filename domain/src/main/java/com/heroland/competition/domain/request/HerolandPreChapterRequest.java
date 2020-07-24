@@ -39,5 +39,10 @@ public class HerolandPreChapterRequest extends BaseQO implements Serializable {
     @NotNull
     private Integer contentType;
 
+    /**
+     * 父节点id
+     */
+    private Long parentId;
+
 
 }

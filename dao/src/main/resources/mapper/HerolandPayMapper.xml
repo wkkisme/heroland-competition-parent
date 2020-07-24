@@ -38,10 +38,10 @@
     from heroland_pay
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from heroland_pay
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_pay set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" parameterType="com.heroland.competition.dal.pojo.order.HerolandPay">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
@@ -68,6 +68,9 @@
     </selectKey>
     insert into heroland_pay
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="bizNo != null">
         biz_no,
       </if>
@@ -126,6 +129,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
       <if test="bizNo != null">
         #{bizNo,jdbcType=VARCHAR},
       </if>

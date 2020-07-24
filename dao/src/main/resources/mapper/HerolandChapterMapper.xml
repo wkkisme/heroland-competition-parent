@@ -28,10 +28,10 @@
     from heroland_chapter
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from heroland_chapter
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  heroland_chapter set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
 
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandChapter">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
