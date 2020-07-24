@@ -45,4 +45,73 @@
         </if>
 
     </select>
+
+    <select id="getSyncTotalScore"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
+
+
+        select
+        sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,
+        sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount) total_games from (
+        select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
+        ,class_code class_code,grade_code grade_code,org_code org_code
+        ,count(invite_score) competitionCount
+        from heroland_competition_record
+        where topic_type = #{topicType}
+        and  is_deleted = 0
+
+        GROUP BY org_code,grade_code
+        ,invite_id
+
+        union all
+
+        select sum(opponent_score) total_score , opponent_id user_id ,topic_type topic_type
+        ,class_code class_code,grade_code grade_code,org_code org_code,
+        count(opponent_score) competitionCount
+        from heroland_competition_record
+        where topic_type = #{topicType}
+        and  is_deleted = 0
+
+
+        GROUP BY org_code,grade_code
+        ,opponent_id
+
+        ) a
+        GROUP BY user_id
+
+    </select>
+
+
+    <select id="getSyncTotalScoreDetail"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
+
+
+        select
+        sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,subject_code
+        sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount)  total_games from (
+        select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
+        ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
+        ,count(invite_score) competitionCount
+        from heroland_competition_record
+        where topic_type = #{topicType}
+        and  is_deleted = 0
+
+        GROUP BY org_code,grade_code,class_code,subject_code
+        ,invite_id
+        union all
+
+        select sum(opponent_score) total_score , opponent_id user_id ,topic_type topic_type
+        ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
+        count(opponent_score) competitionCount
+        from heroland_competition_record
+        where topic_type = #{topicType}
+        and  is_deleted = 0
+
+        GROUP BY org_code,grade_code,class_code,subject_code
+        ,opponent_id
+
+        ) a
+        GROUP BY user_id
+
+    </select>
 </mapper>

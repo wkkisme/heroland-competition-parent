@@ -3,7 +3,6 @@ package com.heroland.competition.service.order.impl;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.OrderStateEnum;
 import com.heroland.competition.common.contants.PayCurrencyTypeEnum;
 import com.heroland.competition.common.contants.PayEnvEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;

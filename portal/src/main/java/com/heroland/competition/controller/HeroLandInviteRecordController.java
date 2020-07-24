@@ -4,7 +4,6 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
-import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +35,7 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/toInvite")
-    public ResponseBody<Boolean> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
+    public ResponseBody<String> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         return heroLandInviteRecordService.invite(heroLandInviteRecord);
     }

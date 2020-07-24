@@ -77,7 +77,12 @@
 
 
 
-        <table tableName="heroland_invite_record" domainObjectName="HeroLandInviteRecord" mapperName="HeroLandInviteRecordMapper">
+        <table tableName="heroland_statistics_detail" domainObjectName="HeroLandStatisticsDetail" mapperName="HeroLandStatisticsDetailMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+       <table tableName="heroland_statistics_total" domainObjectName="HeroLandStatisticsTotal" mapperName="HeroLandStatisticsTotalMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

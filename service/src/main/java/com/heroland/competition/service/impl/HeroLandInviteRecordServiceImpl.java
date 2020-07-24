@@ -8,6 +8,7 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.InviteStatusEnum;
+import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
@@ -36,30 +37,31 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandInviteRecordServiceImpl.class);
     @Resource
-    private HeroLandInviteRecordMapper heroLandInviteRecordMapper;
+    private HeroLandInviteRecordExtMapper heroLandInviteRecordExtMapper;
 
     @Override
-    public ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp) {
+    public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
         logger.info("邀请记录：{}", JSON.toJSONString(dp));
+        HeroLandInviteRecord heroLandInviteRecord = null;
         try {
-            heroLandInviteRecordMapper.insert(BeanUtil.insertConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecord = BeanUtil.insertConversion(dp.addCheck(), new HeroLandInviteRecord());
+            heroLandInviteRecordExtMapper.insert(heroLandInviteRecord);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
-        return ResponseBodyWrapper.success();
+        return ResponseBodyWrapper.successWrapper(heroLandInviteRecord.getRecordId());
     }
 
     @Override
-    public ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp) {
-        //todo  定时修改超时或者自己完成比赛的 清除redis
+    public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
         return addInvite(dp.inviteCheck(redisTemplate));
     }
 
     @Override
     public ResponseBody<Boolean> cancelInvite(HeroLandInviteRecordDP dp) {
         dp.setStatus(InviteStatusEnum.DO_NOT_AGREE.getStatus());
-        if (updateInvite(dp).isSuccess()){
+        if (updateInvite(dp).isSuccess()) {
             dp.finishBeInviteUserCompetition(redisTemplate);
             dp.finishInviteUserCompetition(redisTemplate);
         }
@@ -74,8 +76,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             HeroLandInviteRecordExample example = new HeroLandInviteRecordExample();
             HeroLandInviteRecordExample.Criteria criteria = example.createCriteria();
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
-            heroLandQuestions = heroLandInviteRecordMapper.selectByExample(example);
-            count = heroLandInviteRecordMapper.countByExample(example);
+            heroLandQuestions = heroLandInviteRecordExtMapper.selectByExample(example);
+            count = heroLandInviteRecordExtMapper.countByExample(example);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -95,7 +97,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         try {
 
-            heroLandInviteRecordMapper.updateByPrimaryKey(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecordExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

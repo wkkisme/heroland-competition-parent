@@ -224,6 +224,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.anycommon</groupId>
+            <artifactId>anycommon-cache</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
         </dependency>
@@ -242,7 +247,23 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <artifactId>heroland-competition-rpc</artifactId>
+            <groupId>com.heroland.competition</groupId>
+            <version>1.0.0</version>
+        </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.anycommon</groupId>-->
+<!--            <artifactId>anycommon-logger</artifactId>-->
+<!--            <version>1.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.platform.sso</groupId>
+            <artifactId>platform-sso-client</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 

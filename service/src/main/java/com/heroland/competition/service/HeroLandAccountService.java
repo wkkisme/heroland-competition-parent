@@ -33,6 +33,13 @@ public interface HeroLandAccountService {
      */
     ResponseBody<List<HeroLandAccountDP>> getAccount(HeroLandAccountQO qo);
 
+    /**
+     * 查询当前个人账户详情
+     * @param qo
+     * @return
+     */
+    ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId);
+
 
 
 }

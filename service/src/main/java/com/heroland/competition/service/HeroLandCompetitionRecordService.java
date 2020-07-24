@@ -1,8 +1,12 @@
 package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.dal.pojo.HeroLandStatisticsTotal;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
+import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ public interface HeroLandCompetitionRecordService {
      * @param dp 对象
      * @return 正确
      */
-    ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp);
+    ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp);
 
     /**
      * 比赛记录更新
@@ -59,5 +63,8 @@ public interface HeroLandCompetitionRecordService {
     ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId);
 
 
+    List<HeroLandStatisticsTotalDP> getSyncTotalScore(HeroLandStatisticsTotalQO qo);
+
+    List<HeroLandStatisticsDetailDP> getSyncTotalScoreDetail(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
 
 }

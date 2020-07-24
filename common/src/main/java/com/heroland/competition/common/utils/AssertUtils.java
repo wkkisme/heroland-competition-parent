@@ -123,7 +123,7 @@ public abstract class AssertUtils {
     public static void notEmpty(Object obj) {
         if (obj instanceof Collection){
             Collection collection = (Collection)obj;
-            if (collection == null || CollectionUtils.isEmpty((Collection)obj)) {
+            if (CollectionUtils.isEmpty(collection)) {
                 assertFail();
             }
         }else if(obj instanceof Map){
@@ -141,12 +141,12 @@ public abstract class AssertUtils {
     public static void notEmpty(Object obj, String msg) {
         if (obj instanceof Collection){
             Collection collection = (Collection)obj;
-            if (collection == null || CollectionUtils.isEmpty((Collection)obj)) {
+            if (CollectionUtils.isEmpty((Collection)obj)) {
                 assertFail(msg);
             }
         }else if(obj instanceof Map){
             Map map = (Map)obj;
-            if (map == null || map.size() ==  0){
+            if (map.size() == 0){
                 assertFail(msg);
             }
         }
@@ -156,7 +156,7 @@ public abstract class AssertUtils {
      * 断言错误
      */
     private static void assertFail() {
-        ResponseBodyWrapper.failSysException();
+        ResponseBodyWrapper.failParamException();
     }
 
     /**

@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-scp -r portal/target/bqhealth-cloud-physical admin@192.168.1.111:/home/admin/
+scp -r portal/target/heroland-competition-physical/heroland-competition root@121.37.221.237:/home/competition
 

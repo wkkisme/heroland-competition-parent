@@ -1,20 +1,21 @@
 package com.heroland.competition.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.HeroLandRedisConstants;
+import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
-import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
+import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
-import com.heroland.competition.service.HeroLandAccountService;
-import com.heroland.competition.service.HeroLandCalculatorService;
-import com.heroland.competition.service.HeroLandCompetitionRecordService;
-import com.heroland.competition.service.HeroLandCompetitionService;
+import com.heroland.competition.service.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author mac
@@ -33,8 +34,12 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
     @Resource
     private HeroLandAccountService heroLandAccountService;
 
+    @Resource
+    private HeroLandQuestionRecordDetailService questionRecordDetailService;
+
     /**
      * type类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
+     *
      * @return
      */
     @Override
@@ -58,29 +63,53 @@ public class HeroLandSynchronizeCompetitionServiceImpl implements HeroLandCompet
      * 勝低兩級對手，得2分。
      * 己方為和：己方答錯，對方亦答錯，得0分。
      * 己方為負：① 雙方都答對，己方遲答對，得1分。② 己方答錯，對方答對，得0分。
+     *
      * @param dp 答题
      * @return 结果
      */
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP dp) {
-        // 查出两个人的信息
-//        heroLandAccountService.getCurrentUserCompetition();
+
+        // 获取比赛记录
+        String recordId = dp.getRecordId();
+
         // 1 更新记录，插入详细
         HeroLandCompetitionRecordDP record = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
+
         // 先缓存查
-        if (record == null){
-            // todo 预留限流
-            record = heroLandCompetitionRecordService.getCompetitionRecordById(new HeroLandCompetitionRecordQO().setRecordId(dp.getRecordId()).queryIdCheck()).getData();
+        if (record == null) {
+            record = heroLandCompetitionRecordService.getCompetitionRecordById(new HeroLandCompetitionRecordQO().setRecordId(recordId).queryIdCheck()).getData();
         }
-        if (record == null){
+
+        // 如果还是没有找到比赛 就报错
+        if (record == null) {
             ResponseBodyWrapper.failException("该场比赛不存在");
         }
-        // todo 预留限流
+
+        // 获取用户信息
+        ResponseBody<HeroLandAccountDP> inviteUserRes = heroLandAccountService.getAccountByUserId(dp.getInviteId());
+        ResponseBody<HeroLandAccountDP> opponentUserRes = heroLandAccountService.getAccountByUserId(dp.getOpponentId());
+        HeroLandAccountDP inviteUser = inviteUserRes.getData();
+        HeroLandAccountDP opponentUser = opponentUserRes.getData();
+        if (ObjectUtil.isNull(inviteUser) || ObjectUtil.isNull(opponentUser)) {
+            ResponseBodyWrapper.failException("用户不存在");
+        }
+
+        // 每次答题生成一个答题记录
+        List<HeroLandQuestionRecordDetailDP> details = dp.getDetails();
+        if (CollUtil.isEmpty(details)) {
+            ResponseBodyWrapper.failException("答题记录不能为空");
+        }
+
+        // 保存答题记录
+        details.forEach(questionRecord -> {
+            questionRecordDetailService.addQuestionRecord(questionRecord);
+        });
+
         heroLandCompetitionRecordService.updateCompetitionRecord(dp.doAnswer());
-//        if ()
-        redisTemplate.opsForValue().set(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(),dp);
-        // 2 查看当前时间谁先答 然后计算开始时间和结束时间，分别更新和加分
+        redisTemplate.opsForValue().set(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
+        // 查看当前时间谁先答 然后计算开始时间和结束时间，分别更新和加分
         HeroLandCalculatorResultDP calculate = heroLandCalculatorService.calculate(dp);
         // todo 账户加分
 

@@ -397,62 +397,62 @@ public class HeroLandInviteRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeEqualTo(String value) {
+        public Criteria andTopicTypeEqualTo(Integer value) {
             addCriterion("topic_type =", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeNotEqualTo(String value) {
+        public Criteria andTopicTypeNotEqualTo(Integer value) {
             addCriterion("topic_type <>", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeGreaterThan(String value) {
+        public Criteria andTopicTypeGreaterThan(Integer value) {
             addCriterion("topic_type >", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeGreaterThanOrEqualTo(String value) {
+        public Criteria andTopicTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("topic_type >=", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeLessThan(String value) {
+        public Criteria andTopicTypeLessThan(Integer value) {
             addCriterion("topic_type <", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeLessThanOrEqualTo(String value) {
+        public Criteria andTopicTypeLessThanOrEqualTo(Integer value) {
             addCriterion("topic_type <=", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeLike(String value) {
+        public Criteria andTopicTypeLike(Integer value) {
             addCriterion("topic_type like", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeNotLike(String value) {
+        public Criteria andTopicTypeNotLike(Integer value) {
             addCriterion("topic_type not like", value, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeIn(List<String> values) {
+        public Criteria andTopicTypeIn(List<Integer> values) {
             addCriterion("topic_type in", values, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeNotIn(List<String> values) {
+        public Criteria andTopicTypeNotIn(List<Integer> values) {
             addCriterion("topic_type not in", values, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeBetween(String value1, String value2) {
+        public Criteria andTopicTypeBetween(Integer value1, Integer value2) {
             addCriterion("topic_type between", value1, value2, "topicType");
             return (Criteria) this;
         }
 
-        public Criteria andTopicTypeNotBetween(String value1, String value2) {
+        public Criteria andTopicTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("topic_type not between", value1, value2, "topicType");
             return (Criteria) this;
         }

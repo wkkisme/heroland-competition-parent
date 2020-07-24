@@ -1,15 +1,10 @@
 package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
-import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.common.utils.AssertUtils;
-import com.heroland.competition.common.utils.IDGenerateUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @date 2020/6/23

@@ -21,14 +21,14 @@ public interface HeroLandInviteRecordService {
      * @param dp
      * @return
      */
-    ResponseBody<Boolean> addInvite(HeroLandInviteRecordDP dp);
+    ResponseBody<String> addInvite(HeroLandInviteRecordDP dp);
 
     /**
      * 新增邀请
      * @param dp
      * @return
      */
-    ResponseBody<Boolean> invite(HeroLandInviteRecordDP dp);
+    ResponseBody<String> invite(HeroLandInviteRecordDP dp);
 
 
     /**

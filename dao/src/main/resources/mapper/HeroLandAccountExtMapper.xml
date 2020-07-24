@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.heroland.competition.dal.mapper.HeroLandAccountExtMapper" >
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandAccountExtMapper">
 
 
     <resultMap id="UserCompetitionMap" type="com.heroland.competition.dal.pojo.HeroLandUserCompetition"
                extends="com.heroland.competition.dal.mapper.HeroLandAccountMapper.BaseResultMap">
-        <collection property="records" ofType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord" resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap"/>
+        <collection property="records" ofType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord"
+                    resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap"/>
     </resultMap>
 
     <select id="getCurrentUserCompetition"
             resultMap="UserCompetitionMap">
         <!-- 查出个人账户信息，根据个人userid 去record中查出inviteuserid 和opponentuserid =个人的userid     -->
-        select a.*,b.*  from heroland_account a left join heroland_competition_record b
+        select a.*,b.* from heroland_account a left join heroland_competition_record b
         on a.user_id = b.invite_user_id or a.user_id = b.opponent_user_id
 
         where a.user_id =#{userId} and a.is_deleted =0 and b.is_deleted =0
         <if test="startTime != null">
 
-          b.gmt_create >= #{startTime}
+            b.gmt_create >= #{startTime}
         </if>
 
         <if test="endTime != null">
@@ -27,10 +28,14 @@
         </if>
 
 
-
         <if test="startRow != null and startRow != -1 and pageSize != null">
             limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
 
+    </select>
+    <select id="selectByUserId" resultMap="UserCompetitionMap">
+        select a.*,b.*  from heroland_account a left join heroland_competition_record b
+        on a.user_id = b.invite_user_id or a.user_id = b.opponent_user_id
+        where a.user_id =#{userId} and a.is_deleted =0 and b.is_deleted =0 limit 1
     </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
@@ -9,7 +10,10 @@ import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
+import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,18 +36,23 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private HeroLandCompetitionRecordExtMapper heroLandCompetitionRecordExtMapper;
 
     @Resource
-    private RedisTemplate<String, HeroLandCompetitionRecordDP> redisTemplate;
+    private RedisService redisService;
 
     @Override
-    public ResponseBody<Boolean> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
-        ResponseBody<Boolean> result = new ResponseBody<>();
+    public ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
+        ResponseBody<String> result = new ResponseBody<>();
+        String recordId;
         try {
             dp.addSynchronizeCheck();
-            Boolean aBoolean = redisTemplate.opsForValue().setIfAbsent(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
-            if (aBoolean == null || !aBoolean) {
-                result.setData(heroLandCompetitionRecordExtMapper.insert(BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord())) > 0);
-            }else {
-                result.setData(true);
+            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp,"24h");
+            if (!aBoolean) {
+                HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
+                recordId = heroLandCompetitionRecord.getRecordId();
+                heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
+                result.setData(recordId);
+            } else {
+                dp = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
+                result.setData(dp.getRecordId());
             }
         } catch (Exception e) {
             logger.error("", e);
@@ -56,6 +65,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     public ResponseBody<Boolean> updateCompetitionRecord(HeroLandCompetitionRecordDP dp) {
 
         ResponseBody<Boolean> result = new ResponseBody<>();
+        // 更新缓存
+        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp,"24h");
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
         } catch (Exception e) {
@@ -121,5 +132,27 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecord, HeroLandCompetitionRecordDP.class);
+    }
+
+    @Override
+    public List<HeroLandStatisticsTotalDP> getSyncTotalScore(HeroLandStatisticsTotalQO qo) {
+
+        try {
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getSyncTotalScore(qo),HeroLandStatisticsTotalDP.class);
+        } catch (Exception e) {
+            logger.error("e",e);
+        }
+        return null;
+    }
+
+    @Override
+    public List<HeroLandStatisticsDetailDP> getSyncTotalScoreDetail(HeroLandStatisticsTotalQO qo) {
+
+        try {
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getSyncTotalScoreDetail(qo),HeroLandStatisticsDetailDP.class);
+        } catch (Exception e) {
+            logger.error("e",e);
+        }
+        return null;
     }
 }
