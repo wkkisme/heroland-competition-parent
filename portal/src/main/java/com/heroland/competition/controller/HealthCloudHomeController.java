@@ -23,6 +23,7 @@ public class HealthCloudHomeController {
         redisService.set("1",3);
         Object o = redisService.get("1");
         System.out.println(o);
+        logger.info("redis test :{}",o);
 //        Long id = TinyId.nextId("test");
 //        List<Long> ids = TinyId.nextId("test", 10);
         return "/res/index.html";
