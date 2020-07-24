@@ -5,7 +5,7 @@
     <select id="selectStatisticsByRank" resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
         SELECT
         <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
-
+        ,
         CASE
         WHEN @prevRank = ${orderField} THEN @curRank
         WHEN @prevRank := ${orderField} THEN @curRank := @curRank + 1
