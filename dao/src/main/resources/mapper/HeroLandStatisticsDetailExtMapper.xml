@@ -7,8 +7,8 @@
         <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
         ,
         CASE
-        WHEN @prevRank = ${orderField} THEN @curRank
-        WHEN @prevRank := ${orderField} THEN @curRank := @curRank + 1
+        WHEN @prevRank = ${rankField} THEN @curRank
+        WHEN @prevRank := ${rankField} THEN @curRank := @curRank + 1
         END AS rank
         FROM heroland_statistics_detail p,
         (SELECT @curRank :=0, @prevRank := NULL) r
