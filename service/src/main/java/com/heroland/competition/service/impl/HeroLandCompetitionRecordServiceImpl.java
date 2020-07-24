@@ -46,7 +46,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 recordId = heroLandCompetitionRecord.getRecordId();
                 heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
                 result.setData(recordId);
-            }else {
+            } else {
                 dp = redisTemplate.opsForValue().get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
                 result.setData(dp.getRecordId());
             }
@@ -61,6 +61,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     public ResponseBody<Boolean> updateCompetitionRecord(HeroLandCompetitionRecordDP dp) {
 
         ResponseBody<Boolean> result = new ResponseBody<>();
+        // 更新缓存
+        redisTemplate.opsForValue().setIfAbsent(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp);
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
         } catch (Exception e) {

@@ -20,7 +20,7 @@ public class HeroLandAccountQO extends BaseQO {
      * userId用户id 必须
      */
     @MybatisCriteriaAnnotation
-    @ApiModelProperty(value = "userId用户id",required = true)
+    @ApiModelProperty(value = "userId用户id",required = false)
     private String userId;
 
     /**

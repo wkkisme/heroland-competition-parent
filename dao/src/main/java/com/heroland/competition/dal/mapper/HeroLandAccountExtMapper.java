@@ -5,4 +5,7 @@ import com.heroland.competition.dal.pojo.HeroLandUserCompetition;
 
 public interface HeroLandAccountExtMapper extends HeroLandAccountMapper{
     HeroLandUserCompetition getCurrentUserCompetition(HeroLandAccount conversion);
+
+    HeroLandAccount selectByUserId(String userId);
+
 }

@@ -42,9 +42,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Override
     public ResponseBody<HeroLandAccountDP> getCurrentUserCompetition(HeroLandAccountDP dp) {
         try {
-            heroLandAccountExtMapper.getCurrentUserCompetition(BeanUtil.conversion(dp.queryCheck(),new HeroLandAccount() ));
+            heroLandAccountExtMapper.getCurrentUserCompetition(BeanUtil.conversion(dp.queryCheck(), new HeroLandAccount()));
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
@@ -59,14 +59,27 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         long count = 0;
         try {
             HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
-            MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(),qo);
+            MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
             heroLandAccounts = heroLandAccountExtMapper.selectByExample(heroLandAccountExample);
             count = heroLandAccountExtMapper.countByExample(heroLandAccountExample);
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
         return ResponseBodyWrapper.successListWrapper(heroLandAccounts, count, qo, HeroLandAccountDP.class);
+    }
+
+    @Override
+    public ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId) {
+        HeroLandAccount account = null;
+        try {
+            account = heroLandAccountExtMapper.selectByUserId(userId);
+        } catch (Exception e) {
+            logger.error("", e);
+            ResponseBodyWrapper.failSysException();
+        }
+
+        return ResponseBodyWrapper.successWrapper(account, HeroLandAccountDP.class);
     }
 }

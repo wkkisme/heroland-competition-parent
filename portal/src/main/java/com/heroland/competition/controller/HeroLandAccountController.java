@@ -4,13 +4,11 @@ import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.service.HeroLandAccountService;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 个人账户信息
@@ -48,11 +46,8 @@ public class HeroLandAccountController {
     @RequestMapping("/queryAccount")
     public ResponseBody<HeroLandAccountDP> getAccount(@RequestBody HeroLandAccountQO qo) {
         ResponseBody<HeroLandAccountDP> result = new ResponseBody<HeroLandAccountDP>();
-        ResponseBody<List<HeroLandAccountDP>> account = heroLandAccountService.getAccount(qo);
-        if (!CollectionUtils.isEmpty(account.getData())) {
-            HeroLandAccountDP heroLandAccountDP1 = account.getData().get(0);
-            result.setData(heroLandAccountDP1);
-        }
+        ResponseBody<HeroLandAccountDP> account = heroLandAccountService.getAccountByUserId(qo.getUserId());
+        result.setData(account.getData());
         return result;
     }
 
