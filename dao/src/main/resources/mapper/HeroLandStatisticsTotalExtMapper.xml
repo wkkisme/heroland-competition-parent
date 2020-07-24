@@ -50,6 +50,7 @@
 
       SELECT
         count(*)
+      FROM heroland_statistics_total p,
       where is_deleted =0
 
       <if test="userId != null">
