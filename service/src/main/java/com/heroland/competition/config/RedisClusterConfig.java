@@ -39,7 +39,7 @@ import java.util.Set;
  * @date 2020/6/19
  */
 
-@Configuration
+//@Configuration
 @EnableCaching
 @ConditionalOnProperty(prefix = "hero.redis", name = "type",havingValue = "cluster")
 public class RedisClusterConfig {

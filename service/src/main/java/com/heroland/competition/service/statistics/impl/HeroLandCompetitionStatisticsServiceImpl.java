@@ -62,21 +62,21 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<HeroLandStatisticsTotalDP>> getCompetitionsTatal(HeroLandStatisticsTotalQO qo) {
         HeroLandStatisticsTotalExample heroLandStatisticsTotalExample = new HeroLandStatisticsTotalExample();
-        if (qo.getOrderByFiled() != null){
+        if (qo.getOrderByFiled() != null) {
             heroLandStatisticsTotalExample.setOrderByClause(qo.getOrderByFiled().getFiled());
-        }else {
+        } else {
             heroLandStatisticsTotalExample.setOrderByClause(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
         HeroLandStatisticsTotalExample.Criteria criteria = heroLandStatisticsTotalExample.createCriteria();
 
 
-        MybatisCriteriaConditionUtil.createExample(criteria,qo);
+        MybatisCriteriaConditionUtil.createExample(criteria, qo);
         try {
             return ResponseBodyWrapper
                     .successListWrapper(heroLandStatisticsTotalMapper.selectByExample(heroLandStatisticsTotalExample),
-                            heroLandStatisticsTotalMapper.countByExample(heroLandStatisticsTotalExample),qo,HeroLandStatisticsTotalDP.class);
+                            heroLandStatisticsTotalMapper.countByExample(heroLandStatisticsTotalExample), qo, HeroLandStatisticsTotalDP.class);
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return null;
@@ -124,13 +124,24 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     @Override
+    public ResponseBody<Boolean> updateHistoryStatisticsTotalAndDetailByQO(HeroLandStatisticsTotalQO qo) {
+        HeroLandStatisticsTotal heroLandStatisticsTotal = new HeroLandStatisticsTotal();
+        heroLandStatisticsTotal.setHistory(true);
+        HeroLandStatisticsTotalExample heroLandStatisticsTotalExample = new HeroLandStatisticsTotalExample();
+        MybatisCriteriaConditionUtil.createExample(heroLandStatisticsTotalExample.createCriteria(), qo);
+        heroLandStatisticsTotalMapper.updateByExampleSelective(heroLandStatisticsTotal, heroLandStatisticsTotalExample);
+
+        return new ResponseBody<>();
+    }
+
+    @Override
     public ResponseBody<Boolean> updateStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> dp) {
 
         updateStatisticsTotal(dp);
 
         for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
             heroLandStatisticsTotalDP.updateTotalAndDetailCheck();
-            for (HeroLandStatisticsDetailDP landStatisticsTotalDP :heroLandStatisticsTotalDP.getDetails() ) {
+            for (HeroLandStatisticsDetailDP landStatisticsTotalDP : heroLandStatisticsTotalDP.getDetails()) {
 
 
                 try {
@@ -168,14 +179,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
         HeroLandStatisticsDetailExample heroLandStatisticsDetailExample = new HeroLandStatisticsDetailExample();
-        MybatisCriteriaConditionUtil.createExample(heroLandStatisticsDetailExample.createCriteria(),qo);
+        MybatisCriteriaConditionUtil.createExample(heroLandStatisticsDetailExample.createCriteria(), qo);
 
         try {
             return ResponseBodyWrapper
                     .successListWrapper(heroLandStatisticsDetailMapper.selectByExample(heroLandStatisticsDetailExample),
-                            heroLandStatisticsDetailMapper.countByExample(heroLandStatisticsDetailExample),qo,HeroLandStatisticsDetailDP.class);
+                            heroLandStatisticsDetailMapper.countByExample(heroLandStatisticsDetailExample), qo, HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return null;

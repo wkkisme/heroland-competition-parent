@@ -28,7 +28,7 @@ import java.util.StringJoiner;
 /**
  * @author wangkai
  */
-@Configuration
+//@Configuration
 @ConditionalOnClass(RedisOperations.class)
 @EnableConfigurationProperties(RedisProperties.class)
 @ConditionalOnProperty(prefix = "hero.redis", name = "type",havingValue = "standalone")

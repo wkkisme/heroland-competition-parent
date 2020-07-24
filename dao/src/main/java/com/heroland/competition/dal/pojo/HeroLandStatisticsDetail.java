@@ -86,6 +86,12 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
     private Boolean history;
 
     /**
+     * 总场次
+     */
+    @ApiModelProperty(value="totalGames总场次")
+    private Integer totalGames;
+
+    /**
      * heroland_statistics_detail
      */
     private static final long serialVersionUID = 1L;
@@ -296,5 +302,21 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      */
     public void setHistory(Boolean history) {
         this.history = history;
+    }
+
+    /**
+     * 总场次
+     * @return total_games 总场次
+     */
+    public Integer getTotalGames() {
+        return totalGames;
+    }
+
+    /**
+     * 总场次
+     * @param totalGames 总场次
+     */
+    public void setTotalGames(Integer totalGames) {
+        this.totalGames = totalGames;
     }
 }

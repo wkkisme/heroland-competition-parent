@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.common.BaseQO;
 import com.heroland.competition.common.enums.OrderByEnum;
@@ -102,7 +103,18 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     /**
      * 0不是，1是
      */
+    @MybatisCriteriaAnnotation
     private Boolean history;
+
+    private String groupBy;
+
+    public String getGroupBy() {
+        return groupBy;
+    }
+
+    public void setGroupBy(String groupBy) {
+        this.groupBy = groupBy;
+    }
 
     public Boolean getHistory() {
         return history;

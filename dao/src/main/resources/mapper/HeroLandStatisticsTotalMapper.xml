@@ -24,6 +24,7 @@
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="history" jdbcType="BIT" property="history" />
+    <result column="total_games" jdbcType="INTEGER" property="totalGames" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -86,7 +87,7 @@
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_name, user_id, 
     grade_code, grade_name, class_code, class_name, total_score, complete_rate, answer_right_rate, 
-    win_rate, total_time, average_score, total_id, org_code, type, history
+    win_rate, total_time, average_score, total_id, org_code, type, history, total_games
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsTotalExample" resultMap="BaseResultMap">
     select
@@ -128,14 +129,16 @@
       class_code, class_name, total_score, 
       complete_rate, answer_right_rate, win_rate, 
       total_time, average_score, total_id, 
-      org_code, type, history)
+      org_code, type, history, 
+      total_games)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userName,jdbcType=VARCHAR}, 
       #{userId,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, #{gradeName,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, #{totalScore,jdbcType=VARCHAR}, 
       #{completeRate,jdbcType=DOUBLE}, #{answerRightRate,jdbcType=DOUBLE}, #{winRate,jdbcType=DOUBLE}, 
       #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE}, #{totalId,jdbcType=VARCHAR}, 
-      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{history,jdbcType=BIT})
+      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{history,jdbcType=BIT}, 
+      #{totalGames,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -206,6 +209,9 @@
       <if test="history != null">
         history,
       </if>
+      <if test="totalGames != null">
+        total_games,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -270,6 +276,9 @@
       </if>
       <if test="history != null">
         #{history,jdbcType=BIT},
+      </if>
+      <if test="totalGames != null">
+        #{totalGames,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -348,6 +357,9 @@
       <if test="record.history != null">
         history = #{record.history,jdbcType=BIT},
       </if>
+      <if test="record.totalGames != null">
+        total_games = #{record.totalGames,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -376,7 +388,8 @@
       total_id = #{record.totalId,jdbcType=VARCHAR},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
-      history = #{record.history,jdbcType=BIT}
+      history = #{record.history,jdbcType=BIT},
+      total_games = #{record.totalGames,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -447,6 +460,9 @@
       <if test="history != null">
         history = #{history,jdbcType=BIT},
       </if>
+      <if test="totalGames != null">
+        total_games = #{totalGames,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -472,7 +488,9 @@
       total_id = #{totalId,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
-      history = #{history,jdbcType=BIT}
+      history = #{history,jdbcType=BIT},
+      total_games = #{totalGames,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

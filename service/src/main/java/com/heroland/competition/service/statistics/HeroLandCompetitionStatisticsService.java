@@ -48,6 +48,14 @@ public interface HeroLandCompetitionStatisticsService {
     ResponseBody<Boolean> updateStatisticsTotal(List<HeroLandStatisticsTotalDP> dp);
 
     /**
+     * 更新比赛总记录 根据条件
+     *
+     * @param qo dp
+     * @return Boolean
+     */
+    ResponseBody<Boolean> updateHistoryStatisticsTotalAndDetailByQO(HeroLandStatisticsTotalQO qo);
+
+    /**
      * 更新比赛总记录以及详情
      *
      * @param dp dp

@@ -74,7 +74,7 @@ public class HeroLandStatisticsDetailExample {
     }
 
     /**
-     * heroland_statistics_detail 2020-07-23
+     * heroland_statistics_detail 2020-07-24
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1346,6 +1346,66 @@ public class HeroLandStatisticsDetailExample {
             addCriterion("history not between", value1, value2, "history");
             return (Criteria) this;
         }
+
+        public Criteria andTotalGamesIsNull() {
+            addCriterion("total_games is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesIsNotNull() {
+            addCriterion("total_games is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesEqualTo(Integer value) {
+            addCriterion("total_games =", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesNotEqualTo(Integer value) {
+            addCriterion("total_games <>", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesGreaterThan(Integer value) {
+            addCriterion("total_games >", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesGreaterThanOrEqualTo(Integer value) {
+            addCriterion("total_games >=", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesLessThan(Integer value) {
+            addCriterion("total_games <", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesLessThanOrEqualTo(Integer value) {
+            addCriterion("total_games <=", value, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesIn(List<Integer> values) {
+            addCriterion("total_games in", values, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesNotIn(List<Integer> values) {
+            addCriterion("total_games not in", values, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesBetween(Integer value1, Integer value2) {
+            addCriterion("total_games between", value1, value2, "totalGames");
+            return (Criteria) this;
+        }
+
+        public Criteria andTotalGamesNotBetween(Integer value1, Integer value2) {
+            addCriterion("total_games not between", value1, value2, "totalGames");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1359,7 +1419,7 @@ public class HeroLandStatisticsDetailExample {
     }
 
     /**
-     * heroland_statistics_detail 2020-07-23
+     * heroland_statistics_detail 2020-07-24
      */
     public static class Criterion {
         private String condition;
