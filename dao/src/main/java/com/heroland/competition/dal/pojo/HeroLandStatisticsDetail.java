@@ -29,7 +29,7 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      * 总分数
      */
     @ApiModelProperty(value="totalScore总分数")
-    private String totalScore;
+    private Integer totalScore;
 
     /**
      * 得分率
@@ -148,7 +148,7 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      * 总分数
      * @return total_score 总分数
      */
-    public String getTotalScore() {
+    public Integer getTotalScore() {
         return totalScore;
     }
 
@@ -156,8 +156,8 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      * 总分数
      * @param totalScore 总分数
      */
-    public void setTotalScore(String totalScore) {
-        this.totalScore = totalScore == null ? null : totalScore.trim();
+    public void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
     }
 
     /**
