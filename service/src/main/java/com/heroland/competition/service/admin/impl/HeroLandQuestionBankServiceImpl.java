@@ -311,7 +311,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForCourse(HerolandQuestionBankListForChapterRequest request){
         HerolandQuestionBankQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankQo.class);
         resolveYearRange(request.getYearRange(), qo);
-        if (StringUtils.isEmpty(request.getYear())){
+        if (!StringUtils.isEmpty(request.getYear())){
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);
             Date endTime = DateUtils.string2Date(request.getYear() + "-12-31 23:59:59", DateUtils.PATTERN_STANDARD);
             qo.setBeginTime(beginTime);

@@ -94,14 +94,15 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public Boolean addTopic(HeroLandTopicGroupDP dp) {
+    public Long addTopic(HeroLandTopicGroupDP dp) {
         if (!NumberUtils.nullOrZeroLong(dp.getId())){
-            return editTopic(dp);
+            editTopic(dp);
+            return dp.getId();
         }
         dp = dp.addCheckAndInit();
         HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
-
-        return heroLandTopicGroupMapper.insertSelective(heroLandTopicGroup) > 0;
+        heroLandTopicGroupMapper.insertSelective(heroLandTopicGroup);
+        return heroLandTopicGroup.getId();
     }
 
     @Override
