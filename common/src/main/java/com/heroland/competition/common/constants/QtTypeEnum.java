@@ -1,4 +1,4 @@
-package com.heroland.competition.common.contants;
+package com.heroland.competition.common.constants;
 
 import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Getter;

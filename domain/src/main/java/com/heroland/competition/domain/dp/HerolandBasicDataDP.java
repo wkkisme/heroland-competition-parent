@@ -2,7 +2,7 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Data;

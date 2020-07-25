@@ -1,9 +1,7 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.common.contants.AdminFieldEnum;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
-import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.qo.HeroLandClassQO;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.service.admin.HeroLandAdminService;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 字典数据

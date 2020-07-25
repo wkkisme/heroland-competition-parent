@@ -2,9 +2,9 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.AdminFieldEnum;
-import com.heroland.competition.common.contants.PayCurrencyTypeEnum;
-import com.heroland.competition.common.contants.SPUEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
+import com.heroland.competition.common.constants.PayCurrencyTypeEnum;
+import com.heroland.competition.common.constants.SPUEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;

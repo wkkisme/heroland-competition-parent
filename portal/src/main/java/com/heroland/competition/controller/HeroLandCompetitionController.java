@@ -25,8 +25,10 @@ public class HeroLandCompetitionController {
     private HeroLandCompetitionService heroLandCompetitionService;
 
     @RequestMapping("/doAnswer")
-    public ResponseBody doAnswer(@RequestBody HeroLandCompetitionRecordDP dp) {
+    public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp) {
 
         return heroLandCompetitionService.doAnswer(dp);
     }
+
+
 }

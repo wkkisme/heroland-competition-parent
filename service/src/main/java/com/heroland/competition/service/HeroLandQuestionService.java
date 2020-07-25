@@ -59,7 +59,7 @@ public interface HeroLandQuestionService{
     List<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request);
 
     /**
-     * 获取课节和知识点
+     * 获取每一个赛事下课节和知识点
      * @return 值
      */
     PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request);

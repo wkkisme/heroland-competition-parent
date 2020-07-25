@@ -8,9 +8,7 @@ import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper;
 import com.heroland.competition.dal.mapper.HeroLandStatisticsTotalExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetail;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailExample;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsTotal;
@@ -83,13 +81,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     @Override
-    public ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> dp) {
-        for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
-            heroLandStatisticsTotalDP.addTotalAndDetailCheck();
+    public ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS, List<HeroLandStatisticsDetailDP> detailDPS) {
+        if (!CollectionUtils.isEmpty(totalDPS)) {
+            for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : totalDPS) {
+                heroLandStatisticsTotalDP.addTotalAndDetailCheck();
+            }
+            saveStatisticsTotal(totalDPS);
         }
-        saveStatisticsTotal(dp);
-        for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
-            for (HeroLandStatisticsDetailDP detail : heroLandStatisticsTotalDP.getDetails()) {
+        if (!CollectionUtils.isEmpty(detailDPS)) {
+            for (HeroLandStatisticsDetailDP detail : detailDPS) {
                 try {
                     heroLandStatisticsDetailExtMapper.insert(BeanUtil.insertConversion(detail, new HeroLandStatisticsDetail()));
                 } catch (Exception e) {

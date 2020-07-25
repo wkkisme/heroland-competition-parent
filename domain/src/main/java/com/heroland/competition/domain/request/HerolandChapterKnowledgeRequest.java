@@ -1,6 +1,5 @@
 package com.heroland.competition.domain.request;
 
-import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

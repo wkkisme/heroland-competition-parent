@@ -5,7 +5,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.constant.HeroLandRedisConstants;
+import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;

@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 

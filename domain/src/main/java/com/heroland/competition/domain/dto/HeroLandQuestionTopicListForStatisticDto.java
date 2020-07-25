@@ -69,4 +69,9 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      * 关联的题号和知识点列表
      */
     private List<HerolandQuestionKnowledgeSimpleDto> knowledges = Lists.newArrayList();
+
+    /**
+     * 关联的题号和知识点列表
+     */
+    private List<HerolandQuestionChapterSimpleDto> chapters = Lists.newArrayList();
 }

@@ -1,10 +1,9 @@
-package com.heroland.competition.common.contants;
+package com.heroland.competition.common.constants;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -1,6 +1,5 @@
 package com.heroland.competition.service.admin;
 
-import com.github.pagehelper.Page;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandSchoolDP;
 import com.heroland.competition.domain.dto.HerolandSchoolDto;

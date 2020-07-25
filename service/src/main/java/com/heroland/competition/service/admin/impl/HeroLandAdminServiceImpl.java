@@ -8,7 +8,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -19,7 +19,6 @@ import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandLocation;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
-import com.heroland.competition.domain.dto.HerolandSchoolSimpleDto;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
@@ -33,8 +32,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**

@@ -2,10 +2,10 @@ package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
-import com.anycommon.response.utils.ResponseBodyWrapper;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class HeroLandQuestionQO extends BaseQO {
 
@@ -14,4 +14,22 @@ public class HeroLandQuestionQO extends BaseQO {
 
     @MybatisCriteriaAnnotation
     private Long questionId;
+
+    /**
+     * 比赛记录id
+     */
+    @MybatisCriteriaAnnotation
+    private String competitionRecordId;
+
+    /**
+     * 答题记录id
+     */
+    @MybatisCriteriaAnnotation
+    private String recordDetailId;
+
+    /**
+     * 答题用户id
+     */
+    @MybatisCriteriaAnnotation
+    private String userId;
 }

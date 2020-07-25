@@ -77,15 +77,15 @@
 
 
 
-        <table tableName="heroland_statistics_detail" domainObjectName="HeroLandStatisticsDetail" mapperName="HeroLandStatisticsDetailMapper">
+        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 
-       <table tableName="heroland_statistics_total" domainObjectName="HeroLandStatisticsTotal" mapperName="HeroLandStatisticsTotalMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--       <table tableName="heroland_statistics_total" domainObjectName="HeroLandStatisticsTotal" mapperName="HeroLandStatisticsTotalMapper">-->
+<!--            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
 
 

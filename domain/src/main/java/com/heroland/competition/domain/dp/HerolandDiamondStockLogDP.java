@@ -2,9 +2,9 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.DiamBizGroupEnum;
-import com.heroland.competition.common.contants.DiamBizTypeEnum;
-import com.heroland.competition.common.contants.StockEnum;
+import com.heroland.competition.common.constants.DiamBizGroupEnum;
+import com.heroland.competition.common.constants.DiamBizTypeEnum;
+import com.heroland.competition.common.constants.StockEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.NumberUtils;

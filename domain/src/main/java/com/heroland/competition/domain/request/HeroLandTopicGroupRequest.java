@@ -1,19 +1,9 @@
 package com.heroland.competition.domain.request;
 
-import com.anycommon.response.common.BaseDO;
-import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.domain.dp.HeroLandQuestionDP;
-import com.xiaoju.uemc.tinyid.client.utils.TinyId;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Data
 public class HeroLandTopicGroupRequest implements Serializable {

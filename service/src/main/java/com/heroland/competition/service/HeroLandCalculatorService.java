@@ -15,5 +15,5 @@ public interface HeroLandCalculatorService {
      * @param dp
      * @return
      */
-    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp);
+    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp, String userId);
 }

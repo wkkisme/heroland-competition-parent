@@ -1,7 +1,6 @@
 package com.heroland.competition.service.statistics;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
@@ -37,7 +36,7 @@ public interface HeroLandCompetitionStatisticsService {
      * @param dp dp
      * @return Boolean
      */
-    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> dp);
+    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS,List<HeroLandStatisticsDetailDP> detailDPS);
 
     /**
      * 更新比赛总记录

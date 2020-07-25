@@ -7,7 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;

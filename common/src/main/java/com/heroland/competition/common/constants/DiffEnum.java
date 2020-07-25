@@ -1,4 +1,4 @@
-package com.heroland.competition.common.contants;
+package com.heroland.competition.common.constants;
 
 import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Getter;
@@ -7,9 +7,12 @@ import lombok.Getter;
  * @author smjyouzan
  * @date 2020/7/4
  */
-public enum StockEnum {
-    INCREASE(1,"增加"),
-    DECREASE(2,"扣减"),
+public enum DiffEnum {
+    ESAY(1,"容易"),
+    HALF_ESAY(2,"较易"),
+    MEDIUM(3,"中等"),
+    HALF_DIFFICULT(4,"较难"),
+    DIFFICULT(5,"难"),
 
     ;
 
@@ -20,16 +23,16 @@ public enum StockEnum {
     @Getter
     private Integer level;
 
-    StockEnum(Integer level, String name) {
+    DiffEnum(Integer level, String name) {
         this.name = name;
         this.level = level;
     }
 
-    public static StockEnum valueOfName(String name) {
+    public static DiffEnum valueOfName(String name) {
         if (name == null) {
             return null;
         }
-        for (StockEnum diffEnum : values()){
+        for (DiffEnum diffEnum : values()){
             if (diffEnum.name.equals(name)){
                 return diffEnum;
             }
@@ -37,11 +40,11 @@ public enum StockEnum {
         return null;
     }
 
-    public static StockEnum valueOfLevel(Integer level) {
+    public static DiffEnum valueOfLevel(Integer level) {
         if (NumberUtils.nullOrZero(level)) {
             return null;
         }
-        for (StockEnum diffEnum : values()){
+        for (DiffEnum diffEnum : values()){
             if (diffEnum.level .equals(level)){
                 return diffEnum;
             }

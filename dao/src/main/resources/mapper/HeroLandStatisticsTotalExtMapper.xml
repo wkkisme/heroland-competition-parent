@@ -29,6 +29,10 @@
       and subject_code = #{subjectCode,jdbcType=VARCHAR}
     </if>
 
+   <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+
     <if test="orgCode != null">
       and org_code = #{orgCode,jdbcType=VARCHAR}
     </if>
@@ -68,6 +72,11 @@
       <if test="orgCode != null">
         and org_code = #{orgCode,jdbcType=VARCHAR}
       </if>
+
+      <if test="type != null">
+        and type = #{type,jdbcType=VARCHAR}
+      </if>
+
 
       <if test="classCode != null">
         and class_code = #{classCode,jdbcType=VARCHAR}
