@@ -7,6 +7,7 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper;
+import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
@@ -43,6 +44,19 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.successWrapper(heroLandQuestionRecordDetail.getRecordId());
+    }
+
+    @Override
+    public ResponseBody<Boolean> updateQuestionRecord(HeroLandQuestionRecordDetailDP recordDetail) {
+
+        try {
+
+            heroLandQuestionRecordDetailMapper.updateByRecordIdSelective(BeanUtil.updateConversion(recordDetail.addCheck(), new HeroLandQuestionRecordDetail()));
+        } catch (Exception e) {
+            logger.error("", e);
+            ResponseBodyWrapper.failSysException();
+        }
+        return ResponseBodyWrapper.success();
     }
 
     @Override
