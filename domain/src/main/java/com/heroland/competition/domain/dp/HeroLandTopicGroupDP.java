@@ -3,6 +3,8 @@ package com.heroland.competition.domain.dp;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
@@ -11,6 +13,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +57,16 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
     private Integer type;
 
     /**
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+
+    /**
      * 题目组id
      */
     @ApiModelProperty(value = "topicId题目组id")
@@ -71,6 +84,13 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         if (this.getType() == null) {
             ResponseBodyWrapper.failParamException();
         }
+        if (startTime == null || endTime == null){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (startTime.after(endTime)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+
         this.topicId = IDGenerateUtils.getKey(AdminFieldEnum.TOPIC);
         this.beforeInsert();
         return this;

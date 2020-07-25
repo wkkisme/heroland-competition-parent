@@ -38,6 +38,12 @@
     from heroland_sku
     where sku_id = #{skuId,jdbcType=VARCHAR} and is_deleted = 0
   </select>
+  <select id="getBySkuIdWithDelete"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_sku
+    where sku_id = #{skuId,jdbcType=VARCHAR}
+  </select>
   <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update  heroland_sku set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}

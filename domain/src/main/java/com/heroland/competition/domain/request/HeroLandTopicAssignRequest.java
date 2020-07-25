@@ -1,7 +1,6 @@
 package com.heroland.competition.domain.request;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,8 +15,13 @@ public class HeroLandTopicAssignRequest implements Serializable {
     private Long topicId;
 
     /**
-     * 题目id
+     * 如果是根据章节选题，需要带上章节id
      */
-    private List<Long> questionIds;
+    private List<HeroLandTopicChapterAssignRequest> chapterQuestions = Lists.newArrayList();
+
+    /**
+     * 如果不是根据章节选题，比如直接根据科目，直接用questionIds
+     */
+    private List<Long> questionIds = Lists.newArrayList();
 
 }

@@ -2,8 +2,11 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.contants.SPUEnum;
+import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
+import com.heroland.competition.domain.dto.HerolandOrderListDto;
+import com.heroland.competition.domain.dto.HerolandPayDto;
 import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.HerolandOrderQO;
 import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
@@ -60,10 +63,9 @@ public class HeroLandOrderController {
      */
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandOrderDP>> listOrder(@RequestBody HerolandOrderQueryQO qo) {
-        ResponseBody<List<HerolandOrderDP>> result = new ResponseBody<>();
-
-        List<HerolandOrderDP> herolandOrderDPS = herolandOrderService.listOrder(qo.getBuyerId(), qo.getStatus());
+    public ResponseBody<List<HerolandOrderListDto>> listOrder(@RequestBody HerolandOrderQueryQO qo) {
+        ResponseBody<List<HerolandOrderListDto>> result = new ResponseBody<>();
+        List<HerolandOrderListDto> herolandOrderDPS = herolandOrderService.listOrder(qo.getBuyerId(), qo.getStatus());
         result.setData(herolandOrderDPS);
         return result;
     }
@@ -98,9 +100,10 @@ public class HeroLandOrderController {
      */
     @RequestMapping(value = "/id", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandPayDP> get(@RequestParam("id") Long id){
-        ResponseBody<HerolandPayDP> result = new ResponseBody<>();
-        result.setData(herolandPayService.getPayById(id));
+    public ResponseBody<HerolandPayDto> get(@RequestParam("id") Long id){
+        ResponseBody<HerolandPayDto> result = new ResponseBody<>();
+        HerolandPayDP payById = herolandPayService.getPayById(id);
+        result.setData(BeanCopyUtils.copyByJSON(payById, HerolandPayDto.class));
         return result;
     }
 

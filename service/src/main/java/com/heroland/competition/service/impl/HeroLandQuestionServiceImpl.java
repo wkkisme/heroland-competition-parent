@@ -71,6 +71,12 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         if (StringUtils.isAnyBlank(dp.getOrgCode(), dp.getTopicName())) {
             ResponseBodyWrapper.failParamException();
         }
+        if (dp.getStartTime() == null || dp.getEndTime() == null){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (dp.getStartTime().after(dp.getEndTime())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
 
         if (dp.getType() == null) {
             ResponseBodyWrapper.failParamException();
@@ -177,9 +183,23 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             HerolandTopicQuestion topicQuestion = new HerolandTopicQuestion();
             topicQuestion.setQuestionId(e);
             topicQuestion.setTopicId(request.getTopicId());
+            topicQuestion.setChapterId(0L);
             list.add(topicQuestion);
         });
-        return herolandTopicQuestionMapper.saveBatch(list) > 0;
+        request.getChapterQuestions().stream().forEach(e -> {
+            e.getQuestionIds().stream().forEach(ques -> {
+                HerolandTopicQuestion topicQuestion = new HerolandTopicQuestion();
+                topicQuestion.setQuestionId(ques);
+                topicQuestion.setTopicId(request.getTopicId());
+                topicQuestion.setChapterId(e.getChapterId());
+                list.add(topicQuestion);
+            });
+        });
+        List<HerolandTopicQuestion> uniq = list.stream().distinct().collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(uniq)){
+            return herolandTopicQuestionMapper.saveBatch(uniq) > 0;
+        }
+        return false;
     }
 
     @Override

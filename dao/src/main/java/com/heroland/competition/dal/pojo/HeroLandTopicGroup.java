@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandTopicGroup")
 public class HeroLandTopicGroup extends BaseDO implements Serializable {
@@ -39,6 +40,17 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
     private Integer type;
 
     private String courseCode;
+
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+
 
     /**
      * heroland_topic_group
@@ -131,5 +143,21 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
 
     public void setCourseCode(String courseCode) {
         this.courseCode = courseCode;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

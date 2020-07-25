@@ -1,4 +1,4 @@
-package com.heroland.competition.domain.dp;
+package com.heroland.competition.domain.dto;
 
 import com.anycommon.response.common.BaseDO;
 import com.heroland.competition.common.contants.OrderStateEnum;
@@ -12,44 +12,53 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class HerolandPayDP extends BaseDO implements Serializable {
+public class HerolandPayDto extends BaseDO implements Serializable {
 
+    /**
+     * 业务订单号
+     */
     private String bizNo;
 
+    /**
+     * 状态
+     */
     private String state;
 
+    /**
+     * 用户id
+     */
     private String buyId;
 
+    /**
+     * 支付工具
+     */
     private String payTool;
 
+    /**
+     * 支付平台单号
+     */
     private String paymentNo;
 
-    private Date startTime;
-
-    private Date expireTime;
-
-    private String tradeDesc;
-
+    /**
+     * 支付入口
+     * PC APP
+     */
     private String payWay;
 
+    /**
+     * 支付完成时间
+     */
     private Date payFinishTime;
 
+    /**
+     * 金额
+     */
     private Long settleAmt;
 
+    /**
+     * 金额汇率
+     */
     private String currencyType;
 
-    private String bizExt;
-
-
-    public HerolandPayDP checkAndBuildBeforeCreate(){
-        AssertUtils.notBlank(buyId);
-        AssertUtils.notBlank(currencyType);
-        AssertUtils.notBlank(bizNo);
-        this.state = OrderStateEnum.CREATED.getCode();
-        this.startTime = new Date();
-        this.startTime = DateUtils.plusMill(this.startTime,30*60*1000);
-        this.setId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.PAY));
-        return this;
-    }
 
 }

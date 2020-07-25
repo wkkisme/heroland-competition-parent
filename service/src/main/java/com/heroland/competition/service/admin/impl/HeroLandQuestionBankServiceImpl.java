@@ -245,27 +245,28 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     @Override
     public PageResponse<HeroLandQuestionBankListForTopicDto> getQuestionList(HerolandQuestionBankListForChapterRequest request) {
-        if (NumberUtils.nullOrZeroLong(request.getChapterId()) && StringUtils.isEmpty(request.getCourse()) && StringUtils.isEmpty(request.getGrade())){
+        if (CollectionUtils.isEmpty(request.getChapterIds()) && StringUtils.isEmpty(request.getCourse()) && StringUtils.isEmpty(request.getGrade())){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage()+", 请选择有效参数");
         }
         PageResponse<HeroLandQuestionBankListForTopicDto> pageResult = new PageResponse<>();
         List<HeroLandQuestionBankListForTopicDto> list = new ArrayList<>();
         pageResult.setItems(list);
-        if (!NumberUtils.nullOrZeroLong(request.getChapterId())){
+        if (!CollectionUtils.isEmpty(request.getChapterIds())){
             return questionListForChapter(request);
         }else {
-
+            return questionListForCourse(request);
         }
-
-        return pageResult;
     }
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForChapter(HerolandQuestionBankListForChapterRequest request){
         PageResponse<HeroLandQuestionBankListForTopicDto> pageResult = new PageResponse<>();
         List<HeroLandQuestionBankListForTopicDto> list = new ArrayList<>();
         pageResult.setItems(list);
-        List<HerolandKnowledgeRefer> data = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(request.getChapterId()), KnowledgeReferEnum.CHAPTER.getType());
-        List<Long> knowledges = data.stream().map(HerolandKnowledgeRefer::getKnowledgeId).collect(Collectors.toList());
+        List<HerolandKnowledgeRefer> data = herolandKnowledgeReferMapper.selectByReferIds(request.getChapterIds(), KnowledgeReferEnum.CHAPTER.getType());
+
+        Map<Long, List<HerolandKnowledgeRefer>> knowledgeMap = data.stream().collect(Collectors.groupingBy(HerolandKnowledgeRefer::getKnowledgeId));
+
+        List<Long> knowledges = data.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
         if (CollectionUtils.isEmpty(knowledges)){
             return pageResult;
         }
@@ -282,10 +283,29 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             return pageResult;
         }
         List<Long> bankReferIds = bankRefers.stream().map(HerolandKnowledgeRefer::getReferId).collect(Collectors.toList());
+        Map<Long, List<HerolandKnowledgeRefer>> bankIdKnowledgeMap = bankRefers.stream().collect(Collectors.groupingBy(HerolandKnowledgeRefer::getReferId));
+
         qo.setBankIds(bankReferIds);
         Page<HerolandQuestionBank> banks = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
                 () -> herolandQuestionBankMapper.getByQuery(qo));
-        return build(banks);
+
+        pageResult= build(banks);
+        if (!CollectionUtils.isEmpty(pageResult.getItems())){
+            pageResult.getItems().stream().forEach(e -> {
+                List<Long> chapterIds = Lists.newArrayList();
+                if (bankIdKnowledgeMap.containsKey(e.getId())){
+                    List<HerolandKnowledgeRefer> refers = bankIdKnowledgeMap.get(e.getId());
+                    List<Long> ks = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
+                    ks.stream().forEach(k -> {
+                        if(knowledgeMap.containsKey(k)){
+                            chapterIds.addAll(knowledgeMap.get(k).stream().map(HerolandKnowledgeRefer::getReferId).collect(Collectors.toList()));
+                        }
+                    });
+                }
+                e.setChapterId(chapterIds.stream().distinct().collect(Collectors.toList()));
+            });
+        }
+        return pageResult;
     }
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForCourse(HerolandQuestionBankListForChapterRequest request){
@@ -318,6 +338,10 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
         List<HeroLandQuestionBankListForTopicDto> chapterDtos  = Lists.newArrayList();
         List<Long> bankIds = banks.getResult().stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
+
+        Map<Long, List<HerolandQuestionBank>> bankIdMap = banks.getResult().stream().collect(Collectors.groupingBy(HerolandQuestionBank::getId));
+
+
         List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(bankIds);
         Map<Long, List<HerolandQuestionBankDetail>> qtMap = byQtId.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
 

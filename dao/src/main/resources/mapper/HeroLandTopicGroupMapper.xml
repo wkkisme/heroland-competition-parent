@@ -9,6 +9,8 @@
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
     <result column="course_code" jdbcType="VARCHAR" property="courseCode" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -74,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, org_code, topic_name, grade_code, class_code,course_code, type, creator, modifier,
+    id, org_code, topic_name, grade_code, class_code,course_code, type,start_time,end_time creator, modifier,
     gmt_create, gmt_modified, is_deleted
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
@@ -134,6 +136,12 @@
       <if test="type != null">
         type,
       </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
       <if test="creator != null">
         creator,
       </if>
@@ -171,6 +179,12 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
       </if>
       <if test="creator != null">
         #{creator,jdbcType=VARCHAR},
@@ -276,6 +290,12 @@
       </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
       </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
