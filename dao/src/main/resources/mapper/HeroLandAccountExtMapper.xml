@@ -35,7 +35,7 @@
     </select>
     <select id="selectByUserId" resultMap="UserCompetitionMap">
         select a.*,b.*  from heroland_account a left join heroland_competition_record b
-        on a.user_id = b.invite_user_id or a.user_id = b.opponent_user_id
+        on a.user_id = b.invite_id or a.user_id = b.opponent_id
         where a.user_id =#{userId} and a.is_deleted =0 and b.is_deleted =0 limit 1
     </select>
 </mapper>
