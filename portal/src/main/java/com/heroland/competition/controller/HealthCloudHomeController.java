@@ -1,7 +1,7 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
-import com.spreada.utils.chinese.ZHConverter;
+//import com.spreada.utils.chinese.ZHConverter;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +31,13 @@ public class HealthCloudHomeController {
     }
 
 
-        public static void main(String[] args) {
-            ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
-            String simplifiedStr = converter.convert("鄧麗君");
-            System.out.println(simplifiedStr);
-
-        System.out.println("***************");
-    }
+//        public static void main(String[] args) {
+//            ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
+//            String simplifiedStr = converter.convert("鄧麗君");
+//            System.out.println(simplifiedStr);
+//
+//        System.out.println("***************");
+//    }
 
 
 }
