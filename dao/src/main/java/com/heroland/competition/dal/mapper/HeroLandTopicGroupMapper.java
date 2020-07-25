@@ -2,11 +2,10 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroupExample;
-import com.heroland.competition.dal.pojo.HerolandTopicQuestion;
+import java.util.List;
+
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface HeroLandTopicGroupMapper {
     long countByExample(HeroLandTopicGroupExample example);
@@ -15,6 +14,7 @@ public interface HeroLandTopicGroupMapper {
 
     int deleteByPrimaryKey(Long id);
 
+    int insert(HeroLandTopicGroup record);
 
     int insertSelective(HeroLandTopicGroup record);
 

@@ -56,12 +56,12 @@ public interface HeroLandQuestionService{
      * 获取每一个赛事下的详细情况及题目数
      * @return 值
      */
-    List<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request);
+    List<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request);
 
     /**
      * 获取每一个赛事下课节和知识点
      * @return 值
      */
-    PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request);
+    PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request);
 
 }

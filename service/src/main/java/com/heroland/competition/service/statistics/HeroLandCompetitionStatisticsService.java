@@ -1,9 +1,12 @@
 package com.heroland.competition.service.statistics;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
+import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
-import com.heroland.competition.domain.dp.SyncCompetitionCourseFinishStatisticDP;
+import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 
@@ -38,7 +41,7 @@ public interface HeroLandCompetitionStatisticsService {
      * @param dp dp
      * @return Boolean
      */
-    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS,List<HeroLandStatisticsDetailDP> detailDPS);
+    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS, List<HeroLandStatisticsDetailDP> detailDPS);
 
     /**
      * 更新比赛总记录
@@ -158,5 +161,13 @@ public interface HeroLandCompetitionStatisticsService {
      * @param qo
      * @return
      */
-    ResponseBody<List<SyncCompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(CourseFinishStatisticQO qo);
+    ResponseBody<List<CompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(CourseFinishStatisticQO qo);
+
+    /**
+     * 查询比赛记录
+     *
+     * @param qo
+     * @return
+     */
+    PageResponse<AnswerQuestionRecordStatisticDP> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo);
 }
