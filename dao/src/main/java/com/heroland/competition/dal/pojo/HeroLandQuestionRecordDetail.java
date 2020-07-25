@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail")
 public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable {
@@ -99,10 +100,34 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     private String userId;
 
     /**
-     * 唯一id
+     * 比赛记录唯一id
      */
-    @ApiModelProperty(value="recordId唯一id")
+    @ApiModelProperty(value="recordId比赛记录唯一id")
     private String recordId;
+
+    /**
+     * detail 唯一id
+     */
+    @ApiModelProperty(value="recordDetailIddetail 唯一id")
+    private String recordDetailId;
+
+    /**
+     * 该题答题开始时间
+     */
+    @ApiModelProperty(value="beginDate该题答题开始时间")
+    private Date beginDate;
+
+    /**
+     * 该题答题结束时间
+     */
+    @ApiModelProperty(value="endDate该题答题结束时间")
+    private Date endDate;
+
+    /**
+     * 该题得分
+     */
+    @ApiModelProperty(value="score该题得分")
+    private Integer score;
 
     /**
      * heroland_question_record_detail
@@ -350,18 +375,82 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     }
 
     /**
-     * 唯一id
-     * @return record_id 唯一id
+     * 比赛记录唯一id
+     * @return record_id 比赛记录唯一id
      */
     public String getRecordId() {
         return recordId;
     }
 
     /**
-     * 唯一id
-     * @param recordId 唯一id
+     * 比赛记录唯一id
+     * @param recordId 比赛记录唯一id
      */
     public void setRecordId(String recordId) {
         this.recordId = recordId == null ? null : recordId.trim();
+    }
+
+    /**
+     * detail 唯一id
+     * @return record_detail_id detail 唯一id
+     */
+    public String getRecordDetailId() {
+        return recordDetailId;
+    }
+
+    /**
+     * detail 唯一id
+     * @param recordDetailId detail 唯一id
+     */
+    public void setRecordDetailId(String recordDetailId) {
+        this.recordDetailId = recordDetailId == null ? null : recordDetailId.trim();
+    }
+
+    /**
+     * 该题答题开始时间
+     * @return begin_date 该题答题开始时间
+     */
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    /**
+     * 该题答题开始时间
+     * @param beginDate 该题答题开始时间
+     */
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    /**
+     * 该题答题结束时间
+     * @return end_date 该题答题结束时间
+     */
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    /**
+     * 该题答题结束时间
+     * @param endDate 该题答题结束时间
+     */
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    /**
+     * 该题得分
+     * @return score 该题得分
+     */
+    public Integer getScore() {
+        return score;
+    }
+
+    /**
+     * 该题得分
+     * @param score 该题得分
+     */
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }

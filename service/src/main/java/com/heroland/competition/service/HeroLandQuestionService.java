@@ -8,8 +8,6 @@ import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
-import java.util.List;
-
 /**
  *  试卷题目服务
  * @author mac

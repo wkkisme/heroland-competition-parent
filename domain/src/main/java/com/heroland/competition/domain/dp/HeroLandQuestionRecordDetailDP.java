@@ -1,14 +1,16 @@
 package com.heroland.competition.domain.dp;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.Date;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail")
 public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializable {
@@ -103,22 +105,46 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String userId;
 
     /**
-     * 唯一id
+     * 比赛记录唯一id
      */
-    @ApiModelProperty(value = "recordId唯一id")
+    @ApiModelProperty(value = "recordId比赛记录唯一id")
     private String recordId;
 
+    /**
+     * 答题记录唯一id
+     */
+    @ApiModelProperty(value = "答题记录唯一id")
+    private String recordDetailId;
+
+    /**
+     * 用户该题答题开始时间
+     */
+    @ApiModelProperty(value = "用户该题答题开始时间")
+    private Date beginDate;
+
+    /**
+     * 用户该题答题结束时间
+     */
+    @ApiModelProperty(value = "用户该题答题结束时间")
+    private Date endDate;
+
+    /**
+     * 该题得分
+     */
+    @ApiModelProperty(value = "该题得分")
+    private Integer score;
+
     public HeroLandQuestionRecordDetailDP addCheck() {
-        if (StringUtils.isAnyBlank(this.userId, this.questionId, this.yourAnswer)) {
+        if (ObjectUtil.isNull(beginDate) || StringUtils.isAnyBlank(this.userId, this.questionId, this.yourAnswer, this.recordId, this.recordDetailId)) {
             ResponseBodyWrapper.failParamException();
         }
 
         try {
             Long invite = TinyId.nextId("questionRecord");
-            this.recordId = invite.toString();
+            this.recordDetailId = invite.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            this.recordId = UUID.randomUUID().toString();
+            this.recordDetailId = IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.DEFAULT) + "";
         }
 
         this.beforeInsert();
@@ -416,5 +442,37 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      */
     public void setRecordId(String recordId) {
         this.recordId = recordId == null ? null : recordId.trim();
+    }
+
+    public String getRecordDetailId() {
+        return recordDetailId;
+    }
+
+    public void setRecordDetailId(String recordDetailId) {
+        this.recordDetailId = recordDetailId == null ? null : recordDetailId.trim();
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getScore() {
+        return score;
     }
 }

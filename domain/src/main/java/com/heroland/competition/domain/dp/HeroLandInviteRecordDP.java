@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
 public class HeroLandInviteRecordDP extends BaseDO implements Serializable {

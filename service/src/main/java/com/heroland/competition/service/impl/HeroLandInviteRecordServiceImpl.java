@@ -10,7 +10,6 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandInviteRecordMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;

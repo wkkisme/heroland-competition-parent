@@ -1,10 +1,7 @@
 package com.heroland.competition.dal.mapper;
 
-import com.heroland.competition.dal.pojo.HeroLandStatisticsDetail;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
-import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailExample;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

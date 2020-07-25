@@ -1,4 +1,4 @@
-package com.heroland.competition.common.contants;
+package com.heroland.competition.common.constants;
 
 /**
  */

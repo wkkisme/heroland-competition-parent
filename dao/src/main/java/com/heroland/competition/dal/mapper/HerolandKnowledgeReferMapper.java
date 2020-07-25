@@ -1,7 +1,6 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandKnowledgeRefer;
-import com.heroland.competition.dal.pojo.HerolandSchoolCourse;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

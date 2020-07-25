@@ -2,15 +2,13 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.contants.DiffEnum;
+import com.heroland.competition.common.constants.DiffEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 /**
  */

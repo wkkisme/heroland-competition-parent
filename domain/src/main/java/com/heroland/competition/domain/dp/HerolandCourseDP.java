@@ -7,7 +7,6 @@ import com.heroland.competition.common.utils.AssertUtils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import java.util.regex.Pattern;

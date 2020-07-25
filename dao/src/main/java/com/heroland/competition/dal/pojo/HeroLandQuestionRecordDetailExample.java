@@ -74,7 +74,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-06-18
+     * heroland_question_record_detail 2020-07-25
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1616,6 +1616,256 @@ public class HeroLandQuestionRecordDetailExample {
             addCriterion("record_id not between", value1, value2, "recordId");
             return (Criteria) this;
         }
+
+        public Criteria andRecordDetailIdIsNull() {
+            addCriterion("record_detail_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdIsNotNull() {
+            addCriterion("record_detail_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdEqualTo(String value) {
+            addCriterion("record_detail_id =", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdNotEqualTo(String value) {
+            addCriterion("record_detail_id <>", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdGreaterThan(String value) {
+            addCriterion("record_detail_id >", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdGreaterThanOrEqualTo(String value) {
+            addCriterion("record_detail_id >=", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdLessThan(String value) {
+            addCriterion("record_detail_id <", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdLessThanOrEqualTo(String value) {
+            addCriterion("record_detail_id <=", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdLike(String value) {
+            addCriterion("record_detail_id like", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdNotLike(String value) {
+            addCriterion("record_detail_id not like", value, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdIn(List<String> values) {
+            addCriterion("record_detail_id in", values, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdNotIn(List<String> values) {
+            addCriterion("record_detail_id not in", values, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdBetween(String value1, String value2) {
+            addCriterion("record_detail_id between", value1, value2, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordDetailIdNotBetween(String value1, String value2) {
+            addCriterion("record_detail_id not between", value1, value2, "recordDetailId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateIsNull() {
+            addCriterion("begin_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateIsNotNull() {
+            addCriterion("begin_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateEqualTo(Date value) {
+            addCriterion("begin_date =", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateNotEqualTo(Date value) {
+            addCriterion("begin_date <>", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateGreaterThan(Date value) {
+            addCriterion("begin_date >", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("begin_date >=", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateLessThan(Date value) {
+            addCriterion("begin_date <", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateLessThanOrEqualTo(Date value) {
+            addCriterion("begin_date <=", value, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateIn(List<Date> values) {
+            addCriterion("begin_date in", values, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateNotIn(List<Date> values) {
+            addCriterion("begin_date not in", values, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateBetween(Date value1, Date value2) {
+            addCriterion("begin_date between", value1, value2, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andBeginDateNotBetween(Date value1, Date value2) {
+            addCriterion("begin_date not between", value1, value2, "beginDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateIsNull() {
+            addCriterion("end_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateIsNotNull() {
+            addCriterion("end_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateEqualTo(Date value) {
+            addCriterion("end_date =", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateNotEqualTo(Date value) {
+            addCriterion("end_date <>", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateGreaterThan(Date value) {
+            addCriterion("end_date >", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("end_date >=", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateLessThan(Date value) {
+            addCriterion("end_date <", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateLessThanOrEqualTo(Date value) {
+            addCriterion("end_date <=", value, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateIn(List<Date> values) {
+            addCriterion("end_date in", values, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateNotIn(List<Date> values) {
+            addCriterion("end_date not in", values, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateBetween(Date value1, Date value2) {
+            addCriterion("end_date between", value1, value2, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndDateNotBetween(Date value1, Date value2) {
+            addCriterion("end_date not between", value1, value2, "endDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreIsNull() {
+            addCriterion("score is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreIsNotNull() {
+            addCriterion("score is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreEqualTo(Integer value) {
+            addCriterion("score =", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreNotEqualTo(Integer value) {
+            addCriterion("score <>", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreGreaterThan(Integer value) {
+            addCriterion("score >", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreGreaterThanOrEqualTo(Integer value) {
+            addCriterion("score >=", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreLessThan(Integer value) {
+            addCriterion("score <", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreLessThanOrEqualTo(Integer value) {
+            addCriterion("score <=", value, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreIn(List<Integer> values) {
+            addCriterion("score in", values, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreNotIn(List<Integer> values) {
+            addCriterion("score not in", values, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreBetween(Integer value1, Integer value2) {
+            addCriterion("score between", value1, value2, "score");
+            return (Criteria) this;
+        }
+
+        public Criteria andScoreNotBetween(Integer value1, Integer value2) {
+            addCriterion("score not between", value1, value2, "score");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1629,7 +1879,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-06-18
+     * heroland_question_record_detail 2020-07-25
      */
     public static class Criterion {
         private String condition;

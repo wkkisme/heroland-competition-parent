@@ -13,7 +13,8 @@ public interface HeroLandCalculatorRemoteService {
     /**
      * 得分
      * @param dp
+     * @param userId
      * @return
      */
-    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp);
+    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp, String userId);
 }
