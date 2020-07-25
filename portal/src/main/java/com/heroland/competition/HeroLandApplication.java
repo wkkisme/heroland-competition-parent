@@ -1,5 +1,6 @@
 package com.heroland.competition;
 
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableTransactionManagement
 @EnableAsync
 @EnableDubbo(scanBasePackages = "com.heroland.competition")
-//@NacosPropertySource(dataId = "hero_data", groupId = "hero_group", autoRefreshed = true)
+@NacosPropertySource(dataId = "hero_data", groupId = "hero_group", autoRefreshed = true)
 public class HeroLandApplication {
 
     private final Logger logger = LoggerFactory.getLogger(HeroLandApplication.class);
