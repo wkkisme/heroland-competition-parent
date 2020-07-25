@@ -1,7 +1,7 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
-import com.anycommon.logger.annotation.CommonLogger;
+//import com.anycommon.logger.annotation.CommonLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
