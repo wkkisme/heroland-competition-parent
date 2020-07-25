@@ -37,7 +37,7 @@ public interface HeroLandCompetitionStatisticsService {
      * @param dp dp
      * @return Boolean
      */
-    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> dp);
+    ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS,List<HeroLandStatisticsDetailDP> detailDPS);
 
     /**
      * 更新比赛总记录

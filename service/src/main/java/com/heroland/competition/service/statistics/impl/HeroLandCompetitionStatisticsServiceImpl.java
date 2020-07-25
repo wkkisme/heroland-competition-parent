@@ -83,13 +83,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     @Override
-    public ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> dp) {
-        for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
-            heroLandStatisticsTotalDP.addTotalAndDetailCheck();
+    public ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS, List<HeroLandStatisticsDetailDP> detailDPS) {
+        if (!CollectionUtils.isEmpty(totalDPS)) {
+            for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : totalDPS) {
+                heroLandStatisticsTotalDP.addTotalAndDetailCheck();
+            }
+            saveStatisticsTotal(totalDPS);
         }
-        saveStatisticsTotal(dp);
-        for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
-            for (HeroLandStatisticsDetailDP detail : heroLandStatisticsTotalDP.getDetails()) {
+        if (!CollectionUtils.isEmpty(detailDPS)) {
+            for (HeroLandStatisticsDetailDP detail : detailDPS) {
                 try {
                     heroLandStatisticsDetailExtMapper.insert(BeanUtil.insertConversion(detail, new HeroLandStatisticsDetail()));
                 } catch (Exception e) {
