@@ -2,11 +2,9 @@ package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
-import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
-import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -15,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandTopicGroup")
 @Data

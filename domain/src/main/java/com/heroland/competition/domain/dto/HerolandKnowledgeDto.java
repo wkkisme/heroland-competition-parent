@@ -1,13 +1,9 @@
 package com.heroland.competition.domain.dto;
 
 import com.anycommon.response.common.BaseDO;
-import com.google.common.collect.Lists;
-import com.heroland.competition.common.contants.DiffEnum;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
 
 /**
  */

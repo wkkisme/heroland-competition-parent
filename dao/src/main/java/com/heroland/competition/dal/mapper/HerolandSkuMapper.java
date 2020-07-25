@@ -1,8 +1,6 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandSku;
-import com.heroland.competition.domain.dp.HerolandSkuDP;
-import com.heroland.competition.domain.qo.HerolandSkuQO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -1,26 +1,22 @@
 package com.heroland.competition.domain.request;
 
+import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author smjyouzan
+ * @date 2020/7/24
+ */
 @Data
-public class HeroLandTopicGroupRequest implements Serializable {
+public class HeroLandTopicQuestionForCourseRequest extends BaseQO implements Serializable {
 
-    /**
-     * 编辑时需要传
-     */
-    private Long id;
     /**
      * 机构code
      */
     private String orgCode;
-
-    /**
-     * 题目组名称
-     */
-    private String topicName;
 
     /**
      * 年级code

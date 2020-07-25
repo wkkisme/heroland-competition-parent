@@ -1,10 +1,8 @@
 package com.heroland.competition.domain.request;
 
 import com.anycommon.response.common.BaseQO;
-import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 

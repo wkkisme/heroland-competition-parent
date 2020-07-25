@@ -1,12 +1,8 @@
 package com.heroland.competition.domain.dto;
 
-import com.heroland.competition.common.contants.AdminFieldEnum;
-import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author smjyouzan

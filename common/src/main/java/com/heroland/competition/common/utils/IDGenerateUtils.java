@@ -1,6 +1,6 @@
 package com.heroland.competition.common.utils;
 
-import com.heroland.competition.common.contants.AdminFieldEnum;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

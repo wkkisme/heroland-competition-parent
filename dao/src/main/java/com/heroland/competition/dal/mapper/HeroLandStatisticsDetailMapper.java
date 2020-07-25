@@ -2,8 +2,9 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetail;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HeroLandStatisticsDetailMapper {
     long countByExample(HeroLandStatisticsDetailExample example);

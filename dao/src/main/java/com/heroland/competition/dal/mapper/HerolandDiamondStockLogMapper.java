@@ -2,7 +2,6 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandDiamondStockLog;
 import com.heroland.competition.domain.qo.HerolandDiamRecordQO;
-import com.heroland.competition.domain.request.HerolandDiamMonthRecordRequest;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -5,6 +5,9 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.heroland.competition.common.constants.ChapterEnum;
+import com.heroland.competition.common.constants.KnowledgeReferEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -12,17 +15,27 @@ import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
+import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
+import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
+import com.heroland.competition.dal.mapper.HerolandQuestionBankDetailMapper;
+import com.heroland.competition.dal.mapper.HerolandQuestionBankMapper;
+import com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper;
+import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
+import com.heroland.competition.dal.pojo.HerolandQuestionBank;
+import com.heroland.competition.dal.pojo.HerolandQuestionBankDetail;
+import com.heroland.competition.dal.pojo.HerolandTopicQuestion;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.dto.HeroLandTopicDto;
-import com.heroland.competition.domain.dto.QuestionOptionDto;
+import com.heroland.competition.domain.dto.*;
+import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
+import com.heroland.competition.service.admin.HeroLandChapterService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +64,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     private HerolandQuestionBankMapper herolandQuestionBankMapper;
 
     @Resource
+    private HerolandKnowledgeReferMapper herolandKnowledgeReferMapper;
+
+    @Resource
+    private HerolandKnowledgeMapper herolandKnowledgeMapper;
+
+    @Resource
     private HeroLandAdminService heroLandAdminService;
+
+    @Resource
+    private HerolandChapterMapper heroLandChapterMapper;
 
     @Resource
     private HerolandQuestionBankDetailMapper herolandQuestionBankDetailMapper;
@@ -230,6 +252,84 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             heroLandTopicDto.setOrgCode(keyMap.get(heroLandTopicDto.getOrgCode()).get(0).getDictValue());
         }
         return heroLandTopicDto;
+    }
+
+    @Override
+    public List<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request) {
+
+       List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
+        HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(qo);
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+            return list;
+        }
+        List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds);
+        Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
+        heroLandTopicGroups.stream().forEach(e -> {
+            HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
+            if (topicMap.containsKey(e.getId())){
+                List<Long> question = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
+                dto.setQuestionNum(question.size());
+            }
+            list.add(dto);
+        });
+
+        List<Long> chapterIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getChapterId).distinct().collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(chapterIds)){
+            List<HerolandChapter> chapters = heroLandChapterMapper.getByIds(chapterIds);
+            Map<Long, List<HerolandChapter>> idMap = chapters.stream().collect(Collectors.groupingBy(HerolandChapter::getId));
+            list.stream().forEach(e -> {
+                if (topicMap.containsKey(e.getId())){
+                    List<Long> chapter = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getChapterId).distinct().collect(Collectors.toList());
+                    chapter.stream().forEach(i -> {
+                        if (idMap.containsKey(i) && ChapterEnum.ZHANG.getType().equals(idMap.get(i).get(0).getContentType())){
+                            e.getChapterList().add(i);
+                        }else {
+                            e.getSectionList().add(i);
+                        }
+                    });
+
+                }
+            });
+        }
+        return list;
+    }
+
+    @Override
+    public PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request) {
+        PageResponse<HeroLandQuestionTopicListForStatisticDto> pageResult = new PageResponse<>();
+        List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
+        pageResult.setItems(list);
+        HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
+        Page<HeroLandTopicGroup> topicGroupsPageResult = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                () -> heroLandTopicGroupMapper.selectByQuery(qo));
+        if (CollectionUtils.isEmpty(topicGroupsPageResult.getResult())) {
+            return pageResult;
+        }
+        List<HeroLandTopicGroup> heroLandTopicGroups = topicGroupsPageResult.getResult();
+        List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds);
+        Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
+        heroLandTopicGroups.stream().forEach(e -> {
+            HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
+            if (topicMap.containsKey(e.getId())){
+                List<Long> questionIds = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
+                dto.setQuestionNum(questionIds.size());
+                List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(questionIds, KnowledgeReferEnum.QUESTION.getType());
+                Map<Long, List<HerolandKnowledgeRefer>> questionsMap = refers.stream().collect(Collectors.groupingBy(HerolandKnowledgeRefer::getReferId));
+                questionIds.stream().forEach(qId -> {
+                    HerolandQuestionKnowledgeSimpleDto knowledgeSimpleDto = new HerolandQuestionKnowledgeSimpleDto();
+                    knowledgeSimpleDto.setQuestionId(qId);
+                    if (questionsMap.containsKey(qId)){
+                        List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(questionsMap.get(qId).stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList()));
+                        knowledgeSimpleDto.setKnowledge(herolandKnowledges.stream().map(HerolandKnowledge::getKnowledge).collect(Collectors.toList()));
+                    }
+                });
+            }
+            list.add(dto);
+        });
+        return pageResult;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.heroland.competition.common.contants;
+package com.heroland.competition.common.constants;
 
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import java.util.LinkedList;
  * @author smjyouzan
  * @date 2020/6/22
  */
-public enum GradeEnum {
+public enum AdminFieldEnum {
     //地区
-    AREA("100", "area","地区"),
+    AREA("AE", "area","地区"),
     //学校
     SCHOOL("SH", "school","学校"),
     //班级
@@ -35,12 +35,18 @@ public enum GradeEnum {
     //知识点
     KNOWEDGE("KL", "knowledge","知识点"),
 
+    BXEDTION("BX", "oblig","必修选修"),
+
 
     DIAMOND("DA", "diamond","宝石"),
 
+    QUEST("QE", "question","题目"),
+
+    TOPIC("TP", "topic","题目组"),
+
             ;
 
-    public static LinkedList<GradeEnum> location = Lists.newLinkedList();
+    public static LinkedList<AdminFieldEnum> location = Lists.newLinkedList();
     static {
         location.add(0,AREA);
         location.add(1,SCHOOL);
@@ -55,17 +61,17 @@ public enum GradeEnum {
     @Getter
     private String chName;
 
-    GradeEnum(String code, String field, String chName) {
+    AdminFieldEnum(String code, String field,String chName) {
         this.code = code;
         this.field = field;
         this.chName = chName;
     }
 
-    public static GradeEnum valueOfName(String field) {
+    public static AdminFieldEnum valueOfName(String field) {
         if (field == null) {
             return null;
         }
-        for (GradeEnum subjectEnum : values()){
+        for (AdminFieldEnum subjectEnum : values()){
             if (subjectEnum.field.equals(field)){
                 return subjectEnum;
             }
@@ -73,11 +79,11 @@ public enum GradeEnum {
         return null;
     }
 
-    public static GradeEnum valueOfCode(String code) {
+    public static AdminFieldEnum valueOfCode(String code) {
         if (StringUtils.isBlank(code)) {
             return null;
         }
-        for (GradeEnum subjectEnum : values()){
+        for (AdminFieldEnum subjectEnum : values()){
             if (subjectEnum.code .equals(code)){
                 return subjectEnum;
             }
@@ -85,29 +91,29 @@ public enum GradeEnum {
         return null;
     }
 
-    public static GradeEnum preAdminFieldEnumForLocation(String code){
-        GradeEnum adminFieldEnum = valueOfCode(code);
+    public static AdminFieldEnum preAdminFieldEnumForLocation(String code){
+        AdminFieldEnum adminFieldEnum = valueOfCode(code);
         if (adminFieldEnum == null){
             return null;
         }
         if (!location.contains(adminFieldEnum)){
             return null;
         }
-        if (GradeEnum.AREA.code.equals(code)){
+        if (AdminFieldEnum.AREA.code.equals(code)){
             return null;
         }
         return location.get(location.indexOf(adminFieldEnum)-1);
     }
 
-    public static GradeEnum afterAdminFieldEnumForLocation(String code){
-        GradeEnum adminFieldEnum = valueOfCode(code);
+    public static AdminFieldEnum afterAdminFieldEnumForLocation(String code){
+        AdminFieldEnum adminFieldEnum = valueOfCode(code);
         if (adminFieldEnum == null){
             return null;
         }
         if (!location.contains(adminFieldEnum)){
             return null;
         }
-        if (GradeEnum.CLASS.code.equals(code)){
+        if (AdminFieldEnum.CLASS.code.equals(code)){
             return null;
         }
         return location.get(location.indexOf(adminFieldEnum)+1);

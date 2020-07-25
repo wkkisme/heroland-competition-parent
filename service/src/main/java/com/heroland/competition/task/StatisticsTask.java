@@ -1,17 +1,14 @@
 package com.heroland.competition.task;
 
 import com.google.common.collect.Maps;
-import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

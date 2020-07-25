@@ -1,10 +1,8 @@
 package com.heroland.competition.domain.dto;
 
-import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author smjyouzan

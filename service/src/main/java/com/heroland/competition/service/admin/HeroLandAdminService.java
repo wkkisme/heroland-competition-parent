@@ -5,7 +5,6 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
-import com.heroland.competition.domain.dto.HerolandSchoolSimpleDto;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;

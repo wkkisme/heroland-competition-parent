@@ -2,6 +2,9 @@ package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
+import com.heroland.competition.domain.qo.HeroLandQuestionQO;
+
+import java.util.List;
 
 /**
  * @author wushuaiping
@@ -10,4 +13,8 @@ import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 public interface HeroLandQuestionRecordDetailService {
 
     ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP);
+
+    ResponseBody<Boolean> updateQuestionRecord(HeroLandQuestionRecordDetailDP recordDetail);
+
+    ResponseBody<List<HeroLandQuestionRecordDetailDP>> getQuestionRecord(HeroLandQuestionQO qo);
 }

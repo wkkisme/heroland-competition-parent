@@ -1,7 +1,6 @@
 package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.dal.pojo.HeroLandStatisticsTotal;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;

@@ -2,8 +2,6 @@ package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.logger.annotation.CommonLogger;
-//import com.spreada.utils.chinese.ZHConverter;
-import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+//import com.spreada.utils.chinese.ZHConverter;
 
 @Controller
 public class HealthCloudHomeController {

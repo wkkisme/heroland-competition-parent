@@ -1,10 +1,5 @@
 package com.heroland.competition.domain.dto;
 
-import com.anycommon.response.common.BaseDO;
-import com.heroland.competition.common.contants.OrderStateEnum;
-import com.heroland.competition.common.utils.AssertUtils;
-import com.heroland.competition.common.utils.IDGenerateUtils;
-import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -1,7 +1,6 @@
 package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.common.BaseQO;
-import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.io.Serializable;

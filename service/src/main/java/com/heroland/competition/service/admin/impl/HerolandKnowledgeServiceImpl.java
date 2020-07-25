@@ -7,7 +7,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.contants.DiffEnum;
+import com.heroland.competition.common.constants.DiffEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandKnowledgeMapper;
