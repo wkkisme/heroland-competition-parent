@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper">
+    <resultMap id="DetailRankBaseMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll"
+               extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+        <result column="rank" property="rank" />
+
+    </resultMap>
+    <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
+        SELECT
+        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
+        ,
+        CASE
+        WHEN @prevRank = ${rankField} THEN @curRank
+        WHEN @prevRank := ${rankField} THEN @curRank := @curRank + 1
+        END AS rank
+        FROM heroland_statistics_detail p,
+        (SELECT @curRank :=0, @prevRank := NULL) r
+
+        where is_deleted =0
+
+        <if test="userId != null">
+          and  user_id = #{userId}
+        </if>
+
+        <if test="subjectCode != null">
+            and subject_code = #{subjectCode,jdbcType=VARCHAR}
+        </if>
+
+        ORDER BY ${orderField}
+
+
+        <if test="startRow != null and startRow != -1 and pageSize != null">
+            limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+
+
+
+    </select>
+
+    <select id="countStatisticsByRank" resultType="Long">
+        SELECT
+            count(*)
+        FROM heroland_statistics_detail
+
+        where is_deleted =0
+
+        <if test="userId != null">
+            and  user_id = #{userId}
+        </if>
+
+        <if test="subjectCode != null">
+            and subject_code = #{subjectCode,jdbcType=VARCHAR}
+        </if>
+
+
+    </select>
+
+</mapper>

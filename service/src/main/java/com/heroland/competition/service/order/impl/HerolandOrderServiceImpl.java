@@ -1,6 +1,7 @@
 package com.heroland.competition.service.order.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
@@ -21,7 +22,6 @@ import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -42,7 +42,7 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     private HerolandOrderMapper herolandOrderMapper;
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisService redisService;
 
     @Resource
     private HerolandPayService herolandPayService;

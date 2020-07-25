@@ -17,7 +17,6 @@ import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -135,10 +134,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsTotalDP> getSyncTotalScore(HeroLandStatisticsTotalQO qo) {
+    public List<HeroLandStatisticsTotalDP> getTotalScore(HeroLandStatisticsTotalQO qo) {
 
         try {
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getSyncTotalScore(qo),HeroLandStatisticsTotalDP.class);
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScore(qo),HeroLandStatisticsTotalDP.class);
         } catch (Exception e) {
             logger.error("e",e);
         }
@@ -146,13 +145,33 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsDetailDP> getSyncTotalScoreDetail(HeroLandStatisticsTotalQO qo) {
+    public List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO qo) {
 
         try {
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getSyncTotalScoreDetail(qo),HeroLandStatisticsDetailDP.class);
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScoreDetail(qo),HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
             logger.error("e",e);
         }
+        return null;
+    }
+
+    @Override
+    public List<HeroLandStatisticsTotalDP> getAnswerRightRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
+        return null;
+    }
+
+    @Override
+    public List<HeroLandStatisticsTotalDP> getCompleteRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
+        return null;
+    }
+
+    @Override
+    public List<HeroLandStatisticsTotalDP> getWinRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
+        return null;
+    }
+
+    @Override
+    public List<HeroLandStatisticsTotalDP> getTotalTime(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
         return null;
     }
 }

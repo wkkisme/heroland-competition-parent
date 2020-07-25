@@ -14,7 +14,7 @@
     <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
     <result column="class_name" jdbcType="VARCHAR" property="className" />
-    <result column="total_score" jdbcType="VARCHAR" property="totalScore" />
+    <result column="total_score" jdbcType="INTEGER" property="totalScore" />
     <result column="complete_rate" jdbcType="DOUBLE" property="completeRate" />
     <result column="answer_right_rate" jdbcType="DOUBLE" property="answerRightRate" />
     <result column="win_rate" jdbcType="DOUBLE" property="winRate" />
@@ -134,7 +134,7 @@
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userName,jdbcType=VARCHAR}, 
       #{userId,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, #{gradeName,jdbcType=VARCHAR}, 
-      #{classCode,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, #{totalScore,jdbcType=VARCHAR}, 
+      #{classCode,jdbcType=VARCHAR}, #{className,jdbcType=VARCHAR}, #{totalScore,jdbcType=INTEGER}, 
       #{completeRate,jdbcType=DOUBLE}, #{answerRightRate,jdbcType=DOUBLE}, #{winRate,jdbcType=DOUBLE}, 
       #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE}, #{totalId,jdbcType=VARCHAR}, 
       #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{history,jdbcType=BIT}, 
@@ -248,7 +248,7 @@
         #{className,jdbcType=VARCHAR},
       </if>
       <if test="totalScore != null">
-        #{totalScore,jdbcType=VARCHAR},
+        #{totalScore,jdbcType=INTEGER},
       </if>
       <if test="completeRate != null">
         #{completeRate,jdbcType=DOUBLE},
@@ -328,7 +328,7 @@
         class_name = #{record.className,jdbcType=VARCHAR},
       </if>
       <if test="record.totalScore != null">
-        total_score = #{record.totalScore,jdbcType=VARCHAR},
+        total_score = #{record.totalScore,jdbcType=INTEGER},
       </if>
       <if test="record.completeRate != null">
         complete_rate = #{record.completeRate,jdbcType=DOUBLE},
@@ -379,7 +379,7 @@
       grade_name = #{record.gradeName,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
       class_name = #{record.className,jdbcType=VARCHAR},
-      total_score = #{record.totalScore,jdbcType=VARCHAR},
+      total_score = #{record.totalScore,jdbcType=INTEGER},
       complete_rate = #{record.completeRate,jdbcType=DOUBLE},
       answer_right_rate = #{record.answerRightRate,jdbcType=DOUBLE},
       win_rate = #{record.winRate,jdbcType=DOUBLE},
@@ -431,7 +431,7 @@
         class_name = #{className,jdbcType=VARCHAR},
       </if>
       <if test="totalScore != null">
-        total_score = #{totalScore,jdbcType=VARCHAR},
+        total_score = #{totalScore,jdbcType=INTEGER},
       </if>
       <if test="completeRate != null">
         complete_rate = #{completeRate,jdbcType=DOUBLE},
@@ -466,31 +466,5 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal">
-    update heroland_statistics_total
-    set creator = #{creator,jdbcType=VARCHAR},
-      modifier = #{modifier,jdbcType=VARCHAR},
-      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT},
-      user_name = #{userName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=VARCHAR},
-      grade_code = #{gradeCode,jdbcType=VARCHAR},
-      grade_name = #{gradeName,jdbcType=VARCHAR},
-      class_code = #{classCode,jdbcType=VARCHAR},
-      class_name = #{className,jdbcType=VARCHAR},
-      total_score = #{totalScore,jdbcType=VARCHAR},
-      complete_rate = #{completeRate,jdbcType=DOUBLE},
-      answer_right_rate = #{answerRightRate,jdbcType=DOUBLE},
-      win_rate = #{winRate,jdbcType=DOUBLE},
-      total_time = #{totalTime,jdbcType=INTEGER},
-      average_score = #{averageScore,jdbcType=DOUBLE},
-      total_id = #{totalId,jdbcType=VARCHAR},
-      org_code = #{orgCode,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
-      history = #{history,jdbcType=BIT},
-      total_games = #{totalGames,jdbcType=INTEGER}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-
+  
 </mapper>

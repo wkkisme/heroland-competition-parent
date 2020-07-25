@@ -45,7 +45,7 @@
         <protobuf.version>3.8.0</protobuf.version>
         <redis.version>2.3.1.RELEASE</redis.version>
         <lombok.version>1.16.16</lombok.version>
-        <cache.version>1.0.1</cache.version>
+        <cache.version>1.0.1-SNAPSHOT</cache.version>
         <!--<ZHConverter.version>1.0.0</ZHConverter.version>-->
     </properties>
 
@@ -76,7 +76,7 @@
             <dependency>
                 <groupId>com.anycommon</groupId>
                 <artifactId>anycommon-cache</artifactId>
-                <version>1.0.0</version>
+                <version>${cache.version}</version>
             </dependency>
 
             <dependency>

@@ -90,7 +90,7 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/getCanInviteList")
-    public ResponseBody<Set<HeroLandAccountDP>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP) {
+    public ResponseBody<Set<Object>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP) {
 
         return heroLandAccountService.getOnLineUserByType(heroLandAccountDP);
     }

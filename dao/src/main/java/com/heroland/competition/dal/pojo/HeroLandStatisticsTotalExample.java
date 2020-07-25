@@ -74,7 +74,7 @@ public class HeroLandStatisticsTotalExample {
     }
 
     /**
-     * heroland_statistics_total 2020-07-24
+     * heroland_statistics_total 2020-07-25
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -927,62 +927,52 @@ public class HeroLandStatisticsTotalExample {
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreEqualTo(String value) {
+        public Criteria andTotalScoreEqualTo(Integer value) {
             addCriterion("total_score =", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreNotEqualTo(String value) {
+        public Criteria andTotalScoreNotEqualTo(Integer value) {
             addCriterion("total_score <>", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreGreaterThan(String value) {
+        public Criteria andTotalScoreGreaterThan(Integer value) {
             addCriterion("total_score >", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreGreaterThanOrEqualTo(String value) {
+        public Criteria andTotalScoreGreaterThanOrEqualTo(Integer value) {
             addCriterion("total_score >=", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreLessThan(String value) {
+        public Criteria andTotalScoreLessThan(Integer value) {
             addCriterion("total_score <", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreLessThanOrEqualTo(String value) {
+        public Criteria andTotalScoreLessThanOrEqualTo(Integer value) {
             addCriterion("total_score <=", value, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreLike(String value) {
-            addCriterion("total_score like", value, "totalScore");
-            return (Criteria) this;
-        }
-
-        public Criteria andTotalScoreNotLike(String value) {
-            addCriterion("total_score not like", value, "totalScore");
-            return (Criteria) this;
-        }
-
-        public Criteria andTotalScoreIn(List<String> values) {
+        public Criteria andTotalScoreIn(List<Integer> values) {
             addCriterion("total_score in", values, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreNotIn(List<String> values) {
+        public Criteria andTotalScoreNotIn(List<Integer> values) {
             addCriterion("total_score not in", values, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreBetween(String value1, String value2) {
+        public Criteria andTotalScoreBetween(Integer value1, Integer value2) {
             addCriterion("total_score between", value1, value2, "totalScore");
             return (Criteria) this;
         }
 
-        public Criteria andTotalScoreNotBetween(String value1, String value2) {
+        public Criteria andTotalScoreNotBetween(Integer value1, Integer value2) {
             addCriterion("total_score not between", value1, value2, "totalScore");
             return (Criteria) this;
         }
@@ -1619,7 +1609,7 @@ public class HeroLandStatisticsTotalExample {
     }
 
     /**
-     * heroland_statistics_total 2020-07-24
+     * heroland_statistics_total 2020-07-25
      */
     public static class Criterion {
         private String condition;

@@ -106,7 +106,29 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     @MybatisCriteriaAnnotation
     private Boolean history;
 
+    private String subjectCode;
+
+
     private String groupBy;
+
+    private String rankField;
+
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public String getRankField() {
+        return rankField;
+    }
+
+    public void setRankField(String rankField) {
+        this.rankField = rankField;
+    }
 
     public String getGroupBy() {
         return groupBy;
@@ -145,8 +167,17 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
      *     AVERAGE_SCORE_DESC("平均分倒序"),
      *     AVERAGES_CORE_ASC("平均分正序");
      */
-    private OrderByEnum orderByFiled;
+    private OrderByEnum orderByField;
 
+    private String orderField;
+
+    public String getOrderField() {
+        return orderField;
+    }
+
+    public void setOrderField(String orderField) {
+        this.orderField = orderField;
+    }
 
     public String getOrgCode() {
         return orgCode;
@@ -156,12 +187,12 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
         this.orgCode = orgCode;
     }
 
-    public OrderByEnum getOrderByFiled() {
-        return orderByFiled;
+    public OrderByEnum getOrderByField() {
+        return orderByField;
     }
 
-    public void setOrderByFiled(OrderByEnum orderByFiled) {
-        this.orderByFiled = orderByFiled;
+    public void setOrderByField(OrderByEnum orderByField) {
+        this.orderByField = orderByField;
     }
 
     /**

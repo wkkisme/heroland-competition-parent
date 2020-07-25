@@ -55,10 +55,10 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
     private String className;
 
     /**
-     *
+     * 总分数
      */
-    @ApiModelProperty(value="totalScore")
-    private String totalScore;
+    @ApiModelProperty(value="totalScore总分数")
+    private Integer totalScore;
 
     /**
      * 得分率
@@ -113,6 +113,11 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="history是否历史")
     private Boolean history;
+
+    /**
+     * 排名情况
+     */
+    private Long rank;
 
     /**
      * 详情
@@ -191,6 +196,14 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
 
     public void setDetails(List<HeroLandStatisticsDetailDP> details) {
         this.details = details;
+    }
+
+    public Long getRank() {
+        return rank;
+    }
+
+    public void setRank(Long rank) {
+        this.rank = rank;
     }
 
     /**
@@ -293,20 +306,12 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
         this.className = className == null ? null : className.trim();
     }
 
-    /**
-     * 
-     * @return total_score 
-     */
-    public String getTotalScore() {
+    public Integer getTotalScore() {
         return totalScore;
     }
 
-    /**
-     * 
-     * @param totalScore 
-     */
-    public void setTotalScore(String totalScore) {
-        this.totalScore = totalScore == null ? null : totalScore.trim();
+    public void setTotalScore(Integer totalScore) {
+        this.totalScore = totalScore;
     }
 
     /**

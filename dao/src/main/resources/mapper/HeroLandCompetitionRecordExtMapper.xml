@@ -46,7 +46,7 @@
 
     </select>
 
-    <select id="getSyncTotalScore"
+    <select id="getTotalScore"
             resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
 
 
@@ -57,10 +57,12 @@
         ,class_code class_code,grade_code grade_code,org_code org_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
-        where topic_type = #{topicType}
-        and  is_deleted = 0
+        where  is_deleted = 0
+        <if test="topicType != null">
+         and topic_type = #{topicType}
+        </if>
 
-        GROUP BY org_code,grade_code
+        GROUP BY org_code,topic_type,grade_code
         ,invite_id
 
         union all
@@ -69,11 +71,13 @@
         ,class_code class_code,grade_code grade_code,org_code org_code,
         count(opponent_score) competitionCount
         from heroland_competition_record
-        where topic_type = #{topicType}
-        and  is_deleted = 0
+        where is_deleted = 0
+        <if test="topicType != null">
+            and topic_type = #{topicType}
+        </if>
 
 
-        GROUP BY org_code,grade_code
+        GROUP BY org_code,topic_type,grade_code
         ,opponent_id
 
         ) a
@@ -82,7 +86,7 @@
     </select>
 
 
-    <select id="getSyncTotalScoreDetail"
+    <select id="getTotalScoreDetail"
             resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
 
 
@@ -93,10 +97,11 @@
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
-        where topic_type = #{topicType}
-        and  is_deleted = 0
-
-        GROUP BY org_code,grade_code,class_code,subject_code
+        where is_deleted = 0
+        <if test="topicType != null">
+            and topic_type = #{topicType}
+        </if>
+        GROUP BY org_code,topic_type,grade_code,class_code,subject_code
         ,invite_id
         union all
 
@@ -104,10 +109,12 @@
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         count(opponent_score) competitionCount
         from heroland_competition_record
-        where topic_type = #{topicType}
-        and  is_deleted = 0
+        where is_deleted = 0
+        <if test="topicType != null">
+            and topic_type = #{topicType}
+        </if>
 
-        GROUP BY org_code,grade_code,class_code,subject_code
+        GROUP BY org_code,topic_type,grade_code,class_code,subject_code
         ,opponent_id
 
         ) a

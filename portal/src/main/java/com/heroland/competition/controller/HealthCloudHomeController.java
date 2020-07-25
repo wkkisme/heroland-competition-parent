@@ -5,7 +5,6 @@ import com.spreada.utils.chinese.ZHConverter;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +23,7 @@ public class HealthCloudHomeController {
         redisService.set("1",3);
         Object o = redisService.get("1");
         System.out.println(o);
+        logger.info("redis test :{}",o);
 //        Long id = TinyId.nextId("test");
 //        List<Long> ids = TinyId.nextId("test", 10);
         return "/res/index.html";

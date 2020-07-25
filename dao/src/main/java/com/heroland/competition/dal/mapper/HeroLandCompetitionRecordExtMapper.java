@@ -15,7 +15,7 @@ public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionR
 
     Long countCompetitionRecordsAndQuestions(HeroLandCompetitionRecordQO heroLandTopicGroupExample);
 
-    List<HeroLandStatisticsTotal> getSyncTotalScore(HeroLandStatisticsTotalQO qo);
+    List<HeroLandStatisticsTotal> getTotalScore(HeroLandStatisticsTotalQO qo);
 
-    List<HeroLandStatisticsDetailDP> getSyncTotalScoreDetail(HeroLandStatisticsTotalQO qo);
+    List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO qo);
 }

@@ -24,7 +24,9 @@ public class HeroLandCompetitionStatisticsController {
 
 
     /**
-     * 查询同步作业赛列表
+     * 查询同步作业赛列表统计列表,
+     *  1 查询个人排行榜时或者页面上面的统计信息可根据传userId等信息过来查询
+     *
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -35,7 +37,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询同步作业赛详情 userid 必传
+     * 查询同步作业赛统计详情 userid 必传
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -46,7 +48,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询某人比赛详情 userid 必传
+     * 查询某人比赛统计详情 userid 必传
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -57,7 +59,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询寒假作业赛详情 userid 必传
+     * 查询寒假作业赛统计详情 userid 必传
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -68,7 +70,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询寒假作业赛
+     * 查询寒假作业赛统计
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -79,7 +81,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询暑假作业赛详情 userid 必传
+     * 查询暑假作业赛详情统计 userid 必传
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -90,7 +92,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询暑假作业赛
+     * 查询暑假作业赛统计
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -101,7 +103,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询世界赛详情 userid 必传
+     * 查询世界赛详情统计 userid 必传
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -112,7 +114,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询世界赛
+     * 查询世界赛统计
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -123,7 +125,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询校际赛-学校排行榜
+     * 查询校际赛-学校排行榜统计
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
@@ -134,7 +136,7 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 查询校际赛-某个学校里学生排行榜
+     * 查询校际赛-某个学校里学生排行榜统计
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
