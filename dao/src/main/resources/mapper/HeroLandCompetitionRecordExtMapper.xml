@@ -57,9 +57,9 @@
         ,class_code class_code,grade_code grade_code,org_code org_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
-        where  is_deleted = 0
+        where is_deleted = 0
         <if test="topicType != null">
-         and topic_type = #{topicType}
+            and topic_type = #{topicType}
         </if>
 
         GROUP BY org_code,topic_type,grade_code
@@ -92,7 +92,7 @@
 
         select
         sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,subject_code
-        sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount)  total_games from (
+        sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount) total_games from (
         select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         ,count(invite_score) competitionCount
@@ -120,5 +120,15 @@
         ) a
         GROUP BY user_id
 
+    </select>
+    <select id="selectByTopicIdsAndInviterId" resultType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+        select *
+        from heroland_competition_record
+        where is_deleted = 0
+        and topic_id in
+        <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+            #{topicId}
+        </foreach>
+        and invite_id = #{userId}
     </select>
 </mapper>
