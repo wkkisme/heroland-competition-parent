@@ -28,6 +28,560 @@
     <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
+    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
+    parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date, 
+    end_date, score, is_correct_answer
+  </sql>
+  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from heroland_question_record_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from heroland_question_record_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from heroland_question_record_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample">
+    delete from heroland_question_record_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_question_record_detail (creator, modifier, gmt_create, 
+      gmt_modified, is_deleted, grade_code, 
+      class_code, question_id, title, 
+      option_a, option_b, option_c, 
+      option_d, option_e, answer, 
+      solution, parse, level_code, 
+      your_answer, user_id, record_id, 
+      record_detail_id, begin_date, end_date, 
+      score, is_correct_answer)
+    values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
+      #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{optionA,jdbcType=VARCHAR}, #{optionB,jdbcType=VARCHAR}, #{optionC,jdbcType=VARCHAR}, 
+      #{optionD,jdbcType=VARCHAR}, #{optionE,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, 
+      #{solution,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR}, 
+      #{yourAnswer,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, 
+      #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into heroland_question_record_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="modifier != null">
+        modifier,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="isDeleted != null">
+        is_deleted,
+      </if>
+      <if test="gradeCode != null">
+        grade_code,
+      </if>
+      <if test="classCode != null">
+        class_code,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="optionA != null">
+        option_a,
+      </if>
+      <if test="optionB != null">
+        option_b,
+      </if>
+      <if test="optionC != null">
+        option_c,
+      </if>
+      <if test="optionD != null">
+        option_d,
+      </if>
+      <if test="optionE != null">
+        option_e,
+      </if>
+      <if test="answer != null">
+        answer,
+      </if>
+      <if test="solution != null">
+        solution,
+      </if>
+      <if test="parse != null">
+        parse,
+      </if>
+      <if test="levelCode != null">
+        level_code,
+      </if>
+      <if test="yourAnswer != null">
+        your_answer,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="recordId != null">
+        record_id,
+      </if>
+      <if test="recordDetailId != null">
+        record_detail_id,
+      </if>
+      <if test="beginDate != null">
+        begin_date,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="isCorrectAnswer != null">
+        is_correct_answer,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="gradeCode != null">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classCode != null">
+        #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="optionA != null">
+        #{optionA,jdbcType=VARCHAR},
+      </if>
+      <if test="optionB != null">
+        #{optionB,jdbcType=VARCHAR},
+      </if>
+      <if test="optionC != null">
+        #{optionC,jdbcType=VARCHAR},
+      </if>
+      <if test="optionD != null">
+        #{optionD,jdbcType=VARCHAR},
+      </if>
+      <if test="optionE != null">
+        #{optionE,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null">
+        #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="parse != null">
+        #{parse,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null">
+        #{levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="yourAnswer != null">
+        #{yourAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordId != null">
+        #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDetailId != null">
+        #{recordDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null">
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="isCorrectAnswer != null">
+        #{isCorrectAnswer,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultType="java.lang.Long">
+    select count(*) from heroland_question_record_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update heroland_question_record_detail
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.creator != null">
+        creator = #{record.creator,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifier != null">
+        modifier = #{record.modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isDeleted != null">
+        is_deleted = #{record.isDeleted,jdbcType=BIT},
+      </if>
+      <if test="record.gradeCode != null">
+        grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classCode != null">
+        class_code = #{record.classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionId != null">
+        question_id = #{record.questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionA != null">
+        option_a = #{record.optionA,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionB != null">
+        option_b = #{record.optionB,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionC != null">
+        option_c = #{record.optionC,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionD != null">
+        option_d = #{record.optionD,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionE != null">
+        option_e = #{record.optionE,jdbcType=VARCHAR},
+      </if>
+      <if test="record.answer != null">
+        answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.solution != null">
+        solution = #{record.solution,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parse != null">
+        parse = #{record.parse,jdbcType=VARCHAR},
+      </if>
+      <if test="record.levelCode != null">
+        level_code = #{record.levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.yourAnswer != null">
+        your_answer = #{record.yourAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recordDetailId != null">
+        record_detail_id = #{record.recordDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.beginDate != null">
+        begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endDate != null">
+        end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.score != null">
+        score = #{record.score,jdbcType=INTEGER},
+      </if>
+      <if test="record.isCorrectAnswer != null">
+        is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update heroland_question_record_detail
+    set id = #{record.id,jdbcType=BIGINT},
+      creator = #{record.creator,jdbcType=VARCHAR},
+      modifier = #{record.modifier,jdbcType=VARCHAR},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{record.isDeleted,jdbcType=BIT},
+      grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      class_code = #{record.classCode,jdbcType=VARCHAR},
+      question_id = #{record.questionId,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      option_a = #{record.optionA,jdbcType=VARCHAR},
+      option_b = #{record.optionB,jdbcType=VARCHAR},
+      option_c = #{record.optionC,jdbcType=VARCHAR},
+      option_d = #{record.optionD,jdbcType=VARCHAR},
+      option_e = #{record.optionE,jdbcType=VARCHAR},
+      answer = #{record.answer,jdbcType=VARCHAR},
+      solution = #{record.solution,jdbcType=VARCHAR},
+      parse = #{record.parse,jdbcType=VARCHAR},
+      level_code = #{record.levelCode,jdbcType=VARCHAR},
+      your_answer = #{record.yourAnswer,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      record_id = #{record.recordId,jdbcType=VARCHAR},
+      record_detail_id = #{record.recordDetailId,jdbcType=VARCHAR},
+      begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
+      end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      score = #{record.score,jdbcType=INTEGER},
+      is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    update heroland_question_record_detail
+    <set>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="modifier != null">
+        modifier = #{modifier,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null">
+        is_deleted = #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classCode != null">
+        class_code = #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null">
+        question_id = #{questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="optionA != null">
+        option_a = #{optionA,jdbcType=VARCHAR},
+      </if>
+      <if test="optionB != null">
+        option_b = #{optionB,jdbcType=VARCHAR},
+      </if>
+      <if test="optionC != null">
+        option_c = #{optionC,jdbcType=VARCHAR},
+      </if>
+      <if test="optionD != null">
+        option_d = #{optionD,jdbcType=VARCHAR},
+      </if>
+      <if test="optionE != null">
+        option_e = #{optionE,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null">
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="solution != null">
+        solution = #{solution,jdbcType=VARCHAR},
+      </if>
+      <if test="parse != null">
+        parse = #{parse,jdbcType=VARCHAR},
+      </if>
+      <if test="levelCode != null">
+        level_code = #{levelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="yourAnswer != null">
+        your_answer = #{yourAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordId != null">
+        record_id = #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordDetailId != null">
+        record_detail_id = #{recordDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null">
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="isCorrectAnswer != null">
+        is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    update heroland_question_record_detail
+    set creator = #{creator,jdbcType=VARCHAR},
+      modifier = #{modifier,jdbcType=VARCHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      grade_code = #{gradeCode,jdbcType=VARCHAR},
+      class_code = #{classCode,jdbcType=VARCHAR},
+      question_id = #{questionId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      option_a = #{optionA,jdbcType=VARCHAR},
+      option_b = #{optionB,jdbcType=VARCHAR},
+      option_c = #{optionC,jdbcType=VARCHAR},
+      option_d = #{optionD,jdbcType=VARCHAR},
+      option_e = #{optionE,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      solution = #{solution,jdbcType=VARCHAR},
+      parse = #{parse,jdbcType=VARCHAR},
+      level_code = #{levelCode,jdbcType=VARCHAR},
+      your_answer = #{yourAnswer,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      record_id = #{recordId,jdbcType=VARCHAR},
+      record_detail_id = #{recordDetailId,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      score = #{score,jdbcType=INTEGER},
+      is_correct_answer = #{isCorrectAnswer,jdbcType=BIT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="question_id" jdbcType="VARCHAR" property="questionId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="option_a" jdbcType="VARCHAR" property="optionA" />
+    <result column="option_b" jdbcType="VARCHAR" property="optionB" />
+    <result column="option_c" jdbcType="VARCHAR" property="optionC" />
+    <result column="option_d" jdbcType="VARCHAR" property="optionD" />
+    <result column="option_e" jdbcType="VARCHAR" property="optionE" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="solution" jdbcType="VARCHAR" property="solution" />
+    <result column="parse" jdbcType="VARCHAR" property="parse" />
+    <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
+    <result column="your_answer" jdbcType="VARCHAR" property="yourAnswer" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="record_id" jdbcType="VARCHAR" property="recordId" />
+    <result column="record_detail_id" jdbcType="VARCHAR" property="recordDetailId" />
+    <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="score" jdbcType="INTEGER" property="score" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>

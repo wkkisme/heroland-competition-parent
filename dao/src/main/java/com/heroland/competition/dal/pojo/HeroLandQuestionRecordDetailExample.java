@@ -1866,6 +1866,66 @@ public class HeroLandQuestionRecordDetailExample {
             addCriterion("score not between", value1, value2, "score");
             return (Criteria) this;
         }
+
+        public Criteria andIsCorrectAnswerIsNull() {
+            addCriterion("is_correct_answer is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerIsNotNull() {
+            addCriterion("is_correct_answer is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerEqualTo(Boolean value) {
+            addCriterion("is_correct_answer =", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotEqualTo(Boolean value) {
+            addCriterion("is_correct_answer <>", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerGreaterThan(Boolean value) {
+            addCriterion("is_correct_answer >", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_correct_answer >=", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerLessThan(Boolean value) {
+            addCriterion("is_correct_answer <", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_correct_answer <=", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerIn(List<Boolean> values) {
+            addCriterion("is_correct_answer in", values, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotIn(List<Boolean> values) {
+            addCriterion("is_correct_answer not in", values, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_correct_answer between", value1, value2, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_correct_answer not between", value1, value2, "isCorrectAnswer");
+            return (Criteria) this;
+        }
     }
 
     /**

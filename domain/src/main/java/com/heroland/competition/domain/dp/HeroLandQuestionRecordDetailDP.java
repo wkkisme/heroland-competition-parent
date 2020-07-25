@@ -134,6 +134,12 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     @ApiModelProperty(value = "该题得分")
     private Integer score;
 
+    /**
+     * 是否答对
+     */
+    @ApiModelProperty(value = "是否答对")
+    private boolean isCorrectAnswer;
+
     public HeroLandQuestionRecordDetailDP addCheck() {
         if (ObjectUtil.isNull(beginDate) || StringUtils.isAnyBlank(this.userId, this.questionId, this.yourAnswer, this.recordId, this.recordDetailId)) {
             ResponseBodyWrapper.failParamException();
@@ -474,5 +480,13 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     public Integer getScore() {
         return score;
+    }
+
+    public boolean isCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public void setCorrectAnswer(boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
     }
 }

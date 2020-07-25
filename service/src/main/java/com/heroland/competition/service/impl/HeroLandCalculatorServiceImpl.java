@@ -15,11 +15,13 @@ import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandCalculatorService;
+import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,11 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
     @Resource
     private HeroLevelUtils heroLevelUtils;
 
+    @Resource
+    private HeroLandCompetitionRecordService competitionRecordService;
+
+    private List<HeroLandQuestionRecordDetailDP> currentUserQuestionRecords;
+
     /**
      * 每道题初试分数
      */
@@ -96,27 +103,40 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
         questionQo.setCompetitionRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getInviteId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> inviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
+        List<HeroLandQuestionRecordDetailDP> inviteQuestionRecords = inviteQuestionRecordRes.getData();
 
         // 获取被邀请人答题记录
         questionQo.setCompetitionRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getOpponentId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> beInviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
+        List<HeroLandQuestionRecordDetailDP> beInviteQuestionRecords = beInviteQuestionRecordRes.getData();
 
         // 当前用户是否为邀请人
         boolean isInvite = StrUtil.equals(inviteUser.getUserId(), userId);
         if (isInvite) {
             // 计算当前用户的分数
-            Integer answerScore = calculateAnswerScore(inviteQuestionRecordRes.getData(), beInviteQuestionRecordRes.getData(), inviteUser, opponentUser);
+            Integer answerScore = calculateAnswerScore(inviteQuestionRecords, beInviteQuestionRecords, inviteUser, opponentUser);
             dp.setInviteScore(answerScore);
         } else {
             // 计算当前用户的分数
-            Integer answerScore = calculateAnswerScore(beInviteQuestionRecordRes.getData(), inviteQuestionRecordRes.getData(), opponentUser, inviteUser);
+            Integer answerScore = calculateAnswerScore(beInviteQuestionRecords, inviteQuestionRecords, opponentUser, inviteUser);
             dp.setOpponentScore(answerScore);
+        }
+
+        // 如果双方都答完，设置该场比赛的结果
+        if (ObjectUtil.isNotNull(dp.getInviteEndTime()) && ObjectUtil.isNotNull(dp.getOpponentEndTime())) {
+
+            List<HeroLandQuestionRecordDetailDP> correctAnswerQuestionRecords = currentUserQuestionRecords.stream().filter(HeroLandQuestionRecordDetailDP::isCorrectAnswer).collect(Collectors.toList());
+            // 设置胜负
+            int result = dp.getInviteScore() > dp.getOpponentScore() ? 0 : dp.getInviteScore().equals(dp.getOpponentScore()) ? 2 : 1;
+            dp.setResult(result);
+
+            // 设置完成题数
+            dp.setFinishQuestions(correctAnswerQuestionRecords.size());
         }
 
         Integer inviteScore = dp.getInviteScore();
         Integer opponentScore = dp.getOpponentScore();
-
         // 如果是应试赛，获胜者分数X2
         if (TopicTypeConstants.TEST_COMPETITION.equals(dp.getTopicType()) &&
                 ObjectUtil.isNotNull(inviteScore) &&
@@ -127,6 +147,9 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
                 dp.setOpponentScore(opponentScore * 2);
             }
         }
+
+        // 修改比赛记录数据
+        competitionRecordService.updateCompetitionRecord(dp);
 
         HeroLandCalculatorResultDP result = new HeroLandCalculatorResultDP();
         result.setInviteLevel(inviteUser.getLevelName());
@@ -221,8 +244,11 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
                     }
                 }
             }
+            questionRecord.setScore(atomicInteger.get());
+            questionRecord.setCorrectAnswer(isCorrect);
+            questionRecordDetailService.updateQuestionRecord(questionRecord);
         });
-
+        this.currentUserQuestionRecords = new ArrayList<>(currentUserQuestionRecordMap.values());
         return atomicInteger.get();
     }
 }
