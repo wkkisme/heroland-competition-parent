@@ -253,10 +253,10 @@
             <version>1.0.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.anycommon</groupId>
-            <artifactId>anycommon-logger</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.anycommon</groupId>-->
+<!--            <artifactId>anycommon-logger</artifactId>-->
+<!--        </dependency>-->
 
 
         <dependency>
