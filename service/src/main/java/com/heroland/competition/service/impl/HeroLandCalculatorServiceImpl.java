@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.HeroLevelUtils;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
@@ -99,11 +100,13 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
             dp.setOpponentScore(answerScore);
         }
 
-        // 如果是应试赛，获胜者分数X2
-//        if (dp.getTopicType().equals())
         Integer inviteScore = dp.getInviteScore();
         Integer opponentScore = dp.getOpponentScore();
-        if (ObjectUtil.isNotNull(inviteScore) && ObjectUtil.isNotNull(opponentScore)) {
+
+        // 如果是应试赛，获胜者分数X2
+        if (TopicTypeConstants.TEST_COMPETITION.equals(dp.getTopicType()) &&
+                ObjectUtil.isNotNull(inviteScore) &&
+                ObjectUtil.isNotNull(opponentScore)) {
             if (dp.getInviteScore() > dp.getOpponentScore()) {
                 dp.setInviteScore(inviteScore * 2);
             } else {
@@ -111,7 +114,12 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
             }
         }
 
-        return null;
+        HeroLandCalculatorResultDP resultDP = new HeroLandCalculatorResultDP();
+        resultDP.setInviteLevel(inviteUser.getLevelName());
+        resultDP.setInviteScore(dp.getInviteScore());
+        resultDP.setOpponentLevel(dp.getOpponentLevel());
+        resultDP.setOpponentScore(dp.getOpponentScore());
+        return resultDP;
     }
 
     /**
