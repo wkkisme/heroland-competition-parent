@@ -20,7 +20,7 @@ public class HealthCloudHomeController {
     @Resource
     private RedisService redisService;
     @RequestMapping(value ={"/","/home"} )
-    @CommonLogger(name = "home 方法")
+//    @CommonLogger(name = "home 方法")
     public String home(HttpServletRequest request,String orgCode){
 
 //        Long id = TinyId.nextId("test");
