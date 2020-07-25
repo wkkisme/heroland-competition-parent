@@ -2,7 +2,7 @@ package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.logger.annotation.CommonLogger;
-import com.spreada.utils.chinese.ZHConverter;
+//import com.spreada.utils.chinese.ZHConverter;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
