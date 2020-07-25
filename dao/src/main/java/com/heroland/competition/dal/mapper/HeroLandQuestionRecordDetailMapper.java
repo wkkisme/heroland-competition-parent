@@ -28,4 +28,6 @@ public interface HeroLandQuestionRecordDetailMapper {
     int updateByPrimaryKeySelective(HeroLandQuestionRecordDetail record);
 
     int updateByPrimaryKey(HeroLandQuestionRecordDetail record);
+
+    void updateByRecordIdSelective(HeroLandQuestionRecordDetail updateConversion);
 }

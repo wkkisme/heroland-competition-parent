@@ -3,6 +3,8 @@ package com.heroland.competition.service.statistics;
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
+import com.heroland.competition.domain.dp.SyncCompetitionCourseFinishStatisticDP;
+import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 
 import java.util.List;
@@ -150,4 +152,11 @@ public interface HeroLandCompetitionStatisticsService {
      */
     ResponseBody<List<HeroLandStatisticsDetailDP>> getSchoolCompetitions(HeroLandStatisticsTotalQO qo);
 
+    /**
+     * 同步作业赛-查询每个科目比赛完成情况
+     *
+     * @param qo
+     * @return
+     */
+    ResponseBody<List<SyncCompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(CourseFinishStatisticQO qo);
 }

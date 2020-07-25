@@ -5,13 +5,13 @@ import com.heroland.competition.api.HeroLandCompetitionRemoteService;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.service.HeroLandCompetitionService;
 import lombok.AllArgsConstructor;
-import org.apache.dubbo.config.annotation.DubboService;
+import org.apache.dubbo.config.annotation.Service;
 
 /**
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
-@DubboService(version = "1.0.0")
+@Service(version = "1.0.0")
 @AllArgsConstructor
 public class HeroLandCompetitionRemoteServiceImpl implements HeroLandCompetitionRemoteService {
 

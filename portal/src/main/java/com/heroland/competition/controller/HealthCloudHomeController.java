@@ -1,7 +1,7 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
-import com.anycommon.logger.annotation.CommonLogger;
+//import com.anycommon.logger.annotation.CommonLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ public class HealthCloudHomeController {
     @Resource
     private RedisService redisService;
     @RequestMapping(value ={"/","/home"} )
-    @CommonLogger(name = "home 方法")
+//    @CommonLogger(name = "home 方法")
     public String home(HttpServletRequest request,String orgCode){
 
 //        Long id = TinyId.nextId("test");
