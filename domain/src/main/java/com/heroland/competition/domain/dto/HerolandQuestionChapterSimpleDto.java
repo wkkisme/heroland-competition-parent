@@ -11,7 +11,7 @@ import java.util.List;
 public class HerolandQuestionChapterSimpleDto implements Serializable {
 
     /**
-     * 题号
+     * 课节id
      */
     private Long chapterId;
 

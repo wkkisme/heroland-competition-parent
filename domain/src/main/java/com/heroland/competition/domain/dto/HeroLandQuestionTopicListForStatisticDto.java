@@ -17,6 +17,11 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      */
     private Long id;
 
+    /**
+     * 赛事名称
+     */
+    private Long topicName;
+
 
     /**
      * 年级
@@ -71,7 +76,7 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
     private List<HerolandQuestionKnowledgeSimpleDto> knowledges = Lists.newArrayList();
 
     /**
-     * 关联的题号和知识点列表
+     * 关联的章节号和知识点列表
      */
-    private List<HerolandQuestionChapterSimpleDto> chapters = Lists.newArrayList();
+//    private List<HerolandQuestionChapterSimpleDto> chapters = Lists.newArrayList();
 }

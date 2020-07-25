@@ -329,4 +329,36 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByQuery"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_topic_group
+    where is_deleted = 0
+    <if test="item.orgCode != null">
+      and org_code = #{item.orgCode,jdbcType=VARCHAR}
+    </if>
+    <if test="item.gradeCode != null">
+      and grade_code = #{item.gradeCode,jdbcType=VARCHAR}
+    </if>
+    <if test="item.classCode != null">
+      and class_code = #{item.classCode,jdbcType=VARCHAR}
+    </if>
+    <if test="item.courseCode != null">
+      and course_code = #{item.courseCode,jdbcType=VARCHAR}
+    </if>
+    <if test="item.type != null">
+      and `type` = #{item.type,jdbcType=INTEGER}
+    </if>
+    <if test="item.startTime != null">
+      and `start_time` >= #{item.startTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="item.endTime != null">
+      <![CDATA[
+        and `end_time` <= #{item.endTime,jdbcType=TIMESTAMP}
+        ]]>
+
+    </if>
+  </select>
+
 </mapper>
