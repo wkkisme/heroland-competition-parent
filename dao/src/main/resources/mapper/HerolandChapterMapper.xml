@@ -219,4 +219,16 @@
     </if>
   </select>
 
+  <select id="getByIds"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_chapter
+    where is_deleted = 0
+    and
+    id IN
+    <foreach collection="ids" item="id" open="(" close=")" separator=",">
+      #{id}
+    </foreach>
+  </select>
+
 </mapper>

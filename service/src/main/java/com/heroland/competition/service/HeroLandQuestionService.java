@@ -4,8 +4,10 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
 import java.util.List;
@@ -51,10 +53,15 @@ public interface HeroLandQuestionService{
     HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request);
 
     /**
-     * 获取题组和题
-     * @param qo 对象
+     * 获取每一个赛事下的详细情况及题目数
      * @return 值
      */
-//    List<HeroLandQuestionDP> getQuestion(HeroLandQuestionQO qo);
+    List<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request);
+
+    /**
+     * 获取课节和知识点
+     * @return 值
+     */
+    PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request);
 
 }
