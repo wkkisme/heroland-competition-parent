@@ -37,7 +37,7 @@ public interface HeroLandQuestionService{
      * @param dp 对象
      * @return 正确
      */
-    Boolean addTopic(HeroLandTopicGroupDP dp);
+    Long addTopic(HeroLandTopicGroupDP dp);
 
     /**
      * 获取题组下的题

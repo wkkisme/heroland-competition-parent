@@ -31,15 +31,13 @@
     <result column="title" jdbcType="LONGVARCHAR" property="title" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, 
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, title,
     `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no
   </sql>
-  <sql id="Blob_Column_List">
-    title
-  </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select
-    <include refid="Blob_Column_List" />
+    <include refid="Base_Column_List" />
     from heroland_question_bank
     where id = #{id,jdbcType=BIGINT}
   </select>
@@ -284,7 +282,7 @@
 
   <select id="getByQuery"  resultMap="ResultMapWithBLOBs">
     select
-    <include refid="Blob_Column_List" />
+    <include refid="Base_Column_List" />
     from heroland_question_bank
     where is_deleted = 0
     <if test="item.grade != null">

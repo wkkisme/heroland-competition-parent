@@ -19,6 +19,10 @@ public enum HerolandErrMsgEnum {
 
 
     ERROR_PARAM("70100", "同一类型下不支持相同编号"),
+
+    ERROR_TIME("70101", "时间参数不正确"),
+
+
    ;
 
     private String errorCode;

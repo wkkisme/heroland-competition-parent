@@ -75,8 +75,8 @@ public class HeroLandTopicQuestionController {
      * @module 題目組
      */
     @RequestMapping("/addAndEdit")
-    public ResponseBody<Boolean> addTopicQuestions(@RequestBody HeroLandTopicGroupRequest request){
-        ResponseBody<Boolean> result = new ResponseBody<>();
+    public ResponseBody<Long> addTopicQuestions(@RequestBody HeroLandTopicGroupRequest request){
+        ResponseBody<Long> result = new ResponseBody<>();
         HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
         result.setData(heroLandQuestionService.addTopic(dp));
         return result;

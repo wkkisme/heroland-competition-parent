@@ -30,13 +30,13 @@ public class HealthCloudHomeController {
     }
 
 
-        public static void main(String[] args) {
-            ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
-            String simplifiedStr = converter.convert("鄧麗君");
-            System.out.println(simplifiedStr);
-
-        System.out.println("***************");
-    }
+//        public static void main(String[] args) {
+//            ZHConverter converter = ZHConverter.getInstance(ZHConverter.SIMPLIFIED);
+//            String simplifiedStr = converter.convert("鄧麗君");
+//            System.out.println(simplifiedStr);
+//
+//        System.out.println("***************");
+//    }
 
 
 }

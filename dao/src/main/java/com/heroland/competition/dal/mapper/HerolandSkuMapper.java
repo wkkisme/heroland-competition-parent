@@ -25,4 +25,11 @@ public interface HerolandSkuMapper {
     List<HerolandSku> list(@Param("spuId") String spuId,@Param("skuId") String  skuId);
 
     HerolandSku getBySkuId(@Param("skuId") String skuId);
+
+    /**
+     *
+     * @param skuId
+     * @return
+     */
+    HerolandSku getBySkuIdWithDelete(@Param("skuId") String skuId);
 }

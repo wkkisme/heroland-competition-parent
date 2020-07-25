@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="question_id" jdbcType="BIGINT" property="questionId" />
     <result column="topic_id" jdbcType="BIGINT" property="topicId" />
+    <result column="chapter_id" jdbcType="BIGINT" property="chapterId" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
@@ -12,11 +13,11 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, question_id, topic_id, creator, modifier, gmt_create, gmt_modified, is_deleted
+    id, question_id, topic_id,chapter_id, creator, modifier, gmt_create, gmt_modified, is_deleted
   </sql>
 
   <sql id="Insert_Column_List">
-    question_id,topic_id
+    question_id,topic_id,chapter_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -32,7 +33,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_topic_question (question_id, topic_id, creator, 
+    insert into heroland_topic_question (question_id, topic_id,chapter_id, creator,
       modifier, gmt_create, gmt_modified, 
       is_deleted)
     values (#{questionId,jdbcType=BIGINT}, #{topicId,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR},
@@ -50,6 +51,9 @@
       </if>
       <if test="topicId != null">
         topic_id,
+      </if>
+      <if test="chapterId != null">
+        chapter_id,
       </if>
       <if test="creator != null">
         creator,
@@ -73,6 +77,9 @@
       </if>
       <if test="topicId != null">
         #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="chapterId != null">
+        #{chapterId,jdbcType=BIGINT},
       </if>
       <if test="creator != null">
         #{creator,jdbcType=VARCHAR},
@@ -99,6 +106,9 @@
       </if>
       <if test="topicId != null">
         topic_id = #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="chapterId != null">
+        chapter_id = #{chapterId,jdbcType=BIGINT},
       </if>
       <if test="creator != null">
         creator = #{creator,jdbcType=VARCHAR},
@@ -167,7 +177,9 @@
     values
     <foreach collection="records" item="item" index="index" separator=",">
       (#{item.questionId,jdbcType=BIGINT},
-      #{item.topicId,jdbcType=BIGINT})
+      #{item.topicId,jdbcType=BIGINT},
+      #{item.chapterId,jdbcType=BIGINT},
+      )
     </foreach>
   </insert>
 

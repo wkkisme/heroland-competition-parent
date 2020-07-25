@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
+import com.heroland.competition.common.contants.OrderStateEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -14,6 +16,7 @@ import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dp.HerolandSkuDP;
+import com.heroland.competition.domain.dto.HerolandOrderListDto;
 import com.heroland.competition.domain.qo.PayOrderQO;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
@@ -21,9 +24,11 @@ import com.heroland.competition.service.order.HerolandPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author smjyouzan
@@ -86,10 +91,37 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     }
 
     @Override
-    public List<HerolandOrderDP> listOrder(String userId, List<String> status) {
+    public List<HerolandOrderListDto> listOrder(String userId, List<String> status) {
         AssertUtils.notBlank(userId);
         List<HerolandOrder> list = herolandOrderMapper.listOrderByBuyer(userId, status);
-        return null;
+        if (!CollectionUtils.isEmpty(list)){
+           return list.stream().map(this::convertToDto).collect(Collectors.toList());
+        }
+       return Lists.newArrayList();
+    }
+
+    private HerolandOrderListDto convertToDto(HerolandOrder order){
+        HerolandOrderListDto dto = new HerolandOrderListDto();
+        dto.setBizNo(order.getBizNo());
+        dto.setBuyerId(order.getBuyerId());
+        dto.setSkuId(order.getSkuId());
+        dto.setSkuName(order.getSkuName());
+        dto.setSkuNum(order.getSkuNum());
+        dto.setCurrencyAmt(order.getCurrencyAmt());
+        dto.setCurrencyType(order.getCurrencyType());
+        dto.setPaidTime(order.getPaidTime());
+        dto.setCloseTime(order.getCloseTime());
+        dto.setState(order.getState());
+        dto.setOrderCreateTime(order.getGmtCreate());
+        HerolandSku bySkuId = herolandSkuMapper.getBySkuIdWithDelete(order.getSkuId());
+        dto.setSkuUnit(bySkuId.getUnit());
+        //如果是创建的订单再去拉一下是否有付款
+        if (order.getState().equalsIgnoreCase(OrderStateEnum.CREATED.getCode())){
+            //todo
+            //rpc 调用一下或者写一个定时器
+
+        }
+        return dto;
     }
 
     @Override

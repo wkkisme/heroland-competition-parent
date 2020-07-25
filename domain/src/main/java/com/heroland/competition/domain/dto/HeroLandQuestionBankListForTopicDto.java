@@ -93,6 +93,11 @@ public class HeroLandQuestionBankListForTopicDto implements Serializable {
     private String answer;
 
     /**
+     * 当根据章节来选的时候，该题目属于的章节
+     */
+    private List<Long> chapterId = Lists.newArrayList();
+
+    /**
      * 关联的知识点列表
      */
     private List<HerolandKnowledgeSimpleDto> knowledges = Lists.newArrayList();
