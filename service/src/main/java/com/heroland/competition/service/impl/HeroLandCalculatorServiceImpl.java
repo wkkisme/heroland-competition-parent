@@ -75,7 +75,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
     private List<HeroLandQuestionRecordDetailDP> currentUserQuestionRecords;
 
     /**
-     * 每道题初试分数
+     * 每道题初始分数
      */
     @Value("${hero.init.answerScore}")
     private Integer initAnswerScore;
