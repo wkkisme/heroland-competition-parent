@@ -4,6 +4,7 @@ package com.heroland.competition.controller;
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.service.HeroLandCompetitionService;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class HeroLandCompetitionController {
     private HeroLandCompetitionService heroLandCompetitionService;
 
     @RequestMapping("/doAnswer")
-    public ResponseBody doAnswer(HeroLandCompetitionRecordDP dp) {
+    public ResponseBody doAnswer(@RequestBody HeroLandCompetitionRecordDP dp) {
 
         return heroLandCompetitionService.doAnswer(dp);
     }
