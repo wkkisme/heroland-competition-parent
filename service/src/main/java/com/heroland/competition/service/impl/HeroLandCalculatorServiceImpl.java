@@ -28,9 +28,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 作業賽計分規則
+ * 計分規則
  * <p>
- * 答題限時2分鐘；任何一方答完即出結果，對或錯，分數。立即出勝負。
+ * 每个回合积分规则：
  * 己方為勝：①  己方早答對，對方無論答對或錯；②  己方遲答對，對方早答錯。
  * 選擇不同英雄等級的對手，勝方計分方法：
  * 勝高兩級對手，得6分；
@@ -40,6 +40,20 @@ import java.util.stream.Collectors;
  * 勝低兩級對手，得2分。
  * 己方為和：己方答錯，對方亦答錯，得0分。
  * 己方為負：① 雙方都答對，己方遲答對，得1分。② 己方答錯，對方答對，得0分。
+ * <p>
+ * 作业赛规则：
+ * 整盤勝負及計分方法：
+ * 賽事類型：作業賽分為同步作業賽、寒假作業賽和暑期作業賽三種賽事。
+ * 規則：答題限時2分鐘；任何一方答完即出結果，對或錯，分數。立即出勝負。
+ * <p>
+ * 应试赛规则：
+ * 整盤勝負及計分方法：
+ * 賽事規則：每盤比賽有多條題目，答對題數多，又快者，勝。
+ * 整盤勝負：整盤贏多局者為勝，相同局數計和局，相同和局計總時數，快者勝。
+ * 計分方法：各回合按勝負和對手等級高低計分，然後加總。勝方總分再 x 2，負方總分 x 1
+ *
+ * @author wushuaiping
+ * @date 2020-7-25
  */
 @Component
 public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService {
@@ -114,12 +128,12 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
             }
         }
 
-        HeroLandCalculatorResultDP resultDP = new HeroLandCalculatorResultDP();
-        resultDP.setInviteLevel(inviteUser.getLevelName());
-        resultDP.setInviteScore(dp.getInviteScore());
-        resultDP.setOpponentLevel(dp.getOpponentLevel());
-        resultDP.setOpponentScore(dp.getOpponentScore());
-        return resultDP;
+        HeroLandCalculatorResultDP result = new HeroLandCalculatorResultDP();
+        result.setInviteLevel(inviteUser.getLevelName());
+        result.setInviteScore(dp.getInviteScore());
+        result.setOpponentLevel(dp.getOpponentLevel());
+        result.setOpponentScore(dp.getOpponentScore());
+        return result;
     }
 
     /**
