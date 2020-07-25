@@ -28,6 +28,6 @@ public class HeroLandCompetitionController {
         return heroLandCompetitionService.doAnswer(dp);
     }
 
-    @GetMapping("/getSyncCompetitionRecord")
-    public ResponseBody<>
+//    @GetMapping("/getSyncCompetitionRecord")
+//    public ResponseBody<>
 }
