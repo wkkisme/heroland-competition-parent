@@ -70,7 +70,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
     /**
      * 每道题初试分数
      */
-    @Value("hero.init.answerScore")
+    @Value("${hero.init.answerScore}")
     private Integer initAnswerScore;
 
     /**
