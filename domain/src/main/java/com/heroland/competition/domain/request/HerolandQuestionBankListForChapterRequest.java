@@ -27,14 +27,14 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
      *     ANSWER(3,"解答题"),
      *     COMPO(4,"综合题"),
      */
-    private Integer type;
+    private List<Integer> types;
 
     /**
      * 题目的子类型，比如选择题的子类型有多选|单选
      * OPTION_ONE(11,"单选题"),
      * OPTION_MULTI(12,"多选题"),
      */
-    private Integer subType;
+    private List<Integer> subTypes;
 
     /**
      * 难度
@@ -44,7 +44,7 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
      *     HALF_DIFFICULT(4,"较难"),
      *     DIFFICULT(5,"难"),
      */
-    private Integer diff;
+    private List<Integer> diffs;
 
     /**
      *
@@ -67,12 +67,12 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
     /**
      * 地区 如上海市
      */
-    private String area;
+    private List<String> areas;
 
     /**
      * 来源 如2016年上海市闵行区中考数学一模试卷
      */
-    private String source;
+    private List<String> sources;
 
     /**
      * 试题类型
@@ -85,7 +85,7 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
      *     GAO(37,"高考"),
      *     OTHER(33,"其他"),
      */
-    private Integer paperType;
+    private List<Integer> paperTypes;
 
     /**
      * 章节id

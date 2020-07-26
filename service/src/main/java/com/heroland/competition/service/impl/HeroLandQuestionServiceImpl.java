@@ -305,6 +305,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
             if (topicMap.containsKey(e.getId())){
                 List<Long> questionIds = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
+                Map<Long, List<HerolandQuestionBank>> quesBank = herolandQuestionBankMapper.getByIdsWithDelete(questionIds).stream().collect(Collectors.groupingBy(HerolandQuestionBank::getId));
                 dto.setQuestionNum(questionIds.size());
                 List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(questionIds, KnowledgeReferEnum.QUESTION.getType());
                 Map<Long, List<HerolandKnowledgeRefer>> questionsMap = refers.stream().collect(Collectors.groupingBy(HerolandKnowledgeRefer::getReferId));
@@ -312,6 +313,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                     HerolandQuestionKnowledgeSimpleDto knowledgeSimpleDto = new HerolandQuestionKnowledgeSimpleDto();
                     knowledgeSimpleDto.setQuestionId(qId);
                     if (questionsMap.containsKey(qId)){
+                        knowledgeSimpleDto.setDiff(quesBank.containsKey(qId) ? quesBank.get(qId).get(0).getDiff() : 1);
+                        knowledgeSimpleDto.setType(quesBank.containsKey(qId) ? quesBank.get(qId).get(0).getType() : 1);
                         List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(questionsMap.get(qId).stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList()));
                         knowledgeSimpleDto.setKnowledge(herolandKnowledges.stream().map(HerolandKnowledge::getKnowledge).collect(Collectors.toList()));
                     }

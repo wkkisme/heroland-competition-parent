@@ -26,6 +26,7 @@ import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HerolandQuestionBankQo;
+import com.heroland.competition.domain.qo.HerolandQuestionSelectQo;
 import com.heroland.competition.domain.request.HerolandQuestionBankListForChapterRequest;
 import com.heroland.competition.domain.request.HerolandQuestionBankPageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
@@ -270,7 +271,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         if (CollectionUtils.isEmpty(knowledges)){
             return pageResult;
         }
-        HerolandQuestionBankQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankQo.class);
+        HerolandQuestionSelectQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionSelectQo.class);
         resolveYearRange(request.getYearRange(), qo);
         if (!StringUtils.isEmpty(request.getYear())){
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);
@@ -287,7 +288,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
         qo.setBankIds(bankReferIds);
         Page<HerolandQuestionBank> banks = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandQuestionBankMapper.getByQuery(qo));
+                () -> herolandQuestionBankMapper.questionSelect(qo));
 
         pageResult= build(banks);
         if (!CollectionUtils.isEmpty(pageResult.getItems())){
@@ -309,7 +310,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForCourse(HerolandQuestionBankListForChapterRequest request){
-        HerolandQuestionBankQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankQo.class);
+        HerolandQuestionSelectQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionSelectQo.class);
         resolveYearRange(request.getYearRange(), qo);
         if (!StringUtils.isEmpty(request.getYear())){
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);
@@ -318,7 +319,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             qo.setEndTime(endTime);
         }
         Page<HerolandQuestionBank> banks = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandQuestionBankMapper.getByQuery(qo));
+                () -> herolandQuestionBankMapper.questionSelect(qo));
        return build(banks);
     }
 
@@ -376,7 +377,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         return pageResult;
     }
 
-    private void resolveYearRange(Integer yearRange, HerolandQuestionBankQo qo){
+    private void resolveYearRange(Integer yearRange, HerolandQuestionSelectQo qo){
         int num = 0;
         if (!NumberUtils.nullOrZero(yearRange)){
             QtYearRangeEnum qtYearRangeEnum = QtYearRangeEnum.valueOfLevel(yearRange);

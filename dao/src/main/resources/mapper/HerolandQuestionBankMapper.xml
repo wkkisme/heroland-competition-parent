@@ -330,6 +330,73 @@
     </if>
   </select>
 
+  <select id="questionSelect"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_question_bank
+    where is_deleted = 0
+    <if test="item.grade != null">
+      and grade_code = #{item.grade,jdbcType=VARCHAR}
+    </if>
+    <if test="item.course != null">
+      and course = #{item.course,jdbcType=VARCHAR}
+    </if>
+    <if test="item.types != null and item.types.size > 0">
+      and type IN (
+      <foreach collection="item.types" item="type" index="index" separator=",">
+        #{type,jdbcType=INTEGER}
+      </foreach>
+      )
+    </if>
+    <if test="item.diffs != null and item.diffs.size > 0">
+      and diff IN (
+      <foreach collection="item.diffs" item="diff" index="index" separator=",">
+        #{diff,jdbcType=INTEGER}
+      </foreach>
+      )
+    </if>
+
+    <if test="item.beginTime != null">
+      and `year` >= #{item.beginTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="item.endTime != null">
+      <![CDATA[
+        and `year` <= #{item.endTime,jdbcType=TIMESTAMP}
+        ]]>
+
+    </if>
+    <if test="item.areas != null and item.areas.size > 0">
+      and area IN (
+      <foreach collection="item.areas" item="area" index="index" separator=",">
+        #{area,jdbcType=VARCHAR}
+      </foreach>
+      )
+    </if>
+    <if test="item.sources != null and item.sources.size > 0">
+      and `source` IN (
+      <foreach collection="item.sources" item="source" index="index" separator=",">
+        #{source,jdbcType=VARCHAR}
+      </foreach>
+      )
+    </if>
+
+    <if test="item.paperTypes != null and item.paperTypes.size > 0">
+      and paper_type IN (
+      <foreach collection="item.paperTypes" item="paperType" index="index" separator=",">
+        #{paperType,jdbcType=INTEGER}
+      </foreach>
+      )
+    </if>
+
+    <if test="item.bankIds != null and item.bankIds.size > 0">
+      and id IN (
+      <foreach collection="item.bankIds" item="id" index="index" separator=",">
+        #{id,jdbcType=BIGINT}
+      </foreach>
+      )
+    </if>
+  </select>
+
   <select id="getByIds" resultMap="ResultMapWithBLOBs">
     select
     <include refid="Base_Column_List" />
