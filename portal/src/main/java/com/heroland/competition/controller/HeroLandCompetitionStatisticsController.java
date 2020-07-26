@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -180,6 +181,7 @@ public class HeroLandCompetitionStatisticsController {
             dp.setQuestionNum(i.get() + 10);
             dp.setSectionCount(i.get() + 2);
             dp.setFinishSection(i.get());
+            dp.setWinRate(new BigDecimal(20));
             list.add(dp);
         });
         return ResponseBodyWrapper.successWrapper(list);
