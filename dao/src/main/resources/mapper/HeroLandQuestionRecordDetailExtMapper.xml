@@ -101,6 +101,7 @@
         select a.*, b.topic_id
         from heroland_competition_record b
         left join heroland_question_record_detail a
+        on b.record_id = a.record_id
         where b.topic_id in
         <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
             #{topicId}
