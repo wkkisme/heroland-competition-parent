@@ -387,14 +387,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setDiff(statisticDto.getDiff());
             dp.setLevelCode(statisticDto.getLevelCode());
             if (qo.getType().equals(TopicTypeConstants.SYNC_COMPETITION)) {
-
-                List<HeroLandQuestionRecordDetailDP> questionRecordDetailDPS = questionRecordMap.get().get(statisticDto.getId().toString());
-                if (CollUtil.isNotEmpty(questionRecordDetailDPS)) {
-                    HeroLandQuestionRecordDetailDP heroLandQuestionRecordDetailDP = questionRecordDetailDPS.get(0);
-                    // 如果是同步作业赛，题只能有一个
-                    dp.setIsCorrectAnswer(heroLandQuestionRecordDetailDP.isCorrectAnswer());
-                    dp.setLevelCode(heroLandQuestionRecordDetailDP.getLevelCode());
+                if (ObjectUtil.isNotNull(questionRecordMap.get())) {
+                    List<HeroLandQuestionRecordDetailDP> questionRecordDetailDPS = questionRecordMap.get().get(statisticDto.getId().toString());
+                    if (CollUtil.isNotEmpty(questionRecordDetailDPS)) {
+                        HeroLandQuestionRecordDetailDP heroLandQuestionRecordDetailDP = questionRecordDetailDPS.get(0);
+                        // 如果是同步作业赛，题只能有一个
+                        dp.setIsCorrectAnswer(heroLandQuestionRecordDetailDP.isCorrectAnswer());
+                        dp.setLevelCode(heroLandQuestionRecordDetailDP.getLevelCode());
+                    }
                 }
+
                 HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
                 if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
                     dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
