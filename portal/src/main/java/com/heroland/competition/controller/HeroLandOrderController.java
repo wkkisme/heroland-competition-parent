@@ -1,7 +1,9 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.page.Pagination;
 import com.heroland.competition.common.constants.SPUEnum;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
@@ -65,8 +67,14 @@ public class HeroLandOrderController {
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<List<HerolandOrderListDto>> listOrder(@RequestBody HerolandOrderQueryQO qo) {
         ResponseBody<List<HerolandOrderListDto>> result = new ResponseBody<>();
-        List<HerolandOrderListDto> herolandOrderDPS = herolandOrderService.listOrder(qo.getBuyerId(), qo.getStatus());
-        result.setData(herolandOrderDPS);
+        PageResponse<HerolandOrderListDto> pageResponse = herolandOrderService.listOrder(qo);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
         return result;
     }
 

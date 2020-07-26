@@ -2,18 +2,24 @@ package com.heroland.competition.service.order.impl;
 
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.dal.mapper.HerolandOrderMapper;
 import com.heroland.competition.dal.mapper.HerolandSkuMapper;
+import com.heroland.competition.dal.pojo.HerolandQuestionBank;
 import com.heroland.competition.dal.pojo.HerolandSku;
 import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dp.HerolandPayDP;
+import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
 import com.heroland.competition.domain.dto.HerolandOrderListDto;
+import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.PayOrderQO;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
@@ -88,13 +94,17 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     }
 
     @Override
-    public List<HerolandOrderListDto> listOrder(String userId, List<String> status) {
-        AssertUtils.notBlank(userId);
-        List<HerolandOrder> list = herolandOrderMapper.listOrderByBuyer(userId, status);
-        if (!CollectionUtils.isEmpty(list)){
-           return list.stream().map(this::convertToDto).collect(Collectors.toList());
+    public PageResponse<HerolandOrderListDto> listOrder(HerolandOrderQueryQO qo) {
+        AssertUtils.notBlank(qo.getBuyerId());
+        PageResponse<HerolandOrderListDto> pageResult = new PageResponse<>();
+        List<HerolandOrderListDto> list = Lists.newArrayList();
+        pageResult.setItems(list);
+        Page<HerolandOrder> data = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
+                () -> herolandOrderMapper.listOrderByBuyer(qo.getBuyerId(), qo.getStatus()));
+        if (!CollectionUtils.isEmpty(data.getResult())){
+            list =  data.getResult().stream().map(this::convertToDto).collect(Collectors.toList());
         }
-       return Lists.newArrayList();
+       return pageResult;
     }
 
     private HerolandOrderListDto convertToDto(HerolandOrder order){

@@ -1,7 +1,9 @@
 package com.heroland.competition.service.order;
 
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandOrderDP;
 import com.heroland.competition.domain.dto.HerolandOrderListDto;
+import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.PayOrderQO;
 
 import java.util.List;
@@ -26,11 +28,10 @@ public interface HerolandOrderService {
 
     /**
      * 获取用户的订单列表
-     * @param userId
-     * @param status
+
      * @return
      */
-    List<HerolandOrderListDto> listOrder(String userId, List<String> status);
+    PageResponse<HerolandOrderListDto> listOrder(HerolandOrderQueryQO qo);
 
     /**
      * 关闭订单
