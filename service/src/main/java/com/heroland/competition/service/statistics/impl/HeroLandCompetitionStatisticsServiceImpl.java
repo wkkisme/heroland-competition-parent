@@ -397,12 +397,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     }
                 }
 
-                HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
-                if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
-                    dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
-                    dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
-                    dp.setQuestionId(herolandQuestionKnowledgeSimpleDto.getQuestionId());
+                if (CollUtil.isNotEmpty(statisticDto.getKnowledges())){
+                    HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
+                    if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
+                        dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
+                        dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
+                        dp.setQuestionId(herolandQuestionKnowledgeSimpleDto.getQuestionId());
+                    }
                 }
+
             }
             result.add(dp);
         });
