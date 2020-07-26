@@ -3,6 +3,7 @@ package com.heroland.competition.service.statistics.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
@@ -301,7 +302,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
-        logger.info("拿到获取每一个赛事下的详细情况及题目数的数据,request={}, list={}", qo, topicQuestionForCourseStatistics);
+        logger.info("拿到获取每一个赛事下的详细情况及题目数的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(topicQuestionForCourseStatistics));
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
             return ResponseBodyWrapper.success();
         }
@@ -353,7 +354,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         BeanUtil.copyProperties(qo, request);
         PageResponse<HeroLandQuestionTopicListForStatisticDto> topicQuestionListPage = heroLandQuestionService.getTopicQuestionForChapterStatistics(request);
         List<HeroLandQuestionTopicListForStatisticDto> items = topicQuestionListPage.getItems();
-        logger.info("拿到获取每一个赛事下课节和知识点的数据,request={}, list={}", qo, items);
+        logger.info("拿到获取每一个赛事下课节和知识点的数据,request={}, list={}",  JSONObject.toJSONString(qo), JSONObject.toJSONString(items));
         if (CollUtil.isEmpty(items)) {
             return ResponseBodyWrapper.success();
         }
