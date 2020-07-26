@@ -102,7 +102,8 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
         Page<HerolandOrder> data = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                 () -> herolandOrderMapper.listOrderByBuyer(qo.getBuyerId(), qo.getStatus()));
         if (!CollectionUtils.isEmpty(data.getResult())){
-            list =  data.getResult().stream().map(this::convertToDto).collect(Collectors.toList());
+            List<HerolandOrderListDto> collect = data.getResult().stream().map(this::convertToDto).collect(Collectors.toList());
+            pageResult.setItems(collect);
         }
        return pageResult;
     }
