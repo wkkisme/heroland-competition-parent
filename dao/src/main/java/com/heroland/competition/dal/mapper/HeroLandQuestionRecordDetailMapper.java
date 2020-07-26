@@ -2,9 +2,8 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface HeroLandQuestionRecordDetailMapper {
     long countByExample(HeroLandQuestionRecordDetailExample example);
@@ -28,6 +27,4 @@ public interface HeroLandQuestionRecordDetailMapper {
     int updateByPrimaryKeySelective(HeroLandQuestionRecordDetail record);
 
     int updateByPrimaryKey(HeroLandQuestionRecordDetail record);
-
-    void updateByRecordIdSelective(HeroLandQuestionRecordDetail updateConversion);
 }

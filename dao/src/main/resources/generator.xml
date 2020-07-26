@@ -77,7 +77,7 @@
 
 
 
-        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">
+        <table tableName="heroland_topic_group" domainObjectName="HeroLandTopicGroup" mapperName="HeroLandTopicGroupMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

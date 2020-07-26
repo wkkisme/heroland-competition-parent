@@ -20,7 +20,7 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
     /**
      * 赛事名称
      */
-    private Long topicName;
+    private String topicName;
 
 
     /**
@@ -59,6 +59,16 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
     private Integer questionNum = 0;
 
     /**
+     * 题型
+     */
+    private Integer diff;
+
+    /**
+     * 难度
+     */
+    private String levelCode;
+
+    /**
      * 课的id集合
      */
     private List<Long> chapterList = Lists.newArrayList();
@@ -67,7 +77,6 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      * 节的集合
      */
     private List<Long> sectionList = Lists.newArrayList();
-
 
 
     /**

@@ -5,7 +5,6 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.constants.KnowledgeReferEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
@@ -16,14 +15,6 @@ import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
-import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
-import com.heroland.competition.dal.mapper.HerolandQuestionBankDetailMapper;
-import com.heroland.competition.dal.mapper.HerolandQuestionBankMapper;
-import com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper;
-import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
-import com.heroland.competition.dal.pojo.HerolandQuestionBank;
-import com.heroland.competition.dal.pojo.HerolandQuestionBankDetail;
-import com.heroland.competition.dal.pojo.HerolandTopicQuestion;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
@@ -35,7 +26,6 @@ import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseReq
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
-import com.heroland.competition.service.admin.HeroLandChapterService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,7 +245,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public List<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request) {
+    public List<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request) {
 
        List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
         HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
@@ -297,7 +287,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuesitionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request) {
+    public PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request) {
         PageResponse<HeroLandQuestionTopicListForStatisticDto> pageResult = new PageResponse<>();
         List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
         pageResult.setItems(list);

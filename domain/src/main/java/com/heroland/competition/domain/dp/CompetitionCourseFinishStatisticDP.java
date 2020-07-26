@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SyncCompetitionCourseFinishStatisticDP extends BaseDO implements Serializable {
+public class CompetitionCourseFinishStatisticDP extends BaseDO implements Serializable {
 
     /**
      * 年级

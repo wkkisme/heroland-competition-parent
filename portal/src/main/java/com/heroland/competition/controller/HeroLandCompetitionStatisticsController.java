@@ -1,9 +1,12 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
-import com.heroland.competition.domain.dp.SyncCompetitionCourseFinishStatisticDP;
+import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
+import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
@@ -151,13 +154,24 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
-     * 同步作业赛-查询每个科目比赛完成情况
+     * 查询每个科目比赛完成情况
      *
      * @param qo
      * @return
      */
     @PostMapping("/getCourseFinishStatistic")
-    ResponseBody<List<SyncCompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(@RequestBody CourseFinishStatisticQO qo) {
+    ResponseBody<List<CompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(@RequestBody CourseFinishStatisticQO qo) {
         return heroLandCompetitionStatisticsService.getCourseFinishStatistic(qo);
+    }
+
+    /**
+     * 查询比赛记录
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getAnswerQuestionRecordStatistic")
+    PageResponse<AnswerQuestionRecordStatisticDP> getAnswerQuestionRecordStatistic(@RequestBody AnswerQuestionRecordStatisticQO qo) {
+        return heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(qo);
     }
 }

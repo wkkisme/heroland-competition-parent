@@ -83,4 +83,13 @@ public class HeroLandTopicDto implements Serializable {
      */
     private List<HeroLandQuestionListForTopicDto> questions;
 
+    /**
+     * 题组难度
+     */
+    private String levelCode;
+
+    /**
+     * 题型
+     */
+    private Integer diff;
 }
