@@ -283,7 +283,26 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 }
             });
         }
+        getAdminData(list);
         return list;
+    }
+
+    private void getAdminData(List<HeroLandQuestionTopicListForStatisticDto> list){
+        List<String> classKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getClassCode).distinct().collect(Collectors.toList());
+        List<String> orgKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getOrgCode).distinct().collect(Collectors.toList());
+        List<String> courseKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getCourseCode).distinct().collect(Collectors.toList());
+        List<String> gradeKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getGradeCode).distinct().collect(Collectors.toList());
+        classKeys.addAll(gradeKeys);
+        classKeys.addAll(orgKeys);
+        classKeys.addAll(courseKeys);
+        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(courseKeys);
+        Map<String, List<HerolandBasicDataDP>> keyMap = keys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        list.stream().forEach(e -> {
+            e.setCourseName(keyMap.containsKey(e.getCourseCode()) ? keyMap.get(e.getCourseCode()).get(0).getDictValue() : "");
+            e.setGradeName(keyMap.containsKey(e.getGradeCode()) ? keyMap.get(e.getGradeCode()).get(0).getDictValue() : "");
+            e.setClassName(keyMap.containsKey(e.getClassCode()) ? keyMap.get(e.getClassCode()).get(0).getDictValue() : "");
+            e.setOrgCode(keyMap.containsKey(e.getOrgCode()) ? keyMap.get(e.getOrgCode()).get(0).getDictValue() : "");
+        });
     }
 
     @Override
@@ -322,6 +341,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             }
             list.add(dto);
         });
+        getAdminData(list);
         return pageResult;
     }
 

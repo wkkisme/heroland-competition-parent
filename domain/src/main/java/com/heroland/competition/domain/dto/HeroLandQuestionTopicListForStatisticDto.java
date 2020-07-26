@@ -28,6 +28,7 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      */
     private String gradeCode;
 
+
     /**
      * 年级名称
      */
@@ -48,10 +49,16 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      */
     private String classCode;
 
+    private String className;
+
     /**
      * 班级code
      */
     private String orgCode;
+
+
+
+    private String orgName;
 
     /**
      * 题目数量
