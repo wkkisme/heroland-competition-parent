@@ -302,11 +302,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
-        logger.info("拿到获取每一个赛事下的详细情况及题目数的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(topicQuestionForCourseStatistics));
+        logger.info("拿到获取科目的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(topicQuestionForCourseStatistics));
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
             return ResponseBodyWrapper.success();
         }
-        Map<String, List<HeroLandQuestionTopicListForStatisticDto>> map = topicQuestionForCourseStatistics.stream().filter(d -> StrUtil.isNotBlank(d.getCourseName())).collect(Collectors.groupingBy(HeroLandQuestionTopicListForStatisticDto::getCourseName));
+        Map<String, List<HeroLandQuestionTopicListForStatisticDto>> map = topicQuestionForCourseStatistics.stream().filter(d -> StrUtil.isNotBlank(d.getCourseCode())).collect(Collectors.groupingBy(HeroLandQuestionTopicListForStatisticDto::getCourseName));
         List<String> topicIds = topicQuestionForCourseStatistics.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).map(String::valueOf).distinct().collect(Collectors.toList());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
         AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMap = new AtomicReference<>();
@@ -319,11 +319,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
         }
         List<CompetitionCourseFinishStatisticDP> dps = new ArrayList<>();
-        map.forEach((courseName, questionTopicStatistics) -> {
+        map.forEach((courseCode, questionTopicStatistics) -> {
             CompetitionCourseFinishStatisticDP dp = new CompetitionCourseFinishStatisticDP();
             HeroLandQuestionTopicListForStatisticDto dto = questionTopicStatistics.get(0);
-            dp.setCourseCode(dto.getCourseCode());
-            dp.setCourseName(courseName);
+            dp.setCourseCode(courseCode);
+            dp.setCourseName(dto.getCourseName());
             dp.setClassCode(dto.getClassCode());
             dp.setQuestionNum(questionTopicStatistics.stream().map(HeroLandQuestionTopicListForStatisticDto::getQuestionNum).reduce(0, Integer::sum));
             dp.setChapterCount(questionTopicStatistics.stream().map(q -> q.getChapterList().size()).reduce(0, Integer::sum));
