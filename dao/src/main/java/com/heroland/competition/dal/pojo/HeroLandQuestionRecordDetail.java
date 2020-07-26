@@ -3,7 +3,6 @@ package com.heroland.competition.dal.pojo;
 import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -134,6 +133,12 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     @ApiModelProperty(value="isCorrectAnswer是否回答正确")
     private Boolean isCorrectAnswer;
+
+    /**
+     * 题组id
+     */
+    @ApiModelProperty(value="topicId题组id")
+    private String topicId;
 
     /**
      * heroland_question_record_detail
@@ -474,5 +479,21 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setIsCorrectAnswer(Boolean isCorrectAnswer) {
         this.isCorrectAnswer = isCorrectAnswer;
+    }
+
+    /**
+     * 题组id
+     * @return topic_id 题组id
+     */
+    public String getTopicId() {
+        return topicId;
+    }
+
+    /**
+     * 题组id
+     * @param topicId 题组id
+     */
+    public void setTopicId(String topicId) {
+        this.topicId = topicId == null ? null : topicId.trim();
     }
 }

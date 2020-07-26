@@ -5,6 +5,7 @@ import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 
 import java.util.List;
@@ -62,15 +63,14 @@ public interface HeroLandCompetitionRecordService {
     ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId);
 
 
-    List<HeroLandStatisticsTotalDP> getTotalScore(HeroLandStatisticsTotalQO qo);
+    List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
 
-    List<HeroLandStatisticsTotalDP> getAnswerRightRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getAnswerRightRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
-    List<HeroLandStatisticsTotalDP> getCompleteRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
-    List<HeroLandStatisticsTotalDP> getWinRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
-    List<HeroLandStatisticsTotalDP> getTotalTime(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 }

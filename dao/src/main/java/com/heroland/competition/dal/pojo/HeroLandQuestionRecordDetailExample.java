@@ -74,7 +74,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-07-25
+     * heroland_question_record_detail 2020-07-26
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1926,6 +1926,76 @@ public class HeroLandQuestionRecordDetailExample {
             addCriterion("is_correct_answer not between", value1, value2, "isCorrectAnswer");
             return (Criteria) this;
         }
+
+        public Criteria andTopicIdIsNull() {
+            addCriterion("topic_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdIsNotNull() {
+            addCriterion("topic_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdEqualTo(String value) {
+            addCriterion("topic_id =", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdNotEqualTo(String value) {
+            addCriterion("topic_id <>", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdGreaterThan(String value) {
+            addCriterion("topic_id >", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdGreaterThanOrEqualTo(String value) {
+            addCriterion("topic_id >=", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdLessThan(String value) {
+            addCriterion("topic_id <", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdLessThanOrEqualTo(String value) {
+            addCriterion("topic_id <=", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdLike(String value) {
+            addCriterion("topic_id like", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdNotLike(String value) {
+            addCriterion("topic_id not like", value, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdIn(List<String> values) {
+            addCriterion("topic_id in", values, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdNotIn(List<String> values) {
+            addCriterion("topic_id not in", values, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdBetween(String value1, String value2) {
+            addCriterion("topic_id between", value1, value2, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicIdNotBetween(String value1, String value2) {
+            addCriterion("topic_id not between", value1, value2, "topicId");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1939,7 +2009,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-07-25
+     * heroland_question_record_detail 2020-07-26
      */
     public static class Criterion {
         private String condition;

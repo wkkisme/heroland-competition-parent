@@ -92,6 +92,16 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
      */
     private Long rank;
 
+    private Long rightCount;
+
+    public Long getRightCount() {
+        return rightCount;
+    }
+
+    public void setRightCount(Long rightCount) {
+        this.rightCount = rightCount;
+    }
+
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
     }

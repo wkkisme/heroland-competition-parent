@@ -7,8 +7,6 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper;
-import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
@@ -35,7 +33,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
 
     @Override
     public ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP) {
-        logger.info("邀请记录：{}", JSON.toJSONString(recordDetailDP));
+        logger.info("答题记录：{}", JSON.toJSONString(recordDetailDP));
         HeroLandQuestionRecordDetail heroLandQuestionRecordDetail = null;
         try {
             heroLandQuestionRecordDetail = BeanUtil.insertConversion(recordDetailDP.addCheck(), new HeroLandQuestionRecordDetail());
