@@ -26,8 +26,11 @@ import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.impl.HeroLandAccountServiceImpl;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -49,6 +52,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompetitionStatisticsService {
+    private final Logger logger = LoggerFactory.getLogger(HeroLandCompetitionStatisticsServiceImpl.class);
 
     @Resource
     private HeroLandStatisticsTotalExtMapper heroLandStatisticsTotalExtMapper;
@@ -297,6 +301,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
+        logger.warn("拿到获取每一个赛事下的详细情况及题目数的数据,{}", topicQuestionForCourseStatistics);
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
             return ResponseBodyWrapper.success();
         }
@@ -348,6 +353,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         BeanUtil.copyProperties(qo, request);
         PageResponse<HeroLandQuestionTopicListForStatisticDto> topicQuestionListPage = heroLandQuestionService.getTopicQuestionForChapterStatistics(request);
         List<HeroLandQuestionTopicListForStatisticDto> items = topicQuestionListPage.getItems();
+        logger.warn("拿到获取每一个赛事下课节和知识点的数据,{}", items);
         if (CollUtil.isEmpty(items)) {
             return ResponseBodyWrapper.success();
         }
