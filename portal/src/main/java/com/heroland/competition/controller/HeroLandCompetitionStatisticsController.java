@@ -1,9 +1,10 @@
 package com.heroland.competition.controller;
 
 import cn.hutool.core.collection.ListUtil;
+import com.anycommon.response.common.BaseQO;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.ResponseBodyWrapper;
-import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
 import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
@@ -195,7 +196,7 @@ public class HeroLandCompetitionStatisticsController {
      * @return
      */
     @PostMapping("/getAnswerQuestionRecordStatistic")
-    PageResponse<AnswerQuestionRecordStatisticDP> getAnswerQuestionRecordStatistic(@RequestBody AnswerQuestionRecordStatisticQO qo) {
+    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(@RequestBody AnswerQuestionRecordStatisticQO qo) {
         List<AnswerQuestionRecordStatisticDP> list = new ArrayList<>();
         for (int i = 1; i < 33; i++) {
             AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
@@ -211,12 +212,13 @@ public class HeroLandCompetitionStatisticsController {
             dp.setTopicName("測試" + i);
             list.add(dp);
         }
-        PageResponse<AnswerQuestionRecordStatisticDP> response = new PageResponse<>();
-        response.setItems(list);
-        response.setPage(1);
-        response.setPageSize(40);
-        response.setTotal(33);
-        return response;
+        BaseQO baseQO = new BaseQO();
+        baseQO.setPageIndex(1);
+        baseQO.setPageSize(40);
+        ResponseBody tResponseBody = new ResponseBody();
+        tResponseBody.setData(list);
+        tResponseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), 33));
+        return tResponseBody;
 //        return heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(qo);
     }
 }
