@@ -2,6 +2,7 @@ package com.heroland.competition.service.statistics.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
@@ -298,7 +299,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
             return ResponseBodyWrapper.success();
         }
-        Map<String, List<HeroLandQuestionTopicListForStatisticDto>> map = topicQuestionForCourseStatistics.stream().collect(Collectors.groupingBy(HeroLandQuestionTopicListForStatisticDto::getCourseName));
+        Map<String, List<HeroLandQuestionTopicListForStatisticDto>> map = topicQuestionForCourseStatistics.stream().filter(d -> StrUtil.isNotBlank(d.getCourseName())).collect(Collectors.groupingBy(HeroLandQuestionTopicListForStatisticDto::getCourseName));
         List<Long> topicIds = topicQuestionForCourseStatistics.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).distinct().collect(Collectors.toList());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
         if (CollUtil.isEmpty(heroLandCompetitionRecords)) {
