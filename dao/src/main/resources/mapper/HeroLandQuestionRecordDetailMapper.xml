@@ -29,6 +29,7 @@
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="score" jdbcType="INTEGER" property="score" />
     <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer" />
+    <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,7 +93,7 @@
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
     question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
     parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date, 
-    end_date, score, is_correct_answer
+    end_date, score, is_correct_answer, topic_id
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
@@ -136,7 +137,8 @@
       solution, parse, level_code, 
       your_answer, user_id, record_id, 
       record_detail_id, begin_date, end_date, 
-      score, is_correct_answer)
+      score, is_correct_answer, topic_id
+      )
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
@@ -145,7 +147,8 @@
       #{solution,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR}, 
       #{yourAnswer,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, 
       #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
-      #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT})
+      #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT}, #{topicId,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -231,6 +234,9 @@
       <if test="isCorrectAnswer != null">
         is_correct_answer,
       </if>
+      <if test="topicId != null">
+        topic_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -310,6 +316,9 @@
       </if>
       <if test="isCorrectAnswer != null">
         #{isCorrectAnswer,jdbcType=BIT},
+      </if>
+      <if test="topicId != null">
+        #{topicId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -403,6 +412,9 @@
       <if test="record.isCorrectAnswer != null">
         is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
       </if>
+      <if test="record.topicId != null">
+        topic_id = #{record.topicId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -436,7 +448,8 @@
       begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
       end_date = #{record.endDate,jdbcType=TIMESTAMP},
       score = #{record.score,jdbcType=INTEGER},
-      is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT}
+      is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
+      topic_id = #{record.topicId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -522,6 +535,9 @@
       <if test="isCorrectAnswer != null">
         is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
       </if>
+      <if test="topicId != null">
+        topic_id = #{topicId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -552,91 +568,9 @@
       begin_date = #{beginDate,jdbcType=TIMESTAMP},
       end_date = #{endDate,jdbcType=TIMESTAMP},
       score = #{score,jdbcType=INTEGER},
-      is_correct_answer = #{isCorrectAnswer,jdbcType=BIT}
+      is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+      topic_id = #{topicId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByRecordIdSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
-    update heroland_question_record_detail
-    <set>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=BIT},
-      </if>
-      <if test="gradeCode != null">
-        grade_code = #{gradeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="classCode != null">
-        class_code = #{classCode,jdbcType=VARCHAR},
-      </if>
-      <if test="questionId != null">
-        question_id = #{questionId,jdbcType=VARCHAR},
-      </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="optionA != null">
-        option_a = #{optionA,jdbcType=VARCHAR},
-      </if>
-      <if test="optionB != null">
-        option_b = #{optionB,jdbcType=VARCHAR},
-      </if>
-      <if test="optionC != null">
-        option_c = #{optionC,jdbcType=VARCHAR},
-      </if>
-      <if test="optionD != null">
-        option_d = #{optionD,jdbcType=VARCHAR},
-      </if>
-      <if test="optionE != null">
-        option_e = #{optionE,jdbcType=VARCHAR},
-      </if>
-      <if test="answer != null">
-        answer = #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="solution != null">
-        solution = #{solution,jdbcType=VARCHAR},
-      </if>
-      <if test="parse != null">
-        parse = #{parse,jdbcType=VARCHAR},
-      </if>
-      <if test="levelCode != null">
-        level_code = #{levelCode,jdbcType=VARCHAR},
-      </if>
-      <if test="yourAnswer != null">
-        your_answer = #{yourAnswer,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
-      </if>
-      <if test="recordId != null">
-        record_id = #{recordId,jdbcType=VARCHAR},
-      </if>
-      <if test="recordDetailId != null">
-        record_detail_id = #{recordDetailId,jdbcType=VARCHAR},
-      </if>
-      <if test="beginDate != null">
-        begin_date = #{beginDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endDate != null">
-        end_date = #{endDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="score != null">
-        score = #{score,jdbcType=INTEGER},
-      </if>
-      <if test="isCorrectAnswer != null">
-        is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
-      </if>
-    </set>
-    where record_id = #{recordId,jdbcType=VARCHAR}
-  </update>
+
 </mapper>
