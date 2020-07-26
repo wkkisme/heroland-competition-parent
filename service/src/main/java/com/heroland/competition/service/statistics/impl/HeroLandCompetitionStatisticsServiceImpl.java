@@ -1,6 +1,7 @@
 package com.heroland.competition.service.statistics.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -27,7 +28,6 @@ import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
-import com.heroland.competition.service.impl.HeroLandAccountServiceImpl;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -309,10 +309,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         Map<String, List<HeroLandQuestionTopicListForStatisticDto>> map = topicQuestionForCourseStatistics.stream().filter(d -> StrUtil.isNotBlank(d.getCourseName())).collect(Collectors.groupingBy(HeroLandQuestionTopicListForStatisticDto::getCourseName));
         List<Long> topicIds = topicQuestionForCourseStatistics.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).distinct().collect(Collectors.toList());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
-        if (CollUtil.isEmpty(heroLandCompetitionRecords)) {
-            return ResponseBodyWrapper.success();
+        AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMap = new AtomicReference<>();
+        if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
+            competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId)));
         }
-        Map<String, List<HeroLandCompetitionRecord>> competitionRecordMap = heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId));
         List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, qo.getUserId());
         AtomicReference<Map<Long, List<HeroLandQuestionRecordDetailDP>>> questionRecordMap = new AtomicReference<>();
         if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
@@ -329,20 +329,21 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setChapterCount(questionTopicStatistics.stream().map(q -> q.getChapterList().size()).reduce(0, Integer::sum));
             dp.setSectionCount(questionTopicStatistics.stream().map(q -> q.getSectionList().size()).reduce(0, Integer::sum));
             Map<Long, HeroLandQuestionTopicListForStatisticDto> statisticDtoMap = questionTopicStatistics.stream().collect(Collectors.toMap(HeroLandQuestionTopicListForStatisticDto::getId, Function.identity(), (o, n) -> n));
-            statisticDtoMap.forEach((topicId, statisticDto) -> {
-                List<HeroLandCompetitionRecord> competitionRecords = competitionRecordMap.get(String.valueOf(topicId));
-                long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(c -> c.equals(0)).count();
-                // 胜率
-                BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
-                dp.setWinRate(winRate);
-                if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
-                    List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(topicId);
-                    // 完成情况
-                    dp.setFinishQuestion(questionRecordDetails.size());
-                }
-                // TODO 完成多少节 不知道怎么统计
-            });
-
+            if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
+                statisticDtoMap.forEach((topicId, statisticDto) -> {
+                    List<HeroLandCompetitionRecord> competitionRecords = competitionRecordMap.get().get(String.valueOf(topicId));
+                    long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(c -> c.equals(0)).count();
+                    // 胜率
+                    BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
+                    dp.setWinRate(winRate);
+                    if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
+                        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(topicId);
+                        // 完成情况
+                        dp.setFinishQuestion(questionRecordDetails.size());
+                    }
+                    // TODO 完成多少节 不知道怎么统计
+                });
+            }
             dps.add(dp);
         });
         return ResponseBodyWrapper.successWrapper(dps);
@@ -354,7 +355,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         BeanUtil.copyProperties(qo, request);
         PageResponse<HeroLandQuestionTopicListForStatisticDto> topicQuestionListPage = heroLandQuestionService.getTopicQuestionForChapterStatistics(request);
         List<HeroLandQuestionTopicListForStatisticDto> items = topicQuestionListPage.getItems();
-        logger.info("拿到获取每一个赛事下课节和知识点的数据,request={}, list={}",  JSONObject.toJSONString(qo), JSONObject.toJSONString(items));
+        logger.info("拿到获取每一个赛事下课节和知识点的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(items));
         if (CollUtil.isEmpty(items)) {
             return ResponseBodyWrapper.success();
         }
@@ -362,28 +363,44 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<Long> topicIds = items.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).collect(Collectors.toList());
         List<HeroLandQuestionRecordDetailDP> questionRecords = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, qo.getUserId());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
-        Map<String, List<HeroLandQuestionRecordDetailDP>> questionRecordMap = questionRecords.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId));
-        Map<String, HeroLandCompetitionRecord> competitionRecordMap = heroLandCompetitionRecords.stream().collect(Collectors.toMap(HeroLandCompetitionRecord::getTopicId, Function.identity(), (o, n) -> n));
+        AtomicReference<Map<String, List<HeroLandQuestionRecordDetailDP>>> questionRecordMap = new AtomicReference<>();
+        if (CollUtil.isNotEmpty(questionRecords)) {
+            questionRecordMap.set(questionRecords.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
+        }
+        AtomicReference<Map<String, HeroLandCompetitionRecord>> competitionRecordMap = new AtomicReference<>();
+        if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
+            competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.toMap(HeroLandCompetitionRecord::getTopicId, Function.identity(), (o, n) -> n)));
+        }
         List<AnswerQuestionRecordStatisticDP> result = new ArrayList<>();
         items.forEach(statisticDto -> {
             AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
-            HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get(statisticDto.getId().toString());
-            dp.setResult(heroLandCompetitionRecord.getResult());
-            dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
+            if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
+                HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(statisticDto.getId().toString());
+                if (ObjectUtil.isNotNull(heroLandCompetitionRecord)) {
+                    dp.setResult(heroLandCompetitionRecord.getResult());
+                    dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
+                    dp.setScore(heroLandCompetitionRecord.getInviteScore());
+                }
+            }
+
             dp.setTopicName(statisticDto.getTopicName());
-            dp.setScore(heroLandCompetitionRecord.getInviteScore());
             dp.setDiff(statisticDto.getDiff());
             dp.setLevelCode(statisticDto.getLevelCode());
             if (qo.getType().equals(TopicTypeConstants.SYNC_COMPETITION)) {
-                List<HeroLandQuestionRecordDetailDP> questionRecordDetailDPS = questionRecordMap.get(statisticDto.getId().toString());
-                // 如果是同步作业赛，题只能有一个
-                HeroLandQuestionRecordDetailDP heroLandQuestionRecordDetailDP = questionRecordDetailDPS.get(0);
-                dp.setIsCorrectAnswer(heroLandQuestionRecordDetailDP.isCorrectAnswer());
-                dp.setLevelCode(heroLandQuestionRecordDetailDP.getLevelCode());
+
+                List<HeroLandQuestionRecordDetailDP> questionRecordDetailDPS = questionRecordMap.get().get(statisticDto.getId().toString());
+                if (CollUtil.isNotEmpty(questionRecordDetailDPS)) {
+                    HeroLandQuestionRecordDetailDP heroLandQuestionRecordDetailDP = questionRecordDetailDPS.get(0);
+                    // 如果是同步作业赛，题只能有一个
+                    dp.setIsCorrectAnswer(heroLandQuestionRecordDetailDP.isCorrectAnswer());
+                    dp.setLevelCode(heroLandQuestionRecordDetailDP.getLevelCode());
+                }
                 HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
-                dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
-                dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
-                dp.setQuestionId(herolandQuestionKnowledgeSimpleDto.getQuestionId());
+                if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
+                    dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
+                    dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
+                    dp.setQuestionId(herolandQuestionKnowledgeSimpleDto.getQuestionId());
+                }
             }
             result.add(dp);
         });
