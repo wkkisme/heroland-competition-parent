@@ -30,7 +30,7 @@
     </select>
 
     <select id="countCompetitionRecordsAndQuestions"
-            resultType="Long">
+            resultType="java.lang.Long">
 
         select count(a.*) from heroland_competition_record a left join heroland_question_record_detail b
         on a.record_id = b.record_id
@@ -47,14 +47,15 @@
     </select>
 
     <select id="getTotalScore"
-            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
+            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
 
 
         select
         sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,
-        sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount) total_games from (
-        select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
-        ,class_code class_code,grade_code grade_code,org_code org_code
+        sum(total_score)/sum(competitionCount) average_score,sum(competitionCount) total_games ,subject_code
+        from (
+        select sum(invite_score) total_score,invite_id user_id ,topic_type
+        ,class_code ,grade_code ,org_code ,subject_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
@@ -62,13 +63,21 @@
             and topic_type = #{topicType}
         </if>
 
-        GROUP BY org_code,topic_type,grade_code
-        ,invite_id
+        GROUP BY org_code
+        <if test="groupByType == true">
+            ,topic_type
+        </if>
+        <if test="groupByGradeCode == true">
+            ,grade_code
+        </if>
+        <if test="groupByInviteId == true">
+            ,invite_id
+        </if>
 
         union all
 
-        select sum(opponent_score) total_score , opponent_id user_id ,topic_type topic_type
-        ,class_code class_code,grade_code grade_code,org_code org_code,
+        select sum(opponent_score) total_score , opponent_id user_id ,topic_type
+        ,class_code ,grade_code ,org_code ,subject_code
         count(opponent_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
@@ -77,8 +86,17 @@
         </if>
 
 
-        GROUP BY org_code,topic_type,grade_code
-        ,opponent_id
+        GROUP BY org_code
+        <if test="groupByType == true">
+            ,topic_type
+        </if>
+        <if test="groupByGradeCode == true">
+            ,grade_code
+        </if>
+        <if test="groupByOpponentId == true">
+            ,opponent_id
+        </if>
+
 
         ) a
         GROUP BY user_id
@@ -131,4 +149,57 @@
         </foreach>
         and invite_id = #{userId}
     </select>
+
+    <select id="getAnswerRightRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP">
+    <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
+        select
+
+         invite_id user_id ,topic_type
+        ,class_code ,grade_code ,org_code ,subject_code
+        ,count(*) right_count
+
+        from heroland_competition_record
+
+        where is_deleted = 0
+
+        <if test="userId != null">
+            and invite_id= #{userId}
+
+        </if>
+        <if test="resultInvite != null">
+            and result =#{resultInvite}
+
+        </if>
+        group by invite_id,topic_type
+
+
+        union ALL
+
+        select
+
+        opponent_id user_id ,topic_type
+        ,class_code ,grade_code ,org_code ,subject_code
+        ,count(*) right_count
+
+        from heroland_competition_record
+
+        where is_deleted = 0
+
+
+        <if test="userId != null">
+            and invite_id= #{userId}
+
+        </if>
+        <if test="resultOpponent != null">
+            and result =#{resultOpponent}
+
+        </if>
+
+        group by opponent_id,topic_type
+
+
+    </select>
+    <select id="getCompleteRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
+    <select id="getWinRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
+    <select id="getTotalTime" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
 </mapper>

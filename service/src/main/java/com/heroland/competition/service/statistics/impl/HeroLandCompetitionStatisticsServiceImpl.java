@@ -153,7 +153,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         heroLandStatisticsTotal.setHistory(true);
         HeroLandStatisticsTotalExample heroLandStatisticsTotalExample = new HeroLandStatisticsTotalExample();
         MybatisCriteriaConditionUtil.createExample(heroLandStatisticsTotalExample.createCriteria(), qo);
+
         heroLandStatisticsTotalExtMapper.updateByExampleSelective(heroLandStatisticsTotal, heroLandStatisticsTotalExample);
+
+        HeroLandStatisticsDetail heroLandStatisticsDetail = new HeroLandStatisticsDetail();
+        heroLandStatisticsDetail.setHistory(true);
+        HeroLandStatisticsDetailExample heroLandStatisticsDetailExample = new HeroLandStatisticsDetailExample();
+        MybatisCriteriaConditionUtil.createExample(heroLandStatisticsDetailExample.createCriteria(), qo);
+        heroLandStatisticsDetailExtMapper.updateByExampleSelective(heroLandStatisticsDetail, heroLandStatisticsDetailExample);
 
         return new ResponseBody<>();
     }

@@ -13,6 +13,7 @@ import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import org.slf4j.Logger;
@@ -134,10 +135,54 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsTotalDP> getTotalScore(HeroLandStatisticsTotalQO qo) {
+    public List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo) {
 
         try {
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScore(qo),HeroLandStatisticsTotalDP.class);
+            
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScore(qo),HeroLandStatisticsDetailDP.class);
+        } catch (Exception e) {
+            logger.error("e",e);
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public List<HeroLandStatisticsDetailDP> getAnswerRightRate(HeroLandStatisticsAllQO qo) {
+
+        try {
+
+            /*
+             * 再查出总的
+             */
+            List<HeroLandStatisticsDetailDP> totalCount = heroLandCompetitionRecordExtMapper.getAnswerRightRate(qo);
+
+            /*
+             * 先查出正确的
+             */
+            qo.setResultInvite(0);
+            qo.setResultOpponent(1);
+            List<HeroLandStatisticsDetailDP> rightCount = heroLandCompetitionRecordExtMapper.getAnswerRightRate(qo);
+
+
+            //  计算胜率，正确的/总答题数
+            for (HeroLandStatisticsDetailDP heroLandStatisticsDetailDp : rightCount) {
+                for (HeroLandStatisticsDetailDP landStatisticsDetailDp : totalCount) {
+
+                    if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())){
+                        landStatisticsDetailDp.setWinRate((double) (heroLandStatisticsDetailDp.getRightCount() / landStatisticsDetailDp.getRightCount()));
+                    }
+                }
+            }
+
+            // 没有的为零
+            for (HeroLandStatisticsDetailDP landStatisticsDetailDp : totalCount) {
+                if (landStatisticsDetailDp.getWinRate() == null) {
+                    landStatisticsDetailDp.setWinRate(0.0);
+                }
+            }
+            return BeanUtil.queryListConversion(totalCount,HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
             logger.error("e",e);
         }
@@ -145,10 +190,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO qo) {
-
+    public List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO qo) {
         try {
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScoreDetail(qo),HeroLandStatisticsDetailDP.class);
+
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getCompleteRate(qo),HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
             logger.error("e",e);
         }
@@ -156,22 +201,24 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsTotalDP> getAnswerRightRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
+    public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO qo) {
+        try {
+
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getWinRate(qo),HeroLandStatisticsDetailDP.class);
+        } catch (Exception e) {
+            logger.error("e",e);
+        }
         return null;
     }
 
     @Override
-    public List<HeroLandStatisticsTotalDP> getCompleteRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
-        return null;
-    }
+    public List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO qo) {
+        try {
 
-    @Override
-    public List<HeroLandStatisticsTotalDP> getWinRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
-        return null;
-    }
-
-    @Override
-    public List<HeroLandStatisticsTotalDP> getTotalTime(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO) {
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalTime(qo),HeroLandStatisticsDetailDP.class);
+        } catch (Exception e) {
+            logger.error("e",e);
+        }
         return null;
     }
 }
