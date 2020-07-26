@@ -169,5 +169,5 @@ public interface HeroLandCompetitionStatisticsService {
      * @param qo
      * @return
      */
-    PageResponse<AnswerQuestionRecordStatisticDP> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo);
+    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo);
 }

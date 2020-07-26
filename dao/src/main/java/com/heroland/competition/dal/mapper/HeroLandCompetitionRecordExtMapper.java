@@ -27,6 +27,6 @@ public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionR
 
     List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandCompetitionRecord> selectByTopicIdsAndInviterId(@Param("topicIds") List<Long> topicIds,
+    List<HeroLandCompetitionRecord> selectByTopicIdsAndInviterId(@Param("topicIds") List<String> topicIds,
                                                                  @Param("userId") String userId);
 }
