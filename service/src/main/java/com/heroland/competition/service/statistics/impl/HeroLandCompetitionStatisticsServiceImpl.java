@@ -301,7 +301,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
-        logger.info("拿到获取每一个赛事下的详细情况及题目数的数据,{}", topicQuestionForCourseStatistics);
+        logger.info("拿到获取每一个赛事下的详细情况及题目数的数据,request={}, list={}", qo, topicQuestionForCourseStatistics);
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
             return ResponseBodyWrapper.success();
         }
@@ -353,7 +353,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         BeanUtil.copyProperties(qo, request);
         PageResponse<HeroLandQuestionTopicListForStatisticDto> topicQuestionListPage = heroLandQuestionService.getTopicQuestionForChapterStatistics(request);
         List<HeroLandQuestionTopicListForStatisticDto> items = topicQuestionListPage.getItems();
-        logger.info("拿到获取每一个赛事下课节和知识点的数据,{}", items);
+        logger.info("拿到获取每一个赛事下课节和知识点的数据,request={}, list={}", qo, items);
         if (CollUtil.isEmpty(items)) {
             return ResponseBodyWrapper.success();
         }
