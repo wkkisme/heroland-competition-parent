@@ -6,6 +6,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
@@ -30,7 +31,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
     private final Logger logger = LoggerFactory.getLogger(HeroLandQuestionRecordDetailServiceImpl.class);
 
     @Resource
-    private HeroLandQuestionRecordDetailMapper heroLandQuestionRecordDetailMapper;
+    private HeroLandQuestionRecordDetailExtMapper questionRecordDetailExtMapper;
 
     @Override
     public ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP) {
@@ -38,7 +39,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
         HeroLandQuestionRecordDetail heroLandQuestionRecordDetail = null;
         try {
             heroLandQuestionRecordDetail = BeanUtil.insertConversion(recordDetailDP.addCheck(), new HeroLandQuestionRecordDetail());
-            heroLandQuestionRecordDetailMapper.insert(heroLandQuestionRecordDetail);
+            questionRecordDetailExtMapper.insert(heroLandQuestionRecordDetail);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -51,7 +52,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
 
         try {
 
-            heroLandQuestionRecordDetailMapper.updateByRecordIdSelective(BeanUtil.updateConversion(recordDetail.addCheck(), new HeroLandQuestionRecordDetail()));
+            questionRecordDetailExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(recordDetail.addCheck(), new HeroLandQuestionRecordDetail()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -67,8 +68,8 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             HeroLandQuestionRecordDetailExample example = new HeroLandQuestionRecordDetailExample();
             HeroLandQuestionRecordDetailExample.Criteria criteria = example.createCriteria();
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
-            heroLandQuestions = heroLandQuestionRecordDetailMapper.selectByExample(example);
-            count = heroLandQuestionRecordDetailMapper.countByExample(example);
+            heroLandQuestions = questionRecordDetailExtMapper.selectByExample(example);
+            count = questionRecordDetailExtMapper.countByExample(example);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

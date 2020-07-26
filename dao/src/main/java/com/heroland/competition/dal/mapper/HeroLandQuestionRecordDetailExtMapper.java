@@ -1,5 +1,6 @@
 package com.heroland.competition.dal.mapper;
 
+import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,4 +11,5 @@ public interface HeroLandQuestionRecordDetailExtMapper extends HeroLandQuestionR
     List<HeroLandQuestionRecordDetailDP> selectByTopicIdsAndUserId(@Param("topicIds") List<Long> topicIds,
                                                                    @Param("userId") String userId);
 
+    void updateByRecordIdSelective(HeroLandQuestionRecordDetail updateConversion);
 }
