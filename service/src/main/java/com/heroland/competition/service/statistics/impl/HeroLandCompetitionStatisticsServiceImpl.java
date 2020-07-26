@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
@@ -342,17 +343,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     @Override
-    public PageResponse<AnswerQuestionRecordStatisticDP> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo) {
-        PageResponse<AnswerQuestionRecordStatisticDP> pageResponse = new PageResponse<>();
+    public ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo) {
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
         PageResponse<HeroLandQuestionTopicListForStatisticDto> topicQuestionListPage = heroLandQuestionService.getTopicQuestionForChapterStatistics(request);
-        pageResponse.setPage(topicQuestionListPage.getPage());
-        pageResponse.setPageSize(topicQuestionListPage.getPageSize());
-        pageResponse.setTotal(topicQuestionListPage.getTotal());
         List<HeroLandQuestionTopicListForStatisticDto> items = topicQuestionListPage.getItems();
         if (CollUtil.isEmpty(items)) {
-            return pageResponse;
+            return ResponseBodyWrapper.success();
         }
 
         List<Long> topicIds = items.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).collect(Collectors.toList());
@@ -383,7 +380,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             result.add(dp);
         });
-        pageResponse.setItems(result);
-        return pageResponse;
+        ResponseBody<List<AnswerQuestionRecordStatisticDP>> responseBody = new ResponseBody<>();
+        responseBody.setData(result);
+        responseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), topicQuestionListPage.getTotal()));
+        return responseBody;
     }
 }
