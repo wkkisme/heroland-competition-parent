@@ -319,7 +319,7 @@
     <include refid="Base_Column_List" />
     from heroland_order
     where buyer_id = #{userId,jdbcType=VARCHAR}
-    <if test="states != null">
+    <if test="status != null">
       and state IN
       <foreach collection="status" open="(" close=")" item="state" separator=",">
         #{state}
