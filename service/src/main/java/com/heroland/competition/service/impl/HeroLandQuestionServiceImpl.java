@@ -295,7 +295,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         classKeys.addAll(gradeKeys);
         classKeys.addAll(orgKeys);
         classKeys.addAll(courseKeys);
-        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(courseKeys);
+        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(classKeys);
         Map<String, List<HerolandBasicDataDP>> keyMap = keys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
         list.stream().forEach(e -> {
             e.setCourseName(keyMap.containsKey(e.getCourseCode()) ? keyMap.get(e.getCourseCode()).get(0).getDictValue() : "");
