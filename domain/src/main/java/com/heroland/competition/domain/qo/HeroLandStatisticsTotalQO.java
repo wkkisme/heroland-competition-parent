@@ -148,7 +148,7 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     public void checkType(){
 
-        AssertUtils.assertThat(type== null);
+        AssertUtils.assertThat(type != null);
     }
 
 
