@@ -38,8 +38,10 @@ public class HeroLandCompetitionStatisticsController {
 
 
     /**
-     * 查询比赛列表统计列表,根据传不同的type来区分，切type不能为空
-     * 1 查询个人排行榜时或者页面上面的统计信息可根据传userId等信息过来查询
+     * 查询比赛列表统计列表,根据传不同的type来区分，切type不能为空 需要什么类型的数据传什么字段
+     * 例子：
+     * 1 查询当前科目  根据科目查 ：传参为userId、和subject_code 即可查询当前人下当前科目下
+     * 2 查询全科 传userId就可以查全科
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs

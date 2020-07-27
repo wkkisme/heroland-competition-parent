@@ -104,10 +104,10 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     private Integer type;
 
     /**
-     * 0不是，1是
+     * 0不是，1是 默认为false
      */
     @MybatisCriteriaAnnotation
-    private Boolean history;
+    private Boolean history = false;
 
     private String subjectCode;
 
