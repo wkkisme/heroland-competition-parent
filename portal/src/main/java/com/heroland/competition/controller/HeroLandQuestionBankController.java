@@ -1,7 +1,11 @@
 package com.heroland.competition.controller;
 
+import cn.hutool.poi.word.WordUtil;
+import com.anycommon.poi.word.Question;
+import com.anycommon.poi.word.WordFileService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
@@ -12,12 +16,20 @@ import com.heroland.competition.domain.request.HerolandQuestionBankPageRequest;
 import com.heroland.competition.domain.request.HerolandQuestionBankRequest;
 import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import com.heroland.competition.service.order.HerolandPayService;
+import org.apache.commons.fileupload.FileItem;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 
 /**
@@ -32,7 +44,6 @@ public class HeroLandQuestionBankController {
 
     @Resource
     private HerolandPayService herolandPayService;
-
     /**
      * 创建题目
      * @param request
@@ -113,6 +124,18 @@ public class HeroLandQuestionBankController {
         pagination.setTotalPage(pageResponse.getTotalPages());
         result.setPage(pagination);
         return result;
+    }
+    /**
+     * 前台获取题目进行分配
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/importQuestionBank")
+    public ResponseBody<Boolean> importQuestionBank(MultipartHttpServletRequest request) throws Exception {
+
+
+        return heroLandQuestionBankService.importQuestions(request);
+
     }
 
 }

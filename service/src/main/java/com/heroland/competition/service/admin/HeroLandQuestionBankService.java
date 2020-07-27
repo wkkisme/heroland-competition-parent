@@ -1,5 +1,6 @@
 package com.heroland.competition.service.admin;
 
+import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankDto;
@@ -7,6 +8,7 @@ import com.heroland.competition.domain.dto.HeroLandQuestionBankListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
 import com.heroland.competition.domain.request.HerolandQuestionBankListForChapterRequest;
 import com.heroland.competition.domain.request.HerolandQuestionBankPageRequest;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * @author smjyouzan
@@ -40,4 +42,7 @@ public interface HeroLandQuestionBankService {
     PageResponse<HeroLandQuestionBankSimpleDto> pageQuery(HerolandQuestionBankPageRequest request);
 
     PageResponse<HeroLandQuestionBankListForTopicDto> getQuestionList(HerolandQuestionBankListForChapterRequest request);
+
+
+    ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request) throws Exception;
 }

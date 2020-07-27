@@ -256,6 +256,10 @@
 <!--            <artifactId>anycommon-logger</artifactId>-->
 <!--        </dependency>-->
 
+        <dependency>
+            <groupId>com.anycommon</groupId>
+            <artifactId>anycommon-poi</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.platform.sso</groupId>

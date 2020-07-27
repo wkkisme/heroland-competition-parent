@@ -189,6 +189,10 @@
             <groupId>com.heroland.competition</groupId>
             <version>1.0.7-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.anycommon</groupId>
+            <artifactId>anycommon-poi</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
