@@ -82,6 +82,16 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
     private Integer resultOpponent;
     private Integer resultInvite;
 
+    private Boolean ifCorrectAnswer;
+
+    public Boolean getIfCorrectAnswer() {
+        return ifCorrectAnswer;
+    }
+
+    public void setIfCorrectAnswer(Boolean ifCorrectAnswer) {
+        this.ifCorrectAnswer = ifCorrectAnswer;
+    }
+
     public Integer getResultOpponent() {
         return resultOpponent;
     }

@@ -1,6 +1,7 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
+import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsTotal;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
@@ -17,15 +18,15 @@ public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionR
 
     List<HeroLandStatisticsTotal> getTotalScore(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailDP> getTotalScoreDetail(HeroLandStatisticsTotalQO qo);
+    List<HeroLandStatisticsDetailAll> getTotalScoreDetail(HeroLandStatisticsTotalQO qo);
 
-    List<HeroLandStatisticsDetailDP> getAnswerRightRate(HeroLandStatisticsAllQO qo);
+    List<HeroLandStatisticsDetailAll> getDetailCount(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO qo);
+    List<HeroLandStatisticsDetailAll> getCompleteRate(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO qo);
+    List<HeroLandStatisticsDetailAll> getWinRate(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO qo);
+    List<HeroLandStatisticsDetailAll> getTotalTime(HeroLandStatisticsAllQO qo);
 
     List<HeroLandCompetitionRecord> selectByTopicIdsAndInviterId(@Param("topicIds") List<String> topicIds,
                                                                  @Param("userId") String userId);

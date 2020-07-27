@@ -10,12 +10,15 @@ import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 统计
@@ -60,23 +63,25 @@ public class StatisticsTask {
         heroLandCompetitionStatisticsService.updateHistoryStatisticsTotalAndDetailByQO(qo);
 
 
-        HeroLandStatisticsAllQO heroLandStatisticsTotalQO = new HeroLandStatisticsAllQO();
-        heroLandStatisticsTotalQO.setHistory(false);
+        HeroLandStatisticsAllQO totalQo = new HeroLandStatisticsAllQO();
+        totalQo.setHistory(false);
 
         /*
          * 同步作业赛总分数 、总平均分、 总场次 total------>
          * 需要group 机构。--》年级----》  班级----》 科目--》用户
          */
-        heroLandStatisticsTotalQO.setGroupByOrgCode(true);
-        heroLandStatisticsTotalQO.setGroupByGradeCode(true);
-        heroLandStatisticsTotalQO.setGroupByClassCode(true);
-        heroLandStatisticsTotalQO.setGroupBySubjectCode(true);
-        heroLandStatisticsTotalQO.setGroupByInviteId(true);
-        heroLandStatisticsTotalQO.setGroupByOpponentId(true);
-        heroLandStatisticsTotalQO.setGroupByType(true);
+        totalQo.setGroupByOrgCode(true);
+        totalQo.setGroupByGradeCode(true);
+        totalQo.setGroupByClassCode(true);
+        totalQo.setGroupBySubjectCode(true);
+        totalQo.setGroupByInviteId(true);
+        totalQo.setGroupByOpponentId(true);
+        totalQo.setGroupByType(true);
 
-        List<HeroLandStatisticsDetailDP> totalSyncTotalScore = heroLandCompetitionRecordService.getTotalScore(heroLandStatisticsTotalQO);
-
+        List<HeroLandStatisticsDetailDP> totalSyncTotalScore = heroLandCompetitionRecordService.getTotalScore(totalQo);
+        if (CollectionUtils.isEmpty(totalSyncTotalScore)){
+            return;
+        }
         Map<String, HeroLandStatisticsDetailDP> mergeMap = Maps.newHashMapWithExpectedSize(totalSyncTotalScore.size());
         for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : totalSyncTotalScore) {
             mergeMap.put(heroLandStatisticsTotalDP.getOrgCode() + heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
@@ -87,7 +92,7 @@ public class StatisticsTask {
          *   4 答对率
          *
          */
-        List<HeroLandStatisticsDetailDP> answerRightRate = heroLandCompetitionRecordService.getAnswerRightRate(heroLandStatisticsTotalQO);
+        List<HeroLandStatisticsDetailDP> answerRightRate = heroLandCompetitionRecordService.getAnswerRightRate(totalQo);
 
         for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : answerRightRate) {
             HeroLandStatisticsDetailDP totalDP = mergeMap.get(heroLandStatisticsTotalDP.getOrgCode() + heroLandStatisticsTotalDP.getUserId());
@@ -99,34 +104,34 @@ public class StatisticsTask {
         /*
          *  3 完成率
          */
-        List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(heroLandStatisticsTotalQO);
+        List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(totalQo);
 
         for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : completeRate) {
-            HeroLandStatisticsDetailDP totalDP = mergeMap.get(heroLandStatisticsTotalDP.getOrgCode() + heroLandStatisticsTotalDP.getUserId());
-            if (totalDP != null) {
-                totalDP.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
+            HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDP.getOrgCode() + heroLandStatisticsTotalDP.getUserId());
+            if (dp != null) {
+                dp.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
             }
         }
 
         /*
          *5 胜率
          */
-        List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(heroLandStatisticsTotalQO);
+        List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
         for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
-            HeroLandStatisticsDetailDP totalDP = mergeMap.get(heroLandStatisticsTotalDp.getOrgCode() + heroLandStatisticsTotalDp.getUserId());
-            if (totalDP != null) {
-                totalDP.setWinRate(heroLandStatisticsTotalDp.getWinRate());
+            HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDp.getOrgCode() + heroLandStatisticsTotalDp.getUserId());
+            if (dp != null) {
+                dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
             }
         }
 
         /*
          * 6 总时长
          */
-        List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(heroLandStatisticsTotalQO);
-        for (HeroLandStatisticsDetailDP herolandstatisticstotaldp : totalTime) {
-            HeroLandStatisticsDetailDP totaldp = mergeMap.get(herolandstatisticstotaldp.getOrgCode() + herolandstatisticstotaldp.getUserId());
-            if (totaldp != null) {
-                totaldp.setTotalTime(herolandstatisticstotaldp.getTotalTime());
+        List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(totalQo);
+        for (HeroLandStatisticsDetailDP holistically : totalTime) {
+            HeroLandStatisticsDetailDP total = mergeMap.get(holistically.getOrgCode() + holistically.getUserId());
+            if (total != null) {
+                total.setTotalTime(holistically.getTotalTime());
             }
         }
 

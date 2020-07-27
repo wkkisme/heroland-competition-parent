@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><link rel=icon href=/favicon.ico><title>英雄</title><script>// let mobileUtil = JSON.parse(sessionStorage.getItem("mobileUtil"))
+    // let rem = 0
+    // if (mobileUtil.isPc) {
+    //   rem = 1920
+    // } else {
+    //   rem = 750;
+    // }
+    //designWidth:设计稿的实际宽度值，需要根据实际设置
+    //maxWidth:制作稿的最大宽度值，需要根据实际设置
+    //这段js的最后面有两个参数记得要设置，一个为设计稿实际宽度，一个为制作稿最大宽度，例如设计稿为750，最大宽度为750，则为(750,750)
+    ; (function (designWidth, maxWidth) {
+      var doc = document,
+        win = window,
+        docEl = doc.documentElement,
+        remStyle = document.createElement("style"),
+        tid;
+
+      function refreshRem() {
+        var width = docEl.getBoundingClientRect().width;
+        maxWidth = maxWidth || 540;
+        width > maxWidth && (width = maxWidth);
+        var rem = width * 100 / (designWidth / 2);
+        remStyle.innerHTML = 'html{font-size:' + rem + 'px;}';
+      }
+
+      if (docEl.firstElementChild) {
+        docEl.firstElementChild.appendChild(remStyle);
+      } else {
+        var wrap = doc.createElement("div");
+        wrap.appendChild(remStyle);
+        doc.write(wrap.innerHTML);
+        wrap = null;
+      }
+      //要等 wiewport 设置好后才能执行 refreshRem，不然 refreshRem 会执行2次；
+      refreshRem();
+
+      win.addEventListener("resize", function () {
+        clearTimeout(tid); //防止执行两次
+        tid = setTimeout(refreshRem, 300);
+      }, false);
+
+      win.addEventListener("pageshow", function (e) {
+        if (e.persisted) { // 浏览器后退的时候重新计算
+          clearTimeout(tid);
+          tid = setTimeout(refreshRem, 300);
+        }
+      }, false);
+
+      if (doc.readyState === "complete") {
+        doc.body.style.fontSize = "16px";
+      } else {
+        doc.addEventListener("DOMContentLoaded", function (e) {
+          doc.body.style.fontSize = "16px";
+        }, false);
+      }
+    })(750, 750);</script><link href=/css/chunk-01051066.7ab16cac.css rel=prefetch><link href=/css/chunk-043cef04.ea5222c5.css rel=prefetch><link href=/css/chunk-04c71a5c.e9d452ee.css rel=prefetch><link href=/css/chunk-06b964c2.2a8736e4.css rel=prefetch><link href=/css/chunk-0b8626b5.5a22b859.css rel=prefetch><link href=/css/chunk-1133625e.f81ab708.css rel=prefetch><link href=/css/chunk-11462961.22582e67.css rel=prefetch><link href=/css/chunk-1be45208.16f853fe.css rel=prefetch><link href=/css/chunk-210d254a.6f4abe5c.css rel=prefetch><link href=/css/chunk-22472c4c.640136aa.css rel=prefetch><link href=/css/chunk-2462fcc9.6bacaad9.css rel=prefetch><link href=/css/chunk-2faa6183.50f9daaa.css rel=prefetch><link href=/css/chunk-36d430c1.051786fc.css rel=prefetch><link href=/css/chunk-3a41614e.ddd3bedd.css rel=prefetch><link href=/css/chunk-49b168a6.7086861d.css rel=prefetch><link href=/css/chunk-4f9aace1.61a961ff.css rel=prefetch><link href=/css/chunk-5c5b0d04.8bd5c5ae.css rel=prefetch><link href=/css/chunk-5c8539f2.b8c70280.css rel=prefetch><link href=/css/chunk-6a90503c.bfad11e2.css rel=prefetch><link href=/css/chunk-75305ded.3855afc3.css rel=prefetch><link href=/css/chunk-9d7718cc.73342a7f.css rel=prefetch><link href=/css/chunk-a9f8a09c.fe84b588.css rel=prefetch><link href=/css/chunk-b6bb6848.e6faee12.css rel=prefetch><link href=/css/chunk-c76154e6.1d975efb.css rel=prefetch><link href=/css/chunk-d5bfad32.d1b5fb0f.css rel=prefetch><link href=/css/chunk-efaaeb44.c2bacb4f.css rel=prefetch><link href=/css/chunk-f72b0df2.5cbe7a47.css rel=prefetch><link href=/js/chunk-01051066.c97fa0d8.js rel=prefetch><link href=/js/chunk-043cef04.d984a4a1.js rel=prefetch><link href=/js/chunk-04c71a5c.f7761a1b.js rel=prefetch><link href=/js/chunk-06b964c2.8ef609d5.js rel=prefetch><link href=/js/chunk-0b8626b5.16b04cf5.js rel=prefetch><link href=/js/chunk-1133625e.3fb21046.js rel=prefetch><link href=/js/chunk-11462961.f3863314.js rel=prefetch><link href=/js/chunk-1be45208.d365cf0a.js rel=prefetch><link href=/js/chunk-210d254a.4973d81a.js rel=prefetch><link href=/js/chunk-22472c4c.22d8abb9.js rel=prefetch><link href=/js/chunk-2462fcc9.03ff0630.js rel=prefetch><link href=/js/chunk-2d0b68f8.84fbe800.js rel=prefetch><link href=/js/chunk-2faa6183.4d1c3775.js rel=prefetch><link href=/js/chunk-36d430c1.9f908f04.js rel=prefetch><link href=/js/chunk-3a41614e.f5a4aec4.js rel=prefetch><link href=/js/chunk-49b168a6.6e8f2685.js rel=prefetch><link href=/js/chunk-4f9aace1.8dcef6d4.js rel=prefetch><link href=/js/chunk-5c5b0d04.0e4d0f65.js rel=prefetch><link href=/js/chunk-5c8539f2.587a5f80.js rel=prefetch><link href=/js/chunk-6a90503c.6d092121.js rel=prefetch><link href=/js/chunk-75305ded.88c9f799.js rel=prefetch><link href=/js/chunk-9d7718cc.92b1d9be.js rel=prefetch><link href=/js/chunk-a9f8a09c.b95ea6b4.js rel=prefetch><link href=/js/chunk-b6bb6848.2baa144a.js rel=prefetch><link href=/js/chunk-c76154e6.5b61e8d9.js rel=prefetch><link href=/js/chunk-d5bfad32.1e58db2f.js rel=prefetch><link href=/js/chunk-efaaeb44.35593455.js rel=prefetch><link href=/js/chunk-f72b0df2.52e0a682.js rel=prefetch><link href=/css/app.5a616c3f.css rel=preload as=style><link href=/css/chunk-vendors.37adcfc0.css rel=preload as=style><link href=/js/app.314602df.js rel=preload as=script><link href=/js/chunk-vendors.90304130.js rel=preload as=script><link href=/css/chunk-vendors.37adcfc0.css rel=stylesheet><link href=/css/app.5a616c3f.css rel=stylesheet></head><body><noscript><strong>We're sorry but vueapp doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id=app></div><script src=/js/chunk-vendors.90304130.js></script><script src=/js/app.314602df.js></script></body></html>

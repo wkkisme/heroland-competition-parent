@@ -8,6 +8,10 @@
                     ofType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail"/>
     </resultMap>
 
+    <resultMap id="StatisticsMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll" extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+        <result column="right_count" property="rightCount"/>
+
+    </resultMap>
     <select id="selectCompetitionRecordsAndQuestions"
             resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
 
@@ -46,8 +50,7 @@
 
     </select>
 
-    <select id="getTotalScore"
-            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+    <select id="getTotalScore" resultMap="StatisticsMap">
 
 
         select
@@ -74,6 +77,11 @@
             ,invite_id
         </if>
 
+        <if test="groupBySubjectCode == true">
+            ,subject_code
+        </if>
+
+
         union all
 
         select sum(opponent_score) total_score , opponent_id user_id ,topic_type
@@ -96,6 +104,9 @@
         <if test="groupByOpponentId == true">
             ,opponent_id
         </if>
+     <if test="groupBySubjectCode == true">
+            ,subject_code
+        </if>
 
 
         ) a
@@ -104,8 +115,7 @@
     </select>
 
 
-    <select id="getTotalScoreDetail"
-            resultMap="com.heroland.competition.dal.mapper.HeroLandStatisticsTotalMapper.BaseResultMap">
+    <select id="getTotalScoreDetail" resultMap="StatisticsMap">
 
 
         select
@@ -139,7 +149,19 @@
         GROUP BY user_id
 
     </select>
-    <select id="selectByTopicIdsAndInviterId" resultType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
+    <select id="getDetailCount" resultMap="StatisticsMap">
+
+        select count(*) right_count,user_id ,grade_code ,class_code,topic_id
+        from heroland_question_record_detail
+        where is_deleted =0
+        <if test="ifCorrectAnswer == true">
+            and is_correct_answer = 1
+        </if>
+        group user_id,subject_code
+
+    </select>
+
+    <select id="selectByTopicIdsAndInviterId" resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
         where is_deleted = 0
@@ -150,11 +172,15 @@
         and invite_id = #{userId}
     </select>
 
-    <select id="getAnswerRightRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP">
-    <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
+    <select id="getCompleteRate" resultMap="StatisticsMap">
+
+    </select>
+
+    <select id="getWinRate" resultMap="StatisticsMap">
+        <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
         select
 
-         invite_id user_id ,topic_type
+        invite_id user_id ,topic_type
         ,class_code ,grade_code ,org_code ,subject_code
         ,count(*) right_count
 
@@ -170,7 +196,7 @@
             and result =#{resultInvite}
 
         </if>
-        group by invite_id,topic_type
+        group by invite_id,topic_type,subject_code
 
 
         union ALL
@@ -195,11 +221,16 @@
 
         </if>
 
-        group by opponent_id,topic_type
+        group by opponent_id,topic_type,subject_code
+    </select>
+
+    <select id="getTotalTime" resultMap="StatisticsMap">
+
+
+        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time from heroland_question_record_detail
+
+        GROUP BY user_id ,subject_code
 
 
     </select>
-    <select id="getCompleteRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
-    <select id="getWinRate" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
-    <select id="getTotalTime" resultType="com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP"></select>
 </mapper>

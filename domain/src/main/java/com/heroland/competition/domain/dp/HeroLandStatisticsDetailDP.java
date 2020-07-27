@@ -1,10 +1,16 @@
 package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
+import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+
+import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsDetail")
 public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
@@ -93,6 +99,35 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     private Long rank;
 
     private Long rightCount;
+
+    /**
+     * 班级排名
+     */
+    private Long classRank;
+
+    public HeroLandStatisticsDetailDP addDetailCheck(){
+        AssertUtils.notBlank(userId);
+        AssertUtils.notBlank(orgCode);
+        this.beforeInsert();
+
+            try {
+                this.beforeInsert();
+                this.setDetailId(TinyId.nextId("statistics").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.setDetailId(IDGenerateUtils.getIdByRandom(DEFAULT)+"");
+            }
+
+        return this;
+    }
+
+    public Long getClassRank() {
+        return classRank;
+    }
+
+    public void setClassRank(Long classRank) {
+        this.classRank = classRank;
+    }
 
     public Long getRightCount() {
         return rightCount;

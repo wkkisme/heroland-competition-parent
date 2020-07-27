@@ -26,6 +26,39 @@
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>
+        <if test="gradeCode != null">
+            and grade_code = #{gradeCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="classCode != null">
+            and class_code = #{classCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="orgCode != null">
+            and org_code = #{orgCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="type != null">
+            and type = #{type}
+        </if>
+
+         <if test="startTime != null">
+            and gmt_create >= #{startTime}
+        </if>
+
+        <if test="endTime != null">
+            and gmt_create <![CDATA[ <= ]]> #{endTime}
+
+        </if>
+        <if test="userIds != null and userIds.size() > 0">
+            user_id in
+            <foreach collection="userIds" open="(" close=")" separator="," item="item">
+                #{item.userId}
+            </foreach>
+
+        </if>
+
+        group by user_id
 
         ORDER BY ${orderField}
 
@@ -38,7 +71,7 @@
 
     </select>
 
-    <select id="countStatisticsByRank" resultType="Long">
+    <select id="countStatisticsByRank" resultType="java.lang.Long">
         SELECT
             count(*)
         FROM heroland_statistics_detail
@@ -52,6 +85,40 @@
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>
+        <if test="gradeCode != null">
+            and grade_code = #{gradeCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="orgCode != null">
+            and org_code = #{orgCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="classCode != null">
+            and class_code = #{classCode,jdbcType=VARCHAR}
+        </if>
+
+        <if test="startTime != null">
+            and gmt_create >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            and gmt_create <![CDATA[ <= ]]> #{endTime}
+
+        </if>
+
+        <if test="userIds != null and userIds.size() > 0">
+            user_id in
+            <foreach collection="userIds" open="(" close=")" separator="," item="item">
+                #{item.userId}
+            </foreach>
+
+        </if>
+
+        <if test="type != null">
+            and type = #{type}
+        </if>
+
+        group by user_id
+
 
 
     </select>

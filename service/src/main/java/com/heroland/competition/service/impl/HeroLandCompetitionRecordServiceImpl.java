@@ -7,8 +7,11 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
+import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
+import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
+import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
@@ -16,12 +19,17 @@ import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,6 +44,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private HeroLandCompetitionRecordExtMapper heroLandCompetitionRecordExtMapper;
 
     @Resource
+    private HerolandTopicQuestionExtMapper herolandTopicQuestionExtMapper;
+
+    @Resource
     private RedisService redisService;
 
     @Override
@@ -44,7 +55,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         String recordId;
         try {
             dp.addSynchronizeCheck();
-            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp,"24h");
+            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
             if (!aBoolean) {
                 HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
                 recordId = heroLandCompetitionRecord.getRecordId();
@@ -66,7 +77,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
         ResponseBody<Boolean> result = new ResponseBody<>();
         // 更新缓存
-        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp,"24h");
+        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
         } catch (Exception e) {
@@ -138,53 +149,26 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     public List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo) {
 
         try {
-            
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScore(qo),HeroLandStatisticsDetailDP.class);
+
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalScore(qo), HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
         }
         return null;
     }
-
 
 
     @Override
     public List<HeroLandStatisticsDetailDP> getAnswerRightRate(HeroLandStatisticsAllQO qo) {
 
         try {
-
             /*
-             * 再查出总的
+                查出每个人答题正确数
              */
-            List<HeroLandStatisticsDetailDP> totalCount = heroLandCompetitionRecordExtMapper.getAnswerRightRate(qo);
-
-            /*
-             * 先查出正确的
-             */
-            qo.setResultInvite(0);
-            qo.setResultOpponent(1);
-            List<HeroLandStatisticsDetailDP> rightCount = heroLandCompetitionRecordExtMapper.getAnswerRightRate(qo);
-
-
-            //  计算胜率，正确的/总答题数
-            for (HeroLandStatisticsDetailDP heroLandStatisticsDetailDp : rightCount) {
-                for (HeroLandStatisticsDetailDP landStatisticsDetailDp : totalCount) {
-
-                    if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())){
-                        landStatisticsDetailDp.setWinRate((double) (heroLandStatisticsDetailDp.getRightCount() / landStatisticsDetailDp.getRightCount()));
-                    }
-                }
-            }
-
-            // 没有的为零
-            for (HeroLandStatisticsDetailDP landStatisticsDetailDp : totalCount) {
-                if (landStatisticsDetailDp.getWinRate() == null) {
-                    landStatisticsDetailDp.setWinRate(0.0);
-                }
-            }
-            return BeanUtil.queryListConversion(totalCount,HeroLandStatisticsDetailDP.class);
+            qo.setIfCorrectAnswer(true);
+            return getHeroLandStatisticsDetail(qo);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
         }
         return null;
     }
@@ -192,32 +176,86 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     @Override
     public List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO qo) {
         try {
-
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getCompleteRate(qo),HeroLandStatisticsDetailDP.class);
+            return getHeroLandStatisticsDetail(qo);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
         }
         return null;
+    }
+
+    @NotNull
+    private List<HeroLandStatisticsDetailDP> getHeroLandStatisticsDetail(HeroLandStatisticsAllQO qo) throws Exception {
+        List<HeroLandStatisticsDetailDP> dps = BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getDetailCount(qo), HeroLandStatisticsDetailDP.class);
+            /*
+                查出所有比赛里有效题
+             */
+        Long totalCount = herolandTopicQuestionExtMapper.countAll();
+
+             /*
+                计算完成率
+             */
+        if (!CollectionUtils.isEmpty(dps) && totalCount > 0) {
+            dps.forEach(v -> {
+                if (v.getRightCount() == null) {
+                    v.setRightCount(0L);
+                }
+                v.setAnswerRightRate((double) (v.getRightCount() / totalCount));
+            });
+        }
+        return dps;
     }
 
     @Override
     public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO qo) {
         try {
 
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getWinRate(qo),HeroLandStatisticsDetailDP.class);
+
+            /*
+             * 再查出总的
+             */
+            List<HeroLandStatisticsDetailAll> totalCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
+
+            /*
+             * 先查出正确的
+             */
+            qo.setResultInvite(0);
+            qo.setResultOpponent(1);
+            List<HeroLandStatisticsDetailAll> rightCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
+
+
+            //  计算胜率，正确的/总答题数
+            for (HeroLandStatisticsDetailAll heroLandStatisticsDetailDp : rightCount) {
+                for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
+
+                    if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
+                        landStatisticsDetailDp.setWinRate((double) (heroLandStatisticsDetailDp.getRightCount() / landStatisticsDetailDp.getRightCount()));
+                    }
+                }
+            }
+
+            // 没有的为零
+            for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
+                if (landStatisticsDetailDp.getWinRate() == null) {
+                    landStatisticsDetailDp.setWinRate(0.0);
+                }
+            }
+            return BeanUtil.queryListConversion(totalCount, HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
         }
         return null;
     }
 
     @Override
     public List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO qo) {
-        try {
 
-            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalTime(qo),HeroLandStatisticsDetailDP.class);
+
+        try {
+            // 每个科目下的总时长
+
+            return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalTime(qo), HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
         }
         return null;
     }

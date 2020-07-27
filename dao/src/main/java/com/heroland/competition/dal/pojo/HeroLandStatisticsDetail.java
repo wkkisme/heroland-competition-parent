@@ -3,7 +3,6 @@ package com.heroland.competition.dal.pojo;
 import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsDetail")
@@ -91,6 +90,30 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="totalGames总场次")
     private Integer totalGames;
+
+    /**
+     * 班级code
+     */
+    @ApiModelProperty(value="classCode班级code")
+    private String classCode;
+
+    /**
+     * 年级code
+     */
+    @ApiModelProperty(value="gradeCode年级code")
+    private String gradeCode;
+
+    /**
+     * 姓名
+     */
+    @ApiModelProperty(value="userName姓名")
+    private String userName;
+
+    /**
+     * 比赛类型
+     */
+    @ApiModelProperty(value="type比赛类型")
+    private Integer type;
 
     /**
      * heroland_statistics_detail
@@ -319,5 +342,69 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      */
     public void setTotalGames(Integer totalGames) {
         this.totalGames = totalGames;
+    }
+
+    /**
+     * 班级code
+     * @return class_code 班级code
+     */
+    public String getClassCode() {
+        return classCode;
+    }
+
+    /**
+     * 班级code
+     * @param classCode 班级code
+     */
+    public void setClassCode(String classCode) {
+        this.classCode = classCode == null ? null : classCode.trim();
+    }
+
+    /**
+     * 年级code
+     * @return grade_code 年级code
+     */
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    /**
+     * 年级code
+     * @param gradeCode 年级code
+     */
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode == null ? null : gradeCode.trim();
+    }
+
+    /**
+     * 姓名
+     * @return user_name 姓名
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * 姓名
+     * @param userName 姓名
+     */
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
+
+    /**
+     * 比赛类型
+     * @return type 比赛类型
+     */
+    public Integer getType() {
+        return type;
+    }
+
+    /**
+     * 比赛类型
+     * @param type 比赛类型
+     */
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

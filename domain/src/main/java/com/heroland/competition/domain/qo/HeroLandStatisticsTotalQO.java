@@ -2,11 +2,15 @@ package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
+import com.heroland.competition.common.enums.GroupByEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
+import com.heroland.competition.common.utils.AssertUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
 public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
@@ -42,7 +46,7 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     /**
      * 
      */
-    @ApiModelProperty(value="classCode班级code")
+    @ApiModelProperty(value="classCode班级code,除了同步作业赛不需要传，其余的必传")
     private String classCode;
 
     /**
@@ -108,10 +112,69 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     private String subjectCode;
 
 
-    private String groupBy;
 
     private String rankField;
 
+    /**
+     * 参数为：
+     *      TOTAL_SCORE_DESC( "总分数倒序"),
+     *     TOTAL_SCORE_ASC( "总分数正序"),
+     *     COMPLETE_RATE_DESC( "完成率倒序"),
+     *     COMPLETE_RATE_ASC("完成率正序"),
+     *     ANSWERRIGHT_RATE_DESC("答对率倒序"),
+     *     ANSWERRIGHT_RATE_ASC("答对率正序"),
+     *     WIN_RATE_DESC("胜率倒序"),
+     *     WIN_RATE_ASC("胜率正序"),
+     *     AVERAGE_SCORE_DESC("平均分倒序"),
+     *     AVERAGES_CORE_ASC("平均分正序");
+     */
+    private OrderByEnum orderByField;
+
+
+    private String orderField;
+
+    /**
+     * 开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    private Date endTime;
+
+
+    private List<String> userIds;
+
+    public void checkType(){
+
+        AssertUtils.assertThat(type== null);
+    }
+
+
+    public List<String> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds = userIds;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public String getSubjectCode() {
         return subjectCode;
@@ -127,14 +190,6 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     public void setRankField(String rankField) {
         this.rankField = rankField;
-    }
-
-    public String getGroupBy() {
-        return groupBy;
-    }
-
-    public void setGroupBy(String groupBy) {
-        this.groupBy = groupBy;
     }
 
     public Boolean getHistory() {
@@ -153,22 +208,6 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
         this.type = type;
     }
 
-    /**
-     * 参数为：
-     *      TOTAL_SCORE_DESC( "总分数倒序"),
-     *     TOTAL_SCORE_ASC( "总分数正序"),
-     *     COMPLETE_RATE_DESC( "完成率倒序"),
-     *     COMPLETE_RATE_ASC("完成率正序"),
-     *     ANSWERRIGHT_RATE_DESC("答对率倒序"),
-     *     ANSWERRIGHT_RATE_ASC("答对率正序"),
-     *     WIN_RATE_DESC("胜率倒序"),
-     *     WIN_RATE_ASC("胜率正序"),
-     *     AVERAGE_SCORE_DESC("平均分倒序"),
-     *     AVERAGES_CORE_ASC("平均分正序");
-     */
-    private OrderByEnum orderByField;
-
-    private String orderField;
 
     public String getOrderField() {
         return orderField;

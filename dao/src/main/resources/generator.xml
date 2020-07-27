@@ -82,10 +82,10 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
-<!--       <table tableName="heroland_statistics_total" domainObjectName="HeroLandStatisticsTotal" mapperName="HeroLandStatisticsTotalMapper">-->
-<!--            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
-<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
-<!--        </table>-->
+       <table tableName="heroland_statistics_detail" domainObjectName="HeroLandStatisticsDetail" mapperName="HeroLandStatisticsDetailMapper">
+            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
 
 
 
@@ -101,10 +101,10 @@
             <!--<generatedKey column="question_id" sqlStatement="MySql" identity="true"/>-->
         <!--</table>-->
 
-        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="heroland_question_record_detail" domainObjectName="HeroLandQuestionRecordDetail" mapperName="HeroLandQuestionRecordDetailMapper">-->
+<!--            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
         <!--<table tableName="heroland_topic_group" domainObjectName="HeroLandTopicGroup" mapperName="HeroLandTopicGroupMapper">-->
             <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
             <!--<generatedKey column="topic_id" sqlStatement="MySql" identity="true"/>-->

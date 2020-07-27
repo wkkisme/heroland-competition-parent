@@ -22,6 +22,10 @@
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="history" jdbcType="BIT" property="history" />
     <result column="total_games" jdbcType="INTEGER" property="totalGames" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -84,7 +88,8 @@
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_id, subject_code, 
     subject_name, total_score, complete_rate, answer_right_rate, win_rate, total_time, 
-    average_score, total_id, detail_id, org_code, history, total_games
+    average_score, total_id, detail_id, org_code, history, total_games, class_code, grade_code, 
+    user_name, type
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailExample" resultMap="BaseResultMap">
     select
@@ -126,14 +131,16 @@
       complete_rate, answer_right_rate, win_rate, 
       total_time, average_score, total_id, 
       detail_id, org_code, history, 
-      total_games)
+      total_games, class_code, grade_code, 
+      user_name, type)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userId,jdbcType=VARCHAR}, 
       #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{totalScore,jdbcType=INTEGER}, 
       #{completeRate,jdbcType=DOUBLE}, #{answerRightRate,jdbcType=DOUBLE}, #{winRate,jdbcType=DOUBLE}, 
       #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE}, #{totalId,jdbcType=VARCHAR}, 
       #{detailId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{history,jdbcType=BIT}, 
-      #{totalGames,jdbcType=INTEGER})
+      #{totalGames,jdbcType=INTEGER}, #{classCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -198,6 +205,18 @@
       <if test="totalGames != null">
         total_games,
       </if>
+      <if test="classCode != null">
+        class_code,
+      </if>
+      <if test="gradeCode != null">
+        grade_code,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -256,6 +275,18 @@
       </if>
       <if test="totalGames != null">
         #{totalGames,jdbcType=INTEGER},
+      </if>
+      <if test="classCode != null">
+        #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -328,6 +359,18 @@
       <if test="record.totalGames != null">
         total_games = #{record.totalGames,jdbcType=INTEGER},
       </if>
+      <if test="record.classCode != null">
+        class_code = #{record.classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gradeCode != null">
+        grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        user_name = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -354,7 +397,11 @@
       detail_id = #{record.detailId,jdbcType=VARCHAR},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
       history = #{record.history,jdbcType=BIT},
-      total_games = #{record.totalGames,jdbcType=INTEGER}
+      total_games = #{record.totalGames,jdbcType=INTEGER},
+      class_code = #{record.classCode,jdbcType=VARCHAR},
+      grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      user_name = #{record.userName,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -419,6 +466,18 @@
       <if test="totalGames != null">
         total_games = #{totalGames,jdbcType=INTEGER},
       </if>
+      <if test="classCode != null">
+        class_code = #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -442,7 +501,11 @@
       detail_id = #{detailId,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
       history = #{history,jdbcType=BIT},
-      total_games = #{totalGames,jdbcType=INTEGER}
+      total_games = #{totalGames,jdbcType=INTEGER},
+      class_code = #{classCode,jdbcType=VARCHAR},
+      grade_code = #{gradeCode,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

@@ -89,27 +89,27 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         return result;
     }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getCompetitionsTatal(HeroLandStatisticsTotalQO qo) {
-        if (qo.getOrderByField() != null) {
-            qo.setOrderField(qo.getOrderByField().getOrderByFiled());
-            qo.setRankField(qo.getOrderByField().getFiled());
-        } else {
-            qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
-            qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
-        }
-
-        try {
-            return ResponseBodyWrapper
-                    .successListWrapper(heroLandStatisticsTotalExtMapper.selectStatisticsByRank(qo),
-                            heroLandStatisticsTotalExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsTotalDP.class);
-        } catch (Exception e) {
-            log.error("", e);
-            ResponseBodyWrapper.failSysException();
-        }
-        return null;
-    }
+//
+//    @Override
+//    public ResponseBody<List<HeroLandStatisticsTotalDP>> getCompetitionsTatal(HeroLandStatisticsTotalQO qo) {
+//        if (qo.getOrderByField() != null) {
+//            qo.setOrderField(qo.getOrderByField().getOrderByFiled());
+//            qo.setRankField(qo.getOrderByField().getFiled());
+//        } else {
+//            qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
+//            qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
+//        }
+//
+//        try {
+//            return ResponseBodyWrapper
+//                    .successListWrapper(heroLandStatisticsTotalExtMapper.selectStatisticsByRank(qo),
+//                            heroLandStatisticsTotalExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsTotalDP.class);
+//        } catch (Exception e) {
+//            log.error("", e);
+//            ResponseBodyWrapper.failSysException();
+//        }
+//        return null;
+//    }
 
     @Override
     public ResponseBody<Boolean> saveStatisticsTotalAndDetail(List<HeroLandStatisticsTotalDP> totalDPS, List<HeroLandStatisticsDetailDP> detailDPS) {
@@ -122,6 +122,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (!CollectionUtils.isEmpty(detailDPS)) {
             for (HeroLandStatisticsDetailDP detail : detailDPS) {
                 try {
+                    detail.addDetailCheck();
                     heroLandStatisticsDetailExtMapper.insert(BeanUtil.insertConversion(detail, new HeroLandStatisticsDetail()));
                 } catch (Exception e) {
                     log.error("", e);
@@ -199,23 +200,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         return new ResponseBody<>();
     }
 
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getSyncCompetitions(HeroLandStatisticsTotalQO qo) {
-        qo.setType(CompetitionEnum.SYNC.getType());
-        qo.setHistory(false);
-        return getCompetitionsTatal(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        AssertUtils.notBlank(qo.getUserId());
-        qo.setHistory(false);
-        qo.setType(CompetitionEnum.SYNC.getType());
-        return getCompetitionsDetail(qo);
-    }
 
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
+        qo.checkType();
         if (qo.getOrderByField() != null) {
             qo.setOrderField(qo.getOrderByField().getOrderByFiled());
             qo.setRankField(qo.getOrderByField().getFiled());
@@ -224,10 +212,31 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
 
+        ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
+                .successListWrapper(heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo),
+                        heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
+        if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
+            // 同步作业赛时不需要班级排名
+            return result;
+        }
         try {
-            return ResponseBodyWrapper
-                    .successListWrapper(heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo),
-                            heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
+
+            AssertUtils.notBlank(qo.getClassCode());
+            List<String> userIds = result.getData().stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList());
+            qo.setUserIds(userIds);
+            List<HeroLandStatisticsDetailAll> classRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+
+
+            result.getData().forEach(v->{
+                classRank.forEach(s->{
+                    if (v.getUserId().equals(s.getUserId())){
+                        v.setClassRank(s.getClassRank());
+                    }
+
+                });
+            });
+
+            return result;
         } catch (Exception e) {
             log.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -235,66 +244,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         return null;
     }
 
-    @Override
-    public ResponseBody<List<HeroLandStatisticsDetailDP>> getWinterVacationCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        AssertUtils.notBlank(qo.getUserId());
-        qo.setHistory(false);
-        qo.setType(CompetitionEnum.WINTER.getType());
-        return getCompetitionsDetail(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getWinterVacationCompetitions(HeroLandStatisticsTotalQO qo) {
-        qo.setType(CompetitionEnum.WINTER.getType());
-        qo.setHistory(false);
-        return getCompetitionsTatal(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsDetailDP>> getSummerVacationCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        AssertUtils.notBlank(qo.getUserId());
-        qo.setHistory(false);
-        qo.setType(CompetitionEnum.SUMMER.getType());
-        return getCompetitionsDetail(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getSummerVacationCompetitions(HeroLandStatisticsTotalQO qo) {
-        qo.setType(CompetitionEnum.SUMMER.getType());
-        qo.setHistory(false);
-        return getCompetitionsTatal(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsDetailDP>> getWorldCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        AssertUtils.notBlank(qo.getUserId());
-        qo.setHistory(false);
-        qo.setType(CompetitionEnum.WORLD.getType());
-        return getCompetitionsDetail(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getWorldCompetitions(HeroLandStatisticsTotalQO qo) {
-        qo.setType(CompetitionEnum.WORLD.getType());
-        qo.setHistory(false);
-        return getCompetitionsTatal(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsTotalDP>> getSchoolsCompetitions(HeroLandStatisticsTotalQO qo) {
-        qo.setType(CompetitionEnum.SCHOOL.getType());
-        qo.setHistory(false);
-        return getCompetitionsTatal(qo);
-    }
-
-    @Override
-    public ResponseBody<List<HeroLandStatisticsDetailDP>> getSchoolCompetitions(HeroLandStatisticsTotalQO qo) {
-        AssertUtils.notBlank(qo.getUserId());
-        AssertUtils.notBlank(qo.getUserId());
-        qo.setHistory(false);
-        qo.setType(CompetitionEnum.SCHOOL.getType());
-        return getCompetitionsDetail(qo);
-    }
 
     @Override
     public ResponseBody<List<CompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(CourseFinishStatisticQO qo) {
