@@ -230,7 +230,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             result.getData().forEach(v->{
                 classRank.forEach(s->{
                     if (v.getUserId().equals(s.getUserId())){
-                        v.setClassRank(s.getClassRank());
+                        v.setClassRank(s.getRank());
                     }
 
                 });
