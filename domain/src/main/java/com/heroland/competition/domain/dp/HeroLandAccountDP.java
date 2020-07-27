@@ -56,11 +56,23 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     @ApiModelProperty(value = "endTime结束时间")
     private Date endTime;
 
+    /**
+     * 等级code
+     */
+    private String levelCode;
     public HeroLandAccountDP queryCheck() {
         if (StringUtils.isBlank(this.userId)) {
             ResponseBodyWrapper.failParamException();
         }
         return this;
+    }
+
+    public String getLevelCode() {
+        return levelCode;
+    }
+
+    public void setLevelCode(String levelCode) {
+        this.levelCode = levelCode;
     }
 
     public Date getStartTime() {
