@@ -22,6 +22,11 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     private Long questionId;
 
     /**
+     * 题组id
+     */
+    private Long topicId;
+
+    /**
      * 题组名称
      */
     private String topicName;

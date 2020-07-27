@@ -331,7 +331,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     dp.setScore(heroLandCompetitionRecord.getInviteScore());
                 }
             }
-
+            dp.setTopicId(statisticDto.getId());
             dp.setTopicName(statisticDto.getTopicName());
             dp.setDiff(statisticDto.getDiff());
             dp.setLevelCode(statisticDto.getLevelCode());
