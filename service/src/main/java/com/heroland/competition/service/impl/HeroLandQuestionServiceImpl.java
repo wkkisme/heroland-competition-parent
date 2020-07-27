@@ -209,7 +209,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             });
         });
         List<HerolandTopicQuestion> uniq = list.stream().distinct().collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(uniq)){
+        if (!CollectionUtils.isEmpty(uniq)){
             return herolandTopicQuestionMapper.saveBatch(uniq) > 0;
         }
         return false;
