@@ -209,7 +209,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             });
         });
         List<HerolandTopicQuestion> uniq = list.stream().distinct().collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(uniq)){
+        if (!CollectionUtils.isEmpty(uniq)){
             return herolandTopicQuestionMapper.saveBatch(uniq) > 0;
         }
         return false;
@@ -295,7 +295,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         classKeys.addAll(gradeKeys);
         classKeys.addAll(orgKeys);
         classKeys.addAll(courseKeys);
-        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(courseKeys);
+        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(classKeys);
         Map<String, List<HerolandBasicDataDP>> keyMap = keys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
         list.stream().forEach(e -> {
             e.setCourseName(keyMap.containsKey(e.getCourseCode()) ? keyMap.get(e.getCourseCode()).get(0).getDictValue() : "");

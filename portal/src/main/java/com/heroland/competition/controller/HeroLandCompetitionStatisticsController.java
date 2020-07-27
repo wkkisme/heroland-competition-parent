@@ -38,13 +38,13 @@ public class HeroLandCompetitionStatisticsController {
 
 
     /**
-     * 查询同步作业赛列表统计列表,
+     * 查询比赛列表统计列表,根据传不同的type来区分，切type不能为空
      * 1 查询个人排行榜时或者页面上面的统计信息可根据传userId等信息过来查询
      *
      * @param qo qo
      * @return HeroLandStatisticsTotalDPs
      */
-    @PostMapping("/getSyncCompetitions")
+    @PostMapping("/getStatisticsCompetitions")
     ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitions(@RequestBody HeroLandStatisticsTotalQO qo) {
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
