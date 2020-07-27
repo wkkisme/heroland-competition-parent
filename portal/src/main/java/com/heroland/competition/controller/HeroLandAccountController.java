@@ -63,9 +63,12 @@ SUPREME_HERO 至尊英雄
              */
             if (data.getLevelScore() < courageousHero) {
                 data.setLevelCode("ADVERSITY_HERO");
+                data.setLevelName("逆境英雄");
             } else if (data.getLevelScore() > courageousHero) {
                 data.setLevelCode("SUPREME_HERO");
+                data.setLevelName("至尊英雄");
             } else {
+                data.setLevelName("奋勇英雄");
                 data.setLevelCode("ADVERSITY_HERO");
             }
         }
