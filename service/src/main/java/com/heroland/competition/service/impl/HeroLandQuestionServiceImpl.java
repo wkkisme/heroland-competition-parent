@@ -342,6 +342,10 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             list.add(dto);
         });
         getAdminData(list);
+        pageResult.setItems(list);
+        pageResult.setPageSize(topicGroupsPageResult.getPageSize());
+        pageResult.setPage(topicGroupsPageResult.getPageNum());
+        pageResult.setTotal((int) topicGroupsPageResult.getTotal());
         return pageResult;
     }
 
