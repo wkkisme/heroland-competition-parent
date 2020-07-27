@@ -23,6 +23,10 @@
           and  user_id = #{userId}
         </if>
 
+       <if test="userName != null">
+          and  user_name like  concat ( #{userName},'%')
+        </if>
+
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>
@@ -51,16 +55,16 @@
 
         </if>
         <if test="userIds != null and userIds.size() > 0">
-            user_id in
+           and user_id in
             <foreach collection="userIds" open="(" close=")" separator="," item="item">
-                #{item.userId}
+                #{item}
             </foreach>
 
         </if>
 
-        group by user_id
+<!--        group by user_id-->
 
-        ORDER BY ${orderField}
+        ORDER BY  ${orderField}
 
 
         <if test="startRow != null and startRow != -1 and pageSize != null">
@@ -72,7 +76,7 @@
     </select>
 
     <select id="countStatisticsByRank" resultType="java.lang.Long">
-        SELECT
+       select count(*) from( SELECT
             count(*)
         FROM heroland_statistics_detail
 
@@ -105,11 +109,16 @@
 
         </if>
 
+        <if test="userName != null">
+            and  user_name like  concat ( #{userName},'%')
+        </if>
+
         <if test="userIds != null and userIds.size() > 0">
-            user_id in
+            and user_id in
             <foreach collection="userIds" open="(" close=")" separator="," item="item">
-                #{item.userId}
+                #{item}
             </foreach>
+
 
         </if>
 
@@ -117,9 +126,8 @@
             and type = #{type}
         </if>
 
-        group by user_id
-
-
+<!--        group by user_id-->
+        ) a
 
     </select>
 

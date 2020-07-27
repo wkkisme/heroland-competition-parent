@@ -46,6 +46,7 @@
         <redis.version>2.3.1.RELEASE</redis.version>
         <lombok.version>1.16.16</lombok.version>
         <cache.version>1.0.1-SNAPSHOT</cache.version>
+        <poi.version>1.0.0-SNAPSHOT</poi.version>
         <!--<ZHConverter.version>1.0.0</ZHConverter.version>-->
     </properties>
 
@@ -71,7 +72,11 @@
                 <!--<artifactId>ZHConverter</artifactId>-->
                 <!--<version>1.0.0</version>-->
             <!--</dependency>-->
-
+            <dependency>
+                <groupId>com.anycommon</groupId>
+                <artifactId>anycommon-poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.anycommon</groupId>
