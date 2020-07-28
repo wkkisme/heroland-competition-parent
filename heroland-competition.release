@@ -4,4 +4,4 @@
 code.language=oracle-jdk1.8
 
 # 构建打包使用的打包文件
-build.output=portal/target/bqhealth-cloud-physical/bqhealth-cloud
+build.output=portal/target/heroland-competition-physical/heroland-competition

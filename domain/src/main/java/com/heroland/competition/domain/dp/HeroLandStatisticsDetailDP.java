@@ -105,6 +105,49 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
      */
     private Long classRank;
 
+
+    /**
+     * 总场次
+     */
+    @ApiModelProperty(value="totalGames总场次")
+    private Integer totalGames;
+
+    /**
+     * 班级code
+     */
+    @ApiModelProperty(value="classCode班级code")
+    private String classCode;
+
+    /**
+     * 年级code
+     */
+    @ApiModelProperty(value="gradeCode年级code")
+    private String gradeCode;
+
+    /**
+     * 姓名
+     */
+    @ApiModelProperty(value="userName姓名")
+    private String userName;
+
+    /**
+     * 比赛类型
+     */
+    @ApiModelProperty(value="type比赛类型")
+    private Integer type;
+    /**
+     * 年级名称
+     */
+    @ApiModelProperty(value="gradeName年级名称")
+    private String gradeName;
+
+    /**
+     * 班级名称
+     */
+    @ApiModelProperty(value="className班级名称")
+    private String className;
+
+
     public HeroLandStatisticsDetailDP addDetailCheck(){
         AssertUtils.notBlank(userId);
         AssertUtils.notBlank(orgCode);
@@ -119,6 +162,62 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
             }
 
         return this;
+    }
+
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public Integer getTotalGames() {
+        return totalGames;
+    }
+
+    public void setTotalGames(Integer totalGames) {
+        this.totalGames = totalGames;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Long getClassRank() {

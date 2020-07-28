@@ -26,6 +26,8 @@
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="grade_name" jdbcType="VARCHAR" property="gradeName" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -89,7 +91,7 @@
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_id, subject_code, 
     subject_name, total_score, complete_rate, answer_right_rate, win_rate, total_time, 
     average_score, total_id, detail_id, org_code, history, total_games, class_code, grade_code, 
-    user_name, type
+    user_name, type, grade_name, class_name
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailExample" resultMap="BaseResultMap">
     select
@@ -132,7 +134,8 @@
       total_time, average_score, total_id, 
       detail_id, org_code, history, 
       total_games, class_code, grade_code, 
-      user_name, type)
+      user_name, type, grade_name, 
+      class_name)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userId,jdbcType=VARCHAR}, 
       #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{totalScore,jdbcType=INTEGER}, 
@@ -140,7 +143,8 @@
       #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE}, #{totalId,jdbcType=VARCHAR}, 
       #{detailId,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{history,jdbcType=BIT}, 
       #{totalGames,jdbcType=INTEGER}, #{classCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
-      #{userName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+      #{userName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{gradeName,jdbcType=VARCHAR}, 
+      #{className,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandStatisticsDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -217,6 +221,12 @@
       <if test="type != null">
         type,
       </if>
+      <if test="gradeName != null">
+        grade_name,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -287,6 +297,12 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="gradeName != null">
+        #{gradeName,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -371,6 +387,12 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
+      <if test="record.gradeName != null">
+        grade_name = #{record.gradeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.className != null">
+        class_name = #{record.className,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -401,7 +423,9 @@
       class_code = #{record.classCode,jdbcType=VARCHAR},
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=INTEGER}
+      type = #{record.type,jdbcType=INTEGER},
+      grade_name = #{record.gradeName,jdbcType=VARCHAR},
+      class_name = #{record.className,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -478,6 +502,12 @@
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
+      <if test="gradeName != null">
+        grade_name = #{gradeName,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -505,7 +535,9 @@
       class_code = #{classCode,jdbcType=VARCHAR},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       user_name = #{userName,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER}
+      type = #{type,jdbcType=INTEGER},
+      grade_name = #{gradeName,jdbcType=VARCHAR},
+      class_name = #{className,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

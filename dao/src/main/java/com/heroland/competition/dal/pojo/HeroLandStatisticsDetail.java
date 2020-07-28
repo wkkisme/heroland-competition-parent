@@ -116,6 +116,18 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
     private Integer type;
 
     /**
+     * 年级名称
+     */
+    @ApiModelProperty(value="gradeName年级名称")
+    private String gradeName;
+
+    /**
+     * 班级名称
+     */
+    @ApiModelProperty(value="className班级名称")
+    private String className;
+
+    /**
      * heroland_statistics_detail
      */
     private static final long serialVersionUID = 1L;
@@ -406,5 +418,37 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * 年级名称
+     * @return grade_name 年级名称
+     */
+    public String getGradeName() {
+        return gradeName;
+    }
+
+    /**
+     * 年级名称
+     * @param gradeName 年级名称
+     */
+    public void setGradeName(String gradeName) {
+        this.gradeName = gradeName == null ? null : gradeName.trim();
+    }
+
+    /**
+     * 班级名称
+     * @return class_name 班级名称
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * 班级名称
+     * @param className 班级名称
+     */
+    public void setClassName(String className) {
+        this.className = className == null ? null : className.trim();
     }
 }
