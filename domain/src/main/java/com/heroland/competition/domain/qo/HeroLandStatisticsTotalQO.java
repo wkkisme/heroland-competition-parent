@@ -104,11 +104,18 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     private Integer type;
 
     /**
+     * 班级code 多个查询时
+     */
+    private List<String> classCodes;
+    /**
      * 0不是，1是 默认为false
      */
     @MybatisCriteriaAnnotation
     private Boolean history = false;
 
+    /**
+     * 科目code
+     */
     private String subjectCode;
 
 
@@ -149,6 +156,15 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
     public void checkType(){
 
         AssertUtils.assertThat(type != null);
+    }
+
+
+    public List<String> getClassCodes() {
+        return classCodes;
+    }
+
+    public void setClassCodes(List<String> classCodes) {
+        this.classCodes = classCodes;
     }
 
 

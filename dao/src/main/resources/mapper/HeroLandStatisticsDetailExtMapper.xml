@@ -3,7 +3,7 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper">
     <resultMap id="DetailRankBaseMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll"
                extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
-        <result column="rank" property="rank" />
+        <result column="rank" property="rank"/>
 
     </resultMap>
     <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
@@ -20,11 +20,11 @@
         where is_deleted =0
 
         <if test="userId != null">
-          and  user_id = #{userId}
+            and user_id = #{userId}
         </if>
 
-       <if test="userName != null">
-          and  user_name like  concat ( #{userName},'%')
+        <if test="userName != null">
+            and user_name like concat ( #{userName},'%')
         </if>
 
         <if test="subjectCode != null">
@@ -34,6 +34,13 @@
             and grade_code = #{gradeCode,jdbcType=VARCHAR}
         </if>
 
+
+        <if test="classCodes != null and classCodes.size()>0">
+            and class_code  in
+            <foreach collection="classCodes" item="classCode" separator="," close=")" open="(">
+                #{classCode}
+            </foreach>
+        </if>
         <if test="classCode != null">
             and class_code = #{classCode,jdbcType=VARCHAR}
         </if>
@@ -46,7 +53,7 @@
             and type = #{type}
         </if>
 
-         <if test="startTime != null">
+        <if test="startTime != null">
             and gmt_create >= #{startTime}
         </if>
 
@@ -55,16 +62,16 @@
 
         </if>
         <if test="userIds != null and userIds.size() > 0">
-           and user_id in
+            and user_id in
             <foreach collection="userIds" open="(" close=")" separator="," item="item">
                 #{item}
             </foreach>
 
         </if>
 
-<!--        group by user_id-->
+        <!--        group by user_id-->
 
-        ORDER BY  ${orderField}
+        ORDER BY ${orderField}
 
 
         <if test="startRow != null and startRow != -1 and pageSize != null">
@@ -72,18 +79,17 @@
         </if>
 
 
-
     </select>
 
     <select id="countStatisticsByRank" resultType="java.lang.Long">
-       select count(*) from( SELECT
-            count(*)
+        select count(*) from( SELECT
+        count(*)
         FROM heroland_statistics_detail
 
         where is_deleted =0
 
         <if test="userId != null">
-            and  user_id = #{userId}
+            and user_id = #{userId}
         </if>
 
         <if test="subjectCode != null">
@@ -110,7 +116,7 @@
         </if>
 
         <if test="userName != null">
-            and  user_name like  concat ( #{userName},'%')
+            and user_name like concat ( #{userName},'%')
         </if>
 
         <if test="userIds != null and userIds.size() > 0">
@@ -122,11 +128,18 @@
 
         </if>
 
+        <if test="classCodes != null and classCodes.size()>0">
+            and class_code  in
+            <foreach collection="classCodes" item="classCode" separator="," close=")" open="(">
+                #{classCode}
+            </foreach>
+        </if>
+
         <if test="type != null">
             and type = #{type}
         </if>
 
-<!--        group by user_id-->
+        <!--        group by user_id-->
         ) a
 
     </select>
