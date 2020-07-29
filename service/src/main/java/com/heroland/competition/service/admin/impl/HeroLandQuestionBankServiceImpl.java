@@ -369,9 +369,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.write("".getBytes());
                 outStream.close();    //关闭文件输出流
 
-                List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
+                List<HerolandQuestionBankImportDP> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), HerolandQuestionBankImportDP.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
 
-                importQuestionToDataQuestion(questions,new ArrayList<HerolandQuestionBankDP>());
+                importQuestion(questions);
 
             }
         }
@@ -379,9 +379,6 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         return new ResponseBody<>();
     }
 
-    private void importQuestionToDataQuestion(List<Question> questions, List<HerolandQuestionBankDP> herolandQuestionBankDPS) {
-
-    }
 
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForChapter(HerolandQuestionBankListForChapterRequest request) {
