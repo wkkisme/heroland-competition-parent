@@ -126,7 +126,7 @@ public class HeroLandQuestionBankController {
         return result;
     }
     /**
-     * 前台获取题目进行分配
+     * 题库导入 入参为文件
      * @param request
      * @return
      */
