@@ -185,9 +185,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
         });
 
-
-
-        return null;
+        return true;
     }
 
     private void batchSave(List<HerolandQuestionBankDP> list){
