@@ -82,10 +82,15 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
-       <table tableName="heroland_statistics_detail" domainObjectName="HeroLandStatisticsDetail" mapperName="HeroLandStatisticsDetailMapper">
+       <table tableName="heroland_class" domainObjectName="HeroLandClass" mapperName="HeroLandClassMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+
+<!--      <table tableName="heroland_user_class" domainObjectName="HeroLandUserClass" mapperName="HeroLandUserClassMapper">-->
+<!--            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
 
 
 
