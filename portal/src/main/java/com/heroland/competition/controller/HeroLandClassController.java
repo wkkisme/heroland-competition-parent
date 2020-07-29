@@ -59,7 +59,7 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/getClassList")
-    public ResponseBody<List<HeroLandClassDP>> getClass(@RequestBody HeroLandClassManageQO dp) {
+    public ResponseBody<List<HeroLandClassDP>> getClassList(@RequestBody HeroLandClassManageQO dp) {
         return heroLandClassService.getClassList(dp);
     }
 
