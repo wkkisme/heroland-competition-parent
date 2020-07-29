@@ -22,6 +22,8 @@ public enum HerolandErrMsgEnum {
 
     ERROR_TIME("70101", "时间参数不正确"),
 
+    ERROR_PARSE("70102", "解析错误"),
+
 
    ;
 

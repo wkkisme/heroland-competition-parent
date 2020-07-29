@@ -13,6 +13,7 @@ import com.heroland.competition.common.constants.QtYearRangeEnum;
 import com.heroland.competition.common.constants.TimeIntervalUnit;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.BatchUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -26,6 +27,7 @@ import com.heroland.competition.dal.pojo.HerolandQuestionBankDetail;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
+import com.heroland.competition.domain.dp.HerolandQuestionBankImportDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HerolandQuestionBankQo;
@@ -96,6 +98,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         bank.setYear(dp.getYearD());
         bank.setQtId(dp.getQtId());
         bank.setSnapshotNo(dp.getSnapshotNo());
+        bank.setStorage(dp.getStorage());
+        bank.setThink(dp.getThink());
+        bank.setPassageId(dp.getPassageId());
         herolandQuestionBankMapper.insertSelective(bank);
 
         //添加detail相关部分
@@ -105,6 +110,10 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         detail.setOptionAnswer(dp.getOptionAnswer());
         detail.setParse(dp.getParse());
         detail.setQbId(bank.getId());
+        detail.setAnalysis(dp.getAnalysis());
+        detail.setStormAnswer(dp.getStormAnswer());
+        detail.setInformation(dp.getInformation());
+        detail.setSimilarQt(JSON.toJSONString(dp.getSimilarQt()));
         herolandQuestionBankDetailMapper.insertSelective(detail);
         if (!CollectionUtils.isEmpty(dp.getKnowledges())) {
             List<HerolandKnowledgeRefer> list = Lists.newArrayList();
@@ -119,6 +128,75 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         }
         return true;
     }
+
+    @Override
+    public Boolean importQuestion(List<HerolandQuestionBankImportDP> importDPS) {
+        if (CollectionUtils.isEmpty(importDPS)){
+            return true;
+        }
+        List<HerolandQuestionBankDP> bankDPS = Lists.newArrayList();
+        importDPS.stream().forEach(e -> {
+            HerolandQuestionBankDP bankDP = new HerolandQuestionBankDP();
+            bankDP.setAnalysis(e.getAnswer2());
+            bankDP.setCourse(e.getSubjectid());
+            bankDP.setDiff(e.getDiff());
+            bankDP.setGrade(e.getGradeid());
+            bankDP.setOptionAnswer(e.getAnswer1());
+            bankDP.setParse(e.getParse());
+            bankDP.setPassageId(e.getPassageid());
+            bankDP.setThink(e.getThink());
+            bankDP.setTitle(e.getQuestion());
+            bankDP.setType(e.getQtype());
+            bankDP.setStormAnswer(e.getAnswer0());
+            bankDP.setStorage(e.getStorage());
+            bankDP.setInformation(e.getInformation());
+            try {
+                if (!StringUtils.isEmpty(e.getKnowledgeId())){
+                    List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
+                    bankDP.setKnowledges(knowledges);
+                }
+            }catch (Exception ex){
+                ResponseBodyWrapper.failException("知识点id"+HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
+            }
+            try {
+                if (!StringUtils.isEmpty(e.getOption_z())){
+                    List<String> similar = Arrays.asList(e.getOption_z().split(",")).stream().distinct().collect(Collectors.toList());
+                    bankDP.setSimilarQt(similar);
+                }
+            }catch (Exception ex){
+                ResponseBodyWrapper.failException("相似题目"+HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
+            }
+            bankDP.appendOption(e.getOption_a(),"A")
+                    .appendOption(e.getOption_b(),"B")
+                    .appendOption(e.getOption_c(),"C")
+                    .appendOption(e.getOption_d(),"D")
+                    .appendOption(e.getOption_e(),"E");
+            bankDPS.add(bankDP);
+
+            List<List<HerolandQuestionBankDP>> split = BatchUtils.split(bankDPS, 20);
+            split.stream().forEach(list -> {
+                batchSave(list);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e1) {
+                    log.error("sleep error");
+                }
+            });
+
+        });
+
+
+
+        return null;
+    }
+
+    private void batchSave(List<HerolandQuestionBankDP> list){
+        if (CollectionUtils.isEmpty(list)){
+            return;
+        }
+        list.stream().forEach(e -> createQuestion(e));
+    }
+
 
 
     /**

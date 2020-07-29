@@ -7,6 +7,7 @@ import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +15,11 @@ import java.util.List;
 
 @Data
 public class HerolandQuestionBankDP extends BaseDO implements Serializable {
+
+    /**
+     *
+     */
+    private Long passageId;
 
     /**
      * 题目id
@@ -85,9 +91,20 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
     private List<QuestionOptionDto> options = Lists.newArrayList();
 
     /**
-     * 选项答案
+     * 选项答案|填空题答案
      */
     private String optionAnswer;
+
+    /**
+     * 胡乱答案
+     */
+    private String stormAnswer;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
 
     /**
      * 解答题答案
@@ -95,14 +112,34 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
     private String answer;
 
     /**
-     * 答案解析
+     * 解析（特殊场景）
      */
     private String parse;
+
+    /**
+     * 题库类型
+     */
+    private String storage;
+
+    /**
+     * 思维
+     */
+    private Integer think;
+
+    private String information;
+
+
+
 
     /**
      * 关联知识点
      */
     private List<Long> knowledges = Lists.newArrayList();
+
+    /**
+     * 相似题，记录的是 qtId
+     */
+    private List<String> similarQt = Lists.newArrayList();
 
 
     //todo 补全
@@ -113,4 +150,16 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
         this.snapshotNo = 1;
         return this;
     }
+
+    public HerolandQuestionBankDP appendOption(String option, String tag){
+        QuestionOptionDto dto = new QuestionOptionDto();
+        if (StringUtils.isEmpty(option)){
+            return this;
+        }
+        dto.setOptionSerial(tag);
+        dto.setContent(option);
+        this.options.add(dto);
+        return this;
+    }
+
 }

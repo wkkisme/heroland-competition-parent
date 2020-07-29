@@ -13,10 +13,16 @@
     <result column="option_answer" jdbcType="VARCHAR" property="optionAnswer" />
     <result column="answer" jdbcType="VARCHAR" property="answer" />
     <result column="parse" jdbcType="VARCHAR" property="parse" />
+
+    <result column="storm_answer" jdbcType="VARCHAR" property="stormAnswer" />
+    <result column="analysis" jdbcType="VARCHAR" property="analysis" />
+    <result column="information" jdbcType="VARCHAR" property="information" />
+    <result column="similar_qt" jdbcType="VARCHAR" property="similarQt" />
+
   </resultMap>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, qb_id,  `option`,
-    option_answer, answer, parse
+    option_answer, answer, parse, storm_answer,analysis,information,similar_qt
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -65,6 +71,22 @@
       <if test="parse != null">
         parse,
       </if>
+
+      <if test="stormAnswer != null">
+        storm_answer,
+      </if>
+      <if test="analysis != null">
+        analysis,
+      </if>
+      <if test="information != null">
+        information,
+      </if>
+      <if test="similarQt != null">
+        similar_qt,
+      </if>
+
+
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -97,6 +119,20 @@
       <if test="parse != null">
         #{parse,jdbcType=VARCHAR},
       </if>
+
+      <if test="stormAnswer != null">
+        #{stormAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null">
+        #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="information != null">
+        #{information,jdbcType=VARCHAR},
+      </if>
+      <if test="similarQt != null">
+        #{similarQt,jdbcType=VARCHAR},
+      </if>
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBankDetail">
@@ -133,6 +169,20 @@
       <if test="parse != null">
         parse = #{parse,jdbcType=VARCHAR},
       </if>
+
+      <if test="stormAnswer != null">
+        storm_answer = #{stormAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null">
+        analysis = #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="information != null">
+        information = #{information,jdbcType=VARCHAR},
+      </if>
+      <if test="similarQt != null">
+        similar_qt = #{similarQt,jdbcType=VARCHAR},
+      </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>

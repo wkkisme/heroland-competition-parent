@@ -19,6 +19,11 @@
     <result column="paper_type" jdbcType="INTEGER" property="paperType" />
     <result column="qt_id" jdbcType="VARCHAR" property="qtId" />
     <result column="snapshot_no" jdbcType="INTEGER" property="snapshotNo" />
+
+    <result column="passage_id" jdbcType="BIGINT" property="passageId" />
+    <result column="storage" jdbcType="VARCHAR" property="storage" />
+    <result column="think" jdbcType="INTEGER" property="think" />
+
   </resultMap>
 
   <resultMap id="SimpleResultMap" type="com.heroland.competition.domain.dp.HerolandQuestionUniqDP">
@@ -32,7 +37,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, title,
-    `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no
+    `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no, passage_id,storage,think
   </sql>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
@@ -117,6 +122,17 @@
       <if test="snapshotNo != null">
         snapshot_no,
       </if>
+
+      <if test="passageId != null">
+        passage_id,
+      </if>
+      <if test="storage != null">
+        storage,
+      </if>
+      <if test="think != null">
+        think,
+      </if>
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -170,6 +186,17 @@
       <if test="snapshotNo != null">
         #{snapshotNo,jdbcType=INTEGER},
       </if>
+
+      <if test="passageId != null">
+        #{passageId,jdbcType=BIGINT},
+      </if>
+      <if test="storage != null">
+        #{storage,jdbcType=VARCHAR},
+      </if>
+      <if test="think != null">
+        #{think,jdbcType=INTEGER},
+      </if>
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">

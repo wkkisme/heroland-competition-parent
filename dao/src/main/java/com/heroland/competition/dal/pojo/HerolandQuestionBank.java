@@ -41,4 +41,19 @@ public class HerolandQuestionBank extends BaseDO {
      */
     private Integer snapshotNo;
 
+    private Long passageId;
+
+    /**
+     * 题库类型
+     */
+    private String storage;
+
+    /**
+     * 思维
+     */
+    private Integer think;
+
+
+
+
 }
