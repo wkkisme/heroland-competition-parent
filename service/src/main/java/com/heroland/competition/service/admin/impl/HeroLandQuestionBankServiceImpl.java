@@ -219,17 +219,23 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     @Override
     @Transactional
-    public Boolean deleteByqtId(String qtId) {
-        if (StringUtils.isEmpty(qtId)) {
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
-        }
-        List<HerolandQuestionUniqDP> uniqDPS = herolandQuestionBankMapper.selectSimpleSnaphot(Lists.newArrayList(qtId));
-        herolandQuestionBankMapper.deleteByQtIds(Lists.newArrayList(qtId));
-        if (!CollectionUtils.isEmpty(uniqDPS)) {
-            List<Long> ids = uniqDPS.stream().map(HerolandQuestionUniqDP::getId).collect(Collectors.toList());
-            herolandQuestionBankDetailMapper.deleteByQtId(ids);
-            herolandKnowledgeReferMapper.batchDeleteByReferIds(ids, KnowledgeReferEnum.QUESTION.getType());
-        }
+    public Boolean deleteByqtId(String ids) {
+//        if (StringUtils.isEmpty(ids)) {
+//            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+//        }
+//        List<Long> idList = Arrays.asList(ids.split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
+//
+//
+//        bankDP.setKnowledges(knowledges);
+//
+//
+//        List<HerolandQuestionUniqDP> uniqDPS = herolandQuestionBankMapper.selectSimpleSnaphot(Lists.newArrayList(qtId));
+//        herolandQuestionBankMapper.deleteByQtIds(Lists.newArrayList(qtId));
+//        if (!CollectionUtils.isEmpty(uniqDPS)) {
+//            List<Long> ids = uniqDPS.stream().map(HerolandQuestionUniqDP::getId).collect(Collectors.toList());
+//            herolandQuestionBankDetailMapper.deleteByQtId(ids);
+//            herolandKnowledgeReferMapper.batchDeleteByReferIds(ids, KnowledgeReferEnum.QUESTION.getType());
+//        }
 //        //删除和知识点挂钩
         return true;
     }
@@ -248,32 +254,32 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     @Override
-    public HeroLandQuestionBankDto getById(String qtId) {
-//        if (NumberUtils.nullOrZeroLong(id)){
-//            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
-//        }
-//        HerolandQuestionBank bank = herolandQuestionBankMapper.selectByPrimaryKey(id);
-//        HeroLandQuestionBankDto bankDto = getAdminData(bank);
-//        List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(id), KnowledgeReferEnum.QUESTION.getType());
-//        List<Long> knowledgeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
-//        List<HerolandKnowledgeSimpleDto> dtoList = Lists.newArrayList();
-//        if (!CollectionUtils.isEmpty(knowledgeIds)){
-//            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(knowledgeIds);
-//            dtoList = herolandKnowledges.stream().map(this::convert).collect(Collectors.toList());
-//        }
-//
-//        List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(Lists.newArrayList(id));
-//        if (!CollectionUtils.isEmpty(byQtId)){
-//            bankDto.setAnswer(byQtId.get(0).getAnswer());
-//            bankDto.setOptionAnswer(byQtId.get(0).getOptionAnswer());
-//            List<QuestionOptionDto> questionOptionDto = JSON.parseArray(byQtId.get(0).getOption(), QuestionOptionDto.class);
-//            bankDto.setOptions(questionOptionDto);
-//            bankDto.setParse(byQtId.get(0).getParse());
-//        }
-//        bankDto.setKnowledges(dtoList);
+    public HeroLandQuestionBankDto getById(Long id) {
+        if (NumberUtils.nullOrZeroLong(id)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        }
+        HerolandQuestionBank bank = herolandQuestionBankMapper.selectByPrimaryKey(id);
+        HeroLandQuestionBankDto bankDto = getAdminData(bank);
+        List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(id), KnowledgeReferEnum.QUESTION.getType());
+        List<Long> knowledgeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
+        List<HerolandKnowledgeSimpleDto> dtoList = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(knowledgeIds)){
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(knowledgeIds);
+            dtoList = herolandKnowledges.stream().map(this::convert).collect(Collectors.toList());
+        }
 
-//        return bankDto;
-        return null;
+        List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(Lists.newArrayList(id));
+        if (!CollectionUtils.isEmpty(byQtId)){
+            bankDto.setAnswer(byQtId.get(0).getAnswer());
+            bankDto.setOptionAnswer(byQtId.get(0).getOptionAnswer());
+            List<QuestionOptionDto> questionOptionDto = JSON.parseArray(byQtId.get(0).getOption(), QuestionOptionDto.class);
+            bankDto.setOptions(questionOptionDto);
+            bankDto.setParse(byQtId.get(0).getParse());
+            bankDto.setAnalysis(byQtId.get(0).getAnalysis());
+            bankDto.setInformation(byQtId.get(0).getInformation());
+        }
+        bankDto.setKnowledges(dtoList);
+        return bankDto;
     }
 
     private HerolandKnowledgeSimpleDto convert(HerolandKnowledge knowledge) {
@@ -288,7 +294,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         List<HeroLandQuestionBankSimpleDto> result = new ArrayList<>();
         PageResponse<HeroLandQuestionBankSimpleDto> pageResult = new PageResponse<>();
         HerolandQuestionBankQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankQo.class);
-        if (StringUtils.isEmpty(request.getYear())) {
+        if (!StringUtils.isEmpty(request.getYear())) {
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);
             Date endTime = DateUtils.string2Date(request.getYear() + "-12-31 23:59:59", DateUtils.PATTERN_STANDARD);
             qo.setBeginTime(beginTime);

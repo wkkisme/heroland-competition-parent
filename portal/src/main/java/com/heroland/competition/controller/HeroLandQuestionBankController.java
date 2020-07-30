@@ -5,10 +5,14 @@ import com.anycommon.poi.word.Question;
 import com.anycommon.poi.word.WordFileService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
+import com.heroland.competition.domain.dto.HeroLandQuestionBankDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
 import com.heroland.competition.domain.request.HerolandQuestionBankListForChapterRequest;
@@ -19,6 +23,7 @@ import com.heroland.competition.service.order.HerolandPayService;
 import org.apache.commons.fileupload.FileItem;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -30,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -59,30 +65,42 @@ public class HeroLandQuestionBankController {
         return result;
     }
 
-//    /**
-//     * 删除
-//     * @return
-//     */
-//    @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
-//    @org.springframework.web.bind.annotation.ResponseBody
-//    public ResponseBody<Boolean> delete(@RequestParam("id") Long id) {
-//        ResponseBody<Boolean> result = new ResponseBody<>();
-//        result.setData(heroLandQuestionBankService.delete(id));
-//        return result;
-//    }
+    /**
+     * 删除
+     * @return
+     */
+    @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> delete(@RequestParam("ids") String ids) {
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        List<Long> idList = Lists.newArrayList();
+        try {
+            idList = Arrays.asList(ids.split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
+        }catch (Exception ex){
+            ResponseBodyWrapper.failException("题目id"+ HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
+        }
+        if (idList.size() > 20){
+            ResponseBodyWrapper.failException("一次性只能删除20个");
+        }
+        idList.stream().forEach(e -> {
+            heroLandQuestionBankService.deleteById(e);
+        });
+        result.setData(true);
+        return result;
+    }
 
-//    /**
-//     * 查看详情
-//     * @param id
-//     * @return
-//     */
-//    @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
-//    @org.springframework.web.bind.annotation.ResponseBody
-//    public ResponseBody<HeroLandQuestionBankDto> getById(@RequestParam("id") Long id) {
-//        ResponseBody<HeroLandQuestionBankDto> result = new ResponseBody<>();
-//        result.setData(heroLandQuestionBankService.getById(id));
-//        return result;
-//    }
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/getById", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HeroLandQuestionBankDto> getById(@RequestParam("id") Long id) {
+        ResponseBody<HeroLandQuestionBankDto> result = new ResponseBody<>();
+        result.setData(heroLandQuestionBankService.getById(id));
+        return result;
+    }
 
     /**
      * 分页查询

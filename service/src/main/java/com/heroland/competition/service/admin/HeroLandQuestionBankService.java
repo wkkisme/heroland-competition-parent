@@ -30,10 +30,10 @@ public interface HeroLandQuestionBankService {
     /**
      * 根据全局id进行删除
      * 所有快照号的都删除
-     * @param qtId
+     * @param ids
      * @return
      */
-    Boolean deleteByqtId(String qtId);
+    Boolean deleteByqtId(String ids);
 
     /**
      * 根据id进行删除
@@ -43,7 +43,7 @@ public interface HeroLandQuestionBankService {
      */
     Boolean deleteById(Long qtId);
 
-    HeroLandQuestionBankDto getById(String qtId);
+    HeroLandQuestionBankDto getById(Long qtId);
 
     PageResponse<HeroLandQuestionBankSimpleDto> pageQuery(HerolandQuestionBankPageRequest request);
 

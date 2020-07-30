@@ -84,19 +84,35 @@ public class HeroLandQuestionBankDto implements Serializable {
     private List<QuestionOptionDto> options;
 
     /**
-     * 选项答案
+     * 选项|填空题答案
      */
     private String optionAnswer;
 
     /**
      * 解答题答案
+     * 暂无
      */
     private String answer;
 
     /**
-     * 答案解析
+     * 针对跨学科的解说
      */
     private String parse;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
+    /**
+     * 示例
+     */
+    private String information;
+
+    /**
+     * 思维
+     */
+    private Integer think;
 
     /**
      * 关联的知识点列表

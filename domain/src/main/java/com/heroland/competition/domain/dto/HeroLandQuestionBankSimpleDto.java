@@ -45,6 +45,13 @@ public class HeroLandQuestionBankSimpleDto implements Serializable {
 
     /**
      * 题目类型
+     * OPTION(1,"选择题"),
+     *     OPTION_ONE(11,"单选题"),
+     *     OPTION_MULTI(12,"多选题"),
+     *     FILL(2,"填空题"),
+     *     ANSWER(3,"解答题"),
+     *     COMPO(4,"综合题"),
+     *
      */
     private Integer type;
 
@@ -55,6 +62,11 @@ public class HeroLandQuestionBankSimpleDto implements Serializable {
 
     /**
      * 难度
+     * ESAY(1,"容易"),
+     *     HALF_ESAY(2,"较易"),
+     *     MEDIUM(3,"中等"),
+     *     HALF_DIFFICULT(4,"较难"),
+     *     DIFFICULT(5,"难"),
      */
     private Integer diff;
 
@@ -77,6 +89,13 @@ public class HeroLandQuestionBankSimpleDto implements Serializable {
      * 试题类型
      */
     private Integer paperType;
+
+
+    /**
+     * 思维类型
+     * 1是分析、2是推理、3是歸納
+     */
+    private Integer think;
 
     /**
      * 关联的知识点列表
