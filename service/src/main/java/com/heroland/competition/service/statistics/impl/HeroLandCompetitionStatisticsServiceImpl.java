@@ -355,6 +355,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     }
                     HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(Long.valueOf(question.getTopicId()));
                     if (ObjectUtil.isNotNull(statisticDto)) {
+                        dp.setTopicName(statisticDto.getTopicName());
                         if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
                             HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
                             if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
