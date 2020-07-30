@@ -92,7 +92,7 @@
     class_code, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
     parse, level_code, former_question_id, topic_id, topic_name, subject_code, subject_name
   </sql>
-    <select id="selectByTopicIds" resultType="com.heroland.competition.dal.pojo.HeroLandQuestion">
+    <select id="selectByTopicIds" resultMap="BaseResultMap">
         select * from heroland_question
         where topic_id in
         <foreach collection="list" open="(" separator="," close=")" index="i" item="topicId">

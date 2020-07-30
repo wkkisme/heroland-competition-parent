@@ -342,7 +342,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollUtil.isNotEmpty(heroLandQuestions)) {
                 heroLandQuestions.forEach(question -> {
                     AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
-                    dp.setQuestionId(question.getId());
+                    dp.setQuestionId(Long.valueOf(question.getQuestionId()));
                     dp.setLevelCode(question.getLevelCode());
                     if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
                         HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(question.getTopicId());
@@ -352,21 +352,22 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         }
                     }
                     HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(Long.valueOf(question.getTopicId()));
-                    if (ObjectUtil.isNotNull(questionRecordMap.get())) {
-                        HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getQuestionId());
-                        if (ObjectUtil.isNotNull(questionRecordDetail)) {
+                    if (ObjectUtil.isNotNull(statisticDto)) {
+                        if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
+                            HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
+                            if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
+                                dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
+                                dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
+                            }
+                        }
+                        if (ObjectUtil.isNotNull(questionRecordMap.get())) {
+                            HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getQuestionId());
                             // 如果是同步作业赛，题只能有一个
                             dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
                             dp.setScore(questionRecordDetail.getScore());
-                            if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
-                                HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
-                                if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
-                                    dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
-                                    dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
-                                }
-                            }
                         }
                     }
+                    result.add(dp);
                 });
             }
         } else {
