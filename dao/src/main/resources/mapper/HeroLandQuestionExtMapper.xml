@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandQuestionExtMapper">
+    <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandQuestion">
+        <id column="question_id" jdbcType="VARCHAR" property="questionId"/>
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="grade_code" jdbcType="VARCHAR" property="gradeCode"/>
+        <result column="class_code" jdbcType="VARCHAR" property="classCode"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="option_a" jdbcType="VARCHAR" property="optionA"/>
+        <result column="option_b" jdbcType="VARCHAR" property="optionB"/>
+        <result column="option_c" jdbcType="VARCHAR" property="optionC"/>
+        <result column="option_d" jdbcType="VARCHAR" property="optionD"/>
+        <result column="option_e" jdbcType="VARCHAR" property="optionE"/>
+        <result column="answer" jdbcType="VARCHAR" property="answer"/>
+        <result column="solution" jdbcType="VARCHAR" property="solution"/>
+        <result column="parse" jdbcType="VARCHAR" property="parse"/>
+        <result column="level_code" jdbcType="VARCHAR" property="levelCode"/>
+        <result column="former_question_id" jdbcType="VARCHAR" property="formerQuestionId"/>
+        <result column="topic_id" jdbcType="VARCHAR" property="topicId"/>
+        <result column="topic_name" jdbcType="VARCHAR" property="topicName"/>
+        <result column="subject_code" jdbcType="VARCHAR" property="subjectCode"/>
+        <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+    </resultMap>
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
+                                             separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List">
+    question_id, id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, 
+    class_code, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
+    parse, level_code, former_question_id, topic_id, topic_name, subject_code, subject_name
+  </sql>
+    <select id="selectByTopicIds" resultType="com.heroland.competition.dal.pojo.HeroLandQuestion">
+        select * from heroland_question
+        where topic_id in
+        <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+            #{topicId}
+        </foreach>
+    </select>
+</mapper>
