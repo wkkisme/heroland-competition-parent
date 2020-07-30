@@ -95,7 +95,7 @@
     <select id="selectByTopicIds" resultType="com.heroland.competition.dal.pojo.HeroLandQuestion">
         select * from heroland_question
         where topic_id in
-        <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+        <foreach collection="list" open="(" separator="," close=")" index="i" item="topicId">
             #{topicId}
         </foreach>
     </select>
