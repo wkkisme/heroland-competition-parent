@@ -20,7 +20,8 @@ public interface HerolandTopicQuestionMapper {
 
     void deleteByTopicIds(@Param("topicIds") List<Long> topicIds);
 
-    List<HerolandTopicQuestion> selectByTopics(@Param("topicIds") List<Long> topicIds);
+    List<HerolandTopicQuestion> selectByTopics(@Param("topicIds") List<Long> topicIds,
+                                               @Param("questionId") Long questionId);
 
     int saveBatch(@Param("records") List<HerolandTopicQuestion> list);
 }
