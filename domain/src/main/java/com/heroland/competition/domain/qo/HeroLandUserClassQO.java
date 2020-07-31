@@ -41,27 +41,6 @@ public class HeroLandUserClassQO extends BaseQO implements Serializable {
     private Integer userType;
 
 
-    public HeroLandUserClassQO addCheck(){
-        AssertUtils.notBlank(userId,classCode,orgCode,gradeCode);
-
-        AssertUtils.assertThat(userType != null);
-
-
-        return this;
-
-    }
-    public HeroLandUserClassQO updateCheck(){
-        AssertUtils.notBlank(userId,classCode,orgCode,gradeCode);
-
-        AssertUtils.assertThat(userType != null);
-
-        AssertUtils.assertThat(getId() != null);
-
-
-
-        return this;
-
-    }
     /**
      * 是否班主任
      */
