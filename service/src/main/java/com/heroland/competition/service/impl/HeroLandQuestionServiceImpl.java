@@ -77,16 +77,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     @Transactional
     public Boolean editTopic(HeroLandTopicGroupDP dp) {
-        if (NumberUtils.nullOrZeroLong(dp.getId())){
+        if (NumberUtils.nullOrZeroLong(dp.getId())) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         }
         if (StringUtils.isAnyBlank(dp.getOrgCode(), dp.getTopicName())) {
             ResponseBodyWrapper.failParamException();
         }
-        if (dp.getStartTime() == null || dp.getEndTime() == null){
+        if (dp.getStartTime() == null || dp.getEndTime() == null) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
-        if (dp.getStartTime().after(dp.getEndTime())){
+        if (dp.getStartTime().after(dp.getEndTime())) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
 
@@ -107,7 +107,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Override
     public Long addTopic(HeroLandTopicGroupDP dp) {
-        if (!NumberUtils.nullOrZeroLong(dp.getId())){
+        if (!NumberUtils.nullOrZeroLong(dp.getId())) {
             editTopic(dp);
             return dp.getId();
         }
@@ -121,7 +121,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     public PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request) {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
         Page<HerolandTopicQuestion> questions = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(request.getTopicId())));
+                () -> herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(request.getTopicId()), request.getQuestionId()));
         if (CollectionUtils.isEmpty(questions.getResult())) {
             return pageResult;
         }
@@ -155,7 +155,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             dto.setType(e.getType());
             dto.setSubType(e.getSubType());
             dto.setSource(e.getSource());
-            dto.setYear(org.springframework.util.StringUtils.isEmpty(e.getYear()) ? "": DateUtils.dateToYear(e.getYear()));
+            dto.setYear(org.springframework.util.StringUtils.isEmpty(e.getYear()) ? "" : DateUtils.dateToYear(e.getYear()));
             dto.setId(e.getId());
             dto.setQtId(e.getQtId());
             if (qtSnapshotMap.containsKey(e.getQtId())) {
@@ -166,7 +166,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 } else {
                     dto.setDesc("NORMAL");
                 }
-            }else {
+            } else {
                 dto.setDesc("DELETED");
             }
             if (qtMap.containsKey(e.getId())) {
@@ -184,7 +184,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         pageResult.setTotal((int) questions.getTotal());
         return pageResult;
 
-        }
+    }
 
     @Override
     public Boolean saveAssign(HeroLandTopicAssignRequest request) {
@@ -209,7 +209,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             });
         });
         List<HerolandTopicQuestion> uniq = list.stream().distinct().collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(uniq)){
+        if (!CollectionUtils.isEmpty(uniq)) {
             return herolandTopicQuestionMapper.saveBatch(uniq) > 0;
         }
         return false;
@@ -217,7 +217,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Override
     public HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request) {
-        if (NumberUtils.nullOrZeroLong(request.getTopicId())){
+        if (NumberUtils.nullOrZeroLong(request.getTopicId())) {
             return null;
         }
         HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(request.getTopicId());
@@ -229,16 +229,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         keys.add(heroLandTopicDto.getOrgCode());
         List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
         Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-        if (keyMap.containsKey(heroLandTopicDto.getCourseCode())){
+        if (keyMap.containsKey(heroLandTopicDto.getCourseCode())) {
             heroLandTopicDto.setCourseName(keyMap.get(heroLandTopicDto.getCourseCode()).get(0).getDictValue());
         }
-        if (keyMap.containsKey(heroLandTopicDto.getGradeCode())){
+        if (keyMap.containsKey(heroLandTopicDto.getGradeCode())) {
             heroLandTopicDto.setGradeName(keyMap.get(heroLandTopicDto.getGradeCode()).get(0).getDictValue());
         }
-        if (keyMap.containsKey(heroLandTopicDto.getClassCode())){
+        if (keyMap.containsKey(heroLandTopicDto.getClassCode())) {
             heroLandTopicDto.setClassName(keyMap.get(heroLandTopicDto.getClassCode()).get(0).getDictValue());
         }
-        if (keyMap.containsKey(heroLandTopicDto.getOrgCode())){
+        if (keyMap.containsKey(heroLandTopicDto.getOrgCode())) {
             heroLandTopicDto.setOrgCode(keyMap.get(heroLandTopicDto.getOrgCode()).get(0).getDictValue());
         }
         return heroLandTopicDto;
@@ -247,18 +247,18 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public List<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request) {
 
-       List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
+        List<HeroLandQuestionTopicListForStatisticDto> list = new ArrayList<>();
         HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
         List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(qo);
-        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
             return list;
         }
         List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
-        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds);
+        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds, null);
         Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
         heroLandTopicGroups.stream().forEach(e -> {
             HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
-            if (topicMap.containsKey(e.getId())){
+            if (topicMap.containsKey(e.getId())) {
                 List<Long> question = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
                 dto.setQuestionNum(question.size());
             }
@@ -266,16 +266,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         });
 
         List<Long> chapterIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getChapterId).distinct().collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(chapterIds)){
+        if (!CollectionUtils.isEmpty(chapterIds)) {
             List<HerolandChapter> chapters = heroLandChapterMapper.getByIds(chapterIds);
             Map<Long, List<HerolandChapter>> idMap = chapters.stream().collect(Collectors.groupingBy(HerolandChapter::getId));
             list.stream().forEach(e -> {
-                if (topicMap.containsKey(e.getId())){
+                if (topicMap.containsKey(e.getId())) {
                     List<Long> chapter = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getChapterId).distinct().collect(Collectors.toList());
                     chapter.stream().forEach(i -> {
-                        if (idMap.containsKey(i) && ChapterEnum.ZHANG.getType().equals(idMap.get(i).get(0).getContentType())){
+                        if (idMap.containsKey(i) && ChapterEnum.ZHANG.getType().equals(idMap.get(i).get(0).getContentType())) {
                             e.getChapterList().add(i);
-                        }else {
+                        } else {
                             e.getSectionList().add(i);
                         }
                     });
@@ -287,7 +287,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         return list;
     }
 
-    private void getAdminData(List<HeroLandQuestionTopicListForStatisticDto> list){
+    private void getAdminData(List<HeroLandQuestionTopicListForStatisticDto> list) {
         List<String> classKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getClassCode).distinct().collect(Collectors.toList());
         List<String> orgKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getOrgCode).distinct().collect(Collectors.toList());
         List<String> courseKeys = list.stream().map(HeroLandQuestionTopicListForStatisticDto::getCourseCode).distinct().collect(Collectors.toList());
@@ -318,11 +318,11 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         List<HeroLandTopicGroup> heroLandTopicGroups = topicGroupsPageResult.getResult();
         List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
-        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds);
+        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(topicIds, null);
         Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
         heroLandTopicGroups.stream().forEach(e -> {
             HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
-            if (topicMap.containsKey(e.getId())){
+            if (topicMap.containsKey(e.getId())) {
                 List<Long> questionIds = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
                 Map<Long, List<HerolandQuestionBank>> quesBank = herolandQuestionBankMapper.getByIdsWithDelete(questionIds).stream().collect(Collectors.groupingBy(HerolandQuestionBank::getId));
                 dto.setQuestionNum(questionIds.size());
@@ -331,7 +331,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 questionIds.stream().forEach(qId -> {
                     HerolandQuestionKnowledgeSimpleDto knowledgeSimpleDto = new HerolandQuestionKnowledgeSimpleDto();
                     knowledgeSimpleDto.setQuestionId(qId);
-                    if (questionsMap.containsKey(qId)){
+                    if (questionsMap.containsKey(qId)) {
                         knowledgeSimpleDto.setDiff(quesBank.containsKey(qId) ? quesBank.get(qId).get(0).getDiff() : 1);
                         knowledgeSimpleDto.setType(quesBank.containsKey(qId) ? quesBank.get(qId).get(0).getType() : 1);
                         List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(questionsMap.get(qId).stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList()));

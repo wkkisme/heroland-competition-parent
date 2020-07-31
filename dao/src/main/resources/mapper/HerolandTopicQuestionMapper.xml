@@ -20,7 +20,7 @@
     question_id,topic_id,chapter_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from heroland_topic_question
     where id = #{id,jdbcType=BIGINT}
@@ -34,10 +34,10 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into heroland_topic_question (question_id, topic_id,chapter_id, creator,
-      modifier, gmt_create, gmt_modified, 
+      modifier, gmt_create, gmt_modified,
       is_deleted)
     values (#{questionId,jdbcType=BIGINT}, #{topicId,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR},
-      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
       #{isDeleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandTopicQuestion">
@@ -166,6 +166,9 @@
           #{topicId,jdbcType=BIGINT}
         </foreach>
         )
+      </if>
+      <if test="questionId != null">
+        and question_id = #{questionId,jdbcType=BIGINT}
       </if>
       and is_deleted = 0
     </where>

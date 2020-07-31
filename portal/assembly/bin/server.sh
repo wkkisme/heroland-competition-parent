@@ -5,7 +5,7 @@
 #
 
 # 使用命令
-USAGE="Usage: startup.sh {start|stop|restart} {dev|pro|shiyi|pre|tiantai|tonglu|zhengzhou} {debug|jmx|null}"
+USAGE="Usage: startup.sh {start|stop|restart} {dev|pro|pre} {debug|jmx|null}"
 
 # 参数个数
 exec_param_count=$#
@@ -19,7 +19,7 @@ fi
 profile=$2
 # shellcheck disable=SC1072
 # shellcheck disable=SC1020
-if [ $1 != "stop" ] && [ "$profile" != 'pro' ] && [ "$profile" != 'dev' ]  && [ "$profile" != 'shiyi' ] && [ "$profile" != 'pre' ] && ["$profile" != 'tiantai'] && ["$profile" != 'tonglu'] && ["$profile" != 'zhengzhou']
+if [ $1 != "stop" ] && [ "$profile" != 'pro' ] && [ "$profile" != 'dev' ]   && [ "$profile" != 'pre' ]
 then
     echo $USAGE
     echo "error param: $profile"
@@ -27,7 +27,7 @@ then
 fi
 
 JVM_MEM="3g"
-if  [ "$profile" != 'shiyi' ] && ["$profile" != 'tonglu'] && ["$profile" != 'tiantai'] && ["$profile" != 'zhengzhou']
+if  [ "$profile" != 'pro' ]
 then
     JVM_MEM='512m'
 fi
@@ -144,6 +144,39 @@ stop(){
 }
 
 
+stop1(){
+		PIDS=`ps -ef | grep java | grep -v grep | grep "$CONF_DIR" | awk '{print $2}'`
+		if [ -z "$PIDS" ]; then
+		    echo "ERROR: The $SERVER_NAME does not started!"
+        return 200
+		fi
+
+		echo "Stopping the $SERVER_NAME ..."
+		echo "............"
+		for PID in $PIDS ; do
+			kill $PID > /dev/null 2>&1
+		done
+
+		COUNT=0
+		while [ $COUNT -lt 1 ]; do
+		    echo "..."
+		    sleep 1
+		    COUNT=1
+		    for PID in $PIDS ; do
+				PID_EXIST=`ps -f -p $PID | grep java`
+				if [ -n "$PID_EXIST" ]; then
+					COUNT=0
+					break
+				fi
+			done
+		done
+		echo ""
+		echo "$SERVER_NAME stop OK!"
+		echo "PID: $PIDS"
+
+}
+
+
 case $1 in
   start)
 		start;
@@ -153,7 +186,7 @@ case $1 in
     ;;
   restart)
 		echo "############ Application of '"$MAIN_CLASS"' restarting....############"
-    stop;
+    stop1;
     sleep 1
     start;
     ;;
