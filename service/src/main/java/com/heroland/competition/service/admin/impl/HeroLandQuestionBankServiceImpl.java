@@ -324,7 +324,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 List<HerolandKnowledgeRefer> qbKnowledge = qbMap.get(e.getId());
                 if (!CollectionUtils.isEmpty(qbKnowledge)) {
                     List<Long> chapterKnowledgeIds = qbKnowledge.stream().map(HerolandKnowledgeRefer::getKnowledgeId).collect(Collectors.toList());
-                    chapterKnowledgeIds.stream().forEach(id -> simpleDtos.addAll(knowledgeMap.get(id)));
+                    chapterKnowledgeIds.stream().forEach(id -> simpleDtos.addAll(CollectionUtils.isEmpty(knowledgeMap.get(id)) ? Lists.newArrayList() : knowledgeMap.get(id)));
                 }
                 bankDto.setKnowledges(simpleDtos);
                 result.add(simpleDto);
