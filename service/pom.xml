@@ -193,6 +193,10 @@
             <groupId>com.anycommon</groupId>
             <artifactId>anycommon-poi</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.platform.sso</groupId>
+            <artifactId>platform-sso-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

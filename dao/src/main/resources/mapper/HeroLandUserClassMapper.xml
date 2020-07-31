@@ -11,7 +11,9 @@
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
-    <result column="class_id" jdbcType="BIGINT" property="classId" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="head_teacher" jdbcType="BIT" property="headTeacher" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_id, class_code, 
-    org_code, class_id
+    org_code, grade_code, user_type, head_teacher
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandUserClassExample" resultMap="BaseResultMap">
     select
@@ -111,12 +113,12 @@
     </selectKey>
     insert into heroland_user_class (creator, modifier, gmt_create, 
       gmt_modified, is_deleted, user_id, 
-      class_code, org_code, class_id
-      )
+      class_code, org_code, grade_code, 
+      user_type, head_teacher)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userId,jdbcType=VARCHAR}, 
-      #{classCode,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{classId,jdbcType=BIGINT}
-      )
+      #{classCode,jdbcType=VARCHAR}, #{orgCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
+      #{userType,jdbcType=INTEGER}, #{headTeacher,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandUserClass">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -148,8 +150,14 @@
       <if test="orgCode != null">
         org_code,
       </if>
-      <if test="classId != null">
-        class_id,
+      <if test="gradeCode != null">
+        grade_code,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="headTeacher != null">
+        head_teacher,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -177,8 +185,14 @@
       <if test="orgCode != null">
         #{orgCode,jdbcType=VARCHAR},
       </if>
-      <if test="classId != null">
-        #{classId,jdbcType=BIGINT},
+      <if test="gradeCode != null">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="headTeacher != null">
+        #{headTeacher,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -218,8 +232,14 @@
       <if test="record.orgCode != null">
         org_code = #{record.orgCode,jdbcType=VARCHAR},
       </if>
-      <if test="record.classId != null">
-        class_id = #{record.classId,jdbcType=BIGINT},
+      <if test="record.gradeCode != null">
+        grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userType != null">
+        user_type = #{record.userType,jdbcType=INTEGER},
+      </if>
+      <if test="record.headTeacher != null">
+        head_teacher = #{record.headTeacher,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -237,7 +257,9 @@
       user_id = #{record.userId,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
-      class_id = #{record.classId,jdbcType=BIGINT}
+      grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      user_type = #{record.userType,jdbcType=INTEGER},
+      head_teacher = #{record.headTeacher,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -269,8 +291,14 @@
       <if test="orgCode != null">
         org_code = #{orgCode,jdbcType=VARCHAR},
       </if>
-      <if test="classId != null">
-        class_id = #{classId,jdbcType=BIGINT},
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="headTeacher != null">
+        head_teacher = #{headTeacher,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -285,7 +313,9 @@
       user_id = #{userId,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
-      class_id = #{classId,jdbcType=BIGINT}
+      grade_code = #{gradeCode,jdbcType=VARCHAR},
+      user_type = #{userType,jdbcType=INTEGER},
+      head_teacher = #{headTeacher,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

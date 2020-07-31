@@ -2,6 +2,7 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
+import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +29,9 @@ public class HeroLandClassController {
      * @param dp
      * @return
      */
-    @RequestMapping(value = "/addClass")
-    public ResponseBody<Boolean> addClass(@RequestBody HeroLandClassDP dp) {
-        return heroLandClassService.addClass(dp);
+    @RequestMapping(value = "/addClassUser")
+    public ResponseBody<Boolean> addClass(@RequestBody HeroLandUserClassDP dp) {
+        return heroLandClassService.addClassUser(dp);
     }
 
     /**

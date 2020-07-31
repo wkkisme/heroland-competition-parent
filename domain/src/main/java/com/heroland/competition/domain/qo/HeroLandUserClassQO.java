@@ -1,6 +1,7 @@
-package com.heroland.competition.domain.dp;
+package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.common.BaseDO;
+import com.anycommon.response.common.BaseQO;
 import com.heroland.competition.common.utils.AssertUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandUserClass")
-public class HeroLandUserClassDP extends BaseDO implements Serializable {
+public class HeroLandUserClassQO extends BaseQO implements Serializable {
     /**
      * 用户id
      */
@@ -39,42 +40,8 @@ public class HeroLandUserClassDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="userType用户类型")
     private Integer userType;
 
-    private String className;
 
-    private String gradeName;
-
-    private String orgName;
-
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getGradeName() {
-        return gradeName;
-    }
-
-    public void setGradeName(String gradeName) {
-        this.gradeName = gradeName;
-    }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public void setOrgName(String orgName) {
-        this.orgName = orgName;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public HeroLandUserClassDP addCheck(){
+    public HeroLandUserClassQO addCheck(){
         AssertUtils.notBlank(userId,classCode,orgCode,gradeCode);
 
         AssertUtils.assertThat(userType != null);
@@ -83,7 +50,7 @@ public class HeroLandUserClassDP extends BaseDO implements Serializable {
         return this;
 
     }
-    public HeroLandUserClassDP updateCheck(){
+    public HeroLandUserClassQO updateCheck(){
         AssertUtils.notBlank(userId,classCode,orgCode,gradeCode);
 
         AssertUtils.assertThat(userType != null);
