@@ -42,4 +42,10 @@ public class HerolandSchool extends BaseDO {
      */
     private String desc;
 
+    /**
+     * 默认值，例如班级的基本容量
+     */
+    private String defaultValue;
+
+
 }

@@ -377,7 +377,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.close();    //关闭文件输出流
 
                 List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
+                questions.forEach(v->{
 
+                });
                 importQuestion(BeanUtil.queryListConversion(questions,HerolandQuestionBankImportDP.class));
 
             }
