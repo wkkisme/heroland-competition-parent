@@ -354,7 +354,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     @Override
-    public ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request,HerolandQuestionBankPageRequest pageRequest) throws Exception {
+    public ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request) throws Exception {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
             if (entry.getValue() instanceof CommonsMultipartFile) {
