@@ -132,7 +132,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     @Override
     public Boolean importQuestion(List<HerolandQuestionBankImportDP> importDPS) {
-        if (CollectionUtils.isEmpty(importDPS)){
+        if (CollectionUtils.isEmpty(importDPS)) {
             return true;
         }
         List<HerolandQuestionBankDP> bankDPS = Lists.newArrayList();
@@ -152,26 +152,26 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDP.setStorage(e.getStorage());
             bankDP.setInformation(e.getInformation());
             try {
-                if (!StringUtils.isEmpty(e.getKnowledgeId())){
+                if (!StringUtils.isEmpty(e.getKnowledgeId())) {
                     List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
                     bankDP.setKnowledges(knowledges);
                 }
-            }catch (Exception ex){
-                ResponseBodyWrapper.failException("知识点id"+HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
+            } catch (Exception ex) {
+                ResponseBodyWrapper.failException("知识点id" + HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
             }
             try {
-                if (!StringUtils.isEmpty(e.getOption_z())){
+                if (!StringUtils.isEmpty(e.getOption_z())) {
                     List<String> similar = Arrays.asList(e.getOption_z().split(",")).stream().distinct().collect(Collectors.toList());
                     bankDP.setSimilarQt(similar);
                 }
-            }catch (Exception ex){
-                ResponseBodyWrapper.failException("相似题目"+HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
+            } catch (Exception ex) {
+                ResponseBodyWrapper.failException("相似题目" + HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
             }
-            bankDP.appendOption(e.getOption_a(),"A")
-                    .appendOption(e.getOption_b(),"B")
-                    .appendOption(e.getOption_c(),"C")
-                    .appendOption(e.getOption_d(),"D")
-                    .appendOption(e.getOption_e(),"E");
+            bankDP.appendOption(e.getOption_a(), "A")
+                    .appendOption(e.getOption_b(), "B")
+                    .appendOption(e.getOption_c(), "C")
+                    .appendOption(e.getOption_d(), "D")
+                    .appendOption(e.getOption_e(), "E");
             bankDPS.add(bankDP);
 
             List<List<HerolandQuestionBankDP>> split = BatchUtils.split(bankDPS, 20);
@@ -189,13 +189,12 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         return true;
     }
 
-    private void batchSave(List<HerolandQuestionBankDP> list){
-        if (CollectionUtils.isEmpty(list)){
+    private void batchSave(List<HerolandQuestionBankDP> list) {
+        if (CollectionUtils.isEmpty(list)) {
             return;
         }
         list.stream().forEach(e -> createQuestion(e));
     }
-
 
 
     /**
@@ -256,7 +255,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     @Override
     public HeroLandQuestionBankDto getById(Long id) {
-        if (NumberUtils.nullOrZeroLong(id)){
+        if (NumberUtils.nullOrZeroLong(id)) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         }
         HerolandQuestionBank bank = herolandQuestionBankMapper.selectByPrimaryKey(id);
@@ -264,13 +263,13 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(id), KnowledgeReferEnum.QUESTION.getType());
         List<Long> knowledgeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
         List<HerolandKnowledgeSimpleDto> dtoList = Lists.newArrayList();
-        if (!CollectionUtils.isEmpty(knowledgeIds)){
+        if (!CollectionUtils.isEmpty(knowledgeIds)) {
             List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(knowledgeIds);
             dtoList = herolandKnowledges.stream().map(this::convert).collect(Collectors.toList());
         }
 
         List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(Lists.newArrayList(id));
-        if (!CollectionUtils.isEmpty(byQtId)){
+        if (!CollectionUtils.isEmpty(byQtId)) {
             bankDto.setAnswer(byQtId.get(0).getAnswer());
             bankDto.setOptionAnswer(byQtId.get(0).getOptionAnswer());
             List<QuestionOptionDto> questionOptionDto = JSON.parseArray(byQtId.get(0).getOption(), QuestionOptionDto.class);
@@ -377,17 +376,41 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.close();    //关闭文件输出流
 
                 List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
-                questions.forEach(v->{
+                List<HerolandQuestionBankImportDP> dps = new ArrayList<>();
+                questions.forEach(v -> {
+                    HerolandQuestionBankImportDP herolandQuestionBankImportDP = new HerolandQuestionBankImportDP();
+                    try {
+                        dps.add(BeanUtil.insertConversion(v, herolandQuestionBankImportDP));
+                    } catch (Exception e) {
+                        log.error("e", e);
+                    }
+
+                    try {
+                        herolandQuestionBankImportDP.setDiff(Integer.valueOf(v.getDiff()));
+                    } catch (NumberFormatException ignored) {
+                    }
+                    try {
+                        herolandQuestionBankImportDP.setPassageid(Long.valueOf(v.getPassageid()));
+                    } catch (NumberFormatException ignored) {
+                    }
+                    try {
+                        herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype()));
+                    } catch (NumberFormatException ignored) {
+                    }
+                    try {
+                        herolandQuestionBankImportDP.setThink(Integer.parseInt(v.getThink()));
+                    } catch (NumberFormatException ignored) {
+                    }
 
                 });
-                importQuestion(BeanUtil.queryListConversion(questions,HerolandQuestionBankImportDP.class));
+
+                importQuestion(dps);
 
             }
         }
 
         return new ResponseBody<>();
     }
-
 
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForChapter(HerolandQuestionBankListForChapterRequest request) {
