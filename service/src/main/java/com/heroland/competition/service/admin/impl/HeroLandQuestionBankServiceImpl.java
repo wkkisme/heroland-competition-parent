@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.poi.word.Question;
 import com.anycommon.poi.word.WordFileService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -353,7 +354,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     @Override
-    public ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request) throws Exception {
+    public ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request,HerolandQuestionBankPageRequest pageRequest) throws Exception {
         Map<String, MultipartFile> fileMap = request.getFileMap();
         for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
             if (entry.getValue() instanceof CommonsMultipartFile) {
@@ -375,9 +376,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.write("".getBytes());
                 outStream.close();    //关闭文件输出流
 
-                List<HerolandQuestionBankImportDP> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), HerolandQuestionBankImportDP.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
+                List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
 
-                importQuestion(questions);
+                importQuestion(BeanUtil.queryListConversion(questions,HerolandQuestionBankImportDP.class));
 
             }
         }
