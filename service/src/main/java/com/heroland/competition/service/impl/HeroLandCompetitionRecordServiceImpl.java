@@ -55,7 +55,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         String recordId;
         try {
             dp.addSynchronizeCheck();
-            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
+            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
             if (!aBoolean) {
                 HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
                 recordId = heroLandCompetitionRecord.getRecordId();
@@ -77,7 +77,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
         ResponseBody<Boolean> result = new ResponseBody<>();
         // 更新缓存
-        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
+        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
         } catch (Exception e) {
