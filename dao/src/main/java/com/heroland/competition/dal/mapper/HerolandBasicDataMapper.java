@@ -27,4 +27,6 @@ public interface HerolandBasicDataMapper {
     List<HerolandBasicData> selectByDictKeys(@Param("keys") List<String> keys);
 
     List<HerolandBasicData> selectByCodeAndBizNo(@Param("code")String code, @Param("bizNo")String bizNo);
+
+    List<HerolandBasicData> selectByCodesAndValue(@Param("codes")List<String> codes, @Param("value")String name);
 }

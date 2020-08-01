@@ -7,6 +7,7 @@ import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
+import com.heroland.competition.domain.request.HerolandBasicDataPageRequest;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public interface HeroLandAdminService {
      * 分页获取
      * @return 正确
      */
-    ResponseBody<List<HerolandBasicDataDP>> pageQueryDict(HerolandBasicDataQO qo);
+    PageResponse<HerolandBasicDataDP> pageQueryDict(HerolandBasicDataPageRequest request);
 
     /**
      * 获取学校管理的相关内容
