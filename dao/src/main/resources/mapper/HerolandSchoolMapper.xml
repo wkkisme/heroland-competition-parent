@@ -18,9 +18,11 @@
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="default_value"  property="defaultValue" />
   </resultMap>
   <sql id="Base_Column_List">
     id, code, `key`, has_parent, parent_key, name, linked_man, mobile, email,axis,`desc`,is_deleted, creator, modifier, gmt_create, gmt_modified
+    ,default_value
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -100,6 +102,9 @@
       <if test="gmtModified != null">
         gmt_modified,
       </if>
+      <if test="defaultValue != null">
+        default_value,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="code != null">
@@ -146,6 +151,9 @@
       </if>
       <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="defaultValue != null">
+        #{defaultValue},
       </if>
     </trim>
   </insert>
@@ -198,6 +206,9 @@
       </if>
       <if test="gmtModified != null">
         gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="defaultValue != null">
+        default_value= #{defaultValue},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

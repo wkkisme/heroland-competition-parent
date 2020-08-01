@@ -144,8 +144,10 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
 
     //todo 补全
     public HerolandQuestionBankDP checkAndBuildBeforeCreate(){
-        Date yearD = DateUtils.string2Date(year+"-01-01", "");
-        this.yearD = yearD;
+        if (year != null) {
+            Date yearD = DateUtils.string2Date(year + "-01-01", "");
+            this.yearD = yearD;
+        }
         this.qtId = IDGenerateUtils.getKey(AdminFieldEnum.QUEST);
         this.snapshotNo = 1;
         return this;

@@ -26,10 +26,22 @@ public class HeroLandUserClass extends BaseDO implements Serializable {
     private String orgCode;
 
     /**
-     * 班级id
+     * 年级code
      */
-    @ApiModelProperty(value="classId班级id")
-    private Long classId;
+    @ApiModelProperty(value="gradeCode年级code")
+    private String gradeCode;
+
+    /**
+     * 用户类型
+     */
+    @ApiModelProperty(value="userType用户类型")
+    private Integer userType;
+
+    /**
+     * 是否班主任
+     */
+    @ApiModelProperty(value="headTeacher是否班主任")
+    private Boolean headTeacher;
 
     /**
      * heroland_user_class
@@ -85,18 +97,50 @@ public class HeroLandUserClass extends BaseDO implements Serializable {
     }
 
     /**
-     * 班级id
-     * @return class_id 班级id
+     * 年级code
+     * @return grade_code 年级code
      */
-    public Long getClassId() {
-        return classId;
+    public String getGradeCode() {
+        return gradeCode;
     }
 
     /**
-     * 班级id
-     * @param classId 班级id
+     * 年级code
+     * @param gradeCode 年级code
      */
-    public void setClassId(Long classId) {
-        this.classId = classId;
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode == null ? null : gradeCode.trim();
+    }
+
+    /**
+     * 用户类型
+     * @return user_type 用户类型
+     */
+    public Integer getUserType() {
+        return userType;
+    }
+
+    /**
+     * 用户类型
+     * @param userType 用户类型
+     */
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    /**
+     * 是否班主任
+     * @return head_teacher 是否班主任
+     */
+    public Boolean getHeadTeacher() {
+        return headTeacher;
+    }
+
+    /**
+     * 是否班主任
+     * @param headTeacher 是否班主任
+     */
+    public void setHeadTeacher(Boolean headTeacher) {
+        this.headTeacher = headTeacher;
     }
 }

@@ -117,6 +117,20 @@ public abstract class AssertUtils {
     }
 
     /**
+     * 断言，string非空
+     *
+     * @param strs
+     */
+    public static void notBlank(String... strs) {
+        for (String str : strs) {
+            if (StringUtils.isBlank(str)) {
+                assertFail();
+            }
+        }
+
+    }
+
+    /**
      * 对集合，map和collection的断言
      * @param obj
      */
