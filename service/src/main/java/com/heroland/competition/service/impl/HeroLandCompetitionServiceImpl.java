@@ -57,7 +57,7 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
         String recordId = dp.getRecordId();
 
         // 1 更新记录，插入详细
-        HeroLandCompetitionRecordDP record = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
+        HeroLandCompetitionRecordDP record = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + recordId);
 
         // 先缓存查
         if (record == null) {
@@ -77,6 +77,7 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
 
         // 保存答题记录
         details.forEach(questionRecord -> {
+            questionRecord.setRecordId(recordId);
             questionRecordDetailService.addQuestionRecord(questionRecord);
         });
 
