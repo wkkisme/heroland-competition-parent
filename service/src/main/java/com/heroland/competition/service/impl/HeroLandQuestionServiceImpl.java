@@ -297,7 +297,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             dto.setId(e.getId());
             dto.setQtId(e.getQtId());
             dto.setThink(e.getThink());
-            dto.setTopicId(questionIdByTopicId.get(Long.valueOf(e.getQtId())));
+            dto.setTopicId(questionIdByTopicId.get(Long.valueOf(e.getId())));
             if (qtMap.containsKey(e.getId())) {
                 dto.setAnswer(qtMap.get(e.getId()).get(0).getAnswer());
                 dto.setOptionAnswer(qtMap.get(e.getId()).get(0).getOptionAnswer());
