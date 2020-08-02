@@ -14,6 +14,7 @@ import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,6 +79,7 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
         // 保存答题记录
         details.forEach(questionRecord -> {
             questionRecord.setRecordId(recordId);
+            questionRecord.setBeginDate(new Date());
             questionRecordDetailService.addQuestionRecord(questionRecord);
         });
 

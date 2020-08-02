@@ -19,11 +19,13 @@ import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
+import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HerolandQuestionKnowledgeSimpleDto;
 import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
@@ -70,6 +72,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Resource
     private HeroLandQuestionRecordDetailExtMapper questionRecordDetailExtMapper;
+
+    @Resource
+    private HeroLandQuestionService questionService;
 
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
@@ -340,12 +345,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         Map<Long, HeroLandQuestionTopicListForStatisticDto> statisticMap = items.stream().collect(Collectors.toMap(HeroLandQuestionTopicListForStatisticDto::getId, Function.identity(), (o, n) -> n));
         // 作业赛统计
         if (TopicTypeConstants.SYNC_COMPETITION.equals(qo.getType())) {
-            List<HeroLandQuestion> heroLandQuestions = questionExtMapper.selectByTopicIds(topicIds);
+            HeroLandTopicQuestionsQo questionsQo = new HeroLandTopicQuestionsQo();
+            questionsQo.setTopicIds(topicIds.stream().map(Long::valueOf).collect(Collectors.toList()));
+            List<HeroLandQuestionListForTopicDto> heroLandQuestions = questionService.getTopicsQuestions(questionsQo);
             if (CollUtil.isNotEmpty(heroLandQuestions)) {
                 heroLandQuestions.forEach(question -> {
                     AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
-                    dp.setQuestionId(Long.valueOf(question.getQuestionId()));
-                    dp.setTopicId(Long.valueOf(question.getTopicId()));
+                    dp.setQuestionId(Long.valueOf(question.getQtId()));
+                    dp.setTopicId(question.getTopicId());
                     dp.setLevelCode(question.getLevelCode());
                     dp.setQuestionTitle(question.getTitle());
                     if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
@@ -366,7 +373,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             }
                         }
                         if (ObjectUtil.isNotNull(questionRecordMap.get())) {
-                            HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getQuestionId());
+                            HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getQtId());
                             // 如果是同步作业赛，题只能有一个
                             dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
                             dp.setScore(questionRecordDetail.getScore());
