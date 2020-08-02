@@ -233,4 +233,9 @@
 
 
     </select>
+    <select id="selectByRecordId" resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+        select *
+        from heroland_competition_record
+        where record_id = #{recordId}
+    </select>
 </mapper>

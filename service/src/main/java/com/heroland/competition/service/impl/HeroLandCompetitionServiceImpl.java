@@ -61,7 +61,7 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
 
         // 先缓存查
         if (record == null) {
-            record = heroLandCompetitionRecordService.getCompetitionRecordById(new HeroLandCompetitionRecordQO().setRecordId(recordId).queryIdCheck()).getData();
+            record = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(new HeroLandCompetitionRecordQO().setRecordId(recordId).queryIdCheck()).getData();
         }
 
         // 如果还是没有找到比赛 就报错

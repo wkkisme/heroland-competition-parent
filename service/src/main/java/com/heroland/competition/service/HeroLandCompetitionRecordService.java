@@ -60,7 +60,7 @@ public interface HeroLandCompetitionRecordService {
      * @param recordId recordId
      * @return 值
      */
-    ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId);
+    ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByRecordId(HeroLandCompetitionRecordQO recordId);
 
 
     List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo);

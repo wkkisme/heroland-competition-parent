@@ -133,11 +133,11 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO qo) {
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByRecordId(HeroLandCompetitionRecordQO qo) {
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {
-            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByPrimaryKey(qo.queryIdCheck().getId());
+            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByRecordId(qo.queryIdCheck().getRecordId());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
