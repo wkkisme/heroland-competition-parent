@@ -194,7 +194,7 @@
         where record_id = #{recordId,jdbcType=VARCHAR}
     </update>
     <select id="selectByCompetitionRecordId"
-            resultType="BaseResultMap">
+            resultMap="BaseResultMap">
         select * from heroland_question_record_detail where  record_id = #{recordId,jdbcType=VARCHAR}
     </select>
 </mapper>
