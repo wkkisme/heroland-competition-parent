@@ -123,6 +123,24 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
     private String primaryRedisKey;
 
+    /**
+     * 机构code
+     */
+    @ApiModelProperty(value="orgCode机构code")
+    private String orgCode;
+
+    /**
+     * 班级code
+     */
+    @ApiModelProperty(value="classCode班级code")
+    private String classCode;
+
+    /**
+     * 年级
+     */
+    @ApiModelProperty(value="gradeCode年级")
+    private String gradeCode;
+
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
             primaryRedisKey = topicId + questionId + inviteId + opponentId;
@@ -218,6 +236,30 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
 
         return this;
+    }
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode;
     }
 
     public String getWinRate() {

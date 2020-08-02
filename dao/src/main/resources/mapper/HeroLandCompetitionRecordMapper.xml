@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper">
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
-    <id column="record_id" jdbcType="VARCHAR" property="recordId" />
-    <result column="id" jdbcType="BIGINT" property="id" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
     <result column="topic_name" jdbcType="VARCHAR" property="topicName" />
     <result column="topic_type" jdbcType="INTEGER" property="topicType" />
+    <result column="record_id" jdbcType="VARCHAR" property="recordId" />
     <result column="result" jdbcType="INTEGER" property="result" />
     <result column="opponent_id" jdbcType="VARCHAR" property="opponentId" />
     <result column="opponent_level" jdbcType="VARCHAR" property="opponentLevel" />
@@ -24,6 +24,9 @@
     <result column="invite_end_time" jdbcType="TIMESTAMP" property="inviteEndTime" />
     <result column="opponent_start_time" jdbcType="TIMESTAMP" property="opponentStartTime" />
     <result column="opponent_end_time" jdbcType="TIMESTAMP" property="opponentEndTime" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+    <result column="class_code" jdbcType="VARCHAR" property="classCode" />
+    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -84,10 +87,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    record_id, id, topic_id, topic_name, topic_type, result, opponent_id, opponent_level, 
+    id, topic_id, topic_name, topic_type, record_id, result, opponent_id, opponent_level, 
     opponent_score, creator, invite_id, invite_score, modifier, gmt_create, gmt_modified, 
     is_deleted, subject_code, question_id, invite_start_time, invite_end_time, opponent_start_time, 
-    opponent_end_time
+    opponent_end_time, org_code, class_code, grade_code
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultMap="BaseResultMap">
     select
@@ -103,15 +106,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from heroland_competition_record
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from heroland_competition_record
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample">
     delete from heroland_competition_record
@@ -120,35 +123,34 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
-    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_competition_record (id, topic_id, topic_name, 
-      topic_type, result, opponent_id, 
+    insert into heroland_competition_record (topic_id, topic_name, topic_type, 
+      record_id, result, opponent_id, 
       opponent_level, opponent_score, creator, 
       invite_id, invite_score, modifier, 
       gmt_create, gmt_modified, is_deleted, 
       subject_code, question_id, invite_start_time, 
-      invite_end_time, opponent_start_time, opponent_end_time
+      invite_end_time, opponent_start_time, opponent_end_time, 
+      org_code, class_code, grade_code
       )
-    values (#{id,jdbcType=BIGINT}, #{topicId,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, 
-      #{topicType,jdbcType=INTEGER}, #{result,jdbcType=INTEGER}, #{opponentId,jdbcType=VARCHAR}, 
+    values (#{topicId,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{topicType,jdbcType=INTEGER}, 
+      #{recordId,jdbcType=VARCHAR}, #{result,jdbcType=INTEGER}, #{opponentId,jdbcType=VARCHAR}, 
       #{opponentLevel,jdbcType=VARCHAR}, #{opponentScore,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
       #{inviteId,jdbcType=VARCHAR}, #{inviteScore,jdbcType=INTEGER}, #{modifier,jdbcType=VARCHAR}, 
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, 
       #{subjectCode,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{inviteStartTime,jdbcType=TIMESTAMP}, 
-      #{inviteEndTime,jdbcType=TIMESTAMP}, #{opponentStartTime,jdbcType=TIMESTAMP}, #{opponentEndTime,jdbcType=TIMESTAMP}
+      #{inviteEndTime,jdbcType=TIMESTAMP}, #{opponentStartTime,jdbcType=TIMESTAMP}, #{opponentEndTime,jdbcType=TIMESTAMP}, 
+      #{orgCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
-    <selectKey keyProperty="recordId" order="AFTER" resultType="java.lang.String">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into heroland_competition_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="topicId != null">
         topic_id,
       </if>
@@ -157,6 +159,9 @@
       </if>
       <if test="topicType != null">
         topic_type,
+      </if>
+      <if test="recordId != null">
+        record_id,
       </if>
       <if test="result != null">
         result,
@@ -209,11 +214,17 @@
       <if test="opponentEndTime != null">
         opponent_end_time,
       </if>
+      <if test="orgCode != null">
+        org_code,
+      </if>
+      <if test="classCode != null">
+        class_code,
+      </if>
+      <if test="gradeCode != null">
+        grade_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="topicId != null">
         #{topicId,jdbcType=VARCHAR},
       </if>
@@ -222,6 +233,9 @@
       </if>
       <if test="topicType != null">
         #{topicType,jdbcType=INTEGER},
+      </if>
+      <if test="recordId != null">
+        #{recordId,jdbcType=VARCHAR},
       </if>
       <if test="result != null">
         #{result,jdbcType=INTEGER},
@@ -274,6 +288,15 @@
       <if test="opponentEndTime != null">
         #{opponentEndTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="orgCode != null">
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classCode != null">
+        #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null">
+        #{gradeCode,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultType="java.lang.Long">
@@ -285,9 +308,6 @@
   <update id="updateByExampleSelective" parameterType="map">
     update heroland_competition_record
     <set>
-      <if test="record.recordId != null">
-        record_id = #{record.recordId,jdbcType=VARCHAR},
-      </if>
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
@@ -299,6 +319,9 @@
       </if>
       <if test="record.topicType != null">
         topic_type = #{record.topicType,jdbcType=INTEGER},
+      </if>
+      <if test="record.recordId != null">
+        record_id = #{record.recordId,jdbcType=VARCHAR},
       </if>
       <if test="record.result != null">
         result = #{record.result,jdbcType=INTEGER},
@@ -351,6 +374,15 @@
       <if test="record.opponentEndTime != null">
         opponent_end_time = #{record.opponentEndTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.orgCode != null">
+        org_code = #{record.orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.classCode != null">
+        class_code = #{record.classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gradeCode != null">
+        grade_code = #{record.gradeCode,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -358,11 +390,11 @@
   </update>
   <update id="updateByExample" parameterType="map">
     update heroland_competition_record
-    set record_id = #{record.recordId,jdbcType=VARCHAR},
-      id = #{record.id,jdbcType=BIGINT},
+    set id = #{record.id,jdbcType=BIGINT},
       topic_id = #{record.topicId,jdbcType=VARCHAR},
       topic_name = #{record.topicName,jdbcType=VARCHAR},
       topic_type = #{record.topicType,jdbcType=INTEGER},
+      record_id = #{record.recordId,jdbcType=VARCHAR},
       result = #{record.result,jdbcType=INTEGER},
       opponent_id = #{record.opponentId,jdbcType=VARCHAR},
       opponent_level = #{record.opponentLevel,jdbcType=VARCHAR},
@@ -379,7 +411,10 @@
       invite_start_time = #{record.inviteStartTime,jdbcType=TIMESTAMP},
       invite_end_time = #{record.inviteEndTime,jdbcType=TIMESTAMP},
       opponent_start_time = #{record.opponentStartTime,jdbcType=TIMESTAMP},
-      opponent_end_time = #{record.opponentEndTime,jdbcType=TIMESTAMP}
+      opponent_end_time = #{record.opponentEndTime,jdbcType=TIMESTAMP},
+      org_code = #{record.orgCode,jdbcType=VARCHAR},
+      class_code = #{record.classCode,jdbcType=VARCHAR},
+      grade_code = #{record.gradeCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -387,9 +422,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
     update heroland_competition_record
     <set>
-      <if test="id != null">
-        id = #{id,jdbcType=BIGINT},
-      </if>
       <if test="topicId != null">
         topic_id = #{topicId,jdbcType=VARCHAR},
       </if>
@@ -398,6 +430,9 @@
       </if>
       <if test="topicType != null">
         topic_type = #{topicType,jdbcType=INTEGER},
+      </if>
+      <if test="recordId != null">
+        record_id = #{recordId,jdbcType=VARCHAR},
       </if>
       <if test="result != null">
         result = #{result,jdbcType=INTEGER},
@@ -450,15 +485,24 @@
       <if test="opponentEndTime != null">
         opponent_end_time = #{opponentEndTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="orgCode != null">
+        org_code = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classCode != null">
+        class_code = #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeCode != null">
+        grade_code = #{gradeCode,jdbcType=VARCHAR},
+      </if>
     </set>
-    where record_id = #{recordId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
     update heroland_competition_record
-    set id = #{id,jdbcType=BIGINT},
-      topic_id = #{topicId,jdbcType=VARCHAR},
+    set topic_id = #{topicId,jdbcType=VARCHAR},
       topic_name = #{topicName,jdbcType=VARCHAR},
       topic_type = #{topicType,jdbcType=INTEGER},
+      record_id = #{recordId,jdbcType=VARCHAR},
       result = #{result,jdbcType=INTEGER},
       opponent_id = #{opponentId,jdbcType=VARCHAR},
       opponent_level = #{opponentLevel,jdbcType=VARCHAR},
@@ -475,8 +519,10 @@
       invite_start_time = #{inviteStartTime,jdbcType=TIMESTAMP},
       invite_end_time = #{inviteEndTime,jdbcType=TIMESTAMP},
       opponent_start_time = #{opponentStartTime,jdbcType=TIMESTAMP},
-      opponent_end_time = #{opponentEndTime,jdbcType=TIMESTAMP}
-    where record_id = #{recordId,jdbcType=VARCHAR}
+      opponent_end_time = #{opponentEndTime,jdbcType=TIMESTAMP},
+      org_code = #{orgCode,jdbcType=VARCHAR},
+      class_code = #{classCode,jdbcType=VARCHAR},
+      grade_code = #{gradeCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
   </update>
-
 </mapper>

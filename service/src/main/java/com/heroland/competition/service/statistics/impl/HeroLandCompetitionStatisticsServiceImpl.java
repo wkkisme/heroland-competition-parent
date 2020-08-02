@@ -12,6 +12,7 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.CompetitionEnum;
+import com.heroland.competition.common.enums.GroupByEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -221,9 +222,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         try {
 
-            AssertUtils.notBlank(qo.getClassCode());
+//            AssertUtils.notBlank(qo.getClassCode());
             List<String> userIds = result.getData().stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList());
             qo.setUserIds(userIds);
+            qo.setRankField(GroupByEnum.class_code.getFiled());
             List<HeroLandStatisticsDetailAll> classRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
 
 

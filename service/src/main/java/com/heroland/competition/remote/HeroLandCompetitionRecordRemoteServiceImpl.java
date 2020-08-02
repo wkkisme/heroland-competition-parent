@@ -47,6 +47,6 @@ public class HeroLandCompetitionRecordRemoteServiceImpl implements HeroLandCompe
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO recordId) {
-        return heroLandCompetitionRecordService.getCompetitionRecordById(recordId);
+        return heroLandCompetitionRecordService.getCompetitionRecordByRecordId(recordId);
     }
 }

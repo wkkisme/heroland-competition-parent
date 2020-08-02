@@ -88,6 +88,7 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     @ApiModelProperty(value = "opponentEndTime对手比赛结束时间")
     private Date opponentEndTime;
 
+    private Long id;
 
     public HeroLandCompetitionRecordQO queryIdCheck() {
         if (StringUtils.isAnyBlank(recordId)) {
@@ -104,6 +105,14 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     public HeroLandCompetitionRecordQO setRecordId(String recordId) {
         this.recordId = recordId;
         return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTopicId() {

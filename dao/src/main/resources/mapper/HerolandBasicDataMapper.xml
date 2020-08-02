@@ -218,7 +218,7 @@
     <include refid="Base_Column_List" />
     from heroland_basic_data
 
-    where and is_deleted = 0
+    where  is_deleted = 0
     <if test="codes != null and codes.size > 0">
       and code in
       <foreach collection="codes" separator="," close=")" open="(" item="code">

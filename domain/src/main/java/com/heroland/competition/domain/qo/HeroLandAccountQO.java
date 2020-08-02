@@ -36,6 +36,16 @@ public class HeroLandAccountQO extends BaseQO {
     @ApiModelProperty(value = "endTime结束时间")
     private Date endTime;
 
+    private String accountId;
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
     public Date getStartTime() {
         return startTime;
     }

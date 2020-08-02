@@ -1,11 +1,6 @@
 package com.heroland.competition.domain.dp;
 
 import com.anycommon.response.common.BaseDO;
-import com.google.common.collect.Lists;
-import com.heroland.competition.common.constants.AdminFieldEnum;
-import com.heroland.competition.common.utils.DateUtils;
-import com.heroland.competition.common.utils.IDGenerateUtils;
-import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.io.Serializable;

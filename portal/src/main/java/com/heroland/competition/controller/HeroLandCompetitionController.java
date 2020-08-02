@@ -5,6 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandCompetitionService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,9 @@ public class HeroLandCompetitionController {
 
     @Resource
     private HeroLandCompetitionService heroLandCompetitionService;
+
+    @Resource
+    private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
 
     @Value("${answer.SyncTime}")
     private Long syncTime;
@@ -51,5 +56,17 @@ public class HeroLandCompetitionController {
         }
         ResponseBodyWrapper.failParamException();
         return null;
+    }
+
+    @PostMapping("/addCompetitionRecord")
+    public ResponseBody<String> addCompetitionRecord(@RequestBody HeroLandCompetitionRecordDP dp) {
+        return heroLandCompetitionRecordService.addCompetitionRecord(dp);
+    }
+
+    @GetMapping("/getCompetitionRecordById")
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(@RequestParam String competitionRecordId) {
+        HeroLandCompetitionRecordQO qo = new HeroLandCompetitionRecordQO();
+        qo.setRecordId(competitionRecordId);
+        return heroLandCompetitionRecordService.getCompetitionRecordByRecordId(qo);
     }
 }

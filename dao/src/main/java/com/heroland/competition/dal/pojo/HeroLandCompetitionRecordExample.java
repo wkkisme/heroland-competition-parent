@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-27
+     * heroland_competition_record 2020-08-02
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -115,76 +115,6 @@ public class HeroLandCompetitionRecordExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
-        }
-
-        public Criteria andRecordIdIsNull() {
-            addCriterion("record_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdIsNotNull() {
-            addCriterion("record_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdEqualTo(String value) {
-            addCriterion("record_id =", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotEqualTo(String value) {
-            addCriterion("record_id <>", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdGreaterThan(String value) {
-            addCriterion("record_id >", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdGreaterThanOrEqualTo(String value) {
-            addCriterion("record_id >=", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLessThan(String value) {
-            addCriterion("record_id <", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLessThanOrEqualTo(String value) {
-            addCriterion("record_id <=", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdLike(String value) {
-            addCriterion("record_id like", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotLike(String value) {
-            addCriterion("record_id not like", value, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdIn(List<String> values) {
-            addCriterion("record_id in", values, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotIn(List<String> values) {
-            addCriterion("record_id not in", values, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdBetween(String value1, String value2) {
-            addCriterion("record_id between", value1, value2, "recordId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRecordIdNotBetween(String value1, String value2) {
-            addCriterion("record_id not between", value1, value2, "recordId");
-            return (Criteria) this;
         }
 
         public Criteria andIdIsNull() {
@@ -444,6 +374,76 @@ public class HeroLandCompetitionRecordExample {
 
         public Criteria andTopicTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("topic_type not between", value1, value2, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdIsNull() {
+            addCriterion("record_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdIsNotNull() {
+            addCriterion("record_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdEqualTo(String value) {
+            addCriterion("record_id =", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotEqualTo(String value) {
+            addCriterion("record_id <>", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdGreaterThan(String value) {
+            addCriterion("record_id >", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdGreaterThanOrEqualTo(String value) {
+            addCriterion("record_id >=", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLessThan(String value) {
+            addCriterion("record_id <", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLessThanOrEqualTo(String value) {
+            addCriterion("record_id <=", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdLike(String value) {
+            addCriterion("record_id like", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotLike(String value) {
+            addCriterion("record_id not like", value, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdIn(List<String> values) {
+            addCriterion("record_id in", values, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotIn(List<String> values) {
+            addCriterion("record_id not in", values, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdBetween(String value1, String value2) {
+            addCriterion("record_id between", value1, value2, "recordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRecordIdNotBetween(String value1, String value2) {
+            addCriterion("record_id not between", value1, value2, "recordId");
             return (Criteria) this;
         }
 
@@ -1536,6 +1536,216 @@ public class HeroLandCompetitionRecordExample {
             addCriterion("opponent_end_time not between", value1, value2, "opponentEndTime");
             return (Criteria) this;
         }
+
+        public Criteria andOrgCodeIsNull() {
+            addCriterion("org_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeIsNotNull() {
+            addCriterion("org_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeEqualTo(String value) {
+            addCriterion("org_code =", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeNotEqualTo(String value) {
+            addCriterion("org_code <>", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeGreaterThan(String value) {
+            addCriterion("org_code >", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("org_code >=", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeLessThan(String value) {
+            addCriterion("org_code <", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeLessThanOrEqualTo(String value) {
+            addCriterion("org_code <=", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeLike(String value) {
+            addCriterion("org_code like", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeNotLike(String value) {
+            addCriterion("org_code not like", value, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeIn(List<String> values) {
+            addCriterion("org_code in", values, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeNotIn(List<String> values) {
+            addCriterion("org_code not in", values, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeBetween(String value1, String value2) {
+            addCriterion("org_code between", value1, value2, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrgCodeNotBetween(String value1, String value2) {
+            addCriterion("org_code not between", value1, value2, "orgCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeIsNull() {
+            addCriterion("class_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeIsNotNull() {
+            addCriterion("class_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeEqualTo(String value) {
+            addCriterion("class_code =", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeNotEqualTo(String value) {
+            addCriterion("class_code <>", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeGreaterThan(String value) {
+            addCriterion("class_code >", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("class_code >=", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeLessThan(String value) {
+            addCriterion("class_code <", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeLessThanOrEqualTo(String value) {
+            addCriterion("class_code <=", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeLike(String value) {
+            addCriterion("class_code like", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeNotLike(String value) {
+            addCriterion("class_code not like", value, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeIn(List<String> values) {
+            addCriterion("class_code in", values, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeNotIn(List<String> values) {
+            addCriterion("class_code not in", values, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeBetween(String value1, String value2) {
+            addCriterion("class_code between", value1, value2, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andClassCodeNotBetween(String value1, String value2) {
+            addCriterion("class_code not between", value1, value2, "classCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeIsNull() {
+            addCriterion("grade_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeIsNotNull() {
+            addCriterion("grade_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeEqualTo(String value) {
+            addCriterion("grade_code =", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeNotEqualTo(String value) {
+            addCriterion("grade_code <>", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeGreaterThan(String value) {
+            addCriterion("grade_code >", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("grade_code >=", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeLessThan(String value) {
+            addCriterion("grade_code <", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeLessThanOrEqualTo(String value) {
+            addCriterion("grade_code <=", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeLike(String value) {
+            addCriterion("grade_code like", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeNotLike(String value) {
+            addCriterion("grade_code not like", value, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeIn(List<String> values) {
+            addCriterion("grade_code in", values, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeNotIn(List<String> values) {
+            addCriterion("grade_code not in", values, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeBetween(String value1, String value2) {
+            addCriterion("grade_code between", value1, value2, "gradeCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andGradeCodeNotBetween(String value1, String value2) {
+            addCriterion("grade_code not between", value1, value2, "gradeCode");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1549,7 +1759,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-06-27
+     * heroland_competition_record 2020-08-02
      */
     public static class Criterion {
         private String condition;
