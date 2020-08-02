@@ -39,6 +39,8 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.apache.dubbo.common.utils.CollectionUtils.toMap;
+
 /**
  * @author mac
  */
@@ -263,6 +265,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         List<HeroLandQuestionTopicListDto> result = Lists.newArrayList();
         List<Long> questionIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+        Map<Long, Long> questionIdByTopicId = herolandTopicQuestions.stream().collect(Collectors.toMap(HerolandTopicQuestion::getQuestionId, HerolandTopicQuestion::getTopicId, (o, n) -> n));
         List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
 
         List<String> courseKeys = banks.stream().map(HerolandQuestionBank::getCourse).distinct().collect(Collectors.toList());
@@ -299,6 +302,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             dto.setId(e.getId());
             dto.setQtId(e.getQtId());
             dto.setThink(e.getThink());
+            dto.setTopicId(questionIdByTopicId.get(Long.valueOf(e.getId())));
             if (qtMap.containsKey(e.getId())) {
                 dto.setAnswer(qtMap.get(e.getId()).get(0).getAnswer());
                 dto.setOptionAnswer(qtMap.get(e.getId()).get(0).getOptionAnswer());
