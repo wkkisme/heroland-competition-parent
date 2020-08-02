@@ -44,6 +44,8 @@ public enum AdminFieldEnum {
 
     TOPIC("TP", "topic","题目组"),
 
+    STORAGE("SR", "storage","题库类型"),
+
             ;
 
     public static LinkedList<AdminFieldEnum> location = Lists.newLinkedList();

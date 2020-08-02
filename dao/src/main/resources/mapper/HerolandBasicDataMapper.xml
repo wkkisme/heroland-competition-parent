@@ -34,10 +34,10 @@
 
   <update id="deleteByDictKey" >
     update heroland_basic_data
-    set is_delete = 1
+    set is_deleted = 1
     where dict_key in
     <foreach collection="dictKeys" separator="," close=")" open="(" item="dictKey">
-      #{dictKeys,jdbcType=VARCHAR}
+      #{dictKey,jdbcType=VARCHAR}
     </foreach>
   </update>
 

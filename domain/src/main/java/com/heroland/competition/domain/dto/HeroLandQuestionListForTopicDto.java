@@ -104,20 +104,53 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
      */
     private Integer paperType;
 
+
+    /**
+     * 题库类型
+     */
+    private String storage;
+
+    /**
+     * 题库类型名称
+     */
+    private String storageName;
+
+    /**
+     * 思维
+     */
+    private Integer think;
+
     /**
      * 选项内容
      */
     private List<QuestionOptionDto> options;
 
     /**
-     * 选项答案
+     * 选项|填空题答案
      */
     private String optionAnswer;
 
     /**
-     * 解答题答案
+     * 跨学科题答案解说
      */
     private String answer;
+
+    /**
+     * 胡乱答案
+     */
+    private String stormAnswer;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
+    /**
+     * 示例
+     */
+    private String information;
+
+    private String similarQt;
 
     /**
      * 关联的知识点列表
