@@ -22,6 +22,7 @@ import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HerolandQuestionKnowledgeSimpleDto;
 import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
+import com.heroland.competition.domain.qo.AnswerResultQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
@@ -397,5 +398,25 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         responseBody.setData(result);
         responseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), topicQuestionListPage.getTotal()));
         return responseBody;
+    }
+
+    @Override
+    public ResponseBody<AnswerCompetitionResultDP> getAnswerResult(AnswerResultQO qo) {
+        HeroLandCompetitionRecord competitionRecord = competitionRecordExtMapper.selectByRecordIdAndUserId(qo.getCompetitionRecordId(), qo.getUserId());
+        AnswerCompetitionResultDP dp = new AnswerCompetitionResultDP();
+        dp.setResult(dp.getResult());
+        dp.setTotalScore(dp.getTotalScore());
+        // 获取题目的比赛详情
+        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
+        List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
+        questionRecordDetails.forEach(questionRecord -> {
+            AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
+            // TODO 题型
+//            answerDetail.setDiff(questionRecord.ge);
+            answerDetail.setIsCorrectAnswer(questionRecord.getIsCorrectAnswer());
+            answerDetail.setScore(questionRecord.getScore());
+            // TODO 用时
+//            answerDetail.setUseTime();
+        });
     }
 }

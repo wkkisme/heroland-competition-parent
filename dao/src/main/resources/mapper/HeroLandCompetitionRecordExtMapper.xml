@@ -8,7 +8,8 @@
                     ofType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail"/>
     </resultMap>
 
-    <resultMap id="StatisticsMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll" extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
+    <resultMap id="StatisticsMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll"
+               extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
         <result column="right_count" property="rightCount"/>
 
     </resultMap>
@@ -104,7 +105,7 @@
         <if test="groupByOpponentId == true">
             ,opponent_id
         </if>
-     <if test="groupBySubjectCode == true">
+        <if test="groupBySubjectCode == true">
             ,subject_code
         </if>
 
@@ -161,7 +162,8 @@
 
     </select>
 
-    <select id="selectByTopicIdsAndInviterId" resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+    <select id="selectByTopicIdsAndInviterId"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
         where is_deleted = 0
@@ -233,9 +235,17 @@
 
 
     </select>
-    <select id="selectByRecordId" resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+    <select id="selectByRecordId"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
         where record_id = #{recordId}
+    </select>
+    <select id="selectByRecordIdAndUserId"
+            resultType="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+         select *
+        from heroland_competition_record
+        where record_id = #{recordId}
+        and user_id = #{userId}
     </select>
 </mapper>
