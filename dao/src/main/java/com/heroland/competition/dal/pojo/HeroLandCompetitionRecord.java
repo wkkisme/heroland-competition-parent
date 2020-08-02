@@ -3,18 +3,11 @@ package com.heroland.competition.dal.pojo;
 import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 import java.util.Date;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord")
 public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
-    /**
-     * 记录唯一id
-     */
-    @ApiModelProperty(value="recordId记录唯一id")
-    private String recordId;
-
     /**
      * 题组id
      */
@@ -34,9 +27,15 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private Integer topicType;
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局
+     * 记录唯一id
      */
-    @ApiModelProperty(value="result0 邀请方胜利。1 被邀请方胜利。2 平局")
+    @ApiModelProperty(value="recordId记录唯一id")
+    private String recordId;
+
+    /**
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错
+     */
+    @ApiModelProperty(value="result0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错")
     private Integer result;
 
     /**
@@ -106,25 +105,27 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private Date opponentEndTime;
 
     /**
+     * 机构code
+     */
+    @ApiModelProperty(value="orgCode机构code")
+    private String orgCode;
+
+    /**
+     * 班级code
+     */
+    @ApiModelProperty(value="classCode班级code")
+    private String classCode;
+
+    /**
+     * 年级
+     */
+    @ApiModelProperty(value="gradeCode年级")
+    private String gradeCode;
+
+    /**
      * heroland_competition_record
      */
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 记录唯一id
-     * @return record_id 记录唯一id
-     */
-    public String getRecordId() {
-        return recordId;
-    }
-
-    /**
-     * 记录唯一id
-     * @param recordId 记录唯一id
-     */
-    public void setRecordId(String recordId) {
-        this.recordId = recordId == null ? null : recordId.trim();
-    }
 
     /**
      * 题组id
@@ -175,16 +176,32 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     }
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局
-     * @return result 0 邀请方胜利。1 被邀请方胜利。2 平局
+     * 记录唯一id
+     * @return record_id 记录唯一id
+     */
+    public String getRecordId() {
+        return recordId;
+    }
+
+    /**
+     * 记录唯一id
+     * @param recordId 记录唯一id
+     */
+    public void setRecordId(String recordId) {
+        this.recordId = recordId == null ? null : recordId.trim();
+    }
+
+    /**
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错
+     * @return result 0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错
      */
     public Integer getResult() {
         return result;
     }
 
     /**
-     * 0 邀请方胜利。1 被邀请方胜利。2 平局
-     * @param result 0 邀请方胜利。1 被邀请方胜利。2 平局
+     * 0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错
+     * @param result 0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错
      */
     public void setResult(Integer result) {
         this.result = result;
@@ -364,5 +381,53 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
      */
     public void setOpponentEndTime(Date opponentEndTime) {
         this.opponentEndTime = opponentEndTime;
+    }
+
+    /**
+     * 机构code
+     * @return org_code 机构code
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     * 机构code
+     * @param orgCode 机构code
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode == null ? null : orgCode.trim();
+    }
+
+    /**
+     * 班级code
+     * @return class_code 班级code
+     */
+    public String getClassCode() {
+        return classCode;
+    }
+
+    /**
+     * 班级code
+     * @param classCode 班级code
+     */
+    public void setClassCode(String classCode) {
+        this.classCode = classCode == null ? null : classCode.trim();
+    }
+
+    /**
+     * 年级
+     * @return grade_code 年级
+     */
+    public String getGradeCode() {
+        return gradeCode;
+    }
+
+    /**
+     * 年级
+     * @param gradeCode 年级
+     */
+    public void setGradeCode(String gradeCode) {
+        this.gradeCode = gradeCode == null ? null : gradeCode.trim();
     }
 }
