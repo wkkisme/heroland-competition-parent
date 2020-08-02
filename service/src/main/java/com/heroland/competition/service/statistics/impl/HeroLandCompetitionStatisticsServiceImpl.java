@@ -357,13 +357,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 //                            dp.setLevelCode(question.get());
                             dp.setQuestionTitle(question.getTitle());
                             if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
-                                HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(question.getTopicId());
+                                HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(String.valueOf(question.getTopicId()));
                                 if (ObjectUtil.isNotNull(heroLandCompetitionRecord)) {
                                     dp.setResult(heroLandCompetitionRecord.getResult());
                                     dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
                                 }
                             }
-                            HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(Long.valueOf(question.getTopicId()));
+                            HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(question.getTopicId());
                             if (ObjectUtil.isNotNull(statisticDto)) {
                                 dp.setTopicName(statisticDto.getTopicName());
                                 if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
@@ -374,7 +374,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                     }
                                 }
                                 if (ObjectUtil.isNotNull(questionRecordMap.get())) {
-                                    HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getId());
+                                    HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(String.valueOf(question.getId()));
                                     // 如果是同步作业赛，题只能有一个
                                     dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
                                     dp.setScore(questionRecordDetail.getScore());
