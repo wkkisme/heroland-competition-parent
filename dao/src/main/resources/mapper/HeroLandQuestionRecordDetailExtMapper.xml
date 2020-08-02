@@ -108,7 +108,8 @@
         </foreach>
         and a.user_id = #{userId}
     </select>
-    <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
         update heroland_question_record_detail
         <set>
             <if test="creator != null">
@@ -192,4 +193,8 @@
         </set>
         where record_id = #{recordId,jdbcType=VARCHAR}
     </update>
+    <select id="selectByCompetitionRecordId"
+            resultType="BaseResultMap">
+        select * from heroland_question_record_detail where  record_id = #{recordId,jdbcType=VARCHAR}
+    </select>
 </mapper>
