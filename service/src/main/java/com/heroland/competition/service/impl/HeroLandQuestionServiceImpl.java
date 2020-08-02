@@ -247,16 +247,21 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public List<HeroLandQuestionListForTopicDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
+    public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
         if (CollectionUtils.isEmpty(qo.getTopicIds())){
             return Lists.newArrayList();
         }
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByPrimaryKeys(qo.getTopicIds());
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+            return Lists.newArrayList();
+        }
+
         List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(qo.getTopicIds(), null);
 
         if (CollectionUtils.isEmpty(herolandTopicQuestions)){
             return Lists.newArrayList();
         }
-
+        List<HeroLandQuestionTopicListDto> result = Lists.newArrayList();
         List<Long> questionIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
         List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
 
@@ -305,7 +310,22 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             }
             topicDtos.add(dto);
         }
-        return topicDtos;
+        Map<Long, List<HeroLandQuestionListForTopicDto>> questionMap = topicDtos.stream().collect(Collectors.groupingBy(HeroLandQuestionListForTopicDto::getId));
+        Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
+        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()){
+            HeroLandQuestionTopicListDto topicDto = new HeroLandQuestionTopicListDto();
+            topicDto.setId(entry.getKey());
+            List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
+            entry.getValue().forEach(e -> {
+                if (questionMap.containsKey(e.getId())){
+                    subQuestions.addAll(questionMap.get(e.getId()));
+                }
+            });
+            topicDto.setQuestions(subQuestions);
+            result.add(topicDto);
+        }
+
+        return result;
     }
 
 

@@ -4,6 +4,7 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.HeroLandQuestionTopicListDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
@@ -53,7 +54,7 @@ public interface HeroLandQuestionService{
 
     HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request);
 
-    List<HeroLandQuestionListForTopicDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
+    List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
 
 
     /**
