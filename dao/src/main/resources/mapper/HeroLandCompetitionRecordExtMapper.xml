@@ -242,7 +242,7 @@
         where record_id = #{recordId}
     </select>
     <select id="selectByRecordIdAndUserId"
-            resultType="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
          select *
         from heroland_competition_record
         where record_id = #{recordId}
