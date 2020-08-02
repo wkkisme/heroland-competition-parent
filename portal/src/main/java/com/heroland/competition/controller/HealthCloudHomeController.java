@@ -2,6 +2,7 @@ package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
 //import com.anycommon.logger.annotation.CommonLogger;
+import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -23,8 +24,17 @@ public class HealthCloudHomeController {
 //    @CommonLogger(name = "home 方法")
     public String home(HttpServletRequest request,String orgCode){
 
-//        Long id = TinyId.nextId("test");
-//        List<Long> ids = TinyId.nextId("test", 10);
+        /**
+         * {"inviteId":"2718467022236156294001","opponentId":"2",
+         * "opponentLevel":"ADVERSITY_HERO",
+         *
+         * "opponentStartTime":1596290248665,
+         * "primaryRedisKey":"28427184670222361562940012",
+         * "questionId":"4","topicId":"28","topicName":"wangkai001"}
+         *
+         * topicId + questionId + inviteId + opponentId;
+         */
+        redisService.del(HeroLandRedisConstants.COMPETITION+"28"+"4"+"2718467022236156294001"+"2");
         return "/res/index.html";
 
     }

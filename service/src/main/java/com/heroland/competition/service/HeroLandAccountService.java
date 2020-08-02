@@ -2,6 +2,7 @@ package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 
 import java.util.List;
@@ -39,6 +40,26 @@ public interface HeroLandAccountService {
      * @return
      */
     ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId);
+
+
+    /**
+     * 增加钻石
+     * @param dp
+     * @return
+     */
+    ResponseBody<HeroLandAccountDP> incrUserDiamond(HeroLandAccountManageQO dp);
+
+
+
+    /**
+     * 减钻石
+     * @param dp
+     * @return
+     */
+    ResponseBody<HeroLandAccountDP> decrUserDiamond(HeroLandAccountManageQO dp);
+
+
+
 
 
 
