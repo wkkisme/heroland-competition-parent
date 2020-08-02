@@ -35,10 +35,16 @@ public class HeroLandAccountManageQO {
      */
     private Integer num;
 
-    public HeroLandAccountManageQO queryCheck(){
+    public HeroLandAccountManageQO queryDecrCheck(){
 
         AssertUtils.notBlank(userId,accountId);
         AssertUtils.assertThat(competitionType != null);
+        AssertUtils.assertThat(num != null);
+        return this;
+    }
+   public HeroLandAccountManageQO queryIncrCheck(){
+
+        AssertUtils.notBlank(userId,accountId);
         AssertUtils.assertThat(num != null);
         return this;
     }
