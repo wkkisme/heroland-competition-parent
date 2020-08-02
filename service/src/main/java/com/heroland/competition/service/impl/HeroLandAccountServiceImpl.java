@@ -94,7 +94,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Override
     public ResponseBody<HeroLandAccountDP> decrUserDiamond(HeroLandAccountManageQO dp) {
         String userId = dp.getUserId();
-        dp.queryCheck();
+        dp.queryDecrCheck();
         try {
 
             if (!redisService.setNx("user_diamond_decr:" + userId, dp, "PT2h")) {
@@ -138,7 +138,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Override
     public ResponseBody<HeroLandAccountDP> incrUserDiamond(HeroLandAccountManageQO dp) {
         String userId = dp.getUserId();
-        dp.queryCheck();
+        dp.queryIncrCheck();
         try {
 
             if (!redisService.setNx("user_diamond_incr:" + userId, dp, "PT2h")) {
