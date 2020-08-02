@@ -404,8 +404,12 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     public ResponseBody<AnswerCompetitionResultDP> getAnswerResult(AnswerResultQO qo) {
         HeroLandCompetitionRecord competitionRecord = competitionRecordExtMapper.selectByRecordIdAndUserId(qo.getCompetitionRecordId(), qo.getUserId());
         AnswerCompetitionResultDP dp = new AnswerCompetitionResultDP();
-        dp.setResult(dp.getResult());
-        dp.setTotalScore(dp.getTotalScore());
+        dp.setResult(competitionRecord.getResult());
+        if (competitionRecord.getInviteId().equals(qo.getUserId())) {
+            dp.setTotalScore(competitionRecord.getInviteScore());
+        } else {
+            dp.setTotalScore(competitionRecord.getOpponentScore());
+        }
         // 获取题目的比赛详情
         List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
         List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
@@ -417,6 +421,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             answerDetail.setScore(questionRecord.getScore());
             // TODO 用时
 //            answerDetail.setUseTime();
+            answerDetails.add(answerDetail);
         });
+        dp.setAnswerDetails(answerDetails);
+        return ResponseBodyWrapper.successWrapper(dp);
     }
 }
