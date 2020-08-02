@@ -110,7 +110,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     @Override
     public PageResponse<HerolandBasicDataDP> pageQueryDict(HerolandBasicDataPageRequest qo) {
         PageResponse<HerolandBasicDataDP> pageResult = new PageResponse<>();
-        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageNum(), qo.getPageSize(), true).doSelectPage(
+        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                 () -> herolandBasicDataMapper.selectByCodesAndValue(qo.getCode(), qo.getName()));
         List<HerolandBasicDataDP> dpList = dataPage.getResult().stream().map(this::convertToDP).collect(Collectors.toList());
         pageResult.setItems(dpList);
