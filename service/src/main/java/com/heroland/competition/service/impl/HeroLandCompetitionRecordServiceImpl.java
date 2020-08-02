@@ -137,7 +137,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {
-            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByPrimaryKey(qo.queryIdCheck().getRecordId());
+            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByPrimaryKey(qo.queryIdCheck().getId());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
