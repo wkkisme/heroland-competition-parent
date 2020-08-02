@@ -321,8 +321,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             topicDto.setId(entry.getKey());
             List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
             entry.getValue().forEach(e -> {
-                if (questionMap.containsKey(e.getId())){
-                    subQuestions.addAll(questionMap.get(e.getId()));
+                if (questionMap.containsKey(e.getQuestionId())){
+                    subQuestions.addAll(questionMap.get(e.getQuestionId()));
                 }
             });
             topicDto.setQuestions(subQuestions);
