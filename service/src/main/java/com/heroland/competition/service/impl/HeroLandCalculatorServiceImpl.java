@@ -100,13 +100,13 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
 
         // 獲取邀請人的答題記錄
         HeroLandQuestionQO questionQo = new HeroLandQuestionQO();
-        questionQo.setCompetitionRecordId(dp.getRecordId());
+        questionQo.setRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getInviteId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> inviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> inviteQuestionRecords = inviteQuestionRecordRes.getData();
 
         // 获取被邀请人答题记录
-        questionQo.setCompetitionRecordId(dp.getRecordId());
+        questionQo.setRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getOpponentId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> beInviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> beInviteQuestionRecords = beInviteQuestionRecordRes.getData();

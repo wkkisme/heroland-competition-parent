@@ -19,7 +19,7 @@ public class HeroLandQuestionQO extends BaseQO {
      * 比赛记录id
      */
     @MybatisCriteriaAnnotation
-    private String competitionRecordId;
+    private String recordId;
 
     /**
      * 答题记录id
