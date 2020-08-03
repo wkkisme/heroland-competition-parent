@@ -420,13 +420,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setTotalScore(competitionRecord.getOpponentScore());
         }
         // 获取题目的比赛详情
-        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
+        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
         List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
         questionRecordDetails.forEach(questionRecord -> {
             AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
             // TODO 题型
 //            answerDetail.setDiff(questionRecord.ge);
-            answerDetail.setIsCorrectAnswer(questionRecord.getIsCorrectAnswer());
+            answerDetail.setIsCorrectAnswer(questionRecord.isCorrectAnswer());
             answerDetail.setScore(questionRecord.getScore());
             // TODO 用时
 //            answerDetail.setUseTime();
