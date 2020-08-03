@@ -375,9 +375,12 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                 }
                                 if (ObjectUtil.isNotNull(questionRecordMap.get())) {
                                     HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(String.valueOf(question.getId()));
-                                    // 如果是同步作业赛，题只能有一个
-                                    dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
-                                    dp.setScore(questionRecordDetail.getScore());
+                                    if (ObjectUtil.isNotNull(questionRecordDetail)) {
+
+                                        // 如果是同步作业赛，题只能有一个
+                                        dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
+                                        dp.setScore(questionRecordDetail.getScore());
+                                    }
                                 }
                             }
                             result.add(dp);
