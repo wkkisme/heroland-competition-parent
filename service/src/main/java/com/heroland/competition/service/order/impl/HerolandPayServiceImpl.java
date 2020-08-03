@@ -46,7 +46,7 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     @Override
     public void updatePay(HerolandPayDP herolandPay) {
         if (StringUtils.isBlank(herolandPay.getBizNo())){
-            ResponseBodyWrapper.failSysException();;
+            ResponseBodyWrapper.failSysException();
         }
         try {
             HerolandPay pay = BeanUtil.updateConversion(herolandPay, new HerolandPay());

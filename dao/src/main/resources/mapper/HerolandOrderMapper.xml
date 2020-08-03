@@ -277,12 +277,6 @@
       <if test="modifier != null">
         modifier = #{modifier,jdbcType=VARCHAR},
       </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -326,4 +320,18 @@
       </foreach>
     </if>
   </select>
+
+  <select id="getByBizNos"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_order
+    where 1 = 1
+    <if test="bizNos != null and bizNos.size > 0">
+      and biz_no IN
+      <foreach collection="bizNos" open="(" close=")" item="bizNo" separator=",">
+        #{bizNo}
+      </foreach>
+    </if>
+  </select>
+
 </mapper>

@@ -24,7 +24,7 @@ public interface HerolandOrderService {
      * 支付回调
      * @return
      */
-    HerolandOrderDP payOrderCallBack(PayOrderQO qo);
+    Boolean payOrderCallBack(PayOrderQO qo);
 
     /**
      * 获取用户的订单列表
