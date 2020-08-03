@@ -20,7 +20,6 @@ import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
-import com.heroland.competition.domain.dto.HerolandQuestionKnowledgeSimpleDto;
 import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
 import com.heroland.competition.domain.qo.AnswerResultQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
@@ -357,6 +356,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     if (ObjectUtil.isNotNull(heroLandCompetitionRecord)) {
                         dp.setResult(heroLandCompetitionRecord.getResult());
                         dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
+                        Integer recordResult = heroLandCompetitionRecord.getResult();
+                        if (heroLandCompetitionRecord.getInviteId().equals(qo.getUserId())) {
+                            if (ObjectUtil.isNotNull(recordResult)) {
+                                dp.setResult(recordResult.equals(0) ? 0 : recordResult.equals(2) ? 2 : 1);
+                            }
+                        } else {
+                            if (ObjectUtil.isNotNull(result)) {
+                                dp.setResult(recordResult.equals(1) ? 0 : recordResult.equals(2) ? 2 : 1);
+                            }
+                        }
                     }
                 }
                 dp.setTopicName(questionTopicDP.getTopicName());
