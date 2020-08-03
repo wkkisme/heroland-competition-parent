@@ -193,6 +193,93 @@
         </set>
         where record_id = #{recordId,jdbcType=VARCHAR}
     </update>
+    <update id="updateByRecordIdSelective">
+        update heroland_question_record_detail
+        <set>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="gradeCode != null">
+                grade_code = #{gradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="classCode != null">
+                class_code = #{classCode,jdbcType=VARCHAR},
+            </if>
+            <if test="questionId != null">
+                question_id = #{questionId,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="optionA != null">
+                option_a = #{optionA,jdbcType=VARCHAR},
+            </if>
+            <if test="optionB != null">
+                option_b = #{optionB,jdbcType=VARCHAR},
+            </if>
+            <if test="optionC != null">
+                option_c = #{optionC,jdbcType=VARCHAR},
+            </if>
+            <if test="optionD != null">
+                option_d = #{optionD,jdbcType=VARCHAR},
+            </if>
+            <if test="optionE != null">
+                option_e = #{optionE,jdbcType=VARCHAR},
+            </if>
+            <if test="answer != null">
+                answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="solution != null">
+                solution = #{solution,jdbcType=VARCHAR},
+            </if>
+            <if test="parse != null">
+                parse = #{parse,jdbcType=VARCHAR},
+            </if>
+            <if test="levelCode != null">
+                level_code = #{levelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="yourAnswer != null">
+                your_answer = #{yourAnswer,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordId != null">
+                record_id = #{recordId,jdbcType=VARCHAR},
+            </if>
+            <if test="recordDetailId != null">
+                record_detail_id = #{recordDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="beginDate != null">
+                begin_date = #{beginDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="score != null">
+                score = #{score,jdbcType=INTEGER},
+            </if>
+            <if test="isCorrectAnswer != null">
+                is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+            </if>
+            <if test="topicId != null">
+                topic_id = #{topicId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where record_detail_id = #{recordDetailId,jdbcType=VARCHAR}
+    </update>
     <select id="selectByCompetitionRecordId"
             resultMap="BaseResultMap">
         select * from heroland_question_record_detail where  record_id = #{recordId,jdbcType=VARCHAR}

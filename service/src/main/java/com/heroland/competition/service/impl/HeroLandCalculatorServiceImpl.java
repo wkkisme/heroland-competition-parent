@@ -210,7 +210,8 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
 
             // 如果答题正确计算分数
             if (isCorrect) {
-                atomicInteger.addAndGet(initAnswerScore + compare);
+                atomicInteger.addAndGet(initAnswerScore);
+                atomicInteger.addAndGet(compare);
             }
 
             // 判断用户答题时间是否小于对手的答题时间
