@@ -5,6 +5,9 @@ import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,14 +27,16 @@ public class HeroLandClassController {
     @Resource
     private HeroLandClassService heroLandClassService;
 
+    @Resource
+    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
     /**
      * 新增班级
      * @param dp
      * @return
      */
     @RequestMapping(value = "/addClassUser")
-    public ResponseBody<Boolean> addClass(@RequestBody HeroLandUserClassDP dp) {
-        return heroLandClassService.addClassUser(dp);
+    public ResponseBody<Boolean> addClass(@RequestBody PlatformSysUserClassDP dp) {
+        return platformSsoUserClassServiceFacade.save(dp);
     }
 
     /**
@@ -40,8 +45,8 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/updateClass")
-    public ResponseBody<Boolean> updateClass(@RequestBody HeroLandClassDP dp) {
-        return heroLandClassService.updateClass(dp);
+    public ResponseBody<Boolean> updateClass(@RequestBody PlatformSysUserClassDP dp) {
+        return platformSsoUserClassServiceFacade.update(dp);
     }
 
     /**
@@ -50,8 +55,8 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/delClass")
-    public ResponseBody<Boolean> delClass(@RequestBody HeroLandClassManageQO dp) {
-        return heroLandClassService.deleteClassList(dp);
+    public ResponseBody<Boolean> delClass(@RequestBody PlatformSysUserClassDP dp) {
+        return platformSsoUserClassServiceFacade.delete(dp.getId());
     }
 
     /**
@@ -60,8 +65,8 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/getClassList")
-    public ResponseBody<List<HeroLandClassDP>> getClassList(@RequestBody HeroLandClassManageQO dp) {
-        return heroLandClassService.getClassList(dp);
+    public ResponseBody<List<PlatformSysUserClassDP>> getClassList(@RequestBody PlatformSysUserClassQO dp) {
+        return platformSsoUserClassServiceFacade.queryUserClassList(dp);
     }
 
 }

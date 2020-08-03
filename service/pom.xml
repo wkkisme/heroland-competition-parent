@@ -53,6 +53,11 @@
         </dependency>
 
         <dependency>
+            <artifactId>platform-sso-rpc</artifactId>
+            <groupId>com.platform.sso</groupId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>4.0.0</version>
@@ -189,6 +194,7 @@
             <groupId>com.heroland.competition</groupId>
             <version>1.0.8-SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>com.anycommon</groupId>
             <artifactId>anycommon-poi</artifactId>
