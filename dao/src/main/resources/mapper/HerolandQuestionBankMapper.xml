@@ -506,11 +506,11 @@
             and htg.`type` = #{item.type,jdbcType=INTEGER}
         </if>
         <if test="item.startTime != null">
-            and htg.`start_time` &gt;= #{item.startTime,jdbcType=TIMESTAMP}
+            and htg.`gmt_create` &gt;= #{item.startTime,jdbcType=TIMESTAMP}
         </if>
         <if test="item.endTime != null">
             <![CDATA[
-                and htg.`end_time` <= #{item.endTime,jdbcType=TIMESTAMP}
+                and htg.`gmt_create` <= #{item.endTime,jdbcType=TIMESTAMP}
             ]]>
         </if>
         group by hqb.id
