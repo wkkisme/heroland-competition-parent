@@ -147,7 +147,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String topicId;
 
     public HeroLandQuestionRecordDetailDP updateCheck(){
-        if (StringUtils.isAnyBlank(this.topicId, this.recordDetailId, this.recordId)) {
+        if (StringUtils.isAnyBlank(this.recordDetailId, this.recordId)) {
             ResponseBodyWrapper.failParamException();
         }
         if (this.recordId == null && this.recordDetailId == null) {
