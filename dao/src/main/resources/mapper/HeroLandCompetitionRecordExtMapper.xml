@@ -241,11 +241,4 @@
         from heroland_competition_record
         where record_id = #{recordId}
     </select>
-    <select id="selectByRecordIdAndUserId"
-            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
-         select *
-        from heroland_competition_record
-        where record_id = #{recordId}
-        and user_id = #{userId}
-    </select>
 </mapper>

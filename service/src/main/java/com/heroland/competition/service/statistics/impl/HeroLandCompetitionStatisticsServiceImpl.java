@@ -411,7 +411,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Override
     public ResponseBody<AnswerCompetitionResultDP> getAnswerResult(AnswerResultQO qo) {
-        HeroLandCompetitionRecord competitionRecord = competitionRecordExtMapper.selectByRecordIdAndUserId(qo.getCompetitionRecordId(), qo.getUserId());
+        HeroLandCompetitionRecord competitionRecord = competitionRecordExtMapper.selectByRecordId(qo.getCompetitionRecordId());
         AnswerCompetitionResultDP dp = new AnswerCompetitionResultDP();
         dp.setResult(competitionRecord.getResult());
         if (competitionRecord.getInviteId().equals(qo.getUserId())) {
