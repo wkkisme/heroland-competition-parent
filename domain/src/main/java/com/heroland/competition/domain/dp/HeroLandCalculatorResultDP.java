@@ -1,11 +1,15 @@
 package com.heroland.competition.domain.dp;
 
 
+import com.anycommon.response.common.BaseDO;
+
+import java.io.Serializable;
+
 /**
  * 计算结果
  * @author wangkai
  */
-public class HeroLandCalculatorResultDP {
+public class HeroLandCalculatorResultDP extends BaseDO implements Serializable {
 
     /**
      * 我的等级
