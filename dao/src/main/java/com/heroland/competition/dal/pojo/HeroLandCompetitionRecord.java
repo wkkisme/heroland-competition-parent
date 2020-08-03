@@ -123,6 +123,12 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String gradeCode;
 
     /**
+     * 邀请人等级
+     */
+    @ApiModelProperty(value="inviteLevel邀请人等级")
+    private String inviteLevel;
+
+    /**
      * heroland_competition_record
      */
     private static final long serialVersionUID = 1L;
@@ -429,5 +435,21 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
      */
     public void setGradeCode(String gradeCode) {
         this.gradeCode = gradeCode == null ? null : gradeCode.trim();
+    }
+
+    /**
+     * 邀请人等级
+     * @return invite_level 邀请人等级
+     */
+    public String getInviteLevel() {
+        return inviteLevel;
+    }
+
+    /**
+     * 邀请人等级
+     * @param inviteLevel 邀请人等级
+     */
+    public void setInviteLevel(String inviteLevel) {
+        this.inviteLevel = inviteLevel == null ? null : inviteLevel.trim();
     }
 }

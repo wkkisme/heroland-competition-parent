@@ -154,6 +154,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
         HeroLandCalculatorResultDP result = new HeroLandCalculatorResultDP();
         result.setInviteLevel(inviteUser.getLevelName());
         result.setInviteScore(dp.getInviteScore());
+        result.setInviteLevel(heroLevelUtils.getLevelCode(dp.getInviteScore()));
         result.setOpponentLevel(dp.getOpponentLevel());
         result.setOpponentScore(dp.getOpponentScore());
         return result;
