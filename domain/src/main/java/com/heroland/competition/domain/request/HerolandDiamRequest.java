@@ -1,6 +1,7 @@
 package com.heroland.competition.domain.request;
 
 import com.anycommon.response.common.BaseQO;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -58,6 +59,13 @@ public class HerolandDiamRequest extends BaseQO implements Serializable {
      */
     @NotNull
     private String bizGroup;
+
+    /**
+     * 比赛类型
+     * 账户那边必须
+     */
+    @NotNull
+    private CompetitionEnum competitionEnum;
 
 
 }

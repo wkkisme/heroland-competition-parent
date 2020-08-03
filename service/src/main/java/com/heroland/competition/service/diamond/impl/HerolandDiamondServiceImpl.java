@@ -1,10 +1,13 @@
 package com.heroland.competition.service.diamond.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.heroland.competition.common.constants.DiamBizGroupEnum;
+import com.heroland.competition.common.constants.StockEnum;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -12,18 +15,22 @@ import com.heroland.competition.dal.mapper.HerolandDiamondStockLogMapper;
 import com.heroland.competition.dal.mapper.HerolandSkuMapper;
 import com.heroland.competition.dal.pojo.HerolandDiamondStockLog;
 import com.heroland.competition.dal.pojo.HerolandSku;
+import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HerolandDiamondStockLogDP;
 import com.heroland.competition.domain.dp.HerolandSkuDP;
 import com.heroland.competition.domain.dto.HerolandDiamMonthRecordDto;
 import com.heroland.competition.domain.dto.HerolandDiamondStockDto;
+import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HerolandDiamRecordQO;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
 import com.heroland.competition.domain.request.HerolandDiamMonthRecordRequest;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
+import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -40,6 +47,9 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
 
     @Resource
     private HerolandDiamondStockLogMapper herolandDiamondStockLogMapper;
+
+    @Resource
+    private HeroLandAccountService heroLandAccountService;
 
     @Override
     public void createDiamondSku(HerolandSkuDP herolandSkuDP) {
@@ -101,6 +111,7 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
     }
 
     @Override
+    @Transactional
     public Boolean createDiamondRecord(HerolandDiamRequest request) {
         HerolandDiamondStockLogDP dp = new HerolandDiamondStockLogDP();
         dp.setBizGroup(request.getBizGroup());
@@ -110,6 +121,16 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
         dp.setUserId(request.getUserId());
         dp = dp.checkAndBuildBeforeCreate();
         HerolandDiamondStockLog stockLog = BeanCopyUtils.copyByJSON(dp, HerolandDiamondStockLog.class);
+        if (Objects.equals(request.getChangeStockType(), StockEnum.INCREASE.getLevel())){
+            HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
+            heroLandAccountManageQO.setUserId(request.getUserId());
+            heroLandAccountManageQO.setNum(request.getNum());
+            if (!Objects.equals(request.getBizGroup(), DiamBizGroupEnum.BUY.getGroup())){
+                heroLandAccountManageQO.setCompetitionType(request.getCompetitionEnum());
+            }
+            heroLandAccountService.incrUserDiamond(heroLandAccountManageQO);
+        }
+
         return herolandDiamondStockLogMapper.insertSelective(stockLog) > 0;
     }
 

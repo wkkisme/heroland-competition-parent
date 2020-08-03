@@ -3,6 +3,7 @@ package com.heroland.competition.domain.qo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author smjyouzan
@@ -19,10 +20,15 @@ public class PayOrderQO implements Serializable {
     /**
      * 收单号
      */
-    private String acquireNo;
+    private String paymentNo;
 
     /**
      * 支付渠道
      */
     private String payTool;
+
+    /**
+     * 支付完成时间
+     */
+    private Date payFinishTime;
 }

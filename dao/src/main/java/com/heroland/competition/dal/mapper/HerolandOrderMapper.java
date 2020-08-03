@@ -19,4 +19,6 @@ public interface HerolandOrderMapper {
     int updateByPrimaryKey(HerolandOrder record);
 
     List<HerolandOrder> listOrderByBuyer(@Param("userId") String userId,@Param("status") List<String> status);
+
+    List<HerolandOrder> getByBizNos(@Param("bizNos") List<String> bizNos);
 }

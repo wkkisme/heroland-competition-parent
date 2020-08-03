@@ -5,7 +5,10 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constants.DiamBizGroupEnum;
+import com.heroland.competition.common.constants.DiamBizTypeEnum;
 import com.heroland.competition.common.constants.OrderStateEnum;
+import com.heroland.competition.common.constants.StockEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -21,6 +24,7 @@ import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
 import com.heroland.competition.domain.dto.HerolandOrderListDto;
 import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.PayOrderQO;
+import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
@@ -88,9 +92,33 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     }
 
     @Override
-    public HerolandOrderDP payOrderCallBack(PayOrderQO payOrderQO) {
+    public Boolean payOrderCallBack(PayOrderQO payOrderQO) {
+        HerolandPayDP payById = herolandPayService.getPayById(payOrderQO.getPayId());
+        if (payById == null){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PAY.getErrorMessage());
+        }
+        String bizNo = payById.getBizNo();
+        List<HerolandOrder> byBizNos = herolandOrderMapper.getByBizNos(Lists.newArrayList(bizNo));
+        if (CollectionUtils.isEmpty(byBizNos)){
+            return false;
+        }
+        HerolandOrder herolandOrder = byBizNos.get(0);
+        herolandOrder.setState(OrderStateEnum.PAID.getCode());
+        herolandOrderMapper.updateByPrimaryKeySelective(herolandOrder);
+        payById.setPaymentNo(payOrderQO.getPaymentNo());
+        payById.setPayTool(payOrderQO.getPayTool());
+        payById.setPayFinishTime(payOrderQO.getPayFinishTime());
+        payById.setState(OrderStateEnum.PAID.getCode());
+        herolandPayService.updatePay(payById);
 
-        return null;
+        HerolandDiamRequest request = new HerolandDiamRequest();
+        request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
+        request.setBizName(DiamBizTypeEnum.PAY.getValue());
+        request.setNum(herolandOrder.getSkuNum());
+        request.setUserId(herolandOrder.getBuyerId());
+        request.setChangeStockType(StockEnum.INCREASE.getLevel());
+        herolandDiamondService.createDiamondRecord(request);
+        return true;
     }
 
     @Override
