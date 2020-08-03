@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * @author mac
  */
-public interface HeroLandQuestionExtMapper extends HeroLandQuestionMapper{
+public interface HeroLandQuestionExtMapper extends HeroLandQuestionMapper {
     List<HeroLandQuestion> selectByTopicIds(List<String> topicIds);
 }

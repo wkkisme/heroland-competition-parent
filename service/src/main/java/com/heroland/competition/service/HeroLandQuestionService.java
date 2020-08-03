@@ -3,6 +3,7 @@ package com.heroland.competition.service;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
+import com.heroland.competition.domain.dp.QuestionTopicDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
@@ -68,5 +69,7 @@ public interface HeroLandQuestionService{
      * @return 值
      */
     PageResponse<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForChapterStatistics(HeroLandTopicQuestionForCourseRequest request);
+
+    PageResponse<QuestionTopicDP> getQuestionTopic(HeroLandTopicQuestionForCourseRequest request);
 
 }

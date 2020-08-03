@@ -1,262 +1,263 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandQuestionBankMapper">
-  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandQuestionBank">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="creator" jdbcType="VARCHAR" property="creator" />
-    <result column="modifier" jdbcType="VARCHAR" property="modifier" />
-    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
-    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
-    <result column="course" jdbcType="VARCHAR" property="course" />
-    <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="sub_type" jdbcType="INTEGER" property="subType" />
-    <result column="diff" jdbcType="INTEGER" property="diff" />
-    <result column="year" jdbcType="TIMESTAMP" property="year" />
-    <result column="area" jdbcType="VARCHAR" property="area" />
-    <result column="source" jdbcType="VARCHAR" property="source" />
-    <result column="paper_type" jdbcType="INTEGER" property="paperType" />
-    <result column="qt_id" jdbcType="VARCHAR" property="qtId" />
-    <result column="snapshot_no" jdbcType="INTEGER" property="snapshotNo" />
+    <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="creator" jdbcType="VARCHAR" property="creator"/>
+        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="grade_code" jdbcType="VARCHAR" property="gradeCode"/>
+        <result column="course" jdbcType="VARCHAR" property="course"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="sub_type" jdbcType="INTEGER" property="subType"/>
+        <result column="diff" jdbcType="INTEGER" property="diff"/>
+        <result column="year" jdbcType="TIMESTAMP" property="year"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="paper_type" jdbcType="INTEGER" property="paperType"/>
+        <result column="qt_id" jdbcType="VARCHAR" property="qtId"/>
+        <result column="snapshot_no" jdbcType="INTEGER" property="snapshotNo"/>
 
-    <result column="passage_id" jdbcType="BIGINT" property="passageId" />
-    <result column="storage" jdbcType="VARCHAR" property="storage" />
-    <result column="think" jdbcType="INTEGER" property="think" />
+        <result column="passage_id" jdbcType="BIGINT" property="passageId"/>
+        <result column="storage" jdbcType="VARCHAR" property="storage"/>
+        <result column="think" jdbcType="INTEGER" property="think"/>
 
-  </resultMap>
+    </resultMap>
 
-  <resultMap id="SimpleResultMap" type="com.heroland.competition.domain.dp.HerolandQuestionUniqDP">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="qt_id" jdbcType="VARCHAR" property="qtId" />
-    <result column="snapshot_no" jdbcType="INTEGER" property="snapshotNo" />
-  </resultMap>
+    <resultMap id="SimpleResultMap" type="com.heroland.competition.domain.dp.HerolandQuestionUniqDP">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="qt_id" jdbcType="VARCHAR" property="qtId"/>
+        <result column="snapshot_no" jdbcType="INTEGER" property="snapshotNo"/>
+    </resultMap>
 
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.heroland.competition.dal.pojo.HerolandQuestionBank">
-    <result column="title" jdbcType="LONGVARCHAR" property="title" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+               type="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+        <result column="title" jdbcType="LONGVARCHAR" property="title"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, title,
     `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no, passage_id,storage,think
   </sql>
 
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    from heroland_question_bank
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update  heroland_question_bank set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <!--<insert id="insert" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">-->
+    <!--<insert id="insert" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">-->
     <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">-->
-      <!--SELECT LAST_INSERT_ID()-->
+    <!--SELECT LAST_INSERT_ID()-->
     <!--</selectKey>-->
     <!--insert into heroland_question_bank (creator, modifier, gmt_create, -->
-      <!--gmt_modified, is_deleted, grade_code, -->
-      <!--course, `type`, sub_type, -->
-      <!--diff, `year`, area, `source`,-->
+    <!--gmt_modified, is_deleted, grade_code, -->
+    <!--course, `type`, sub_type, -->
+    <!--diff, `year`, area, `source`,-->
     <!--paper_type, title)-->
     <!--values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, -->
-      <!--#{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, -->
-      <!--#{course,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{subType,jdbcType=INTEGER}, -->
-      <!--#{diff,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, -->
-      <!--#{paperType,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR})-->
-  <!--</insert>-->
-  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into heroland_question_bank
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="creator != null">
-        creator,
-      </if>
-      <if test="modifier != null">
-        modifier,
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create,
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified,
-      </if>
-      <if test="isDeleted != null">
-        is_deleted,
-      </if>
-      <if test="gradeCode != null">
-        grade_code,
-      </if>
-      <if test="course != null">
-        course,
-      </if>
-      <if test="type != null">
-        `type`,
-      </if>
-      <if test="subType != null">
-        sub_type,
-      </if>
-      <if test="diff != null">
-        diff,
-      </if>
-      <if test="year != null">
-        `year`,
-      </if>
-      <if test="area != null">
-        area,
-      </if>
-      <if test="source != null">
-        `source`,
-      </if>
-      <if test="paperType != null">
-        paper_type,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="qtId != null">
-        qt_id,
-      </if>
-      <if test="snapshotNo != null">
-        snapshot_no,
-      </if>
+    <!--#{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, -->
+    <!--#{course,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{subType,jdbcType=INTEGER}, -->
+    <!--#{diff,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, -->
+    <!--#{paperType,jdbcType=INTEGER}, #{title,jdbcType=LONGVARCHAR})-->
+    <!--</insert>-->
+    <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into heroland_question_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="creator != null">
+                creator,
+            </if>
+            <if test="modifier != null">
+                modifier,
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create,
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified,
+            </if>
+            <if test="isDeleted != null">
+                is_deleted,
+            </if>
+            <if test="gradeCode != null">
+                grade_code,
+            </if>
+            <if test="course != null">
+                course,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="subType != null">
+                sub_type,
+            </if>
+            <if test="diff != null">
+                diff,
+            </if>
+            <if test="year != null">
+                `year`,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="source != null">
+                `source`,
+            </if>
+            <if test="paperType != null">
+                paper_type,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="qtId != null">
+                qt_id,
+            </if>
+            <if test="snapshotNo != null">
+                snapshot_no,
+            </if>
 
-      <if test="passageId != null">
-        passage_id,
-      </if>
-      <if test="storage != null">
-        storage,
-      </if>
-      <if test="think != null">
-        think,
-      </if>
+            <if test="passageId != null">
+                passage_id,
+            </if>
+            <if test="storage != null">
+                storage,
+            </if>
+            <if test="think != null">
+                think,
+            </if>
 
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifier != null">
-        #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModified != null">
-        #{gmtModified,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDeleted != null">
-        #{isDeleted,jdbcType=BIT},
-      </if>
-      <if test="gradeCode != null">
-        #{gradeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="course != null">
-        #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="subType != null">
-        #{subType,jdbcType=INTEGER},
-      </if>
-      <if test="diff != null">
-        #{diff,jdbcType=INTEGER},
-      </if>
-      <if test="year != null">
-        #{year,jdbcType=TIMESTAMP},
-      </if>
-      <if test="area != null">
-        #{area,jdbcType=VARCHAR},
-      </if>
-      <if test="source != null">
-        #{source,jdbcType=VARCHAR},
-      </if>
-      <if test="paperType != null">
-        #{paperType,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="qtId != null">
-        #{qtId,jdbcType=VARCHAR},
-      </if>
-      <if test="snapshotNo != null">
-        #{snapshotNo,jdbcType=INTEGER},
-      </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="creator != null">
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="gradeCode != null">
+                #{gradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="course != null">
+                #{course,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="subType != null">
+                #{subType,jdbcType=INTEGER},
+            </if>
+            <if test="diff != null">
+                #{diff,jdbcType=INTEGER},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=TIMESTAMP},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="paperType != null">
+                #{paperType,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="qtId != null">
+                #{qtId,jdbcType=VARCHAR},
+            </if>
+            <if test="snapshotNo != null">
+                #{snapshotNo,jdbcType=INTEGER},
+            </if>
 
-      <if test="passageId != null">
-        #{passageId,jdbcType=BIGINT},
-      </if>
-      <if test="storage != null">
-        #{storage,jdbcType=VARCHAR},
-      </if>
-      <if test="think != null">
-        #{think,jdbcType=INTEGER},
-      </if>
+            <if test="passageId != null">
+                #{passageId,jdbcType=BIGINT},
+            </if>
+            <if test="storage != null">
+                #{storage,jdbcType=VARCHAR},
+            </if>
+            <if test="think != null">
+                #{think,jdbcType=INTEGER},
+            </if>
 
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
-    update heroland_question_bank
-    <set>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="modifier != null">
-        modifier = #{modifier,jdbcType=VARCHAR},
-      </if>
-      <if test="gmtCreate != null">
-        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="gmtModified != null">
-        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=BIT},
-      </if>
-      <if test="gradeCode != null">
-        grade_code = #{gradeCode,jdbcType=VARCHAR},
-      </if>
-      <if test="course != null">
-        course = #{course,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        `type` = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="subType != null">
-        sub_type = #{subType,jdbcType=INTEGER},
-      </if>
-      <if test="diff != null">
-        diff = #{diff,jdbcType=INTEGER},
-      </if>
-      <if test="year != null">
-        `year` = #{year,jdbcType=TIMESTAMP},
-      </if>
-      <if test="area != null">
-        area = #{area,jdbcType=VARCHAR},
-      </if>
-      <if test="source != null">
-        `source` = #{source,jdbcType=VARCHAR},
-      </if>
-      <if test="paperType != null">
-        paper_type = #{paperType,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        title = #{title,jdbcType=LONGVARCHAR},
-      </if>
-      <if test="qtId != null">
-        qt_id = #{qtId,jdbcType=VARCHAR},
-      </if>
-      <if test="snapshotNo != null">
-        snapshot_no = #{snapshotNo,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+        update heroland_question_bank
+        <set>
+            <if test="creator != null">
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="gmtCreate != null">
+                gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="gmtModified != null">
+                gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                is_deleted = #{isDeleted,jdbcType=BIT},
+            </if>
+            <if test="gradeCode != null">
+                grade_code = #{gradeCode,jdbcType=VARCHAR},
+            </if>
+            <if test="course != null">
+                course = #{course,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                `type` = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="subType != null">
+                sub_type = #{subType,jdbcType=INTEGER},
+            </if>
+            <if test="diff != null">
+                diff = #{diff,jdbcType=INTEGER},
+            </if>
+            <if test="year != null">
+                `year` = #{year,jdbcType=TIMESTAMP},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null">
+                `source` = #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="paperType != null">
+                paper_type = #{paperType,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="qtId != null">
+                qt_id = #{qtId,jdbcType=VARCHAR},
+            </if>
+            <if test="snapshotNo != null">
+                snapshot_no = #{snapshotNo,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
     update heroland_question_bank
     set creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
@@ -275,7 +276,7 @@
       title = #{title,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
+    <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandQuestionBank">
     update heroland_question_bank
     set creator = #{creator,jdbcType=VARCHAR},
       modifier = #{modifier,jdbcType=VARCHAR},
@@ -294,179 +295,225 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <update id="deleteByQtIds" >
-    update heroland_question_bank
-    set is_deleted = 1
-    where 1 = 1
-    <if test="qtIds != null and qtIds.size > 0">
-      and qt_id IN (
-      <foreach collection="qtIds" item="qtId" index="index" separator=",">
-        #{qtId,jdbcType=VARCHAR}
-      </foreach>
-      )
-    </if>
-  </update>
+    <update id="deleteByQtIds">
+        update heroland_question_bank
+        set is_deleted = 1
+        where 1 = 1
+        <if test="qtIds != null and qtIds.size > 0">
+            and qt_id IN (
+            <foreach collection="qtIds" item="qtId" index="index" separator=",">
+                #{qtId,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+    </update>
 
-  <select id="getByQuery"  resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    from heroland_question_bank
-    where is_deleted = 0
-    <if test="item.grade != null">
-     and grade_code = #{item.grade,jdbcType=VARCHAR}
-    </if>
-    <if test="item.course != null">
-     and course = #{item.course,jdbcType=VARCHAR}
-    </if>
-    <if test="item.type != null">
-     and `type` = #{item.type,jdbcType=INTEGER}
-    </if>
-    <if test="item.subType != null">
-     and sub_type = #{item.subType,jdbcType=INTEGER}
-    </if>
-    <if test="item.diff != null">
-     and diff = #{item.diff,jdbcType=INTEGER}
-    </if>
-    <if test="item.beginTime != null">
-      and `year` >= #{item.beginTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="item.endTime != null">
-      <![CDATA[
+    <select id="getByQuery" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        where is_deleted = 0
+        <if test="item.grade != null">
+            and grade_code = #{item.grade,jdbcType=VARCHAR}
+        </if>
+        <if test="item.course != null">
+            and course = #{item.course,jdbcType=VARCHAR}
+        </if>
+        <if test="item.type != null">
+            and `type` = #{item.type,jdbcType=INTEGER}
+        </if>
+        <if test="item.subType != null">
+            and sub_type = #{item.subType,jdbcType=INTEGER}
+        </if>
+        <if test="item.diff != null">
+            and diff = #{item.diff,jdbcType=INTEGER}
+        </if>
+        <if test="item.beginTime != null">
+            and `year` >= #{item.beginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="item.endTime != null">
+            <![CDATA[
         and `year` <= #{item.endTime,jdbcType=TIMESTAMP}
         ]]>
 
-    </if>
-    <if test="item.area != null">
-     and area = #{item.area,jdbcType=VARCHAR}
-    </if>
-    <if test="item.source != null">
-     and `source` = #{item.source,jdbcType=VARCHAR}
-    </if>
-    <if test="item.paperType != null">
-     and paper_type = #{item.paperType,jdbcType=INTEGER}
-    </if>
-    <if test="item.title != null">
-      and title like concat('%',#{item.title},'%')
-    </if>
-    <if test="item.bankIds != null and item.bankIds.size > 0">
-      and id IN (
-      <foreach collection="item.bankIds" item="id" index="index" separator=",">
-        #{id,jdbcType=BIGINT}
-      </foreach>
-      )
-    </if>
-  </select>
+        </if>
+        <if test="item.area != null">
+            and area = #{item.area,jdbcType=VARCHAR}
+        </if>
+        <if test="item.source != null">
+            and `source` = #{item.source,jdbcType=VARCHAR}
+        </if>
+        <if test="item.paperType != null">
+            and paper_type = #{item.paperType,jdbcType=INTEGER}
+        </if>
+        <if test="item.title != null">
+            and title like concat('%',#{item.title},'%')
+        </if>
+        <if test="item.bankIds != null and item.bankIds.size > 0">
+            and id IN (
+            <foreach collection="item.bankIds" item="id" index="index" separator=",">
+                #{id,jdbcType=BIGINT}
+            </foreach>
+            )
+        </if>
+    </select>
 
-  <select id="questionSelect"  resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    from heroland_question_bank
-    where is_deleted = 0
-    <if test="item.grade != null">
-      and grade_code = #{item.grade,jdbcType=VARCHAR}
-    </if>
-    <if test="item.course != null">
-      and course = #{item.course,jdbcType=VARCHAR}
-    </if>
-    <if test="item.types != null and item.types.size > 0">
-      and type IN (
-      <foreach collection="item.types" item="type" index="index" separator=",">
-        #{type,jdbcType=INTEGER}
-      </foreach>
-      )
-    </if>
-    <if test="item.diffs != null and item.diffs.size > 0">
-      and diff IN (
-      <foreach collection="item.diffs" item="diff" index="index" separator=",">
-        #{diff,jdbcType=INTEGER}
-      </foreach>
-      )
-    </if>
+    <select id="questionSelect" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        where is_deleted = 0
+        <if test="item.grade != null">
+            and grade_code = #{item.grade,jdbcType=VARCHAR}
+        </if>
+        <if test="item.course != null">
+            and course = #{item.course,jdbcType=VARCHAR}
+        </if>
+        <if test="item.types != null and item.types.size > 0">
+            and type IN (
+            <foreach collection="item.types" item="type" index="index" separator=",">
+                #{type,jdbcType=INTEGER}
+            </foreach>
+            )
+        </if>
+        <if test="item.diffs != null and item.diffs.size > 0">
+            and diff IN (
+            <foreach collection="item.diffs" item="diff" index="index" separator=",">
+                #{diff,jdbcType=INTEGER}
+            </foreach>
+            )
+        </if>
 
-    <if test="item.beginTime != null">
-      and `year` >= #{item.beginTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="item.endTime != null">
-      <![CDATA[
+        <if test="item.beginTime != null">
+            and `year` >= #{item.beginTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="item.endTime != null">
+            <![CDATA[
         and `year` <= #{item.endTime,jdbcType=TIMESTAMP}
         ]]>
 
-    </if>
-    <if test="item.areas != null and item.areas.size > 0">
-      and area IN (
-      <foreach collection="item.areas" item="area" index="index" separator=",">
-        #{area,jdbcType=VARCHAR}
-      </foreach>
-      )
-    </if>
-    <if test="item.sources != null and item.sources.size > 0">
-      and `source` IN (
-      <foreach collection="item.sources" item="source" index="index" separator=",">
-        #{source,jdbcType=VARCHAR}
-      </foreach>
-      )
-    </if>
+        </if>
+        <if test="item.areas != null and item.areas.size > 0">
+            and area IN (
+            <foreach collection="item.areas" item="area" index="index" separator=",">
+                #{area,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
+        <if test="item.sources != null and item.sources.size > 0">
+            and `source` IN (
+            <foreach collection="item.sources" item="source" index="index" separator=",">
+                #{source,jdbcType=VARCHAR}
+            </foreach>
+            )
+        </if>
 
-    <if test="item.paperTypes != null and item.paperTypes.size > 0">
-      and paper_type IN (
-      <foreach collection="item.paperTypes" item="paperType" index="index" separator=",">
-        #{paperType,jdbcType=INTEGER}
-      </foreach>
-      )
-    </if>
+        <if test="item.paperTypes != null and item.paperTypes.size > 0">
+            and paper_type IN (
+            <foreach collection="item.paperTypes" item="paperType" index="index" separator=",">
+                #{paperType,jdbcType=INTEGER}
+            </foreach>
+            )
+        </if>
 
-    <if test="item.bankIds != null and item.bankIds.size > 0">
-      and id IN (
-      <foreach collection="item.bankIds" item="id" index="index" separator=",">
-        #{id,jdbcType=BIGINT}
-      </foreach>
-      )
-    </if>
-  </select>
+        <if test="item.bankIds != null and item.bankIds.size > 0">
+            and id IN (
+            <foreach collection="item.bankIds" item="id" index="index" separator=",">
+                #{id,jdbcType=BIGINT}
+            </foreach>
+            )
+        </if>
+    </select>
 
-  <select id="getByIds" resultMap="ResultMapWithBLOBs">
-    select
-    <include refid="Base_Column_List" />
-    from heroland_question_bank
-    <where>
-      <if test="ids != null and ids.size > 0">
-        and id IN (
-        <foreach collection="ids" item="id" index="index" separator=",">
-          #{id,jdbcType=BIGINT}
-        </foreach>
-        )
-      </if>
-      and is_deleted = 0
-    </where>
-  </select>
-  <select id="getByIdsWithDelete" resultMap="ResultMapWithBLOBs">
-    select <include refid="Base_Column_List" />
-    from heroland_question_bank
-    <where>
-      <if test="ids != null and ids.size > 0">
-        and id IN (
-        <foreach collection="ids" item="id" index="index" separator=",">
-          #{id,jdbcType=BIGINT}
-        </foreach>
-        )
-      </if>
-    </where>
-  </select>
+    <select id="getByIds" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        <where>
+            <if test="ids != null and ids.size > 0">
+                and id IN (
+                <foreach collection="ids" item="id" index="index" separator=",">
+                    #{id,jdbcType=BIGINT}
+                </foreach>
+                )
+            </if>
+            and is_deleted = 0
+        </where>
+    </select>
+    <select id="getByIdsWithDelete" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        <where>
+            <if test="ids != null and ids.size > 0">
+                and id IN (
+                <foreach collection="ids" item="id" index="index" separator=",">
+                    #{id,jdbcType=BIGINT}
+                </foreach>
+                )
+            </if>
+        </where>
+    </select>
 
-  <select id="selectSimpleSnaphot" resultMap="SimpleResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from heroland_question_bank
-    <where>
-      <if test="qtIds != null and qtIds.size > 0">
-        and qt_id IN (
-        <foreach collection="qtIds" item="qtId" index="index" separator=",">
-          #{qtId,jdbcType=VARCHAR}
-        </foreach>
-        )
-      </if>
-      and is_deleted = 0
-    </where>
-  </select>
+    <select id="selectSimpleSnaphot" resultMap="SimpleResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        <where>
+            <if test="qtIds != null and qtIds.size > 0">
+                and qt_id IN (
+                <foreach collection="qtIds" item="qtId" index="index" separator=",">
+                    #{qtId,jdbcType=VARCHAR}
+                </foreach>
+                )
+            </if>
+            and is_deleted = 0
+        </where>
+    </select>
+    <select id="selectQuestionTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
+        select
+        hqb.id as questionId, hqb.snapshot_no as snapshotNo,
+        hqb.diff as levelCode, hqb.paper_type as paperType,
+        hqb.course as course, hqb.type as type,
+        hqb.grade_code as gradeCode, htg.level_code as topicLevelCode,
+        htg.topic_name as topicName, htg.type as topicType, htg.diff as topicDiff,
+        group_concat(hk.knowledge) as knowledges, htq.topic_id as topicId
+        from heroland_topic_question htq
+        left join heroland_topic_group htg
+        on htg.id = htq.topic_id
+        left join heroland_question_bank hqb
+        on htq.question_id = hqb.id
+        left join heroland_knowledge_refer hkr
+        on hkr.refer_id = hqb.id
+        left join heroland_knowledge hk
+        on hk.id = hkr.knowledge_id
+        where hkr.type = 2
+        and htg.is_deleted = 0
+        and htq.is_deleted = 0
+        <if test="item.orgCode != null">
+            and htg.org_code = #{item.orgCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.gradeCode != null">
+            and htg.grade_code = #{item.gradeCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.classCode != null">
+            and htg.class_code = #{item.classCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.courseCode != null">
+            and htg.course_code = #{item.courseCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.type != null">
+            and htg.`type` = #{item.type,jdbcType=INTEGER}
+        </if>
+        <if test="item.startTime != null">
+            and htg.`start_time` &gt;= #{item.startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="item.endTime != null">
+            <![CDATA[
+                and htg.`end_time` <= #{item.endTime,jdbcType=TIMESTAMP}
+            ]]>
+        </if>
+        group by hqb.id
+    </select>
 
 </mapper>

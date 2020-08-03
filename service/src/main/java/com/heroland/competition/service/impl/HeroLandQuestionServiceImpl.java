@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
@@ -16,10 +17,7 @@ import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
-import com.heroland.competition.domain.dp.HeroLandQuestionDP;
-import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
-import com.heroland.competition.domain.dp.HerolandBasicDataDP;
-import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
+import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
@@ -37,9 +35,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
-import static org.apache.dubbo.common.utils.CollectionUtils.toMap;
 
 /**
  * @author mac
@@ -124,8 +121,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request) {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
+        AtomicReference<List<Long>> topicIds = new AtomicReference<>();
+        ;
+        if (CollUtil.isEmpty(request.getTopicIds())) {
+            topicIds.set(request.getTopicIds());
+        }
         Page<HerolandTopicQuestion> questions = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(request.getTopicId()), request.getQuestionId()));
+                () -> herolandTopicQuestionMapper.selectByTopics(topicIds.get(), request.getQuestionId()));
         if (CollectionUtils.isEmpty(questions.getResult())) {
             return pageResult;
         }
@@ -250,17 +252,17 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Override
     public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
-        if (CollectionUtils.isEmpty(qo.getTopicIds())){
+        if (CollectionUtils.isEmpty(qo.getTopicIds())) {
             return Lists.newArrayList();
         }
         List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByPrimaryKeys(qo.getTopicIds());
-        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
             return Lists.newArrayList();
         }
 
         List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(qo.getTopicIds(), null);
 
-        if (CollectionUtils.isEmpty(herolandTopicQuestions)){
+        if (CollectionUtils.isEmpty(herolandTopicQuestions)) {
             return Lists.newArrayList();
         }
         List<HeroLandQuestionTopicListDto> result = Lists.newArrayList();
@@ -279,11 +281,11 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         List<HeroLandQuestionListForTopicDto> topicDtos = Lists.newArrayList();
         List<Long> bankIds = banks.stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
         Map<Long, List<HerolandQuestionBankDetail>> qtMap = Maps.newHashMap();
-        if (Objects.equals(qo.getIncludeDetail(), Boolean.TRUE)){
+        if (Objects.equals(qo.getIncludeDetail(), Boolean.TRUE)) {
             List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(bankIds);
             qtMap = byQtId.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
         }
-        for (HerolandQuestionBank e : banks){
+        for (HerolandQuestionBank e : banks) {
             HeroLandQuestionListForTopicDto dto = new HeroLandQuestionListForTopicDto();
             dto.setGrade(e.getGradeCode());
             dto.setCourse(e.getCourse());
@@ -316,12 +318,12 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         Map<Long, List<HeroLandQuestionListForTopicDto>> questionMap = topicDtos.stream().collect(Collectors.groupingBy(HeroLandQuestionListForTopicDto::getId));
         Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
-        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()){
+        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()) {
             HeroLandQuestionTopicListDto topicDto = new HeroLandQuestionTopicListDto();
             topicDto.setId(entry.getKey());
             List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
             entry.getValue().forEach(e -> {
-                if (questionMap.containsKey(e.getQuestionId())){
+                if (questionMap.containsKey(e.getQuestionId())) {
                     subQuestions.addAll(questionMap.get(e.getQuestionId()));
                 }
             });
@@ -331,7 +333,6 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
         return result;
     }
-
 
 
     @Override
@@ -439,6 +440,24 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         });
         getAdminData(list);
         pageResult.setItems(list);
+        pageResult.setPageSize(topicGroupsPageResult.getPageSize());
+        pageResult.setPage(topicGroupsPageResult.getPageNum());
+        pageResult.setTotal((int) topicGroupsPageResult.getTotal());
+        return pageResult;
+    }
+
+    @Override
+    public PageResponse<QuestionTopicDP> getQuestionTopic(HeroLandTopicQuestionForCourseRequest request) {
+        PageResponse<QuestionTopicDP> pageResult = new PageResponse<>();
+        List<QuestionTopicDP> list = new ArrayList<>();
+        pageResult.setItems(list);
+        HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
+        Page<QuestionTopicDP> topicGroupsPageResult = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                () -> herolandQuestionBankMapper.selectQuestionTopic(qo));
+        if (CollectionUtils.isEmpty(topicGroupsPageResult.getResult())) {
+            return pageResult;
+        }
+        pageResult.setItems(topicGroupsPageResult.getResult());
         pageResult.setPageSize(topicGroupsPageResult.getPageSize());
         pageResult.setPage(topicGroupsPageResult.getPageNum());
         pageResult.setTotal((int) topicGroupsPageResult.getTotal());

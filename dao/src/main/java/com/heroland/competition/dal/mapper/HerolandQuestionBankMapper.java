@@ -2,6 +2,8 @@ package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandQuestionBank;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
+import com.heroland.competition.domain.dp.QuestionTopicDP;
+import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HerolandQuestionBankQo;
 import com.heroland.competition.domain.qo.HerolandQuestionSelectQo;
 import org.apache.ibatis.annotations.Param;
@@ -35,4 +37,5 @@ public interface HerolandQuestionBankMapper {
 
     List<HerolandQuestionUniqDP> selectSimpleSnaphot(@Param("qtIds") List<String> qtIds);
 
+    List<QuestionTopicDP> selectQuestionTopic(@Param("item") HeroLandTopicGroupQO qo);
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author smjyouzan
@@ -17,6 +18,8 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
     /**
      * 比赛组id
      */
+    private List<Long> topicIds;
+
     private Long topicId;
 
     /**
