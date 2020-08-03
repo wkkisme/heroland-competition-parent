@@ -49,7 +49,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         ResponseBody<String> result = new ResponseBody<>();
         String recordId;
         try {
-//            dp.addSynchronizeCheck();
+            dp.addSynchronizeCheck();
 //            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
 //            if (!aBoolean) {
             HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
