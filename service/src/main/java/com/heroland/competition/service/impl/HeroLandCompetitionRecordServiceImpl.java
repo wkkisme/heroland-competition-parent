@@ -54,17 +54,17 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         ResponseBody<String> result = new ResponseBody<>();
         String recordId;
         try {
-            dp.addSynchronizeCheck();
-            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
-            if (!aBoolean) {
+//            dp.addSynchronizeCheck();
+//            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
+//            if (!aBoolean) {
                 HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
                 recordId = heroLandCompetitionRecord.getRecordId();
                 heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
                 result.setData(recordId);
-            } else {
-                dp = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
-                result.setData(dp.getRecordId());
-            }
+//            } else {
+//                dp = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
+//                result.setData(dp.getRecordId());
+//            }
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
