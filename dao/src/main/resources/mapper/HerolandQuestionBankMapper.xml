@@ -473,7 +473,7 @@
     <select id="selectQuestionTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
         select
         hqb.id as questionId, hqb.snapshot_no as snapshotNo,
-        hqb.diff as levelCode, hqb.paper_type as paperType,
+        hqb.diff as diff, hqb.paper_type as paperType,
         hqb.course as course, hqb.type as type,
         hqb.grade_code as gradeCode, htg.level_code as topicLevelCode,
         htg.topic_name as topicName, htg.type as topicType, htg.diff as topicDiff,

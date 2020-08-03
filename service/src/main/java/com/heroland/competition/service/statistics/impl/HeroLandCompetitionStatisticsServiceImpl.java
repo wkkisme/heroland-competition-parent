@@ -348,8 +348,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
                 dp.setQuestionId(questionTopicDP.getQuestionId());
                 dp.setTopicId(questionTopicDP.getTopicId());
-                dp.setLevelCode(String.valueOf(questionTopicDP.getLevelCode()));
-                dp.setDiff(questionTopicDP.getType());
+                dp.setDiff(questionTopicDP.getDiff());
+                dp.setType(questionTopicDP.getType());
                 dp.setKnowledge(questionTopicDP.getKnowledges());
                 if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
                     HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(String.valueOf(questionTopicDP.getTopicId()));
@@ -392,8 +392,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 }
                 dp.setTopicId(questionTopicDP.getTopicId());
                 dp.setTopicName(questionTopicDP.getTopicName());
+                dp.setType(questionTopicDP.getTopicType());
                 dp.setDiff(questionTopicDP.getTopicDiff());
-                dp.setLevelCode(questionTopicDP.getTopicLevelCode());
                 result.add(dp);
             });
         }

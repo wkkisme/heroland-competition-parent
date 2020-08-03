@@ -49,7 +49,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 题的难度code
      */
-    private String levelCode;
+    private Integer diff;
 
     /**
      * 是否回答正确
@@ -64,7 +64,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 题型
      */
-    private Integer diff;
+    private Integer type;
 
     /**
      * 比赛结果

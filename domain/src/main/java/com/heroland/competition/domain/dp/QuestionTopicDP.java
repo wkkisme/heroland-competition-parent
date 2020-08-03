@@ -29,7 +29,7 @@ public class QuestionTopicDP implements Serializable {
     /**
      * 题目难度
      */
-    private Integer levelCode;
+    private Integer diff;
 
     /**
      * 试题类型
