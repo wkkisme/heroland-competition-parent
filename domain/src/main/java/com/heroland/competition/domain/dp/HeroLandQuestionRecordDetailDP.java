@@ -146,6 +146,17 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     @ApiModelProperty(value = "题组id")
     private String topicId;
 
+    public HeroLandQuestionRecordDetailDP updateCheck(){
+        if (StringUtils.isAnyBlank(this.topicId, this.recordDetailId, this.recordId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (this.recordId == null && this.recordDetailId == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+        this.beforeUpdate();
+        return this;
+    }
+
     public HeroLandQuestionRecordDetailDP addCheck() {
         if (ObjectUtil.isNull(beginDate) || StringUtils.isAnyBlank(this.userId, this.questionId, this.yourAnswer, this.recordId)) {
             ResponseBodyWrapper.failParamException();
