@@ -50,7 +50,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
 
         try {
 
-            questionRecordDetailExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(recordDetail.addCheck(), new HeroLandQuestionRecordDetail()));
+            questionRecordDetailExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(recordDetail.updateCheck(), new HeroLandQuestionRecordDetail()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

@@ -44,7 +44,7 @@ public class HeroLandAccountManageQO {
     }
    public HeroLandAccountManageQO queryIncrCheck(){
 
-        AssertUtils.notBlank(userId,accountId);
+        AssertUtils.notBlank(userId);
         AssertUtils.assertThat(num != null);
         return this;
     }
