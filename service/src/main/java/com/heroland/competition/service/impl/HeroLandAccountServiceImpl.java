@@ -162,14 +162,6 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     heroLandAccount.setBalance(heroLandAccountDp.getBalance() + dp.getNum());
                 }
                 heroLandAccountExtMapper.updateByExampleSelective(heroLandAccount, heroLandAccountExample);
-
-                HerolandDiamRequest herolandDiamRequest = new HerolandDiamRequest();
-                herolandDiamRequest.setUserId(userId);
-                herolandDiamRequest.setBizGroup(dp.getCompetitionType().getType().toString());
-                herolandDiamRequest.setBizName(dp.getCompetitionType().getName());
-                herolandDiamRequest.setNum(dp.getNum());
-                herolandDiamRequest.setChangeStockType(1);
-                herolandDiamondService.createDiamondRecord(herolandDiamRequest);
             }
         } catch (Exception e) {
             logger.error("", e);
