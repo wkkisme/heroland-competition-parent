@@ -174,16 +174,16 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                     .appendOption(e.getOption_e(), "E");
             bankDPS.add(bankDP);
 
-            List<List<HerolandQuestionBankDP>> split = BatchUtils.split(bankDPS, 20);
-            split.stream().forEach(list -> {
-                batchSave(list);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                    log.error("sleep error");
-                }
-            });
+        });
 
+        List<List<HerolandQuestionBankDP>> split = BatchUtils.split(bankDPS, 20);
+        split.stream().forEach(list -> {
+            batchSave(list);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e1) {
+                log.error("sleep error");
+            }
         });
 
         return true;
