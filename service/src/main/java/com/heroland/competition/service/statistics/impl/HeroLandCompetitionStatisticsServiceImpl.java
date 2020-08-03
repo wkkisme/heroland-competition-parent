@@ -347,10 +347,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
             if (CollUtil.isNotEmpty(topicListDtos)) {
                 topicListDtos.forEach(topic -> {
-                    AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
                     List<HeroLandQuestionListForTopicDto> questions = topic.getQuestions();
                     if (CollUtil.isNotEmpty(questions)) {
                         questions.forEach(question -> {
+                            AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
                             dp.setQuestionId(question.getId());
                             dp.setTopicId(question.getTopicId());
                             // TODO
