@@ -5,6 +5,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.constants.KnowledgeReferEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
@@ -21,6 +22,7 @@ import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
+import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -36,6 +38,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.dubbo.common.utils.CollectionUtils.toMap;
 
 /**
  * @author mac
@@ -243,6 +247,92 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         return heroLandTopicDto;
     }
+
+    @Override
+    public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
+        if (CollectionUtils.isEmpty(qo.getTopicIds())){
+            return Lists.newArrayList();
+        }
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByPrimaryKeys(qo.getTopicIds());
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+            return Lists.newArrayList();
+        }
+
+        List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(qo.getTopicIds(), null);
+
+        if (CollectionUtils.isEmpty(herolandTopicQuestions)){
+            return Lists.newArrayList();
+        }
+        List<HeroLandQuestionTopicListDto> result = Lists.newArrayList();
+        List<Long> questionIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+        Map<Long, Long> questionIdByTopicId = herolandTopicQuestions.stream().collect(Collectors.toMap(HerolandTopicQuestion::getQuestionId, HerolandTopicQuestion::getTopicId, (o, n) -> n));
+        List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
+
+        List<String> courseKeys = banks.stream().map(HerolandQuestionBank::getCourse).distinct().collect(Collectors.toList());
+        List<String> gradeKeys = banks.stream().map(HerolandQuestionBank::getGradeCode).distinct().collect(Collectors.toList());
+        List<String> storage = banks.stream().map(HerolandQuestionBank::getStorage).distinct().collect(Collectors.toList());
+        courseKeys.addAll(gradeKeys);
+        courseKeys.addAll(storage);
+        List<HerolandBasicDataDP> keys = heroLandAdminService.getDictInfoByKeys(courseKeys);
+        Map<String, List<HerolandBasicDataDP>> keysMap = keys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+
+        List<HeroLandQuestionListForTopicDto> topicDtos = Lists.newArrayList();
+        List<Long> bankIds = banks.stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
+        Map<Long, List<HerolandQuestionBankDetail>> qtMap = Maps.newHashMap();
+        if (Objects.equals(qo.getIncludeDetail(), Boolean.TRUE)){
+            List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(bankIds);
+            qtMap = byQtId.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
+        }
+        for (HerolandQuestionBank e : banks){
+            HeroLandQuestionListForTopicDto dto = new HeroLandQuestionListForTopicDto();
+            dto.setGrade(e.getGradeCode());
+            dto.setCourse(e.getCourse());
+            dto.setStorage(e.getStorage());
+            dto.setCourseName(keysMap.containsKey(e.getCourse()) ? keysMap.get(e.getCourse()).get(0).getDictValue() : "");
+            dto.setGradeName(keysMap.containsKey(e.getGradeCode()) ? keysMap.get(e.getGradeCode()).get(0).getDictValue() : "");
+            dto.setStorageName(keysMap.containsKey(e.getStorage()) ? keysMap.get(e.getStorage()).get(0).getDictValue() : "");
+            dto.setArea(e.getArea());
+            dto.setDiff(e.getDiff());
+            dto.setPaperType(e.getPaperType());
+            dto.setTitle(e.getTitle());
+            dto.setType(e.getType());
+            dto.setSubType(e.getSubType());
+            dto.setSource(e.getSource());
+            dto.setYear(org.springframework.util.StringUtils.isEmpty(e.getYear()) ? "" : DateUtils.dateToYear(e.getYear()));
+            dto.setId(e.getId());
+            dto.setQtId(e.getQtId());
+            dto.setThink(e.getThink());
+            dto.setTopicId(questionIdByTopicId.get(Long.valueOf(e.getId())));
+            if (qtMap.containsKey(e.getId())) {
+                dto.setAnswer(qtMap.get(e.getId()).get(0).getAnswer());
+                dto.setOptionAnswer(qtMap.get(e.getId()).get(0).getOptionAnswer());
+                List<QuestionOptionDto> questionOptionDto = JSON.parseArray(qtMap.get(e.getId()).get(0).getOption(), QuestionOptionDto.class);
+                dto.setOptions(questionOptionDto);
+                dto.setInformation(qtMap.get(e.getId()).get(0).getInformation());
+                dto.setStormAnswer(qtMap.get(e.getId()).get(0).getStormAnswer());
+                dto.setAnalysis(qtMap.get(e.getId()).get(0).getAnalysis());
+            }
+            topicDtos.add(dto);
+        }
+        Map<Long, List<HeroLandQuestionListForTopicDto>> questionMap = topicDtos.stream().collect(Collectors.groupingBy(HeroLandQuestionListForTopicDto::getId));
+        Map<Long, List<HerolandTopicQuestion>> topicMap = herolandTopicQuestions.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
+        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()){
+            HeroLandQuestionTopicListDto topicDto = new HeroLandQuestionTopicListDto();
+            topicDto.setId(entry.getKey());
+            List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
+            entry.getValue().forEach(e -> {
+                if (questionMap.containsKey(e.getQuestionId())){
+                    subQuestions.addAll(questionMap.get(e.getQuestionId()));
+                }
+            });
+            topicDto.setQuestions(subQuestions);
+            result.add(topicDto);
+        }
+
+        return result;
+    }
+
+
 
     @Override
     public List<HeroLandQuestionTopicListForStatisticDto> getTopicQuestionForCourseStatistics(HeroLandTopicQuestionForCourseRequest request) {

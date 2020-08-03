@@ -14,6 +14,7 @@ import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,11 +58,11 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
         String recordId = dp.getRecordId();
 
         // 1 更新记录，插入详细
-        HeroLandCompetitionRecordDP record = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getRecordId());
+        HeroLandCompetitionRecordDP record = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + recordId);
 
         // 先缓存查
         if (record == null) {
-            record = heroLandCompetitionRecordService.getCompetitionRecordById(new HeroLandCompetitionRecordQO().setRecordId(recordId).queryIdCheck()).getData();
+            record = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(new HeroLandCompetitionRecordQO().setRecordId(recordId).queryIdCheck()).getData();
         }
 
         // 如果还是没有找到比赛 就报错
@@ -77,6 +78,8 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
 
         // 保存答题记录
         details.forEach(questionRecord -> {
+            questionRecord.setRecordId(recordId);
+            questionRecord.setBeginDate(new Date());
             questionRecordDetailService.addQuestionRecord(questionRecord);
         });
 

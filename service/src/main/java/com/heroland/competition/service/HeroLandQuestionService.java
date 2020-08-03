@@ -4,8 +4,10 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.HeroLandQuestionTopicListDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -51,6 +53,9 @@ public interface HeroLandQuestionService{
     Boolean saveAssign(HeroLandTopicAssignRequest request);
 
     HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request);
+
+    List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
+
 
     /**
      * 获取每一个赛事下的详细情况及题目数

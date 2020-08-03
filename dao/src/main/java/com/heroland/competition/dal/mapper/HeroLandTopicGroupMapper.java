@@ -22,6 +22,8 @@ public interface HeroLandTopicGroupMapper {
 
     HeroLandTopicGroup selectByPrimaryKey(Long id);
 
+    List<HeroLandTopicGroup> selectByPrimaryKeys(@Param("ids") List<Long> ids);
+
     int updateByExampleSelective(@Param("record") HeroLandTopicGroup record, @Param("example") HeroLandTopicGroupExample example);
 
     int updateByExample(@Param("record") HeroLandTopicGroup record, @Param("example") HeroLandTopicGroupExample example);

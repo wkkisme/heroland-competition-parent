@@ -1,12 +1,9 @@
 package com.heroland.competition.service.statistics;
 
 import com.anycommon.response.common.ResponseBody;
-import com.heroland.competition.common.pageable.PageResponse;
-import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
-import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
+import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
+import com.heroland.competition.domain.qo.AnswerResultQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 
@@ -85,4 +82,12 @@ public interface HeroLandCompetitionStatisticsService {
      * @return
      */
     ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo);
+
+    /**
+     * 获取比赛结果
+     *
+     * @param qo
+     * @return
+     */
+    ResponseBody<AnswerCompetitionResultDP> getAnswerResult(AnswerResultQO qo);
 }

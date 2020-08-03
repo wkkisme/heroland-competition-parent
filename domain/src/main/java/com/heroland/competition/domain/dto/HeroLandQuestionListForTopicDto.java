@@ -29,15 +29,14 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
 
     /**
      * 最新某一题目下的最新id
-     *
      */
     private Long newQuestionId;
 
     /**
-     *针对该全局id有两种情况
+     * 针对该全局id有两种情况
      * 题目更新了版本，当前的版本是上一次分配时的版本，可以保留或更换版本
      * 题目在后台已被删除，当前所有的版本都被删除了，不可以再选择
-     *
+     * <p>
      * NORMAL:当初分配时的和现在的还是同一个版本
      * UPDATED：当初分配时的版本比现在的小，如果有需要可以更新到最新版本
      * DELETED：该题目在后台已经被删除
@@ -104,20 +103,58 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
      */
     private Integer paperType;
 
+
+    /**
+     * 题库类型
+     */
+    private String storage;
+
+    /**
+     * 题库类型名称
+     */
+    private String storageName;
+
+    /**
+     * 思维
+     */
+    private Integer think;
+
     /**
      * 选项内容
      */
     private List<QuestionOptionDto> options;
 
     /**
-     * 选项答案
+     * 选项|填空题答案
      */
     private String optionAnswer;
 
     /**
-     * 解答题答案
+     * 跨学科题答案解说
      */
     private String answer;
+
+    /**
+     * 胡乱答案
+     */
+    private String stormAnswer;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
+    /**
+     * 示例
+     */
+    private String information;
+
+    private String similarQt;
+
+    /**
+     * 题组id
+     */
+    private Long topicId;
 
     /**
      * 关联的知识点列表

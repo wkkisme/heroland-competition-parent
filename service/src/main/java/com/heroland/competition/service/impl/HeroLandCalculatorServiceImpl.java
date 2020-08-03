@@ -100,13 +100,13 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
 
         // 獲取邀請人的答題記錄
         HeroLandQuestionQO questionQo = new HeroLandQuestionQO();
-        questionQo.setCompetitionRecordId(dp.getRecordId());
+        questionQo.setRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getInviteId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> inviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> inviteQuestionRecords = inviteQuestionRecordRes.getData();
 
         // 获取被邀请人答题记录
-        questionQo.setCompetitionRecordId(dp.getRecordId());
+        questionQo.setRecordId(dp.getRecordId());
         questionQo.setUserId(dp.getOpponentId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> beInviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> beInviteQuestionRecords = beInviteQuestionRecordRes.getData();
@@ -200,7 +200,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
             Date endDate = questionRecord.getEndDate();
 
             // 用户答题还未答完，报错
-            AssertUtils.assertThat(ObjectUtil.isNull(beginDate) || ObjectUtil.isNull(endDate), "答题未完成，无法计算分数。");
+            AssertUtils.assertThat(ObjectUtil.isNotNull(beginDate) && ObjectUtil.isNotNull(endDate), "答题未完成，无法计算分数。");
 
             // 判断用户是否答对
             boolean isCorrect = StrUtil.equals(questionRecord.getAnswer(), questionRecord.getYourAnswer());
@@ -210,7 +210,8 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
 
             // 如果答题正确计算分数
             if (isCorrect) {
-                atomicInteger.addAndGet(initAnswerScore + compare);
+                atomicInteger.addAndGet(initAnswerScore);
+                atomicInteger.addAndGet(compare);
             }
 
             // 判断用户答题时间是否小于对手的答题时间

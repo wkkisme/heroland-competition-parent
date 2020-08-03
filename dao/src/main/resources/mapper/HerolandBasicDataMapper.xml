@@ -34,10 +34,10 @@
 
   <update id="deleteByDictKey" >
     update heroland_basic_data
-    set is_delete = 1
+    set is_deleted = 1
     where dict_key in
     <foreach collection="dictKeys" separator="," close=")" open="(" item="dictKey">
-      #{dictKeys,jdbcType=VARCHAR}
+      #{dictKey,jdbcType=VARCHAR}
     </foreach>
   </update>
 
@@ -210,6 +210,24 @@
     from heroland_basic_data
     where code = #{code,jdbcType=VARCHAR}
     and is_deleted = 0
+  </select>
+
+
+  <select id="selectByCodesAndValue"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_basic_data
+
+    where  is_deleted = 0
+    <if test="codes != null and codes.size > 0">
+      and code in
+      <foreach collection="codes" separator="," close=")" open="(" item="code">
+        #{code,jdbcType=VARCHAR}
+      </foreach>
+    </if>
+    <if test="value != null">
+      and dict_value = #{value,jdbcType=VARCHAR}
+    </if>
   </select>
 
   <select id="selectByCodeAndBizNo" parameterType="java.lang.String" resultMap="BaseResultMap">

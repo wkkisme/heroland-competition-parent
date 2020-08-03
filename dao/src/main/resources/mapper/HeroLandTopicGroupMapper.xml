@@ -101,6 +101,20 @@
     from heroland_topic_group
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByPrimaryKeys"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_topic_group
+    where is_deleted = 0
+    <if test="ids != null and ids.size > 0">
+      and id IN
+      <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from heroland_topic_group
     where id = #{id,jdbcType=BIGINT}

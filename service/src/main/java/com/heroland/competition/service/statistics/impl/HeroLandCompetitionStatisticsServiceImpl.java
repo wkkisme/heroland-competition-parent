@@ -12,17 +12,18 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.CompetitionEnum;
+import com.heroland.competition.common.enums.GroupByEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
+import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.HeroLandQuestionTopicListDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
 import com.heroland.competition.domain.dto.HerolandQuestionKnowledgeSimpleDto;
-import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
-import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
-import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
@@ -221,9 +222,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         try {
 
-            AssertUtils.notBlank(qo.getClassCode());
+//            AssertUtils.notBlank(qo.getClassCode());
             List<String> userIds = result.getData().stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList());
             qo.setUserIds(userIds);
+            qo.setRankField(GroupByEnum.class_code.getFiled());
             List<HeroLandStatisticsDetailAll> classRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
 
 
@@ -338,39 +340,49 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         Map<Long, HeroLandQuestionTopicListForStatisticDto> statisticMap = items.stream().collect(Collectors.toMap(HeroLandQuestionTopicListForStatisticDto::getId, Function.identity(), (o, n) -> n));
         // 作业赛统计
         if (TopicTypeConstants.SYNC_COMPETITION.equals(qo.getType())) {
-            List<HeroLandQuestion> heroLandQuestions = questionExtMapper.selectByTopicIds(topicIds);
-            if (CollUtil.isNotEmpty(heroLandQuestions)) {
-                heroLandQuestions.forEach(question -> {
+            HeroLandTopicQuestionsQo questionsQo = new HeroLandTopicQuestionsQo();
+            questionsQo.setTopicIds(topicIds.stream().map(Long::valueOf).collect(Collectors.toList()));
+            questionsQo.setIncludeDetail(true);
+            List<HeroLandQuestionTopicListDto> topicListDtos = heroLandQuestionService.getTopicsQuestions(questionsQo);
+
+            if (CollUtil.isNotEmpty(topicListDtos)) {
+                topicListDtos.forEach(topic -> {
                     AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
-                    dp.setQuestionId(Long.valueOf(question.getQuestionId()));
-                    dp.setTopicId(Long.valueOf(question.getTopicId()));
-                    dp.setLevelCode(question.getLevelCode());
-                    dp.setQuestionTitle(question.getTitle());
-                    if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
-                        HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(question.getTopicId());
-                        if (ObjectUtil.isNotNull(heroLandCompetitionRecord)) {
-                            dp.setResult(heroLandCompetitionRecord.getResult());
-                            dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
-                        }
-                    }
-                    HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(Long.valueOf(question.getTopicId()));
-                    if (ObjectUtil.isNotNull(statisticDto)) {
-                        dp.setTopicName(statisticDto.getTopicName());
-                        if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
-                            HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
-                            if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
-                                dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
-                                dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
+                    List<HeroLandQuestionListForTopicDto> questions = topic.getQuestions();
+                    if (CollUtil.isNotEmpty(questions)) {
+                        questions.forEach(question -> {
+                            dp.setQuestionId(question.getId());
+                            dp.setTopicId(question.getTopicId());
+                            // TODO
+//                            dp.setLevelCode(question.get());
+                            dp.setQuestionTitle(question.getTitle());
+                            if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
+                                HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(String.valueOf(question.getTopicId()));
+                                if (ObjectUtil.isNotNull(heroLandCompetitionRecord)) {
+                                    dp.setResult(heroLandCompetitionRecord.getResult());
+                                    dp.setOpponentLevel(heroLandCompetitionRecord.getOpponentLevel());
+                                }
                             }
-                        }
-                        if (ObjectUtil.isNotNull(questionRecordMap.get())) {
-                            HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(question.getQuestionId());
-                            // 如果是同步作业赛，题只能有一个
-                            dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
-                            dp.setScore(questionRecordDetail.getScore());
-                        }
+                            HeroLandQuestionTopicListForStatisticDto statisticDto = statisticMap.get(question.getTopicId());
+                            if (ObjectUtil.isNotNull(statisticDto)) {
+                                dp.setTopicName(statisticDto.getTopicName());
+                                if (CollUtil.isNotEmpty(statisticDto.getKnowledges())) {
+                                    HerolandQuestionKnowledgeSimpleDto herolandQuestionKnowledgeSimpleDto = statisticDto.getKnowledges().get(0);
+                                    if (ObjectUtil.isNotNull(herolandQuestionKnowledgeSimpleDto)) {
+                                        dp.setKnowledge(herolandQuestionKnowledgeSimpleDto.getKnowledge().get(0));
+                                        dp.setDiff(herolandQuestionKnowledgeSimpleDto.getDiff());
+                                    }
+                                }
+                                if (ObjectUtil.isNotNull(questionRecordMap.get())) {
+                                    HeroLandQuestionRecordDetailDP questionRecordDetail = questionRecordMap.get().get(String.valueOf(question.getId()));
+                                    // 如果是同步作业赛，题只能有一个
+                                    dp.setIsCorrectAnswer(questionRecordDetail.isCorrectAnswer());
+                                    dp.setScore(questionRecordDetail.getScore());
+                                }
+                            }
+                            result.add(dp);
+                        });
                     }
-                    result.add(dp);
                 });
             }
         } else {
@@ -395,5 +407,32 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         responseBody.setData(result);
         responseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), topicQuestionListPage.getTotal()));
         return responseBody;
+    }
+
+    @Override
+    public ResponseBody<AnswerCompetitionResultDP> getAnswerResult(AnswerResultQO qo) {
+        HeroLandCompetitionRecord competitionRecord = competitionRecordExtMapper.selectByRecordIdAndUserId(qo.getCompetitionRecordId(), qo.getUserId());
+        AnswerCompetitionResultDP dp = new AnswerCompetitionResultDP();
+        dp.setResult(competitionRecord.getResult());
+        if (competitionRecord.getInviteId().equals(qo.getUserId())) {
+            dp.setTotalScore(competitionRecord.getInviteScore());
+        } else {
+            dp.setTotalScore(competitionRecord.getOpponentScore());
+        }
+        // 获取题目的比赛详情
+        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
+        List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
+        questionRecordDetails.forEach(questionRecord -> {
+            AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
+            // TODO 题型
+//            answerDetail.setDiff(questionRecord.ge);
+            answerDetail.setIsCorrectAnswer(questionRecord.getIsCorrectAnswer());
+            answerDetail.setScore(questionRecord.getScore());
+            // TODO 用时
+//            answerDetail.setUseTime();
+            answerDetails.add(answerDetail);
+        });
+        dp.setAnswerDetails(answerDetails);
+        return ResponseBodyWrapper.successWrapper(dp);
     }
 }

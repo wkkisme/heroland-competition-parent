@@ -19,8 +19,10 @@ import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandLocation;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
+import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
 import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
+import com.heroland.competition.domain.request.HerolandBasicDataPageRequest;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import lombok.extern.slf4j.Slf4j;
@@ -106,16 +108,16 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     }
 
     @Override
-    public ResponseBody<List<HerolandBasicDataDP>> pageQueryDict(HerolandBasicDataQO qo) {
-//        HeroLandBasicDataExample example = new HeroLandBasicDataExample();
-//        MybatisCriteriaConditionUtil.createExample(example.createCriteria(), qo);
-//        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageNum(), qo.getPageSize(), true).doSelectPage(
-//                () -> herolandBasicDataMapper.selectByExample(example));
-        ResponseBody<List<HerolandBasicDataDP>> result = new ResponseBody();
-        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCode(qo.getCode());
-        List<HerolandBasicDataDP> dpList = herolandBasicData.stream().map(this::convertToDP).collect(Collectors.toList());
-        result.setData(dpList);
-        return result;
+    public PageResponse<HerolandBasicDataDP> pageQueryDict(HerolandBasicDataPageRequest qo) {
+        PageResponse<HerolandBasicDataDP> pageResult = new PageResponse<>();
+        Page<HerolandBasicData> dataPage= PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
+                () -> herolandBasicDataMapper.selectByCodesAndValue(qo.getCode(), qo.getName()));
+        List<HerolandBasicDataDP> dpList = dataPage.getResult().stream().map(this::convertToDP).collect(Collectors.toList());
+        pageResult.setItems(dpList);
+        pageResult.setPageSize(dataPage.getPageSize());
+        pageResult.setPage(dataPage.getPageNum());
+        pageResult.setTotal((int) dataPage.getTotal());
+        return pageResult;
     }
 
     @Override

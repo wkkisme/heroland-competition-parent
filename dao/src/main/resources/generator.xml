@@ -87,19 +87,19 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
-      <table tableName="heroland_user_class" domainObjectName="HeroLandUserClass" mapperName="HeroLandUserClassMapper">
+<!--      <table tableName="heroland_user_class" domainObjectName="HeroLandUserClass" mapperName="HeroLandUserClassMapper">-->
+<!--            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+
+
+
+
+
+        <table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-
-
-
-
-
-        <!--<table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">-->
-            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
-            <!--<generatedKey column="record_id" sqlStatement="MySql" identity="true"/>-->
-        <!--</table>-->
 
       <!--<table tableName="heroland_question" domainObjectName="HeroLandQuestion" mapperName="HeroLandQuestionMapper">-->
             <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->

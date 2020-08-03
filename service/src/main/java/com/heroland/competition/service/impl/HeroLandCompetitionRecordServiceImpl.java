@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
@@ -10,17 +11,12 @@ import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
-import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
-import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
-import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
-import com.heroland.competition.service.HeroLandTopicGroupService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +25,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,16 +50,17 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         String recordId;
         try {
             dp.addSynchronizeCheck();
-            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
-            if (!aBoolean) {
-                HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
-                recordId = heroLandCompetitionRecord.getRecordId();
-                heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
-                result.setData(recordId);
-            } else {
-                dp = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
-                result.setData(dp.getRecordId());
-            }
+//            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
+//            if (!aBoolean) {
+            HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
+            recordId = heroLandCompetitionRecord.getRecordId();
+            heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
+            result.setData(recordId);
+            logger.info("返回比赛数据:{}", JSONObject.toJSONString(result));
+//            } else {
+//                dp = (HeroLandCompetitionRecordDP) redisService.get(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey());
+//                result.setData(dp.getRecordId());
+//            }
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -77,7 +73,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
         ResponseBody<Boolean> result = new ResponseBody<>();
         // 更新缓存
-        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "24h");
+        redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
         } catch (Exception e) {
@@ -133,11 +129,11 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordById(HeroLandCompetitionRecordQO qo) {
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByRecordId(HeroLandCompetitionRecordQO qo) {
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {
-            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByPrimaryKey(qo.queryIdCheck().getRecordId());
+            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByRecordId(qo.queryIdCheck().getRecordId());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

@@ -1,15 +1,12 @@
 package com.heroland.competition.controller;
 
-import cn.hutool.core.collection.ListUtil;
-import com.anycommon.response.common.BaseQO;
 import com.anycommon.response.common.ResponseBody;
-import com.anycommon.response.page.Pagination;
-import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.domain.dp.AnswerCompetitionResultDP;
 import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
 import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
+import com.heroland.competition.domain.qo.AnswerResultQO;
 import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
@@ -19,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 比赛统计查询
@@ -113,5 +107,16 @@ public class HeroLandCompetitionStatisticsController {
 //        tResponseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), 33));
 //        return tResponseBody;
         return heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(qo);
+    }
+
+    /**
+     * 获取比赛结果
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getAnswerResult")
+    ResponseBody<AnswerCompetitionResultDP> getAnswerResult(@RequestBody AnswerResultQO qo) {
+        return heroLandCompetitionStatisticsService.getAnswerResult(qo);
     }
 }
