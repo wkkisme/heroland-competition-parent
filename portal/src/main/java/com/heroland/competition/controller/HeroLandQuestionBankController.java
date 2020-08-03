@@ -12,6 +12,7 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
+import com.heroland.competition.domain.dp.HerolandQuestionBankImportDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankSimpleDto;
@@ -153,6 +154,20 @@ public class HeroLandQuestionBankController {
 
 
         return heroLandQuestionBankService.importQuestions(request);
+
+    }
+
+    /**
+     * 题库导入 入参为文件
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/importQuestions")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> importQuestions(@RequestBody List< HerolandQuestionBankImportDP > importDPS) throws Exception {
+
+        heroLandQuestionBankService.importQuestion(importDPS);
+        return null;
 
     }
 
