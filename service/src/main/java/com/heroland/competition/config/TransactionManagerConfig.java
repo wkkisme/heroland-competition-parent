@@ -69,6 +69,7 @@ public class TransactionManagerConfig {
         methodMap.put("cancel*", requiredTx);
         methodMap.put("invite*", requiredTx);
         methodMap.put("do*", requiredTx);
+        methodMap.put("calculate*", requiredTx);
 
         /* 其他方法无事务，只读 */
         methodMap.put("*", readOnlyTx);
