@@ -2,6 +2,7 @@ package com.heroland.competition.config;
 
 import com.platform.sso.facade.PlatformSsoServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platfrom.payment.api.PrePayRemoteService;
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,9 @@ public class DubboInitConfig {
     @Reference(group = "platform-sso",version = "1.0.0",check = false)
     private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
 
+
+    @Reference(group = "platform-sso",version = "1.0.0",check = false)
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
     @Bean("prePayRemoteService")
     public PrePayRemoteService getPrePayRemoteService(){
         return prePayRemoteService;
@@ -31,8 +35,14 @@ public class DubboInitConfig {
         return platformSsoServiceFacade;
     }
 
+
     @Bean("platformSsoUserClassServiceFacade")
     public PlatformSsoUserClassServiceFacade getPlatformSsoUserClassServiceFacade() {
         return platformSsoUserClassServiceFacade;
+    }
+
+    @Bean("platformSsoUserServiceFacade")
+    public PlatformSsoUserServiceFacade getPlatformSsoUserServiceFacade() {
+        return platformSsoUserServiceFacade;
     }
 }

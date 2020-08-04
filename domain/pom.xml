@@ -128,40 +128,6 @@
 
     </dependencies>
 
-    <build>
-        <finalName>${project.name}</finalName>
-        <plugins>
-            <!-- mybatis 代码生成插件 -->
-            <plugin>
-                <groupId>org.mybatis.generator</groupId>
-                <artifactId>mybatis-generator-maven-plugin</artifactId>
-                <version>1.3.7</version>
-                <configuration>
-                    <verbose>true</verbose>
-                    <overwrite>true</overwrite>
-                    <!-- TODO 这里还原为项目之前的配置 -->
-                    <!--<configurationFile>${basedir}/mybatis-generator/generator.xml</configurationFile>-->
-                    <configurationFile>src/main/resources/generatorConfig.xml</configurationFile>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>8.0.19</version>
-                    </dependency>
-
-                    <!-- 此 JSON 依赖可选, 若使用则启用 FastJSON 的 toString 方法,否则使用 Mybatis 默认的 toString -->
-                    <dependency>
-                        <groupId>com.alibaba</groupId>
-                        <artifactId>fastjson</artifactId>
-                        <version>1.2.62</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-        </plugins>
-    </build>
-
     <distributionManagement>
         <repository>
             <id>rdc-releases</id>
