@@ -80,6 +80,7 @@ public class HeroLandCompetitionServiceImpl implements HeroLandCompetitionServic
         details.forEach(questionRecord -> {
             questionRecord.setRecordId(recordId);
             questionRecord.setBeginDate(new Date());
+            questionRecord.setTopicId(dp.getTopicId());
             questionRecordDetailService.addQuestionRecord(questionRecord);
         });
 

@@ -278,7 +278,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId)));
             List<String> competitionRecordIds = heroLandCompetitionRecords.stream().map(HeroLandCompetitionRecord::getRecordId).collect(Collectors.toList());
-            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds);
+            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds, qo.getUserId());
             if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
                 questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
             }
@@ -340,7 +340,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.toMap(HeroLandCompetitionRecord::getTopicId, Function.identity(), (o, n) -> n)));
             List<String> competitionRecordIds = heroLandCompetitionRecords.stream().map(HeroLandCompetitionRecord::getRecordId).collect(Collectors.toList());
-            List<HeroLandQuestionRecordDetailDP> questionRecords = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds);
+            List<HeroLandQuestionRecordDetailDP> questionRecords = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds, qo.getUserId());
             if (CollUtil.isNotEmpty(questionRecords)) {
                 questionRecordMap.set(questionRecords.stream().collect(Collectors.toMap(HeroLandQuestionRecordDetailDP::getQuestionId, Function.identity(), (o, n) -> n)));
             }
@@ -436,7 +436,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setTotalScore(competitionRecord.getOpponentScore());
         }
         // 获取题目的比赛详情
-        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(Lists.newArrayList(qo.getCompetitionRecordId()));
+        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(Lists.newArrayList(qo.getCompetitionRecordId()), qo.getUserId());
         List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
         questionRecordDetails.forEach(questionRecord -> {
             AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
