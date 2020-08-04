@@ -349,7 +349,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
                 dp.setQuestionId(questionTopicDP.getQuestionId());
                 dp.setTopicId(questionTopicDP.getTopicId());
-                dp.setDiff(questionTopicDP.getDiff());
+                dp.setDiff(questionTopicDP.getTopicDiff());
                 dp.setType(questionTopicDP.getType());
                 dp.setKnowledge(questionTopicDP.getKnowledges());
                 if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
