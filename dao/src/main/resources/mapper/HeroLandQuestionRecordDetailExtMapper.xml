@@ -287,5 +287,6 @@
         <foreach collection="recordIds" open="(" separator="," close=")" item="recordId" index="i">
             #{recordId,jdbcType=VARCHAR}
         </foreach>
+        and user_id = #{userId}
     </select>
 </mapper>
