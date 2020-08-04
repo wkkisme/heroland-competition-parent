@@ -297,10 +297,12 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
                 statisticDtoMap.forEach((topicId, statisticDto) -> {
                     List<HeroLandCompetitionRecord> competitionRecords = competitionRecordMap.get().get(String.valueOf(topicId));
-                    long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(c -> c.equals(0)).count();
-                    // 胜率
-                    BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
-                    dp.setWinRate(winRate);
+                    if (CollUtil.isNotEmpty(competitionRecords)) {
+                        long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(c -> c.equals(0)).count();
+                        // 胜率
+                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
+                        dp.setWinRate(winRate);
+                    }
                     if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
                         List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
                         // 完成情况
