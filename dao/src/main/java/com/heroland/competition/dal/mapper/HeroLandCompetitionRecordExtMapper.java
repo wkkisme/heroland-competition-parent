@@ -3,11 +3,11 @@ package com.heroland.competition.dal.mapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsTotal;
-import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionRecordMapper {

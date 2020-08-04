@@ -77,6 +77,9 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value = "inviteScore邀请人得分")
     private Integer inviteScore;
 
+    @ApiModelProperty(value = "inviteLevel邀请人得分")
+    private String inviteLevel;
+
     /**
      * 科目code
      */
@@ -316,6 +319,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
     public void setDetails(List<HeroLandQuestionRecordDetailDP> details) {
         this.details = details;
+    }
+
+    public String getInviteLevel() {
+        return inviteLevel;
+    }
+
+    public void setInviteLevel(String inviteLevel) {
+        this.inviteLevel = inviteLevel;
     }
 
     /**
