@@ -282,6 +282,10 @@
     </update>
     <select id="selectByCompetitionRecordId"
             resultMap="BaseResultMap">
-        select * from heroland_question_record_detail where  record_id = #{recordId,jdbcType=VARCHAR}
+        select * from heroland_question_record_detail
+        where record_id in
+        <foreach collection="list" open="(" separator="," close=")" item="recordId" index="i">
+            #{recordId,jdbcType=VARCHAR}
+        </foreach>
     </select>
 </mapper>
