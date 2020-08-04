@@ -8,8 +8,9 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandClassMapper;
 import com.heroland.competition.dal.mapper.HeroLandUserClassMapper;
-import com.heroland.competition.dal.pojo.*;
-import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.dal.pojo.HeroLandClass;
+import com.heroland.competition.dal.pojo.HeroLandUserClass;
+import com.heroland.competition.dal.pojo.HeroLandUserClassExample;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
@@ -18,7 +19,6 @@ import com.heroland.competition.domain.qo.HeroLandUserClassQO;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
-import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
@@ -32,7 +32,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,9 +55,8 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     @Resource
     private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
 
-  @Resource
+    @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
-
 
     @Resource
     private HeroLandAdminService heroLandAdminService;

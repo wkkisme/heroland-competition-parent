@@ -3,6 +3,7 @@ package com.heroland.competition.domain.request;
 import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class HerolandDataPageRequest extends BaseQO implements Serializable {
 
     /**
