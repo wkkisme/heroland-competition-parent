@@ -470,25 +470,29 @@
             and is_deleted = 0
         </where>
     </select>
-    <select id="selectQuestionTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
-        select
-        hqb.id as questionId, hqb.snapshot_no as snapshotNo,
-        hqb.diff as diff, hqb.paper_type as paperType,
-        hqb.course as course, hqb.type as type,
-        hqb.grade_code as gradeCode, htg.level_code as topicLevelCode,
-        htg.topic_name as topicName, htg.type as topicType, htg.diff as topicDiff,
-        group_concat(hk.knowledge) as knowledges, htq.topic_id as topicId
+    <select id="selectQuestionTopicByQuestion" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
+        select htq.id,
+        htq.question_id           as questionId,
+        hqb.snapshot_no           as snapshotNo,
+        hqb.diff                  as diff,
+        hqb.paper_type            as paperType,
+        hqb.course                as course,
+        hqb.type                  as type,
+        hqb.grade_code            as gradeCode,
+        htg.level_code            as topicLevelCode,
+        htg.topic_name            as topicName,
+        htg.type                  as topicType,
+        htg.diff                  as topicDiff,
+        group_concat(a.knowledge) as knowledges,
+        htq.topic_id              as topicId
         from heroland_topic_question htq
-        left join heroland_topic_group htg
-        on htg.id = htq.topic_id
-        left join heroland_question_bank hqb
-        on htq.question_id = hqb.id
-        left join heroland_knowledge_refer hkr
-        on hkr.refer_id = hqb.id
-        left join heroland_knowledge hk
-        on hk.id = hkr.knowledge_id
-        where hkr.type = 2
-        and htg.is_deleted = 0
+        left join heroland_topic_group htg on htg.id = htq.topic_id
+        left join heroland_question_bank hqb on htq.question_id = hqb.id
+        left join (select hkr.refer_id, hk.knowledge
+        from heroland_knowledge_refer hkr
+        left join heroland_knowledge hk on hk.id = hkr.knowledge_id
+        where hkr.type = 2) as a on hqb.id = a.refer_id
+        where htg.is_deleted = 0
         and htq.is_deleted = 0
         <if test="item.orgCode != null">
             and htg.org_code = #{item.orgCode,jdbcType=VARCHAR}
@@ -514,6 +518,55 @@
             ]]>
         </if>
         group by htq.id
+    </select>
+    <select id="selectQuestionTopicByTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
+        select htq.id,
+        htq.question_id           as questionId,
+        hqb.snapshot_no           as snapshotNo,
+        hqb.diff                  as diff,
+        hqb.paper_type            as paperType,
+        hqb.course                as course,
+        hqb.type                  as type,
+        hqb.grade_code            as gradeCode,
+        htg.level_code            as topicLevelCode,
+        htg.topic_name            as topicName,
+        htg.type                  as topicType,
+        htg.diff                  as topicDiff,
+        group_concat(a.knowledge) as knowledges,
+        htq.topic_id              as topicId
+        from heroland_topic_question htq
+        left join heroland_topic_group htg on htg.id = htq.topic_id
+        left join heroland_question_bank hqb on htq.question_id = hqb.id
+        left join (select hkr.refer_id, hk.knowledge
+        from heroland_knowledge_refer hkr
+        left join heroland_knowledge hk on hk.id = hkr.knowledge_id
+        where hkr.type = 2) as a on hqb.id = a.refer_id
+        where htg.is_deleted = 0
+        and htq.is_deleted = 0
+        <if test="item.orgCode != null">
+            and htg.org_code = #{item.orgCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.gradeCode != null">
+            and htg.grade_code = #{item.gradeCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.classCode != null">
+            and htg.class_code = #{item.classCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.courseCode != null">
+            and htg.course_code = #{item.courseCode,jdbcType=VARCHAR}
+        </if>
+        <if test="item.type != null">
+            and htg.`type` = #{item.type,jdbcType=INTEGER}
+        </if>
+        <if test="item.startTime != null">
+            and htg.`gmt_create` &gt;= #{item.startTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="item.endTime != null">
+            <![CDATA[
+                and htg.`gmt_create` <= #{item.endTime,jdbcType=TIMESTAMP}
+            ]]>
+        </if>
+        group by htq.topic_id
     </select>
 
 </mapper>

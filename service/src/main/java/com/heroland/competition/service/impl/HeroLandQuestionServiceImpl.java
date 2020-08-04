@@ -454,7 +454,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         pageResult.setItems(list);
         HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
         Page<QuestionTopicDP> topicGroupsPageResult = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandQuestionBankMapper.selectQuestionTopic(qo));
+                () -> {
+                    if (request.getType().equals(0)){
+                        herolandQuestionBankMapper.selectQuestionTopicByQuestion(qo);
+                    }else {
+                        herolandQuestionBankMapper.selectQuestionTopicByTopic(qo);
+                    }
+                });
         if (CollectionUtils.isEmpty(topicGroupsPageResult.getResult())) {
             return pageResult;
         }

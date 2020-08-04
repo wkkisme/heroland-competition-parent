@@ -37,5 +37,7 @@ public interface HerolandQuestionBankMapper {
 
     List<HerolandQuestionUniqDP> selectSimpleSnaphot(@Param("qtIds") List<String> qtIds);
 
-    List<QuestionTopicDP> selectQuestionTopic(@Param("item") HeroLandTopicGroupQO qo);
+    List<QuestionTopicDP> selectQuestionTopicByQuestion(@Param("item") HeroLandTopicGroupQO qo);
+
+    List<QuestionTopicDP> selectQuestionTopicByTopic(@Param("item") HeroLandTopicGroupQO qo);
 }
