@@ -10,6 +10,7 @@ import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.GroupByEnum;
@@ -17,7 +18,10 @@ import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.HeroLevelUtils;
-import com.heroland.competition.dal.mapper.*;
+import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandStatisticsTotalExtMapper;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
@@ -270,13 +274,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<String> topicIds = topicQuestionForCourseStatistics.stream().map(HeroLandQuestionTopicListForStatisticDto::getId).map(String::valueOf).distinct().collect(Collectors.toList());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
         AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMap = new AtomicReference<>();
+        AtomicReference<Map<String, List<HeroLandQuestionRecordDetailDP>>> questionRecordMap = new AtomicReference<>();
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId)));
-        }
-        List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, qo.getUserId());
-        AtomicReference<Map<String, List<HeroLandQuestionRecordDetailDP>>> questionRecordMap = new AtomicReference<>();
-        if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
-            questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
+            List<String> competitionRecordIds = heroLandCompetitionRecords.stream().map(HeroLandCompetitionRecord::getRecordId).collect(Collectors.toList());
+            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds);
+            if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
+                questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
+            }
         }
         List<CompetitionCourseFinishStatisticDP> dps = new ArrayList<>();
         map.forEach((courseCode, questionTopicStatistics) -> {
@@ -329,15 +334,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
 
         List<String> topicIds = items.stream().map(QuestionTopicDP::getTopicId).map(String::valueOf).collect(Collectors.toList());
-        List<HeroLandQuestionRecordDetailDP> questionRecords = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, qo.getUserId());
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
         AtomicReference<Map<String, HeroLandQuestionRecordDetailDP>> questionRecordMap = new AtomicReference<>();
-        if (CollUtil.isNotEmpty(questionRecords)) {
-            questionRecordMap.set(questionRecords.stream().collect(Collectors.toMap(HeroLandQuestionRecordDetailDP::getQuestionId, Function.identity(), (o, n) -> n)));
-        }
         AtomicReference<Map<String, HeroLandCompetitionRecord>> competitionRecordMap = new AtomicReference<>();
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.toMap(HeroLandCompetitionRecord::getTopicId, Function.identity(), (o, n) -> n)));
+            List<String> competitionRecordIds = heroLandCompetitionRecords.stream().map(HeroLandCompetitionRecord::getRecordId).collect(Collectors.toList());
+            List<HeroLandQuestionRecordDetailDP> questionRecords = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds);
+            if (CollUtil.isNotEmpty(questionRecords)) {
+                questionRecordMap.set(questionRecords.stream().collect(Collectors.toMap(HeroLandQuestionRecordDetailDP::getQuestionId, Function.identity(), (o, n) -> n)));
+            }
         }
         List<AnswerQuestionRecordStatisticDP> result = new ArrayList<>();
         // 作业赛统计
@@ -430,7 +436,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setTotalScore(competitionRecord.getOpponentScore());
         }
         // 获取题目的比赛详情
-        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(qo.getCompetitionRecordId());
+        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(Lists.newArrayList(qo.getCompetitionRecordId()));
         List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
         questionRecordDetails.forEach(questionRecord -> {
             AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
