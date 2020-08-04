@@ -351,6 +351,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
             if (topicMap.containsKey(e.getId())) {
                 List<Long> question = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
+                dto.setQuestionIds(question);
                 dto.setQuestionNum(question.size());
             }
             list.add(dto);

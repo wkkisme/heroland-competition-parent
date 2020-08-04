@@ -513,7 +513,7 @@
                 and htg.`gmt_create` <= #{item.endTime,jdbcType=TIMESTAMP}
             ]]>
         </if>
-        group by hqb.id
+        group by htq.id
     </select>
 
 </mapper>
