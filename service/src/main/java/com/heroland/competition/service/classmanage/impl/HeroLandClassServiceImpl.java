@@ -19,9 +19,13 @@ import com.heroland.competition.domain.request.HerolandDataPageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +55,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Resource
     private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
+
+  @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
 
     @Resource
@@ -82,7 +89,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Override
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo) {
-        ResponseBody<List<PlatformSysUserClassDP>> responseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        RpcResult<List<PlatformSysUserDP>> responseBody = platformSsoUserServiceFacade.queryUserList(new PlatformSysUserQO());
         ResponseBody<List<HeroLandUserClassDP>> result = new ResponseBody<>();
         if (!CollectionUtils.isEmpty(responseBody.getData())) {
             ArrayList<HeroLandUserClassDP> heroLandUserClasses = new ArrayList<>();
