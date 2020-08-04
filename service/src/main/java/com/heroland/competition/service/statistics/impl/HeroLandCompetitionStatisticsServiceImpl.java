@@ -305,8 +305,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     }
                     if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
                         List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
-                        // 完成情况
-                        dp.setFinishQuestion(questionRecordDetails.size());
+                        if (CollUtil.isNotEmpty(questionRecordDetails)){
+                            // 完成情况
+                            dp.setFinishQuestion(questionRecordDetails.size());
+                        }
                     }
                     // TODO 完成多少节 不知道怎么统计
                 });
