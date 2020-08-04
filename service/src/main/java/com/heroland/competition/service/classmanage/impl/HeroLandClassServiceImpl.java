@@ -4,6 +4,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandClassMapper;
 import com.heroland.competition.dal.mapper.HeroLandUserClassMapper;
@@ -11,14 +12,23 @@ import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
+import com.heroland.competition.domain.request.HerolandDataPageRequest;
+import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.facade.PlatformSsoServiceFacade;
+import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,6 +48,13 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Resource
     private PlatformSsoServiceFacade platformSsoServiceFacade;
+
+    @Resource
+    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
+
+
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
 
     @Override
     public ResponseBody<Boolean> addClass(HeroLandClassDP dp) {
@@ -64,22 +81,36 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     }
 
     @Override
-    public ResponseBody<List<HeroLandClassDP>> getClassList(HeroLandClassManageQO qo) {
+    public ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo) {
+        ResponseBody<List<PlatformSysUserClassDP>> responseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        ResponseBody<List<HeroLandUserClassDP>> result = new ResponseBody<>();
+        if (!CollectionUtils.isEmpty(responseBody.getData())) {
+            ArrayList<HeroLandUserClassDP> heroLandUserClasses = new ArrayList<>();
+            responseBody.getData().parallelStream().forEach(v -> {
+                HeroLandUserClassDP heroLandUserClass = new HeroLandUserClassDP();
+                /*
+                 * 查询班级name
+                 */
+                PageResponse<HerolandBasicDataDP> classCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getClassCode()));
+                BeanUtil.copyProperties(v, heroLandUserClass);
+                if (classCode.getItems() != null) {
+                    heroLandUserClass.setClassName(classCode.getItems().get(0).getDictValue());
+                }
+                /*
+                  查询年级name
+                 */
+                PageResponse<HerolandBasicDataDP> gradeCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getGradeCode()));
 
-
-        List<HeroLandClass> heroLandAccounts = null;
-        long count = 0;
-        try {
-            HeroLandClassExample heroLandAccountExample = new HeroLandClassExample();
-            MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
-            heroLandAccounts = heroLandClassMapper.selectByExample(heroLandAccountExample);
-            count = heroLandClassMapper.countByExample(heroLandAccountExample);
-        } catch (Exception e) {
-            log.error("", e);
-            ResponseBodyWrapper.failSysException();
+                if (gradeCode.getItems() != null) {
+                    heroLandUserClass.setClassName(gradeCode.getItems().get(0).getDictValue());
+                }
+                heroLandUserClasses.add(heroLandUserClass);
+            });
+            result.setData(heroLandUserClasses);
+            return ResponseBodyWrapper.successListWrapper(result.getData(), platformSsoUserClassServiceFacade.queryUserClassCount(qo).getData(), qo, HeroLandUserClassDP.class);
         }
+        return result;
 
-        return ResponseBodyWrapper.successListWrapper(heroLandAccounts, count, qo, HeroLandClassDP.class);
     }
 
     @Override
@@ -102,9 +133,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     @Override
     public ResponseBody<Boolean> addClassUser(HeroLandUserClassDP dp) {
         try {
-            heroLandUserClassMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(),new HeroLandUserClass()));
+            heroLandUserClassMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(), new HeroLandUserClass()));
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return new ResponseBody<>();
@@ -113,9 +144,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     @Override
     public ResponseBody<Boolean> updateClassUser(HeroLandUserClassDP dp) {
         try {
-            heroLandUserClassMapper.insertSelective(BeanUtil.insertConversion(dp.updateCheck(),new HeroLandUserClass()));
+            heroLandUserClassMapper.insertSelective(BeanUtil.insertConversion(dp.updateCheck(), new HeroLandUserClass()));
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return new ResponseBody<>();
@@ -125,9 +156,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     public ResponseBody<Boolean> deleteClassUser(HeroLandUserClassDP dp) {
         try {
             dp.setIsDeleted(true);
-            heroLandUserClassMapper.updateByPrimaryKeySelective(BeanUtil.insertConversion(dp.updateCheck(),new HeroLandUserClass()));
+            heroLandUserClassMapper.updateByPrimaryKeySelective(BeanUtil.insertConversion(dp.updateCheck(), new HeroLandUserClass()));
         } catch (Exception e) {
-            log.error("",e);
+            log.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return new ResponseBody<>();

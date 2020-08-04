@@ -44,7 +44,7 @@
         <grpc.version>1.15.0</grpc.version>
         <protobuf.version>3.8.0</protobuf.version>
         <redis.version>2.3.1.RELEASE</redis.version>
-        <lombok.version>1.16.16</lombok.version>
+        <lombok.version>1.18.4</lombok.version>
         <cache.version>1.0.1-SNAPSHOT</cache.version>
         <poi.version>1.0.0-SNAPSHOT</poi.version>
         <!--<ZHConverter.version>1.0.0</ZHConverter.version>-->

@@ -75,4 +75,11 @@ public class HerolandSchoolSimpleDto implements Serializable {
      *  学校节点下的地区key
      */
     private String areaKey;
+
+
+    /**
+     * 默认值，例如班级的基本容量
+     */
+    private String defaultValue;
+
 }

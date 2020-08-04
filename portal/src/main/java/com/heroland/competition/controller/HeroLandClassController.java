@@ -65,8 +65,8 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/getClassList")
-    public ResponseBody<List<PlatformSysUserClassDP>> getClassList(@RequestBody PlatformSysUserClassQO dp) {
-        return platformSsoUserClassServiceFacade.queryUserClassList(dp);
+    public ResponseBody<List<HeroLandUserClassDP>> getClassList(@RequestBody PlatformSysUserClassQO dp) {
+        return heroLandClassService.getClassList(dp);
     }
 
 }
