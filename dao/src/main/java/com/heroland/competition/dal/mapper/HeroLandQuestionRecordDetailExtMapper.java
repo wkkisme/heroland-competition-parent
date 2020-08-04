@@ -14,5 +14,5 @@ public interface HeroLandQuestionRecordDetailExtMapper extends HeroLandQuestionR
     void updateByRecordIdSelective(HeroLandQuestionRecordDetail updateConversion);
 
     List<HeroLandQuestionRecordDetailDP> selectByCompetitionRecordId(@Param("recordIds")List<String> recordIds,
-                                                                     @Param("UserId") String userId);
+                                                                     @Param("userId") String userId);
 }
