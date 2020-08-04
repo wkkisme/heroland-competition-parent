@@ -351,6 +351,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             HeroLandQuestionTopicListForStatisticDto dto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionTopicListForStatisticDto.class);
             if (topicMap.containsKey(e.getId())) {
                 List<Long> question = topicMap.get(e.getId()).stream().map(HerolandTopicQuestion::getQuestionId).distinct().collect(Collectors.toList());
+                dto.setQuestionIds(question);
                 dto.setQuestionNum(question.size());
             }
             list.add(dto);
@@ -453,7 +454,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         pageResult.setItems(list);
         HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
         Page<QuestionTopicDP> topicGroupsPageResult = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandQuestionBankMapper.selectQuestionTopic(qo));
+                () -> {
+                    if (request.getType().equals(0)){
+                        herolandQuestionBankMapper.selectQuestionTopicByQuestion(qo);
+                    }else {
+                        herolandQuestionBankMapper.selectQuestionTopicByTopic(qo);
+                    }
+                });
         if (CollectionUtils.isEmpty(topicGroupsPageResult.getResult())) {
             return pageResult;
         }

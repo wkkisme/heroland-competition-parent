@@ -6,6 +6,7 @@ import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface HeroLandClassService {
 
     ResponseBody<Boolean> updateClass(HeroLandClassDP recordDetail);
 
-    ResponseBody<List<HeroLandClassDP>> getClassList(HeroLandClassManageQO qo);
+    ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo);
 
 
     ResponseBody<Boolean> deleteClassList(HeroLandClassManageQO qo);

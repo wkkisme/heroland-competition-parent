@@ -224,6 +224,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             simpleDto.setEmail(dto.getEmail());
             simpleDto.setAxis(dto.getAxis());
             simpleDto.setDesc(dto.getDesc());
+            simpleDto.setDefaultValue(dto.getDefaultValue());
             if (basic.keySet().contains(dto.getKey())){
                 simpleDto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
                 simpleDto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());

@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
@@ -8,10 +9,12 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
 import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
 import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
+import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
@@ -25,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,6 +46,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private HerolandTopicQuestionExtMapper herolandTopicQuestionExtMapper;
 
     @Resource
+    private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
+
+    @Resource
     private RedisService redisService;
 
     @Override
@@ -52,8 +59,16 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             dp.addSynchronizeCheck();
 //            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
 //            if (!aBoolean) {
+            HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(Long.valueOf(dp.getTopicId()));
+            if (ObjectUtil.isNull(heroLandTopicGroup)){
+                ResponseBodyWrapper.failException("题组不存在");
+            }
             HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
             recordId = heroLandCompetitionRecord.getRecordId();
+            heroLandCompetitionRecord.setInviteStartTime(new Date());
+            heroLandCompetitionRecord.setClassCode(heroLandTopicGroup.getClassCode());
+            heroLandCompetitionRecord.setGradeCode(heroLandTopicGroup.getGradeCode());
+            heroLandCompetitionRecord.setOrgCode(heroLandTopicGroup.getOrgCode());
             heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
             result.setData(recordId);
             logger.info("返回比赛数据:{}", JSONObject.toJSONString(result));

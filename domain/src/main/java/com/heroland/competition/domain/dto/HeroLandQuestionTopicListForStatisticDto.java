@@ -57,7 +57,6 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
     private String orgCode;
 
 
-
     private String orgName;
 
     /**
@@ -85,6 +84,10 @@ public class HeroLandQuestionTopicListForStatisticDto implements Serializable {
      */
     private List<Long> sectionList = Lists.newArrayList();
 
+    /**
+     * 题ID集合
+     */
+    private List<Long> questionIds = Lists.newArrayList();
 
     /**
      * 关联的题号和知识点列表

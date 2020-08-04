@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-02
+     * heroland_competition_record 2020-08-04
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1746,6 +1746,76 @@ public class HeroLandCompetitionRecordExample {
             addCriterion("grade_code not between", value1, value2, "gradeCode");
             return (Criteria) this;
         }
+
+        public Criteria andInviteLevelIsNull() {
+            addCriterion("invite_level is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelIsNotNull() {
+            addCriterion("invite_level is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelEqualTo(String value) {
+            addCriterion("invite_level =", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelNotEqualTo(String value) {
+            addCriterion("invite_level <>", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelGreaterThan(String value) {
+            addCriterion("invite_level >", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_level >=", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelLessThan(String value) {
+            addCriterion("invite_level <", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelLessThanOrEqualTo(String value) {
+            addCriterion("invite_level <=", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelLike(String value) {
+            addCriterion("invite_level like", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelNotLike(String value) {
+            addCriterion("invite_level not like", value, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelIn(List<String> values) {
+            addCriterion("invite_level in", values, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelNotIn(List<String> values) {
+            addCriterion("invite_level not in", values, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelBetween(String value1, String value2) {
+            addCriterion("invite_level between", value1, value2, "inviteLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteLevelNotBetween(String value1, String value2) {
+            addCriterion("invite_level not between", value1, value2, "inviteLevel");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1759,7 +1829,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-02
+     * heroland_competition_record 2020-08-04
      */
     public static class Criterion {
         private String condition;
