@@ -187,6 +187,7 @@
             <groupId>com.heroland</groupId>
             <artifactId>heroland-competition-dao</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.heroland</groupId>
             <artifactId>heroland-competition-common</artifactId>
