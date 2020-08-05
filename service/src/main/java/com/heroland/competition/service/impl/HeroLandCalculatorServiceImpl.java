@@ -3,6 +3,7 @@ package com.heroland.competition.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.TopicTypeConstants;
@@ -17,6 +18,7 @@ import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandCalculatorService;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -58,6 +60,7 @@ import java.util.stream.Collectors;
  * @date 2020-7-25
  */
 @Component
+@Slf4j
 public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService {
 
     @Resource
@@ -207,6 +210,14 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
             boolean isCorrect = StrUtil.equals(questionRecord.getAnswer(), questionRecord.getYourAnswer());
 
             // 得到当前用户和对手的等级差异
+            log.info("currentUser:[{}],opponentUser:[{}]", JSON.toJSONString(currentUser), JSON.toJSONString(opponentUser));
+            if (currentUser.getLevelScore() == null) {
+                currentUser.setLevelScore(0);
+            }
+            if (opponentUser.getLevelScore() == null) {
+                opponentUser.setLevelScore(0);
+            }
+
             Integer compare = heroLevelUtils.compare(currentUser.getLevelScore(), opponentUser.getLevelScore());
 
             // 如果答题正确计算分数
