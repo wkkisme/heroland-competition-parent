@@ -34,6 +34,13 @@ public interface HeroLandAccountService {
      */
     ResponseBody<List<HeroLandAccountDP>> getAccount(HeroLandAccountQO qo);
 
+     /**
+     * 插入当前人账户信息
+     * @param dp
+     * @return
+     */
+    ResponseBody<Boolean> saveAccount(HeroLandAccountDP dp);
+
     /**
      * 查询当前个人账户详情
      * @param qo

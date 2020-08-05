@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
@@ -39,6 +40,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Resource
     private HerolandDiamondService herolandDiamondService;
 
+    @NacosValue("${competition.defaultBalance:0}")
+    private Long defaultBalance;
+
     @Override
     public ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp) {
         Set<Object> members = redisService.sMembers(dp.getCompetitionType());
@@ -58,6 +62,18 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 
 
         return null;
+    }
+
+    @Override
+    public ResponseBody<Boolean> saveAccount(HeroLandAccountDP dp) {
+        try {
+
+            heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance),new HeroLandAccount()));
+        } catch (Exception e) {
+            logger.error("",e);
+            ResponseBodyWrapper.failSysException();
+        }
+        return ResponseBodyWrapper.success();
     }
 
     @Override

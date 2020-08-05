@@ -4,6 +4,8 @@ import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.MybatisCriteriaMethodEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.IDGenerateUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+
+import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.ADMIN;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandAccount")
 public class HeroLandAccountDP extends BaseDO implements Serializable {
@@ -60,10 +64,28 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
      * 等级code
      */
     private String levelCode;
+
     public HeroLandAccountDP queryCheck() {
         if (StringUtils.isBlank(this.userId)) {
             ResponseBodyWrapper.failParamException();
         }
+        return this;
+    }
+
+    public HeroLandAccountDP addCheck(long balance) {
+
+        AssertUtils.notBlank(userId);
+
+        accountId = IDGenerateUtils.getIdByRandom(ADMIN) + "";
+
+        super.beforeInsert();
+
+        this.balance= balance;
+
+        if (levelScore == null){
+            levelScore = 0;
+        }
+
         return this;
     }
 
