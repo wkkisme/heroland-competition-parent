@@ -3,7 +3,6 @@ package com.heroland.competition.dal.pojo;
 import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandAccount")
@@ -37,6 +36,12 @@ public class HeroLandAccount extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="levelScore级别分数")
     private Integer levelScore;
+
+    /**
+     * 用户名称
+     */
+    @ApiModelProperty(value="userName用户名称")
+    private String userName;
 
     /**
      * heroland_account
@@ -121,5 +126,21 @@ public class HeroLandAccount extends BaseDO implements Serializable {
      */
     public void setLevelScore(Integer levelScore) {
         this.levelScore = levelScore;
+    }
+
+    /**
+     * 用户名称
+     * @return user_name 用户名称
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * 用户名称
+     * @param userName 用户名称
+     */
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
     }
 }

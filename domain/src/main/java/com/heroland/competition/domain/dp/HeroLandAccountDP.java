@@ -6,6 +6,7 @@ import com.anycommon.response.utils.MybatisCriteriaMethodEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +31,12 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     @ApiModelProperty(value = "userId用户id")
     @MybatisCriteriaAnnotation
     private String userId;
+
+    /**
+     * 用户名称
+     */
+    @ApiModelProperty(value="userName用户名称")
+    private String userName;
 
     /**
      * 账户id
@@ -78,6 +85,9 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
 
         accountId = IDGenerateUtils.getIdByRandom(ADMIN) + "";
 
+        if ("".equals(accountId)){
+            accountId = TinyId.nextId("invite")+"";
+        }
         super.beforeInsert();
 
         this.balance= balance;
@@ -87,6 +97,14 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
         }
 
         return this;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getLevelCode() {
