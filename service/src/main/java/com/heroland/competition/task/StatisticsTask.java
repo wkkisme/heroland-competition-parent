@@ -10,6 +10,7 @@ import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author wangk
  */
-//@Component
+@Component
 @Slf4j
 public class StatisticsTask {
     @Resource
@@ -53,7 +54,7 @@ public class StatisticsTask {
      * 7 总场数
      * 0 15 10 * * ? *
      */
-    @Scheduled(cron = "0 0 0 ? * *")
+    @Scheduled(cron = "0 27 23 ? * *")
     public void statistics() {
 
         // 1 先清除历史版本

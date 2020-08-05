@@ -55,7 +55,7 @@
 
 
         select
-        sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,
+        sum(total_score) total_score,user_id ,type,grade_code,class_code ,org_code,
         sum(total_score)/sum(competitionCount) average_score,sum(competitionCount) total_games ,subject_code
         from (
         select sum(invite_score) total_score,invite_id user_id ,topic_type
@@ -63,13 +63,13 @@
         ,count(invite_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
-        <if test="topicType != null">
-            and topic_type = #{topicType}
+        <if test="type != null">
+            and `type` = #{type}
         </if>
 
         GROUP BY org_code
         <if test="groupByType == true">
-            ,topic_type
+            ,`type`
         </if>
         <if test="groupByGradeCode == true">
             ,grade_code
@@ -86,18 +86,18 @@
         union all
 
         select sum(opponent_score) total_score , opponent_id user_id ,topic_type
-        ,class_code ,grade_code ,org_code ,subject_code
+        ,class_code ,grade_code ,org_code ,subject_code,
         count(opponent_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
-        <if test="topicType != null">
-            and topic_type = #{topicType}
+        <if test="type != null">
+            and `type` = #{type}
         </if>
 
 
         GROUP BY org_code
         <if test="groupByType == true">
-            ,topic_type
+            ,`type`
         </if>
         <if test="groupByGradeCode == true">
             ,grade_code
@@ -120,15 +120,15 @@
 
 
         select
-        sum(total_score) total_score,user_id ,topic_type,grade_code,class_code ,org_code,subject_code
+        sum(total_score) total_score,user_id ,type,grade_code,class_code ,org_code,subject_code
         sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount) total_games from (
         select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
-        <if test="topicType != null">
-            and topic_type = #{topicType}
+        <if test="type != null">
+            and topic_type = #{type}
         </if>
         GROUP BY org_code,topic_type,grade_code,class_code,subject_code
         ,invite_id
@@ -139,8 +139,8 @@
         count(opponent_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
-        <if test="topicType != null">
-            and topic_type = #{topicType}
+        <if test="type != null">
+            and topic_type = #{type}
         </if>
 
         GROUP BY org_code,topic_type,grade_code,class_code,subject_code
@@ -158,7 +158,7 @@
         <if test="ifCorrectAnswer == true">
             and is_correct_answer = 1
         </if>
-        group user_id,subject_code
+        group by user_id,subject_code
 
     </select>
 
@@ -231,6 +231,7 @@
 
         select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time from heroland_question_record_detail
 
+        where is_deleted = 0
         GROUP BY user_id ,subject_code
 
 
@@ -239,6 +240,6 @@
             resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
-        where record_id = #{recordId}
+        where record_id = #{recordId} and is_deleted = 0
     </select>
 </mapper>
