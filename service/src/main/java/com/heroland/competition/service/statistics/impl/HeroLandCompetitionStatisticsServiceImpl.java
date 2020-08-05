@@ -306,7 +306,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     }
                     if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
                         List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
-                        if (CollUtil.isNotEmpty(questionRecordDetails)){
+                        if (CollUtil.isNotEmpty(questionRecordDetails)) {
                             // 完成情况
                             dp.setFinishQuestion(questionRecordDetails.size());
                         }
@@ -374,10 +374,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             if (ObjectUtil.isNotNull(recordResult)) {
                                 dp.setResult(recordResult.equals(0) ? 0 : recordResult.equals(2) ? 2 : 1);
                             }
-                        } else {
-                            if (ObjectUtil.isNotNull(result)) {
-                                dp.setResult(recordResult.equals(1) ? 0 : recordResult.equals(2) ? 2 : 1);
-                            }
+                        } else if (ObjectUtil.isNotNull(recordResult)) {
+                            dp.setResult(recordResult.equals(1) ? 0 : recordResult.equals(2) ? 2 : 1);
                         }
                     }
                 }
