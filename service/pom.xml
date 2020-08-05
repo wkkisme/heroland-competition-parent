@@ -182,12 +182,6 @@
             <groupId>com.heroland</groupId>
             <artifactId>heroland-competition-dao</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.heroland</groupId>
-            <artifactId>heroland-competition-common</artifactId>
-            <version>1.0.0</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- end -->
         <dependency>
             <artifactId>heroland-competition-rpc</artifactId>
