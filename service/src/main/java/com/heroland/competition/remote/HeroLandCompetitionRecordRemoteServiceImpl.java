@@ -1,6 +1,8 @@
 package com.heroland.competition.remote;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.api.HeroLandCompetitionRecordRemoteService;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
@@ -22,7 +24,13 @@ public class HeroLandCompetitionRecordRemoteServiceImpl implements HeroLandCompe
 
     @Override
     public ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp) {
-        return heroLandCompetitionRecordService.addCompetitionRecord(dp);
+        HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordService.getRecordInfo(dp.getTopicId(), dp.getInviteId(), dp.getOpponentId());
+        if (ObjectUtil.isNotNull(recordDP)){
+            updateCompetitionRecord(dp);
+            return ResponseBodyWrapper.successWrapper(recordDP.getRecordId());
+        }else {
+            return heroLandCompetitionRecordService.addCompetitionRecord(dp);
+        }
     }
 
     @Override

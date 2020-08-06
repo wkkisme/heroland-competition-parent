@@ -242,4 +242,12 @@
         from heroland_competition_record
         where record_id = #{recordId} and is_deleted = 0
     </select>
+    <select id="selectByTopicIdAndInviteIdAndOpponentId"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+        select *
+        from heroland_competition_record
+        where topic_id = #{topicId}
+        and invite_id = #{inviteId}
+        and opponent_id = #{opponentId}
+    </select>
 </mapper>

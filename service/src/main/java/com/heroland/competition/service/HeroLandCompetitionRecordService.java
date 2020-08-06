@@ -73,4 +73,6 @@ public interface HeroLandCompetitionRecordService {
     List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
     List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
+
+    HeroLandCompetitionRecordDP getRecordInfo(String topicId, String inviteId, String opponentId);
 }

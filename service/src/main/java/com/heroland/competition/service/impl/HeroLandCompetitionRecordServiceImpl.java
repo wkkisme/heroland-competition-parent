@@ -60,7 +60,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 //            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
 //            if (!aBoolean) {
             HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(Long.valueOf(dp.getTopicId()));
-            if (ObjectUtil.isNull(heroLandTopicGroup)){
+            if (ObjectUtil.isNull(heroLandTopicGroup)) {
                 ResponseBodyWrapper.failException("题组不存在");
             }
             HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
@@ -265,6 +265,16 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             // 每个科目下的总时长
 
             return BeanUtil.queryListConversion(heroLandCompetitionRecordExtMapper.getTotalTime(qo), HeroLandStatisticsDetailDP.class);
+        } catch (Exception e) {
+            logger.error("e", e);
+        }
+        return null;
+    }
+
+    @Override
+    public HeroLandCompetitionRecordDP getRecordInfo(String topicId, String inviteId, String opponentId) {
+        try {
+            return BeanUtil.queryConversion(heroLandCompetitionRecordExtMapper.selectByTopicIdAndInviteIdAndOpponentId(topicId, inviteId, opponentId), new HeroLandCompetitionRecordDP());
         } catch (Exception e) {
             logger.error("e", e);
         }
