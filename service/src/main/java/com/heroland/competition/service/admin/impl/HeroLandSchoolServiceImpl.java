@@ -1,6 +1,7 @@
 package com.heroland.competition.service.admin.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -23,6 +24,8 @@ import com.heroland.competition.domain.request.HerolandSchoolPageRequest;
 import com.heroland.competition.domain.request.HerolandSchoolRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandSchoolService;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -46,6 +49,9 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
 
     @Resource
     private HeroLandAdminService heroLandAdminService;
+
+    @Resource
+    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
 
     @Override
     @Transactional
@@ -225,6 +231,17 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             simpleDto.setAxis(dto.getAxis());
             simpleDto.setDesc(dto.getDesc());
             simpleDto.setDefaultValue(dto.getDefaultValue());
+
+            //如果当前是班级则需要查处当前班级的人数
+            if (Objects.equals(dto.getCode(), AdminFieldEnum.CLASS.getCode())){
+                PlatformSysUserClassQO classQO = new PlatformSysUserClassQO();
+                classQO.setClassCode(dto.getKey());
+                ResponseBody<Long> responseBody = platformSsoUserClassServiceFacade.queryUserClassCount(classQO);
+                if (responseBody.isSuccess()){
+                    simpleDto.setHadCapacity(responseBody.getData());
+                }
+            }
+
             if (basic.keySet().contains(dto.getKey())){
                 simpleDto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
                 simpleDto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
