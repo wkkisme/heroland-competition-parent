@@ -157,7 +157,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
         HeroLandCalculatorResultDP result = new HeroLandCalculatorResultDP();
         result.setInviteLevel(inviteUser.getLevelName());
         result.setInviteScore(dp.getInviteScore());
-        result.setInviteLevel(heroLevelUtils.getLevelCode(dp.getInviteScore()));
+        result.setInviteLevel(dp.getInviteLevel());
         result.setOpponentLevel(dp.getOpponentLevel());
         result.setOpponentScore(dp.getOpponentScore());
         return result;
@@ -170,7 +170,7 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
      * @param opponentQuestionRecords    对手的答题记录
      * @return
      */
-    private Integer calculateAnswerScore(List<HeroLandQuestionRecordDetailDP> currentUserQuestionRecords,
+    private int calculateAnswerScore(List<HeroLandQuestionRecordDetailDP> currentUserQuestionRecords,
                                          List<HeroLandQuestionRecordDetailDP> opponentQuestionRecords,
                                          HeroLandAccountDP currentUser,
                                          HeroLandAccountDP opponentUser) {
