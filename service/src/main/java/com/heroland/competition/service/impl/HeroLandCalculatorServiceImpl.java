@@ -13,6 +13,7 @@ import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandCalculatorService;
@@ -86,15 +87,25 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
     /**
      * 結束比賽，計算分數
      *
-     * @param dp
+     * @param recordDP
      * @return
      */
     @Override
-    public HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp, String userId) {
+    public HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP recordDP, String userId) {
+
+        // 获取比赛记录
+        HeroLandCompetitionRecordQO qo = new HeroLandCompetitionRecordQO();
+        qo.setRecordId(recordDP.getRecordId());
+        ResponseBody<HeroLandCompetitionRecordDP> body = competitionRecordService.getCompetitionRecordByRecordId(qo);
+        if (ObjectUtil.isNull(body) || ObjectUtil.isNull(body.getData())) {
+            ResponseBodyWrapper.failException("比赛记录不存在");
+        }
+        HeroLandCompetitionRecordDP competitionRecord = body.getData();
 
         // 獲取雙方比賽用戶信息
-        ResponseBody<HeroLandAccountDP> inviteUserRes = heroLandAccountService.getAccountByUserId(dp.getInviteId());
-        ResponseBody<HeroLandAccountDP> opponentUserRes = heroLandAccountService.getAccountByUserId(dp.getOpponentId());
+        ResponseBody<HeroLandAccountDP> inviteUserRes = heroLandAccountService.getAccountByUserId(competitionRecord.getInviteId());
+        ResponseBody<HeroLandAccountDP> opponentUserRes = heroLandAccountService.getAccountByUserId(competitionRecord.getOpponentId());
+
         HeroLandAccountDP inviteUser = inviteUserRes.getData();
         HeroLandAccountDP opponentUser = opponentUserRes.getData();
         if (ObjectUtil.isNull(inviteUser) || ObjectUtil.isNull(opponentUser)) {
@@ -103,14 +114,14 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
 
         // 獲取邀請人的答題記錄
         HeroLandQuestionQO questionQo = new HeroLandQuestionQO();
-        questionQo.setRecordId(dp.getRecordId());
-        questionQo.setUserId(dp.getInviteId());
+        questionQo.setRecordId(competitionRecord.getRecordId());
+        questionQo.setUserId(competitionRecord.getInviteId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> inviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> inviteQuestionRecords = inviteQuestionRecordRes.getData();
 
         // 获取被邀请人答题记录
-        questionQo.setRecordId(dp.getRecordId());
-        questionQo.setUserId(dp.getOpponentId());
+        questionQo.setRecordId(competitionRecord.getRecordId());
+        questionQo.setUserId(competitionRecord.getOpponentId());
         ResponseBody<List<HeroLandQuestionRecordDetailDP>> beInviteQuestionRecordRes = questionRecordDetailService.getQuestionRecord(questionQo);
         List<HeroLandQuestionRecordDetailDP> beInviteQuestionRecords = beInviteQuestionRecordRes.getData();
 
@@ -119,47 +130,47 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
         if (isInvite) {
             // 计算当前用户的分数
             Integer answerScore = calculateAnswerScore(inviteQuestionRecords, beInviteQuestionRecords, inviteUser, opponentUser);
-            dp.setInviteScore(answerScore);
+            competitionRecord.setInviteScore(answerScore);
         } else {
             // 计算当前用户的分数
             Integer answerScore = calculateAnswerScore(beInviteQuestionRecords, inviteQuestionRecords, opponentUser, inviteUser);
-            dp.setOpponentScore(answerScore);
+            competitionRecord.setOpponentScore(answerScore);
         }
 
         // 如果双方都答完，设置该场比赛的结果
-        if (ObjectUtil.isNotNull(dp.getInviteEndTime()) && ObjectUtil.isNotNull(dp.getOpponentEndTime())) {
+        if (ObjectUtil.isNotNull(competitionRecord.getInviteEndTime()) && ObjectUtil.isNotNull(competitionRecord.getOpponentEndTime())) {
 
             List<HeroLandQuestionRecordDetailDP> correctAnswerQuestionRecords = currentUserQuestionRecords.stream().filter(HeroLandQuestionRecordDetailDP::isCorrectAnswer).collect(Collectors.toList());
             // 设置胜负
-            int result = dp.getInviteScore() > dp.getOpponentScore() ? 0 : dp.getInviteScore().equals(dp.getOpponentScore()) ? 2 : 1;
-            dp.setResult(result);
+            int result = competitionRecord.getInviteScore() > competitionRecord.getOpponentScore() ? 0 : competitionRecord.getInviteScore().equals(competitionRecord.getOpponentScore()) ? 2 : 1;
+            competitionRecord.setResult(result);
 
             // 设置完成题数
-            dp.setFinishQuestions(correctAnswerQuestionRecords.size());
+            competitionRecord.setFinishQuestions(correctAnswerQuestionRecords.size());
         }
 
-        Integer inviteScore = dp.getInviteScore();
-        Integer opponentScore = dp.getOpponentScore();
+        Integer inviteScore = competitionRecord.getInviteScore();
+        Integer opponentScore = competitionRecord.getOpponentScore();
         // 如果是应试赛，获胜者分数X2
-        if (TopicTypeConstants.TEST_COMPETITION.equals(dp.getTopicType()) &&
+        if (TopicTypeConstants.TEST_COMPETITION.equals(competitionRecord.getTopicType()) &&
                 ObjectUtil.isNotNull(inviteScore) &&
                 ObjectUtil.isNotNull(opponentScore)) {
-            if (dp.getInviteScore() > dp.getOpponentScore()) {
-                dp.setInviteScore(inviteScore * 2);
+            if (competitionRecord.getInviteScore() > competitionRecord.getOpponentScore()) {
+                competitionRecord.setInviteScore(inviteScore * 2);
             } else {
-                dp.setOpponentScore(opponentScore * 2);
+                competitionRecord.setOpponentScore(opponentScore * 2);
             }
         }
 
         // 修改比赛记录数据
-        competitionRecordService.updateCompetitionRecord(dp);
+        competitionRecordService.updateCompetitionRecord(competitionRecord);
 
         HeroLandCalculatorResultDP result = new HeroLandCalculatorResultDP();
         result.setInviteLevel(inviteUser.getLevelName());
-        result.setInviteScore(dp.getInviteScore());
-        result.setInviteLevel(dp.getInviteLevel());
-        result.setOpponentLevel(dp.getOpponentLevel());
-        result.setOpponentScore(dp.getOpponentScore());
+        result.setInviteScore(competitionRecord.getInviteScore());
+        result.setInviteLevel(competitionRecord.getInviteLevel());
+        result.setOpponentLevel(competitionRecord.getOpponentLevel());
+        result.setOpponentScore(competitionRecord.getOpponentScore());
         return result;
     }
 
@@ -171,9 +182,9 @@ public class HeroLandCalculatorServiceImpl implements HeroLandCalculatorService 
      * @return
      */
     private int calculateAnswerScore(List<HeroLandQuestionRecordDetailDP> currentUserQuestionRecords,
-                                         List<HeroLandQuestionRecordDetailDP> opponentQuestionRecords,
-                                         HeroLandAccountDP currentUser,
-                                         HeroLandAccountDP opponentUser) {
+                                     List<HeroLandQuestionRecordDetailDP> opponentQuestionRecords,
+                                     HeroLandAccountDP currentUser,
+                                     HeroLandAccountDP opponentUser) {
 
         if (CollUtil.isEmpty(currentUserQuestionRecords)) {
             return 0;
