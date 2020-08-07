@@ -63,4 +63,10 @@ public interface HeroLandInviteRecordService {
     ResponseBody<Boolean> updateInvite(HeroLandInviteRecordDP dp);
 
 
+    /**
+     * 查询当前人是否有正在邀请中的记录
+     * @param heroLandInviteRecord 查询当前人是否有正在邀请中的记录
+     * @return
+     */
+    ResponseBody<List<HeroLandInviteRecordDP>> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord);
 }

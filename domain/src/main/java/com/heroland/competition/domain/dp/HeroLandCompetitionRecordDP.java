@@ -144,6 +144,13 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value="gradeCode年级")
     private String gradeCode;
 
+    /**
+     * 比赛状态 0比赛结束，1 比赛中
+     */
+    @ApiModelProperty(value="status比赛状态 0比赛结束，1 比赛中")
+    private Integer status;
+
+
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
             primaryRedisKey = topicId + questionId + inviteId + opponentId;
@@ -239,6 +246,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
 
         return this;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getOrgCode() {

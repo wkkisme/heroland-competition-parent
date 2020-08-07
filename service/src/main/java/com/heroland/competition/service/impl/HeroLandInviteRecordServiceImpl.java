@@ -18,6 +18,7 @@ import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -96,11 +97,24 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         try {
 
-            heroLandInviteRecordExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.addCheck(), new HeroLandInviteRecord()));
+            heroLandInviteRecordExtMapper.updateByRecordIdSelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandInviteRecord()));
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.success();
+    }
+
+    @Override
+    public ResponseBody<List<HeroLandInviteRecordDP>> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
+        HeroLandInviteRecordQO qo = new HeroLandInviteRecordQO();
+        qo.setInviteUserId(heroLandInviteRecord.getInviteUserId());
+        ResponseBody<List<HeroLandInviteRecordDP>> invite = getInvite(qo);
+        if (CollectionUtils.isEmpty(invite.getData())){
+            qo.setInviteUserId(null);
+            qo.setBeInviteUserId(heroLandInviteRecord.getBeInviteUserId());
+            invite = getInvite(qo);
+        }
+        return invite;
     }
 }

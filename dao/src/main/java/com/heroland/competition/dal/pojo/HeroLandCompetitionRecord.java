@@ -129,6 +129,12 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String inviteLevel;
 
     /**
+     * 比赛状态 0比赛结束，1 比赛中
+     */
+    @ApiModelProperty(value="status比赛状态 0比赛结束，1 比赛中")
+    private Integer status;
+
+    /**
      * heroland_competition_record
      */
     private static final long serialVersionUID = 1L;
@@ -451,5 +457,21 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
      */
     public void setInviteLevel(String inviteLevel) {
         this.inviteLevel = inviteLevel == null ? null : inviteLevel.trim();
+    }
+
+    /**
+     * 比赛状态 0比赛结束，1 比赛中
+     * @return status 比赛状态 0比赛结束，1 比赛中
+     */
+    public Integer getStatus() {
+        return status;
+    }
+
+    /**
+     * 比赛状态 0比赛结束，1 比赛中
+     * @param status 比赛状态 0比赛结束，1 比赛中
+     */
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

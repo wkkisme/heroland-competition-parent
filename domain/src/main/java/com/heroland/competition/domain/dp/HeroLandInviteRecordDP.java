@@ -3,16 +3,18 @@ package com.heroland.competition.domain.dp;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.enums.InviteStatusEnum;
+import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
-import java.util.UUID;
+
+import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.ADMIN;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
-public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
+public class HeroLandInviteRecordDP extends BaseDO {
     /**
      * 记录id
      */
@@ -52,7 +54,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
     /**
      * 0答应1 拒绝
      */
-    @ApiModelProperty(value = "status0答应1 拒绝")
+    @ApiModelProperty(value = "status0答应1 拒绝 3 邀请中")
     private Integer status;
 
     /**
@@ -79,8 +81,10 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
             this.recordId = invite.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            this.recordId = UUID.randomUUID().toString();
+            this.recordId = IDGenerateUtils.getIdByRandom(ADMIN) + "";;
         }
+        // 设置状态为 邀请中
+        status = InviteStatusEnum.WAITING.getStatus();
 
         this.beforeInsert();
         return this;
@@ -118,12 +122,7 @@ public class HeroLandInviteRecordDP extends BaseDO implements Serializable {
     }
 
     private Boolean getInviteStatus(RedisService redisService, String userId) {
-
-        boolean isInvited = true;
-        Boolean aBoolean = redisService.setNx(INVITE_KEY + userId, this, "10h");
-        if (aBoolean != null) {
-            isInvited = aBoolean;
-        }
+        boolean isInvited = redisService.setNx(INVITE_KEY + userId, this, "PT10H");
         return !isInvited;
     }
 

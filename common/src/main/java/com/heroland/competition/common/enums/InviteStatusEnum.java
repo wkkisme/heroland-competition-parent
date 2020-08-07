@@ -13,9 +13,15 @@ public enum InviteStatusEnum {
     /**
      * 不同意
      */
-    DO_NOT_AGREE(1);
+    DO_NOT_AGREE(1),
 
-    private  Integer status;
+    /**
+     * 邀请中
+     */
+    WAITING(3)
+    ;
+
+    private final Integer status;
 
     InviteStatusEnum(Integer status) {
         this.status = status;

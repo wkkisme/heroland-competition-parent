@@ -28,6 +28,7 @@
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="invite_level" jdbcType="VARCHAR" property="inviteLevel" />
+    <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -91,7 +92,7 @@
     id, topic_id, topic_name, topic_type, record_id, result, opponent_id, opponent_level, 
     opponent_score, creator, invite_id, invite_score, modifier, gmt_create, gmt_modified, 
     is_deleted, subject_code, question_id, invite_start_time, invite_end_time, opponent_start_time, 
-    opponent_end_time, org_code, class_code, grade_code, invite_level
+    opponent_end_time, org_code, class_code, grade_code, invite_level, status
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultMap="BaseResultMap">
     select
@@ -135,7 +136,7 @@
       subject_code, question_id, invite_start_time, 
       invite_end_time, opponent_start_time, opponent_end_time, 
       org_code, class_code, grade_code, 
-      invite_level)
+      invite_level, status)
     values (#{topicId,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{topicType,jdbcType=INTEGER}, 
       #{recordId,jdbcType=VARCHAR}, #{result,jdbcType=INTEGER}, #{opponentId,jdbcType=VARCHAR}, 
       #{opponentLevel,jdbcType=VARCHAR}, #{opponentScore,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
@@ -144,7 +145,7 @@
       #{subjectCode,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{inviteStartTime,jdbcType=TIMESTAMP}, 
       #{inviteEndTime,jdbcType=TIMESTAMP}, #{opponentStartTime,jdbcType=TIMESTAMP}, #{opponentEndTime,jdbcType=TIMESTAMP}, 
       #{orgCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
-      #{inviteLevel,jdbcType=VARCHAR})
+      #{inviteLevel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -227,6 +228,9 @@
       <if test="inviteLevel != null">
         invite_level,
       </if>
+      <if test="status != null">
+        status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="topicId != null">
@@ -303,6 +307,9 @@
       </if>
       <if test="inviteLevel != null">
         #{inviteLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -393,6 +400,9 @@
       <if test="record.inviteLevel != null">
         invite_level = #{record.inviteLevel,jdbcType=VARCHAR},
       </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -425,7 +435,8 @@
       org_code = #{record.orgCode,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
-      invite_level = #{record.inviteLevel,jdbcType=VARCHAR}
+      invite_level = #{record.inviteLevel,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -508,6 +519,9 @@
       <if test="inviteLevel != null">
         invite_level = #{inviteLevel,jdbcType=VARCHAR},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -537,7 +551,8 @@
       org_code = #{orgCode,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
-      invite_level = #{inviteLevel,jdbcType=VARCHAR}
+      invite_level = #{inviteLevel,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
