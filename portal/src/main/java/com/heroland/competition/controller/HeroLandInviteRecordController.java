@@ -99,7 +99,8 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/getCanInviteList")
-    public ResponseBody<Set<Object>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP) {
+    public ResponseBody<Set<Object>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP,HttpServletRequest request) {
+        heroLandAccountDP.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
 
         return heroLandAccountService.getOnLineUserByType(heroLandAccountDP);
     }
