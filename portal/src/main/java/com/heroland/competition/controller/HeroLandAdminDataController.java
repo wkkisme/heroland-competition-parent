@@ -92,17 +92,17 @@ public class HeroLandAdminDataController {
     }
 
 
-//    /**
-//     * 查看字典数据详情
-//     * @param id
-//     * @return
-//     */
-//    @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
-//    @org.springframework.web.bind.annotation.ResponseBody
-//    public ResponseBody<HerolandBasicDataDP> getDictInfoById(@RequestParam("id") Long id) {
-////        return heroLandAdminService.getDictInfoById(id);
-//        return null;
-//    }
+    /**
+     * 查看字典数据详情
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HerolandBasicDataDP> getDictInfoById(@RequestParam("id") Long id) {
+
+        return null;
+    }
 
 
 }

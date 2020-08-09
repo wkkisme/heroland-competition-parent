@@ -61,16 +61,6 @@ public interface HeroLandAdminService {
      */
     PageResponse<HerolandBasicDataDP> pageQueryDict(HerolandBasicDataPageRequest request);
 
-    /**
-     * 获取学校管理的相关内容
-     * 层级关系
-     * @param qo
-     * @return
-     */
-    ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandLocationDataQO qo);
-
-
-    ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code);
 
 
     PageResponse<HerolandBasicDataDP> pageDataByCode(HerolandDataPageRequest request);

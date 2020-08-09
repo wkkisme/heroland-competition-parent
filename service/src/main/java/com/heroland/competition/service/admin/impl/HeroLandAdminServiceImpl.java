@@ -1,6 +1,7 @@
 package com.heroland.competition.service.admin.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
@@ -8,6 +9,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constant.RedisConstant;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
@@ -34,6 +36,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +51,9 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
 
     @Resource
     private HerolandLocationMapper herolandLocationMapper;
+
+    @Resource
+    private RedisService redisService;
 
     @Override
     @Transactional
@@ -62,6 +69,8 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
             }
             HerolandBasicData basicData = BeanUtil.insertConversion(dp, new HerolandBasicData());
             herolandBasicDataMapper.insertSelective(basicData);
+            String key = String.format(RedisConstant.ADMIN_KEY, basicData.getDictKey());
+            redisService.set(key, basicData, RedisConstant.EXPIRE_SECONDS);
             return basicData;
         } catch (Exception e) {
             log.error("addDict error, [{}]", JSON.toJSONString(dp));
@@ -86,7 +95,11 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
             }
         }
         try {
-            result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.checkAndBuildBeforeUpdate(), new HerolandBasicData())) > 0);
+            HerolandBasicData basicData = BeanUtil.updateConversion(dp.checkAndBuildBeforeUpdate(), new HerolandBasicData());
+            result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(basicData) > 0);
+            String key = String.format(RedisConstant.ADMIN_KEY, basicData.getDictKey());
+            redisService.del(key);
+            redisService.set(key, basicData, RedisConstant.EXPIRE_SECONDS);
         } catch (Exception e) {
             log.error("editDict error", e);
             if (e instanceof AppSystemException){
@@ -102,7 +115,9 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
     @Transactional
     public Boolean deleteDict(List<String> keys) {
        if(!CollectionUtils.isEmpty(keys)){
-          return  herolandBasicDataMapper.deleteByDictKey(keys) > 0;
+          herolandBasicDataMapper.deleteByDictKey(keys);
+           List<String> redisKeys = keys.stream().map(key -> String.format(RedisConstant.ADMIN_KEY, key)).collect(Collectors.toList());
+           redisService.del(redisKeys);
         }
         return true;
     }
@@ -120,67 +135,6 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         return pageResult;
     }
 
-    @Override
-    public ResponseBody<List<HerolandLocationDP>> listQueryLocale(HerolandLocationDataQO qo) {
-        ResponseBody<List<HerolandLocationDP>> result = new ResponseBody();
-        List<HerolandLocation> locationList = herolandLocationMapper.getLocationByKey(qo.getDictKey(), qo.getCode());
-//        List<String> dictKeys = Lists.newArrayList();
-//        locationList.stream().forEach(e -> {
-//           dictKeys.add(e.getArea());
-//            dictKeys.add(e.getSchool());
-//            dictKeys.add(e.getGrade());
-//            dictKeys.add(e.getClas());
-//        });
-//        List<String> validDictKeys = dictKeys.stream().filter(e -> StringUtils.isNotBlank(e)).collect(Collectors.toList());
-//        ResponseBody<List<HerolandBasicDataDP>> dictInfoByKeys = getDictInfoByKeys(validDictKeys);
-//        Map<String, List<HerolandBasicDataDP>> keysMap = dictInfoByKeys.getData().stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-        List<HerolandLocationDP> locationDPS = Lists.newArrayList();
-        locationList.stream().forEach(e -> {
-            HerolandLocationDP locationDP = new HerolandLocationDP();
-            locationDP.setArea(e.getArea());
-            locationDP.setGrade(e.getGrade());
-            locationDP.setSchool(e.getSchool());
-            locationDP.setClas(e.getClas());
-//            if (keysMap.containsKey(e.getArea())){
-//                locationDP.setAreaName(keysMap.get(e.getArea()).get(0).getDictValue());
-//            }
-//            if (keysMap.containsKey(e.getGrade())){
-//                locationDP.setGradeName(keysMap.get(e.getGrade()).get(0).getDictValue());
-//            }
-//            if (keysMap.containsKey(e.getClas())){
-//                locationDP.setClasName(keysMap.get(e.getClas()).get(0).getDictValue());
-//            }
-//            if (keysMap.containsKey(e.getSchool())){
-//                locationDP.setSchoolName(keysMap.get(e.getSchool()).get(0).getDictValue());
-//            }
-            locationDPS.add(locationDP);
-        });
-        result.setData(locationDPS);
-        return result;
-    }
-
-    @Override
-    public ResponseBody<List<HerolandBasicDataDP>> listValidLoation(String code) {
-        ResponseBody<List<HerolandBasicDataDP>> result = new ResponseBody();
-        List<HerolandBasicData> herolandBasicData = Lists.newArrayList();
-        List<HerolandLocation> location = herolandLocationMapper.getDistinctLocationByCode(code);
-        List<String> keys = Lists.newArrayList();
-        if (AdminFieldEnum.AREA.getCode().equals(code)){
-            keys = location.stream().map(HerolandLocation::getArea).collect(Collectors.toList());
-        }else if (AdminFieldEnum.SCHOOL.getCode().equals(code)){
-            keys = location.stream().map(HerolandLocation::getSchool).collect(Collectors.toList());
-        }else if(AdminFieldEnum.GRADE.getCode().equals(code)){
-            keys = location.stream().map(HerolandLocation::getGrade).collect(Collectors.toList());
-        }else if(AdminFieldEnum.CLASS.getCode().equals(code)){
-            keys = location.stream().map(HerolandLocation::getClas).collect(Collectors.toList());
-        }
-        if (!CollectionUtils.isEmpty(keys)){
-            herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
-        }
-        List<HerolandBasicDataDP> dpList = herolandBasicData.stream().map(this::convertToDP).collect(Collectors.toList());
-        result.setData(dpList);
-        return result;
-    }
 
     @Override
     public PageResponse<HerolandBasicDataDP> pageDataByCode(HerolandDataPageRequest request) {
@@ -239,20 +193,43 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
 
     @Override
     public List<HerolandBasicDataDP> getDictInfoByKeys(List<String> keys) {
+
         List<HerolandBasicData> herolandBasicData = Lists.newArrayList();
         List<HerolandBasicDataDP> list = Lists.newArrayList();
         if (CollectionUtils.isEmpty(keys)){
             return list;
         }
-        try {
+        List<String> redisKeys = keys.stream().map(key -> String.format(RedisConstant.ADMIN_KEY, key)).collect(Collectors.toList());
+        List<Object> redisValue = redisService.getKeys(redisKeys);
+        if (CollectionUtils.isEmpty(redisValue)){
             herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
+            batchSetRedis(herolandBasicData);
             list = BeanCopyUtils.copyArrayByJSON(herolandBasicData,HerolandBasicDataDP.class);
-        } catch (Exception e) {
-            log.error("", e);
-            ResponseBodyWrapper.failSysException();
+        }else {
+            List<String> exist = Lists.newArrayList();
+            list = redisValue.stream().map(e -> {
+                HerolandBasicData data = (HerolandBasicData)e;
+                exist.add(data.getDictKey());
+                HerolandBasicDataDP dataDP = convertToDP(data);
+                return dataDP;
+            }).collect(Collectors.toList());
+            keys.removeAll(exist);
+            List<String> notExist = keys;
+            if (!CollectionUtils.isEmpty(notExist)){
+                herolandBasicData = herolandBasicDataMapper.selectByDictKeys(notExist);
+                batchSetRedis(herolandBasicData);
+                List notExistList = BeanCopyUtils.copyArrayByJSON(herolandBasicData,HerolandBasicDataDP.class);
+                list.addAll(notExistList);
+            }
         }
-
         return list;
+    }
+
+    private void batchSetRedis(List<HerolandBasicData> herolandBasicData){
+        herolandBasicData.forEach(e -> {
+            String key = String.format(RedisConstant.ADMIN_KEY, e.getDictKey());
+            redisService.set(key, e, RedisConstant.EXPIRE_SECONDS);
+        });
     }
 
     private HerolandBasicDataDP convertToDP(HerolandBasicData data){
