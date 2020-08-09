@@ -68,6 +68,12 @@
 
         <dependencies>
             <dependency>
+                <groupId>com.crossoverjie.netty</groupId>
+                <artifactId>cim-rout-api</artifactId>
+                <version>1.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq-spring-boot-starter-version}</version>

@@ -10,6 +10,10 @@ import java.util.Date;
 public class HeroLandCompetitionRecordQO extends BaseQO {
 
     /**
+     * 查询当前人的比赛记录
+     */
+    private String userId;
+    /**
      * 记录唯一id
      */
     @ApiModelProperty(value = "recordId记录唯一id")
@@ -105,6 +109,14 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     public HeroLandCompetitionRecordQO setRecordId(String recordId) {
         this.recordId = recordId;
         return this;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Long getId() {

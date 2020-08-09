@@ -11,9 +11,17 @@ public interface HeroLandCalculatorService {
 
 
     /**
+     * 类型，比赛类型
+     * @return
+     */
+    Integer getType();
+    /**
      * 得分
      * @param dp
      * @return
      */
-    HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp, String userId);
+    HeroLandCompetitionRecordDP calculate(HeroLandCompetitionRecordDP dp);
+
+
+
 }

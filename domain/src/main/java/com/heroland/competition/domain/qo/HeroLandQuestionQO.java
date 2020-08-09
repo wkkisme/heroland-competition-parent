@@ -2,18 +2,21 @@ package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
+import com.heroland.competition.common.utils.AssertUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotBlank;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class HeroLandQuestionQO extends BaseQO {
 
     @MybatisCriteriaAnnotation
-    private Long topicId;
+    private String topicId;
 
     @MybatisCriteriaAnnotation
-    private Long questionId;
+    private String questionId;
 
     /**
      * 比赛记录id
@@ -32,4 +35,12 @@ public class HeroLandQuestionQO extends BaseQO {
      */
     @MybatisCriteriaAnnotation
     private String userId;
+
+    public HeroLandQuestionQO querySynCheck() {
+
+        AssertUtils.notBlank(this.questionId);
+        AssertUtils.notBlank(this.topicId);
+
+        return this;
+    }
 }

@@ -92,11 +92,39 @@
         </where>
     </sql>
     <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
-    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
-    parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date, 
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code,
+    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution,
+    parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date,
     end_date, score, is_correct_answer
   </sql>
+
+    <insert id="insertBach">
+        insert into heroland_question_record_detail (creator, modifier, gmt_create,
+        gmt_modified, is_deleted, grade_code,
+        class_code, question_id, title,
+        option_a, option_b, option_c,
+        option_d, option_e, answer,
+        solution, parse, level_code,
+        your_answer, user_id, record_id,
+        record_detail_id, begin_date, end_date,
+        score, is_correct_answer, topic_id
+        )
+        values
+
+        <foreach collection="details" item="detail" separator=",">
+            (#{detail.creator,jdbcType=VARCHAR}, #{detail.modifier,jdbcType=VARCHAR}, #{detail.detail.gmtCreate,jdbcType=TIMESTAMP},
+            #{detail.gmtModified,jdbcType=TIMESTAMP}, #{detail.isDeleted,jdbcType=BIT}, #{detail.gradeCode,jdbcType=VARCHAR},
+            #{detail.classCode,jdbcType=VARCHAR}, #{detail.questionId,jdbcType=VARCHAR}, #{detail.title,jdbcType=VARCHAR},
+            #{detail.optionA,jdbcType=VARCHAR}, #{detail.optionB,jdbcType=VARCHAR}, #{detail.optionC,jdbcType=VARCHAR},
+            #{detail.optionD,jdbcType=VARCHAR}, #{detail.optionE,jdbcType=VARCHAR}, #{detail.answer,jdbcType=VARCHAR},
+            #{detail.solution,jdbcType=VARCHAR}, #{detail.parse,jdbcType=VARCHAR}, #{detail.levelCode,jdbcType=VARCHAR},
+            #{detail.yourAnswer,jdbcType=VARCHAR}, #{detail.userId,jdbcType=VARCHAR}, #{detail.recordId,jdbcType=VARCHAR},
+            #{detail.recordDetailId,jdbcType=VARCHAR}, #{detail.beginDate,jdbcType=TIMESTAMP}, #{detail.endDate,jdbcType=TIMESTAMP},
+            #{detail.score,jdbcType=INTEGER}, #{detail.isCorrectAnswer,jdbcType=BIT}, #{detail.topicId,jdbcType=VARCHAR}
+            )
+        </foreach>
+
+    </insert>
     <select id="selectByTopicIdsAndUserId" resultMap="BaseResultMap">
         select a.*, b.topic_id
         from heroland_competition_record b

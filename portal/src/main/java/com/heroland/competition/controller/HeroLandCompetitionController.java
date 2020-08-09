@@ -7,13 +7,18 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.domain.dp.HeroLandCalculatorResultDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.factory.CompetitionTopicFactory;
 import com.heroland.competition.service.HeroLandCalculatorService;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandCompetitionService;
+import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * heroland-competition-parent
@@ -27,13 +32,10 @@ import javax.annotation.Resource;
 public class HeroLandCompetitionController {
 
     @Resource
-    private HeroLandCompetitionService heroLandCompetitionService;
-
-    @Resource
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
 
     @Resource
-    private HeroLandCalculatorService heroLandCalculatorService;
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
     @Value("${answer.SyncTime}")
     private Long syncTime;
@@ -42,19 +44,19 @@ public class HeroLandCompetitionController {
     private Long examTime;
 
     @PostMapping("/doAnswer")
-    public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp) {
-
-        return heroLandCompetitionService.doAnswer(dp);
+    public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp, HttpServletRequest request) {
+        dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
+        return CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
     }
 
-    @PostMapping("/score/calculate/{userId}")
-    public ResponseBody<HeroLandCalculatorResultDP> calculateScore(@PathVariable("userId") String userId,
-                                                                   @RequestParam("competitionRecordId") String competitionRecordId) {
-        HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = new HeroLandCompetitionRecordDP();
-        heroLandCompetitionRecordDP.setRecordId(competitionRecordId);
-        HeroLandCalculatorResultDP calculate = heroLandCalculatorService.calculate(heroLandCompetitionRecordDP, userId);
-        return ResponseBodyWrapper.successWrapper(calculate);
-    }
+//    @PostMapping("/score/calculate/{userId}")
+//    public ResponseBody<HeroLandCalculatorResultDP> calculateScore(@PathVariable("userId") String userId,
+//                                                                   @RequestParam("competitionRecordId") String competitionRecordId) {
+//        HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = new HeroLandCompetitionRecordDP();
+//        heroLandCompetitionRecordDP.setRecordId(competitionRecordId);
+//        HeroLandCalculatorResultDP calculate = heroLandCalculatorService.calculate(heroLandCompetitionRecordDP, userId);
+//        return ResponseBodyWrapper.successWrapper(calculate);
+//    }
 
     /**
      * @param topicType
@@ -82,5 +84,11 @@ public class HeroLandCompetitionController {
         HeroLandCompetitionRecordQO qo = new HeroLandCompetitionRecordQO();
         qo.setRecordId(competitionRecordId);
         return heroLandCompetitionRecordService.getCompetitionRecordByRecordId(qo);
+    }
+
+    @GetMapping("/getCompetitionRecords")
+    public ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecords(@RequestBody HeroLandCompetitionRecordQO qo) {
+
+        return heroLandCompetitionRecordService.getCompetitionRecords(qo);
     }
 }

@@ -19,6 +19,6 @@ public class HeroLandCalculatorRemoteServiceImpl implements HeroLandCalculatorRe
 
     @Override
     public HeroLandCalculatorResultDP calculate(HeroLandCompetitionRecordDP dp, String userId) {
-        return heroLandCalculatorService.calculate(dp, userId);
+        return null;
     }
 }

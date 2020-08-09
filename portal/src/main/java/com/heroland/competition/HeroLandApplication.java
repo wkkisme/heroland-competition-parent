@@ -2,6 +2,7 @@ package com.heroland.competition;
 
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author wangkai
@@ -32,7 +35,6 @@ public class HeroLandApplication {
 
     @Value("${socket.netty.port:19999}")
     private int nettyPort;
-
 
 
     public static void main(String[] args) {

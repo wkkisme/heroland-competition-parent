@@ -1,33 +1,37 @@
 package com.heroland.competition.common.enums;
 
 /**
- * 邀请的状态枚举
+ * 比赛记录状态
  * @author mac
  */
 
-public enum InviteStatusEnum {
-    /**
-     * 同意
-     */
-    AGREE(0),
-    /**
-     * 不同意
-     */
-    DO_NOT_AGREE(1),
+public enum CompetitionStatusEnum {
+
 
     /**
-     * 邀请中
+     * 比赛状态 0比赛结束，1 比赛中 2 比赛未开始
+     * 同意
      */
-    WAITING(2)
+    FINISH(0),
+    /**
+     * 1 比赛中
+     */
+    COMPETING(1),
+
+    /**
+     * 2 比赛未开始
+     */
+    UN_START(2)
     ;
 
     private final Integer status;
 
-    InviteStatusEnum(Integer status) {
+    CompetitionStatusEnum(Integer status) {
         this.status = status;
     }
 
     public Integer getStatus() {
         return status;
     }
+
 }

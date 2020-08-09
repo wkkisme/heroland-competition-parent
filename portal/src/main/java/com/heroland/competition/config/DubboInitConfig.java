@@ -1,5 +1,6 @@
 package com.heroland.competition.config;
 
+import com.crossoverjie.cim.route.api.RouteApi;
 import com.platform.sso.facade.PlatformSsoServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
@@ -24,6 +25,11 @@ public class DubboInitConfig {
 
     @Reference(group = "platform-sso",version = "1.0.0",check = false)
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
+
+    @Reference(group = "cim-server",version = "1.0.0",check = false)
+    private RouteApi routeApi;
+
     @Bean("prePayRemoteService")
     public PrePayRemoteService getPrePayRemoteService(){
         return prePayRemoteService;
@@ -44,5 +50,10 @@ public class DubboInitConfig {
     @Bean("platformSsoUserServiceFacade")
     public PlatformSsoUserServiceFacade getPlatformSsoUserServiceFacade() {
         return platformSsoUserServiceFacade;
+    }
+
+    @Bean("routeApi")
+    public RouteApi getRouteApi() {
+        return routeApi;
     }
 }

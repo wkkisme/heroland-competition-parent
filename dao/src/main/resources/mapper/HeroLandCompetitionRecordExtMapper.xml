@@ -229,7 +229,8 @@
     <select id="getTotalTime" resultMap="StatisticsMap">
 
 
-        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time from heroland_question_record_detail
+        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time from
+        heroland_question_record_detail
 
         where is_deleted = 0
         GROUP BY user_id ,subject_code
@@ -249,5 +250,105 @@
         where topic_id = #{topicId}
         and invite_id = #{inviteId}
         and opponent_id = #{opponentId}
+    </select>
+
+    <select id="selectByRecordQO"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+        select
+        <include refid="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.Base_Column_List"/>
+
+        from heroland_competition_record
+
+        where is_deleted =0
+        <if test="userId != null">
+            and (invite_id = #{userId} or opponent_id = #{userId})
+        </if>
+        <if test="recordId != null">
+            and record_id = #{recordId}
+
+        </if>
+        <if test="topicId != null">
+            and topic_id = #{topicId}
+
+        </if>
+        <if test="topicName != null">
+            and topic_name = #{topicName}
+
+        </if>
+        <if test="topicType != null">
+            and topic_type = #{topicType}
+
+        </if>
+        <if test="opponentId != null">
+            and opponent_id = #{opponentId}
+
+        </if>
+
+        <if test="inviteId != null">
+            and invite_id = #{inviteId}
+
+        </if>
+        <if test="subjectCode != null">
+            and subject_code = #{subjectCode}
+
+        </if>
+        <if test="id != null">
+            and id = #{id}
+
+        </if>
+
+
+        order by id desc
+        <if test="startRow != null and startRow != -1 and pageSize != null">
+            limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+
+
+    </select>
+    <select id="countByRecordQO" resultType="java.lang.Long">
+        select
+        count(*)
+
+        from heroland_competition_record
+
+        where is_deleted =0
+        <if test="userId != null">
+            and (invite_id = #{userId} or opponent_id = #{userId})
+        </if>
+        <if test="recordId != null">
+            and record_id = #{recordId}
+
+        </if>
+        <if test="topicId != null">
+            and topic_id = #{topicId}
+
+        </if>
+        <if test="topicName != null">
+            and topic_name = #{topicName}
+
+        </if>
+        <if test="topicType != null">
+            and topic_type = #{topicType}
+
+        </if>
+        <if test="opponentId != null">
+            and opponent_id = #{opponentId}
+
+        </if>
+
+        <if test="inviteId != null">
+            and invite_id = #{inviteId}
+
+        </if>
+        <if test="subjectCode != null">
+            and subject_code = #{subjectCode}
+
+        </if>
+        <if test="id != null">
+            and id = #{id}
+
+        </if>
+
+
     </select>
 </mapper>

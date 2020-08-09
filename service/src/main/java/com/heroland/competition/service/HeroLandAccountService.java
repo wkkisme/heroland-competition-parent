@@ -67,6 +67,15 @@ public interface HeroLandAccountService {
 
 
 
+    /**
+     * 增加或者减分数
+     * @param dp
+     * @return
+     */
+    ResponseBody<HeroLandAccountDP> incrDecrUserScore(HeroLandAccountManageQO dp);
+
+
+
 
 
 

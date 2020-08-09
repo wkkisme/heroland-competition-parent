@@ -46,6 +46,21 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
     }
 
     @Override
+    public ResponseBody<Boolean> addQuestionRecords(List<HeroLandQuestionRecordDetailDP> recordDetails) {
+
+        for (HeroLandQuestionRecordDetailDP recordDetail : recordDetails) {
+            recordDetail.addCheck();
+        }
+        try {
+            questionRecordDetailExtMapper.insertBach(BeanUtil.queryListConversion(recordDetails,HeroLandQuestionRecordDetail.class));
+        } catch (Exception e) {
+            logger.error("e",e);
+            ResponseBodyWrapper.failSysException();
+        }
+        return ResponseBodyWrapper.success();
+    }
+
+    @Override
     public ResponseBody<Boolean> updateQuestionRecord(HeroLandQuestionRecordDetailDP recordDetail) {
 
         try {

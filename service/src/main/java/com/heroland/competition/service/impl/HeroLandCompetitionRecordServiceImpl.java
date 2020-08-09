@@ -20,6 +20,8 @@ import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private HeroLandCompetitionRecordExtMapper heroLandCompetitionRecordExtMapper;
 
     @Resource
+    private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
+    @Resource
     private HerolandTopicQuestionExtMapper herolandTopicQuestionExtMapper;
 
     @Resource
@@ -56,7 +60,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         ResponseBody<String> result = new ResponseBody<>();
         String recordId;
         try {
-            dp.addSynchronizeCheck();
+            dp.addCheck();
 //            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
 //            if (!aBoolean) {
             HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(Long.valueOf(dp.getTopicId()));
@@ -65,7 +69,6 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             }
             HeroLandCompetitionRecord heroLandCompetitionRecord = BeanUtil.insertConversion(dp, new HeroLandCompetitionRecord());
             recordId = heroLandCompetitionRecord.getRecordId();
-            heroLandCompetitionRecord.setInviteStartTime(new Date());
             heroLandCompetitionRecord.setClassCode(heroLandTopicGroup.getClassCode());
             heroLandCompetitionRecord.setGradeCode(heroLandTopicGroup.getGradeCode());
             heroLandCompetitionRecord.setOrgCode(heroLandTopicGroup.getOrgCode());
@@ -84,6 +87,18 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
+    public ResponseBody<Boolean> addCompetitionAndDetail(HeroLandCompetitionRecordDP dp) {
+        try {
+            addCompetitionRecord(dp);
+            return heroLandQuestionRecordDetailService.addQuestionRecords(dp.getDetails());
+        } catch (Exception e) {
+            logger.error("", e);
+            ResponseBodyWrapper.failSysException();
+        }
+        return ResponseBodyWrapper.success();
+    }
+
+    @Override
     public ResponseBody<Boolean> updateCompetitionRecord(HeroLandCompetitionRecordDP dp) {
 
         ResponseBody<Boolean> result = new ResponseBody<>();
@@ -91,6 +106,21 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
         try {
             result.setData(heroLandCompetitionRecordExtMapper.updateByPrimaryKeySelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord())) > 0);
+        } catch (Exception e) {
+            logger.error("", e);
+            ResponseBodyWrapper.failSysException();
+        }
+        return result;
+    }
+
+    @Override
+    public ResponseBody<Boolean> updateCompetitionRecordByTopicId(HeroLandCompetitionRecordDP dp) {
+
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        try {
+            HeroLandCompetitionRecordExample heroLandCompetitionRecordExample = new HeroLandCompetitionRecordExample();
+            heroLandCompetitionRecordExample.createCriteria().andTopicIdEqualTo(dp.getTopicId());
+            result.setData(heroLandCompetitionRecordExtMapper.updateByExampleSelective(BeanUtil.updateConversion(dp.updateCheck(), new HeroLandCompetitionRecord()), heroLandCompetitionRecordExample) > 0);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
@@ -128,14 +158,12 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
     @Override
     public ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecords(HeroLandCompetitionRecordQO qo) {
-        HeroLandCompetitionRecordExample heroLandTopicGroupExample = new HeroLandCompetitionRecordExample();
-        MybatisCriteriaConditionUtil.createExample(heroLandTopicGroupExample.createCriteria(), qo);
         List<HeroLandCompetitionRecord> heroLandTopicGroups = new ArrayList<>();
         long count = 0L;
         try {
 
-            heroLandTopicGroups = heroLandCompetitionRecordExtMapper.selectByExample(heroLandTopicGroupExample);
-            count = heroLandCompetitionRecordExtMapper.countByExample(heroLandTopicGroupExample);
+            heroLandTopicGroups = heroLandCompetitionRecordExtMapper.selectByRecordQO(qo);
+            count = heroLandCompetitionRecordExtMapper.countByRecordQO(qo);
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

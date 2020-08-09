@@ -1,22 +1,31 @@
 package com.heroland.competition.domain.dp;
 
+import cn.hutool.core.util.IdcardUtil;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.enums.CompetitionStatusEnum;
+import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 
 /**
  * @author mac
  */
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandCompetitionRecord")
 public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable {
+    private String userId;
     /**
      * 记录唯一id
      */
@@ -77,7 +86,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value = "inviteScore邀请人得分")
     private Integer inviteScore;
 
-    @ApiModelProperty(value = "inviteLevel邀请人得分")
+    @ApiModelProperty(value = "inviteLevel邀请人级别")
     private String inviteLevel;
 
     /**
@@ -129,25 +138,25 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     /**
      * 机构code
      */
-    @ApiModelProperty(value="orgCode机构code")
+    @ApiModelProperty(value = "orgCode机构code")
     private String orgCode;
 
     /**
      * 班级code
      */
-    @ApiModelProperty(value="classCode班级code")
+    @ApiModelProperty(value = "classCode班级code")
     private String classCode;
 
     /**
      * 年级
      */
-    @ApiModelProperty(value="gradeCode年级")
+    @ApiModelProperty(value = "gradeCode年级")
     private String gradeCode;
 
     /**
-     * 比赛状态 0比赛结束，1 比赛中
+     * 比赛状态 0比赛结束，1 比赛中 2 比赛未开始
      */
-    @ApiModelProperty(value="status比赛状态 0比赛结束，1 比赛中")
+    @ApiModelProperty(value = "status比赛状态 0比赛结束，1 比赛中 2 比赛未开始")
     private Integer status;
 
 
@@ -162,6 +171,26 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         this.primaryRedisKey = primaryRedisKey;
     }
 
+    public HeroLandCompetitionRecordDP fistAddCheck() {
+
+        if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (this.inviteId == null || this.opponentId == null || this.topicType == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+        this.beforeInsert();
+
+        try {
+            this.recordId = TinyId.nextId("competitionRecord").toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.recordId = IDGenerateUtils.getIdByRandom(DEFAULT) + "";
+        }
+
+        return this;
+    }
+
     public HeroLandCompetitionRecordDP addCheck() {
         if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
             ResponseBodyWrapper.failParamException();
@@ -171,24 +200,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         }
         this.beforeInsert();
 
-        // todo 获取当前人的id
-        String currentUserId = "";
-        if (this.inviteId.equals(currentUserId)) {
-            this.inviteStartTime = new Date();
-        }
-        if (this.opponentId.equals(currentUserId)) {
-            this.opponentStartTime = new Date();
-        }
-        if (this.opponentStartTime == null && this.inviteStartTime == null) {
-            ResponseBodyWrapper.failParamException();
-        }
-
+        this.inviteStartTime = new Date();
+        this.opponentStartTime = inviteStartTime;
 
         try {
             this.recordId = TinyId.nextId("competitionRecord").toString();
         } catch (Exception e) {
             e.printStackTrace();
-            this.recordId = UUID.randomUUID().toString();
+            this.recordId = IDGenerateUtils.getIdByRandom(DEFAULT) + "";
         }
 
         return this;
@@ -198,6 +217,9 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     public HeroLandCompetitionRecordDP addSynchronizeCheck() {
 
         if (StringUtils.isAnyBlank(this.questionId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (CollectionUtils.isEmpty(details)) {
             ResponseBodyWrapper.failParamException();
         }
 
@@ -246,6 +268,25 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
 
         return this;
+    }
+
+    public HeroLandCompetitionRecordDP inviteFirstAdd(HeroLandInviteRecordDP inviteRecordDP) {
+        // 处理数据结构
+        topicId = inviteRecordDP.getTopicId();
+        inviteId = inviteRecordDP.getInviteUserId();
+        opponentId = inviteRecordDP.getBeInviteUserId();
+        topicType = inviteRecordDP.getTopicType();
+        status = CompetitionStatusEnum.UN_START.getStatus();
+        questionId = inviteRecordDP.getQuestionId();
+        return this;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getStatus() {

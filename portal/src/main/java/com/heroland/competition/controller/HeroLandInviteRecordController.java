@@ -40,13 +40,12 @@ public class HeroLandInviteRecordController {
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
     /**
-     * 邀请人
+     * 去邀请人
      * @param heroLandInviteRecord h
      * @return e
      */
     @RequestMapping("/toInvite")
     public ResponseBody<String> invite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
-
         return heroLandInviteRecordService.invite(heroLandInviteRecord);
     }
 

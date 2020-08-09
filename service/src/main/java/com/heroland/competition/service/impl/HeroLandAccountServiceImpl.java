@@ -6,6 +6,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.constant.RedisConstant;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandAccount;
@@ -45,7 +46,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 
     @Override
     public ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp) {
-        Set<Object> members = redisService.sMembers(dp.getCompetitionType());
+        Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY+dp.getTopicId());
         ResponseBody<Set<Object>> objectResponseBody = new ResponseBody<>();
         objectResponseBody.setData(members);
         return objectResponseBody;
@@ -147,6 +148,34 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 
         } finally {
             redisService.del("user_diamond_decr:" + userId);
+        }
+        return ResponseBodyWrapper.success();
+    }
+
+    @Override
+    public ResponseBody<HeroLandAccountDP> incrDecrUserScore(HeroLandAccountManageQO dp) {
+        try {
+            dp.scoreCheck();
+            HeroLandAccountQO heroLandAccountQO = new HeroLandAccountQO();
+            heroLandAccountQO.setUserId(dp.getUserId());
+            heroLandAccountQO.setPageSize(1);
+            ResponseBody<List<HeroLandAccountDP>> account = getAccount(heroLandAccountQO);
+            HeroLandAccountDP heroLandAccountDP = account.getData().get(0);
+            if (heroLandAccountDP == null){
+                HeroLandAccountDP accountDP = new HeroLandAccountDP();
+                accountDP.setUserId(dp.getUserId());
+                accountDP.setLevelScore(0);
+                accountDP.setBalance(defaultBalance);
+                saveAccount(accountDP);
+                heroLandAccountDP = accountDP;
+            }
+            HeroLandAccount heroLandAccount = new HeroLandAccount();
+            heroLandAccount.setLevelScore(heroLandAccountDP.getLevelScore()+ dp.getScore());
+            heroLandAccountExtMapper.updateByExampleSelective(BeanUtil.updateConversion(dp, heroLandAccount),new HeroLandAccountExample());
+        } catch (Exception e) {
+
+            logger.error("",e);
+            ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.success();
     }

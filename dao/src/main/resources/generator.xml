@@ -96,7 +96,7 @@
 
 
 
-        <table tableName="heroland_competition_record" domainObjectName="HeroLandCompetitionRecord" mapperName="HeroLandCompetitionRecordMapper">
+        <table tableName="heroland_account" domainObjectName="HeroLandAccount" mapperName="HeroLandAccountMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

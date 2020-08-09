@@ -52,9 +52,9 @@ public class HeroLandInviteRecordDP extends BaseDO {
     private String topicId;
 
     /**
-     * 0答应1 拒绝
+     * 0答应1 拒绝 2 邀请中
      */
-    @ApiModelProperty(value = "status0答应1 拒绝 3 邀请中")
+    @ApiModelProperty(value = "status0答应1 拒绝 2 邀请中")
     private Integer status;
 
     /**
@@ -69,7 +69,12 @@ public class HeroLandInviteRecordDP extends BaseDO {
     @ApiModelProperty(value = "questionId题目id")
     private String questionId;
 
-    private static final String INVITE_KEY = "invite_competition";
+    /**
+     * 当前用户信息，一定要传
+     */
+    private OnlineDP currentUser;
+
+    private static final String INVITE_KEY = "invite_competition:";
 
     public HeroLandInviteRecordDP addCheck() {
         if (this.topicType == null || StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicName)) {
@@ -122,7 +127,7 @@ public class HeroLandInviteRecordDP extends BaseDO {
     }
 
     private Boolean getInviteStatus(RedisService redisService, String userId) {
-        boolean isInvited = redisService.setNx(INVITE_KEY + userId, this, "PT10H");
+        boolean isInvited = redisService.setNx(INVITE_KEY + userId, this, "PT6M");
         return !isInvited;
     }
 
@@ -170,6 +175,14 @@ public class HeroLandInviteRecordDP extends BaseDO {
      * heroland_invite_record
      */
     private static final long serialVersionUID = 1L;
+
+    public OnlineDP getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(OnlineDP currentUser) {
+        this.currentUser = currentUser;
+    }
 
     /**
      * 记录id

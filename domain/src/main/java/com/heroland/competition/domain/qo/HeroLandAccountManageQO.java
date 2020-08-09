@@ -35,6 +35,11 @@ public class HeroLandAccountManageQO {
      */
     private Integer num;
 
+    /**
+     * 增加或者扣除数量
+     */
+    private Integer score;
+
     public HeroLandAccountManageQO queryDecrCheck(){
 
         AssertUtils.notBlank(userId,accountId);
@@ -47,6 +52,19 @@ public class HeroLandAccountManageQO {
         AssertUtils.notBlank(userId);
         AssertUtils.assertThat(num != null);
         return this;
+    }
+
+
+    public  void  scoreCheck(){
+        AssertUtils.notBlank(userId);
+        AssertUtils.notNull(score);
+    }
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     public Integer getNum() {

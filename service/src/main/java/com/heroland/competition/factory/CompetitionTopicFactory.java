@@ -1,7 +1,9 @@
 package com.heroland.competition.factory;
 
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Maps;
 import com.heroland.competition.service.HeroLandCompetitionService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
@@ -16,17 +18,21 @@ import java.util.Map;
  */
 @Component
 public class CompetitionTopicFactory implements BeanPostProcessor {
-    private static Map<Integer, HeroLandCompetitionService> competitionServiceHashMap = Maps.newHashMap();
+    private static final Map<Integer, HeroLandCompetitionService> COMPETITION_SERVICE_HASH_MAP = Maps.newHashMap();
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
         if (bean instanceof HeroLandCompetitionService) {
-            competitionServiceHashMap.put(((HeroLandCompetitionService) bean).getType(), (HeroLandCompetitionService) bean);
+            COMPETITION_SERVICE_HASH_MAP.put(((HeroLandCompetitionService) bean).getType(), (HeroLandCompetitionService) bean);
         }
         return bean;
     }
 
     public static HeroLandCompetitionService get(Integer competitionType) {
-        return competitionServiceHashMap.get(competitionType);
+        HeroLandCompetitionService heroLandCompetitionService = COMPETITION_SERVICE_HASH_MAP.get(competitionType);
+        if (heroLandCompetitionService == null){
+            ResponseBodyWrapper.fail("不存在该类型比赛","50002");
+        }
+        return heroLandCompetitionService;
     }
 }

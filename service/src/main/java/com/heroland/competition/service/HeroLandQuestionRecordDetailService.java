@@ -14,6 +14,8 @@ public interface HeroLandQuestionRecordDetailService {
 
     ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP);
 
+    ResponseBody<Boolean> addQuestionRecords(List<HeroLandQuestionRecordDetailDP> recordDetails);
+
     ResponseBody<Boolean> updateQuestionRecord(HeroLandQuestionRecordDetailDP recordDetail);
 
     ResponseBody<List<HeroLandQuestionRecordDetailDP>> getQuestionRecord(HeroLandQuestionQO qo);

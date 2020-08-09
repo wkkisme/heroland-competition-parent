@@ -507,6 +507,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         isCorrectAnswer = correctAnswer;
     }
 
+
     public String getTopicId() {
         return topicId;
     }

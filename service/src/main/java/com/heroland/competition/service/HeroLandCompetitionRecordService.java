@@ -24,11 +24,24 @@ public interface HeroLandCompetitionRecordService {
     ResponseBody<String> addCompetitionRecord(HeroLandCompetitionRecordDP dp);
 
     /**
+     * 比赛记录增加 和详细记录
+     * @param dp 对象
+     * @return 正确
+     */
+    ResponseBody<Boolean> addCompetitionAndDetail(HeroLandCompetitionRecordDP dp);
+
+    /**
      * 比赛记录更新
      * @param dp 对象
      * @return 正确
      */
     ResponseBody<Boolean> updateCompetitionRecord(HeroLandCompetitionRecordDP dp);
+    /**
+     * 比赛记录更新
+     * @param dp 对象
+     * @return 正确
+     */
+    ResponseBody<Boolean> updateCompetitionRecordByTopicId(HeroLandCompetitionRecordDP dp);
 
     /**
      * 比赛记录删除
