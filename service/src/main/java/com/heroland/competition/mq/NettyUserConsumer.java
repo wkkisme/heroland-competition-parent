@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.heroland.competition.common.constant.RedisConstant;
 import com.heroland.competition.domain.dp.OnlineDP;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
@@ -24,14 +25,17 @@ import static com.heroland.competition.common.constant.RedisConstant.ONLINE_TAGS
  */
 @RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "IM_LINE", consumerGroup = "online_consumer")
 @Component
+@Slf4j
 public class NettyUserConsumer implements RocketMQListener<MessageExt> {
     @Resource
     private RedisService redisService;
 
     @Override
     public void onMessage(MessageExt message) {
+    log.info("message{}",JSON.toJSONString(message));
 
         OnlineDP onlineMsg = JSON.parseObject(new String(message.getBody(), Charset.defaultCharset()), OnlineDP.class);
+        log.info("onlineMsg{}",JSON.toJSONString(onlineMsg));
         // 用户上线，全部放redis以供查询
         String tags = message.getTags();
 
