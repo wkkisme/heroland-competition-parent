@@ -23,7 +23,10 @@ import static com.heroland.competition.common.constant.RedisConstant.ONLINE_TAGS
  *
  * @author mac
  */
-@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "IM_LINE", consumerGroup = "online_consumer")
+@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "IM_LINE" +
+        "" +
+        "" +
+        "", consumerGroup = "online_consumer")
 @Component
 @Slf4j
 public class NettyUserConsumer implements RocketMQListener<MessageExt> {
@@ -41,6 +44,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
 
 
         if (tags.equalsIgnoreCase(ONLINE_TAGS)) {
+            log.info("用户online{}",JSON.toJSONString(onlineMsg));
             Set<String> recent = onlineMsg.getRecent();
             if (recent == null) {
                 recent = new HashSet<>();
@@ -49,6 +53,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
             redisService.sAdd(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg);
             redisService.set("user:"+onlineMsg.getSenderId(),onlineMsg);
         }else if (tags.equalsIgnoreCase(OFFLINE_TAGS)){
+            log.info("用户offline{}",JSON.toJSONString(onlineMsg));
             redisService.sRemove(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg);
             redisService.del("user:"+onlineMsg.getSenderId());
         }

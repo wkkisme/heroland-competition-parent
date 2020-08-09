@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 邀请
+ * 邀请比赛相关接口
  *
  * @author mac
  */
