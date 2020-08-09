@@ -5,6 +5,7 @@ import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
@@ -99,7 +100,7 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/getCanInviteList")
-    public ResponseBody<Set<Object>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP,HttpServletRequest request) {
+    public ResponseBody<Set<OnlineDP>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP, HttpServletRequest request) {
         heroLandAccountDP.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
 
         return heroLandAccountService.getOnLineUserByType(heroLandAccountDP);
