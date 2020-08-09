@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
@@ -12,6 +13,7 @@ import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandAccount;
 import com.heroland.competition.dal.pojo.HeroLandAccountExample;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,10 +48,17 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     private Long defaultBalance;
 
     @Override
-    public ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp) {
+    public ResponseBody<Set<OnlineDP>> getOnLineUserByType(HeroLandAccountDP dp) {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY+dp.getTopicId());
-        ResponseBody<Set<Object>> objectResponseBody = new ResponseBody<>();
-        objectResponseBody.setData(members);
+        ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
+        Set<OnlineDP> users= new HashSet<>();
+        members.forEach(userId ->{
+            if (!userId .equals(dp.getUserId())) {
+                Object o = redisService.get("user:" + userId);
+                users.add(JSON.parseObject(o.toString(),OnlineDP.class));
+            }
+        });
+        objectResponseBody.setData(users);
         return objectResponseBody;
     }
 

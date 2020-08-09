@@ -6,9 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
-@EqualsAndHashCode
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -96,5 +96,22 @@ public class OnlineDP implements Serializable {
      */
     private String addr;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof OnlineDP)) {
+            return false;
+        }
+        OnlineDP onlineDP = (OnlineDP) o;
+        return Objects.equals(topicId, onlineDP.topicId) &&
+                Objects.equals(senderId, onlineDP.senderId) &&
+                Objects.equals(topicType, onlineDP.topicType);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(topicId, senderId, topicType);
+    }
 }

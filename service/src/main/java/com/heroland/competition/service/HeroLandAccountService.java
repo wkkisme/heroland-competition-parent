@@ -2,6 +2,7 @@ package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 
@@ -18,7 +19,7 @@ public interface HeroLandAccountService {
      * @param dp
      * @return
      */
-    ResponseBody<Set<Object>> getOnLineUserByType(HeroLandAccountDP dp);
+    ResponseBody<Set<OnlineDP>> getOnLineUserByType(HeroLandAccountDP dp);
 
      /**
      * 查询当前人的比赛记录
