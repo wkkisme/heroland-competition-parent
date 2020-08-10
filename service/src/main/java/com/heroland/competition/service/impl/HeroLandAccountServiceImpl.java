@@ -19,6 +19,11 @@ import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.domain.qo.PlatformSysUserQO;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -44,6 +49,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Resource
     private HerolandDiamondService herolandDiamondService;
 
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
     @NacosValue("${competition.defaultBalance:0}")
     private Long defaultBalance;
 
@@ -53,9 +61,29 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users= new HashSet<>();
         members.forEach(userId ->{
-            if (!userId .equals(dp.getUserId())) {
-                Object o = redisService.get("user:" + userId);
-                users.add(JSON.parseObject(o.toString(),OnlineDP.class));
+            if (!userId .equals(dp.getUserId()) && StringUtils.isBlank(userId+"")) {
+                Object user = redisService.get("user:" + userId);
+                // 如果为空去查下是否有这个人
+                if (user == null){
+                    PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+                    platformSysUserQO.setUserId(userId+"");
+                    platformSysUserQO.setPageSize(1);
+                    RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+                    // 如果没有这个人，则直接移除掉
+                    if (CollectionUtils.isEmpty(userList.getData() )){
+                        redisService.sRemove(RedisConstant.ONLINE_KEY+dp.getTopicId(),userId);
+                        return;
+                    }
+                    PlatformSysUserDP userDP = userList.getData().get(0);
+                    user = userDP;
+                    // 继续缓存住这个人 2小时
+                    redisService.set("user:"+userDP.getUserId(),userDP,7200000);
+                }
+                users.add(JSON.parseObject(user.toString(),OnlineDP.class));
+
+            }else if ( StringUtils.isBlank(userId+"")){
+                // 说明不存在 删除
+                redisService.sRemove(RedisConstant.ONLINE_KEY+dp.getTopicId(),userId);
             }
         });
         objectResponseBody.setData(users);
