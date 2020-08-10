@@ -96,6 +96,10 @@ public class OnlineDP implements Serializable {
      */
     private String addr;
 
+    private Integer status;
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
