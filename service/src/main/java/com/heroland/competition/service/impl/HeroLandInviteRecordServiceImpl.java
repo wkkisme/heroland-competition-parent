@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ import java.util.List;
  */
 
 @Service
-public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordService{
+public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordService {
     @Resource
     private RedisService redisService;
 
@@ -60,6 +61,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Resource
     private RouteApi routeApi;
+
     @Override
     public ResponseBody<String> addInvite(HeroLandInviteRecordDP dp) {
         logger.info("邀请记录：{}", JSON.toJSONString(dp));
@@ -82,7 +84,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         delayTimeLevel  默认延迟等级 : 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h，
         传入1代表1s, 2代表5s, 以此类推
          */
-        rocketMQTemplate.sendAndReceive("competition-invite",dp,
+        rocketMQTemplate.sendAndReceive("competition-invite", dp,
                 new TypeReference<HeroLandInviteRecordDP>() {
                 }.getType(), 30000, 7);
 
@@ -111,7 +113,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         long count = 0L;
         try {
             HeroLandInviteRecordExample example = new HeroLandInviteRecordExample();
+            if(qo.getNeedPage()) {
+                example.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                example.setOrderByClause("gmt_create desc");
+            }
             HeroLandInviteRecordExample.Criteria criteria = example.createCriteria();
+
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
             heroLandQuestions = heroLandInviteRecordExtMapper.selectByExample(example);
             count = heroLandInviteRecordExtMapper.countByExample(example);
@@ -129,7 +137,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         //  需要提前将比赛记录初始化进去
         HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = new HeroLandCompetitionRecordDP();
         try {
-            BeanUtil.insertConversion(dp,heroLandCompetitionRecordDP);
+            BeanUtil.insertConversion(dp, heroLandCompetitionRecordDP);
             heroLandCompetitionRecordDP.setInviteId(dp.getInviteUserId());
             heroLandCompetitionRecordDP.setOpponentId(dp.getBeInviteUserId());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
@@ -137,7 +145,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             Object o = routeApi.sendMsg(dp, JSON.toJSONString(dp.getCurrentUser()));
             return updateInvite(dp);
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
@@ -160,20 +168,27 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     }
 
     @Override
-    public ResponseBody<List<HeroLandInviteRecordDP>> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
+    public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
         HeroLandInviteRecordQO qo = new HeroLandInviteRecordQO();
+        qo.setBeInviteUserId(null);
         qo.setInviteUserId(heroLandInviteRecord.getInviteUserId());
-        qo.setStatus(InviteStatusEnum.WAITING.getStatus());
+        qo.setPageSize(1);
         ResponseBody<List<HeroLandInviteRecordDP>> invite = getInvite(qo);
-        if (CollectionUtils.isEmpty(invite.getData())){
+        if (CollectionUtils.isEmpty(invite.getData())) {
+            qo.setBeInviteUserId(heroLandInviteRecord.getInviteUserId());
             qo.setInviteUserId(null);
-            qo.setBeInviteUserId(heroLandInviteRecord.getBeInviteUserId());
             invite = getInvite(qo);
         }
-        return invite;
+        List<HeroLandInviteRecordDP> data = invite.getData();
+
+        if (!CollectionUtils.isEmpty(data)){
+            HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
+            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 120000){
+                return ResponseBodyWrapper.success();
+            }
+        }
+        return ResponseBodyWrapper.successWrapper(data.get(0));
     }
-
-
 
 
 }

@@ -1,10 +1,12 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
 public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
@@ -12,54 +14,64 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      * 记录id
      */
     @ApiModelProperty(value = "recordId记录id")
+    @MybatisCriteriaAnnotation
     private String recordId;
 
     /**
      * 题组名称
      */
     @ApiModelProperty(value = "topicName题组名称")
+    @MybatisCriteriaAnnotation
     private String topicName;
 
     /**
      * 邀请人id
      */
     @ApiModelProperty(value = "inviteUserId邀请人id")
+    @MybatisCriteriaAnnotation
     private String inviteUserId;
 
     /**
      * 被邀请人id
      */
     @ApiModelProperty(value = "beInviteUserId被邀请人id")
+    @MybatisCriteriaAnnotation
     private String beInviteUserId;
 
     /**
      * 比赛类型
      */
     @ApiModelProperty(value = "topicType比赛类型")
+    @MybatisCriteriaAnnotation
     private Integer topicType;
 
     /**
      * 题组id
      */
     @ApiModelProperty(value = "topicId题组id")
+    @MybatisCriteriaAnnotation
     private String topicId;
 
     /**
      * 0答应1 拒绝
      */
     @ApiModelProperty(value = "status0答应1 拒绝")
+    @MybatisCriteriaAnnotation
     private Integer status;
 
+    private List<Integer> statuses;
     /**
      * 状态描述
      */
     @ApiModelProperty(value = "statusRemark状态描述")
+    @MybatisCriteriaAnnotation
     private String statusRemark;
 
     /**
      * 题目id
      */
     @ApiModelProperty(value = "questionId题目id")
+    @MybatisCriteriaAnnotation
     private String questionId;
 
 
@@ -228,5 +240,13 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      */
     public void setQuestionId(String questionId) {
         this.questionId = questionId == null ? null : questionId.trim();
+    }
+
+    public List<Integer> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<Integer> statuses) {
+        this.statuses = statuses;
     }
 }

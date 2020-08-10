@@ -61,7 +61,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users= new HashSet<>();
         members.forEach(userId ->{
-            if (!userId .equals(dp.getUserId()) && StringUtils.isBlank(userId+"")) {
+            if (!userId .equals(dp.getUserId()) && StringUtils.isNotBlank(userId+"")) {
                 Object user = redisService.get("user:" + userId);
                 // 如果为空去查下是否有这个人
                 if (user == null){
