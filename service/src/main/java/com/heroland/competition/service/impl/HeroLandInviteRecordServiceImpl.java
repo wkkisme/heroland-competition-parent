@@ -5,11 +5,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.common.UserStatusDP;
+import com.anycommon.response.constant.UserStatusEnum;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.crossoverjie.cim.route.api.RouteApi;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.enums.CommandResType;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
@@ -88,8 +91,19 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
                 new TypeReference<HeroLandInviteRecordDP>() {
                 }.getType(), 30000, 7);
 
-        // 发送消息给websocket去通知 1 发送消息出去，2 回流消息
-        Object o = routeApi.sendMsg(dp, JSON.toJSONString(dp.getCurrentUser()));
+        // 发送消息给websocket去通知 发给所有在线人，和发给对方；
+
+        UserStatusDP userStatusDP = new UserStatusDP();
+        userStatusDP.setUserId(dp.getInviteUserId());
+        userStatusDP.setSenderId(dp.getInviteUserId());
+        userStatusDP.setAddresseeId(dp.getBeInviteUserId());
+        userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+        userStatusDP.setTopicId(dp.getTopicId());
+        // 广播所有人和发给对手
+
+        dp.setType(CommandResType.BE_INVITE.getCode());
+        rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+        rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
 
         return responseBody;
     }
@@ -102,8 +116,19 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.finishInviteUserCompetition(redisService);
         }
 
-        // todo 发消息
-        Object o = routeApi.sendMsg(dp, JSON.toJSONString(dp.getCurrentUser()));
+        // 发送消息给websocket去通知 发给所有在线人，和发给对方；
+
+        UserStatusDP userStatusDP = new UserStatusDP();
+        userStatusDP.setUserId(dp.getInviteUserId());
+        userStatusDP.setSenderId(dp.getInviteUserId());
+        userStatusDP.setAddresseeId(dp.getBeInviteUserId());
+        userStatusDP.setStatus(UserStatusEnum.ONLINE.getStatus());
+        userStatusDP.setTopicId(dp.getTopicId());
+        // 广播所有人和发给对手
+        dp.setType(CommandResType.INVITE_CANCEL.getCode());
+
+        rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+        rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
         return ResponseBodyWrapper.success();
     }
 
@@ -141,8 +166,19 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setInviteId(dp.getInviteUserId());
             heroLandCompetitionRecordDP.setOpponentId(dp.getBeInviteUserId());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
-            // 发消息
-            Object o = routeApi.sendMsg(dp, JSON.toJSONString(dp.getCurrentUser()));
+            // 发送消息给websocket去通知 发给所有在线人，和发给对方；
+
+            UserStatusDP userStatusDP = new UserStatusDP();
+            userStatusDP.setUserId(dp.getInviteUserId());
+            userStatusDP.setSenderId(dp.getInviteUserId());
+            userStatusDP.setAddresseeId(dp.getBeInviteUserId());
+            userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+            userStatusDP.setTopicId(dp.getTopicId());
+            // 广播所有人和发给对手
+            dp.setType(CommandResType.INVITE_AGREE.getCode());
+
+            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
             return updateInvite(dp);
         } catch (Exception e) {
             logger.error("", e);

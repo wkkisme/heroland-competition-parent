@@ -8,6 +8,7 @@ import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -69,10 +70,9 @@ public class HeroLandInviteRecordDP extends BaseDO {
     @ApiModelProperty(value = "questionId题目id")
     private String questionId;
 
-    /**
-     * 当前用户信息，一定要传
-     */
-    private OnlineDP currentUser;
+
+    private Integer type;
+
 
     private static final String INVITE_KEY = "invite_competition:";
 
@@ -176,12 +176,12 @@ public class HeroLandInviteRecordDP extends BaseDO {
      */
     private static final long serialVersionUID = 1L;
 
-    public OnlineDP getCurrentUser() {
-        return currentUser;
+    public Integer getType() {
+        return type;
     }
 
-    public void setCurrentUser(OnlineDP currentUser) {
-        this.currentUser = currentUser;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**
