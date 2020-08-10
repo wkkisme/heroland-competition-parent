@@ -33,13 +33,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         String language = CookieUtils.getValue(request, "language");
         Locale locale = null;
-        if ("zh_TW".equalsIgnoreCase(language)){
-            locale = Locale.TRADITIONAL_CHINESE;
-        }else if ("en".equalsIgnoreCase(language)){
-            locale = Locale.US;
-        }else {
-            locale = Locale.SIMPLIFIED_CHINESE;
-        }
+//        if ("zh_TW".equalsIgnoreCase(language)){
+//            locale = Locale.TRADITIONAL_CHINESE;
+//        }else if ("en".equalsIgnoreCase(language)){
+//            locale = Locale.US;
+//        }else {
+//            locale = Locale.SIMPLIFIED_CHINESE;
+//        }
+        locale = Locale.TRADITIONAL_CHINESE;
         LocaleContextHolder.setLocale(locale);
         if (e instanceof AppSystemException){
           return  ResponseBodyWrapper.fail(e.getMessage(),"50000");
