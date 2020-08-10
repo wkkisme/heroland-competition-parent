@@ -37,6 +37,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -201,6 +202,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         }
         List<String> redisKeys = keys.stream().map(key -> String.format(RedisConstant.ADMIN_KEY, key)).collect(Collectors.toList());
         List<Object> redisValue = redisService.getKeys(redisKeys);
+        redisValue = redisValue.stream().filter(Objects::nonNull).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(redisValue)){
             herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
             batchSetRedis(herolandBasicData);
