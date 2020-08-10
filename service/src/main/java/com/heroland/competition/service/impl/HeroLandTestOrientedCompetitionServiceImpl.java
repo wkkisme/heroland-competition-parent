@@ -27,7 +27,7 @@ import javax.annotation.Resource;
  *
  * @author wangkai
  */
-@Service
+@Service("HeroLandTestOrientedCompetitionService")
 public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompetitionService {
 
     @Resource

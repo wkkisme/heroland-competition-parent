@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author mac
  */
-@Service
+@Service("HeroLandSyncCompetitionService")
 public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionService {
 
     @Resource

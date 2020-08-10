@@ -11,7 +11,7 @@ import org.apache.dubbo.config.annotation.Service;
  * @author wushuaiping
  * @date 2020/7/13 6:16 下午
  */
-@Service(version = "1.0.0")
+//@Service(version = "1.0.0")
 @AllArgsConstructor
 public class HeroLandCompetitionRemoteServiceImpl implements HeroLandCompetitionRemoteService {
 

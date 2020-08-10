@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
 public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
@@ -58,6 +59,7 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
     @MybatisCriteriaAnnotation
     private Integer status;
 
+    private List<Integer> statuses;
     /**
      * 状态描述
      */
@@ -238,5 +240,13 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
      */
     public void setQuestionId(String questionId) {
         this.questionId = questionId == null ? null : questionId.trim();
+    }
+
+    public List<Integer> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<Integer> statuses) {
+        this.statuses = statuses;
     }
 }

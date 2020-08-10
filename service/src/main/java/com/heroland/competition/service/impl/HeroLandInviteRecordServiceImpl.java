@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,7 +113,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         long count = 0L;
         try {
             HeroLandInviteRecordExample example = new HeroLandInviteRecordExample();
+            if(qo.getNeedPage()) {
+                example.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                example.setOrderByClause("gmt_create desc");
+            }
             HeroLandInviteRecordExample.Criteria criteria = example.createCriteria();
+
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
             heroLandQuestions = heroLandInviteRecordExtMapper.selectByExample(example);
             count = heroLandInviteRecordExtMapper.countByExample(example);
@@ -163,16 +170,24 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     @Override
     public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
         HeroLandInviteRecordQO qo = new HeroLandInviteRecordQO();
+        qo.setBeInviteUserId(null);
         qo.setInviteUserId(heroLandInviteRecord.getInviteUserId());
-        qo.setStatus(InviteStatusEnum.WAITING.getStatus());
         qo.setPageSize(1);
         ResponseBody<List<HeroLandInviteRecordDP>> invite = getInvite(qo);
         if (CollectionUtils.isEmpty(invite.getData())) {
+            qo.setBeInviteUserId(heroLandInviteRecord.getInviteUserId());
             qo.setInviteUserId(null);
-            qo.setBeInviteUserId(heroLandInviteRecord.getBeInviteUserId());
             invite = getInvite(qo);
         }
-        return invite == null ? null : ResponseBodyWrapper.successWrapper(invite.getData().get(0));
+        List<HeroLandInviteRecordDP> data = invite.getData();
+
+        if (!CollectionUtils.isEmpty(data)){
+            HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
+            if (heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis() > 120000){
+                return ResponseBodyWrapper.success();
+            }
+        }
+        return ResponseBodyWrapper.successWrapper(data.get(0));
     }
 
 
