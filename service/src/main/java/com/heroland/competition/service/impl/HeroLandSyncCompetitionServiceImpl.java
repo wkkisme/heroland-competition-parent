@@ -175,6 +175,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
             heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
             heroLandCompetitionRecordService.updateCompetitionRecord(record);
+            redisService.del(redisKey);
         }
         return ResponseBodyWrapper.successWrapper(record);
     }
