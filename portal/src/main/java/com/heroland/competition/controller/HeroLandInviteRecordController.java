@@ -13,6 +13,7 @@ import com.platform.sso.client.sso.util.CookieUtils;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platform.sso.facade.result.RpcResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/heroland/invite")
+@Slf4j
 public class HeroLandInviteRecordController {
 
     @Resource
@@ -101,7 +103,10 @@ public class HeroLandInviteRecordController {
      */
     @RequestMapping("/getCanInviteList")
     public ResponseBody<Set<OnlineDP>> getCanInviteList(@RequestBody HeroLandAccountDP heroLandAccountDP, HttpServletRequest request) {
-        heroLandAccountDP.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
+        log.info("ssoFacade为：{}",platformSsoUserServiceFacade);
+        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData();
+        log.info("data：{}",data);
+        heroLandAccountDP.setUserId(data.getUserId());
 
         return heroLandAccountService.getOnLineUserByType(heroLandAccountDP);
     }
