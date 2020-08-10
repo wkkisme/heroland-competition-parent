@@ -1,7 +1,9 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.page.Pagination;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
@@ -100,8 +102,8 @@ public class HeroLandAdminDataController {
     @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<HerolandBasicDataDP> getDictInfoById(@RequestParam("id") Long id) {
-
-        return null;
+        throw new AppSystemException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+//        return null;
     }
 
 
