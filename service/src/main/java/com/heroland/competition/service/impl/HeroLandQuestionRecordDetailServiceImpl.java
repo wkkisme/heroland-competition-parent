@@ -81,6 +81,11 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             HeroLandQuestionRecordDetailExample example = new HeroLandQuestionRecordDetailExample();
             HeroLandQuestionRecordDetailExample.Criteria criteria = example.createCriteria();
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
+            if(qo.getNeedPage()) {
+                example.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                example.setOrderByClause("gmt_create desc");
+            }
             heroLandQuestions = questionRecordDetailExtMapper.selectByExample(example);
             count = questionRecordDetailExtMapper.countByExample(example);
         } catch (Exception e) {

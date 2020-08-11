@@ -123,6 +123,11 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         try {
             HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
             MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
+            if(qo.getNeedPage()) {
+                heroLandAccountExample.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                heroLandAccountExample.setOrderByClause("gmt_create desc");
+            }
             heroLandAccounts = heroLandAccountExtMapper.selectByExample(heroLandAccountExample);
             count = heroLandAccountExtMapper.countByExample(heroLandAccountExample);
         } catch (Exception e) {

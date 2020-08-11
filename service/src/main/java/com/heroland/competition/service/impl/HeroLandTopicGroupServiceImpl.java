@@ -62,6 +62,11 @@ public class HeroLandTopicGroupServiceImpl implements HeroLandTopicGroupService 
         List<HeroLandTopicGroup> heroLandTopicGroups = new ArrayList<>();
         long count = 0L;
         try {
+            if(qo.getNeedPage()) {
+                heroLandTopicGroupExample.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                heroLandTopicGroupExample.setOrderByClause("gmt_create desc");
+            }
 
             heroLandTopicGroups = heroLandTopicGroupExtMapper.selectByExample(heroLandTopicGroupExample);
             count = heroLandTopicGroupExtMapper.countByExample(heroLandTopicGroupExample);
