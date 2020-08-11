@@ -96,10 +96,10 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     public HeroLandInviteRecordDP inviteCheck(RedisService redisTemplate){
         if (isInvited(redisTemplate)){
             // todo 国际化
-            ResponseBodyWrapper.fail("同学你已经邀请人了,请不要重复邀请哟 ！！","50000");
+            ResponseBodyWrapper.failException("同学你已经邀请人了,请不要重复邀请哟 ！！");
         }
         if (isBeInvited(redisTemplate)){
-            ResponseBodyWrapper.fail("同学你邀请的人已经被人邀请了哟 ！！","50000");
+            ResponseBodyWrapper.failException("同学你邀请的人已经被人邀请了哟 ！！");
         }
         return this;
     }
