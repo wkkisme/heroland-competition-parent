@@ -100,7 +100,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
         userStatusDP.setTopicId(dp.getTopicId());
         // 广播所有人和发给对手
-
+        dp.setSenderId(dp.getInviteUserId());
+        dp.setAddresseeId(dp.getBeInviteUserId());
         dp.setType(CommandResType.BE_INVITE.getCode());
         rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
         rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
@@ -127,6 +128,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         // 广播所有人和发给对手
         dp.setType(CommandResType.INVITE_CANCEL.getCode());
 
+        dp.setSenderId(dp.getBeInviteUserId());
+        dp.setAddresseeId(dp.getInviteUserId());
         rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
         rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
         return ResponseBodyWrapper.success();
@@ -176,7 +179,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             userStatusDP.setTopicId(dp.getTopicId());
             // 广播所有人和发给对手
             dp.setType(CommandResType.INVITE_AGREE.getCode());
-
+            dp.setSenderId(dp.getBeInviteUserId());
+            dp.setAddresseeId(dp.getInviteUserId());
             rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
             return updateInvite(dp);

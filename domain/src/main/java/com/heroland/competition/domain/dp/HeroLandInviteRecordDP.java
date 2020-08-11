@@ -15,7 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.ADMIN;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandInviteRecord")
-public class HeroLandInviteRecordDP extends BaseDO {
+public class HeroLandInviteRecordDP extends SocketTransferDP {
     /**
      * 记录id
      */
@@ -70,8 +70,6 @@ public class HeroLandInviteRecordDP extends BaseDO {
     @ApiModelProperty(value = "questionId题目id")
     private String questionId;
 
-
-    private Integer type;
 
 
     private static final String INVITE_KEY = "invite_competition:";
@@ -176,13 +174,6 @@ public class HeroLandInviteRecordDP extends BaseDO {
      */
     private static final long serialVersionUID = 1L;
 
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
 
     /**
      * 记录id
@@ -261,6 +252,7 @@ public class HeroLandInviteRecordDP extends BaseDO {
      *
      * @return topic_type 比赛类型
      */
+    @Override
     public Integer getTopicType() {
         return topicType;
     }
@@ -270,6 +262,7 @@ public class HeroLandInviteRecordDP extends BaseDO {
      *
      * @param topicType 比赛类型
      */
+    @Override
     public void setTopicType(Integer topicType) {
         this.topicType = topicType;
     }
@@ -279,6 +272,7 @@ public class HeroLandInviteRecordDP extends BaseDO {
      *
      * @return topic_id 题组id
      */
+    @Override
     public String getTopicId() {
         return topicId;
     }
@@ -288,6 +282,7 @@ public class HeroLandInviteRecordDP extends BaseDO {
      *
      * @param topicId 题组id
      */
+    @Override
     public void setTopicId(String topicId) {
         this.topicId = topicId == null ? null : topicId.trim();
     }
