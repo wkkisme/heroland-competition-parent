@@ -70,6 +70,7 @@ public class TransactionManagerConfig {
         methodMap.put("invite*", requiredTx);
         methodMap.put("do*", requiredTx);
         methodMap.put("calculate*", requiredTx);
+        methodMap.put("agree*", requiredTx);
 
         /* 其他方法无事务，只读 */
         methodMap.put("*", readOnlyTx);
