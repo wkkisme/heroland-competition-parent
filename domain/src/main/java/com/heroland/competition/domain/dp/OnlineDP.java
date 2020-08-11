@@ -96,7 +96,7 @@ public class OnlineDP implements Serializable {
      */
     private String addr;
 
-    private Integer status;
+    private Integer userStatus;
 
 
 

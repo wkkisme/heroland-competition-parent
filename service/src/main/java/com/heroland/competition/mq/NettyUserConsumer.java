@@ -58,7 +58,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
                 recent = new HashSet<>();
             }
             recent.add(onlineMsg.getAddresseeId());
-            onlineMsg.setStatus(UserStatusEnum.ONLINE.getStatus());
+            onlineMsg.setUserStatus(UserStatusEnum.ONLINE.getStatus());
             onlineMsg.setType(CommandResType.ONLINE_SUCCESS.getCode());
             redisService.sAdd(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg.getSenderId(),1000*60*60*2L);
             redisService.set("user:"+onlineMsg.getSenderId(),JSON.toJSONString(onlineMsg),1000*60*60*2);
@@ -68,7 +68,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
 
         }else if (tags.equalsIgnoreCase(OFFLINE_TAGS)){
             log.info("用户offline{}",JSON.toJSONString(onlineMsg));
-            onlineMsg.setStatus(UserStatusEnum.ONLINE.getStatus());
+            onlineMsg.setUserStatus(UserStatusEnum.ONLINE.getStatus());
             redisService.sRemove(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg.getSenderId());
             redisService.del("user:"+onlineMsg.getSenderId());
             // 通知所有人
