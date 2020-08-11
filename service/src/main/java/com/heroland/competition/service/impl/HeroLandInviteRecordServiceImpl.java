@@ -103,8 +103,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setSenderId(dp.getInviteUserId());
         dp.setAddresseeId(dp.getBeInviteUserId());
         dp.setType(CommandResType.BE_INVITE.getCode());
-        rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-        rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+        try {
+            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+        } catch (Exception ignored) {
+        }
 
         return responseBody;
     }
@@ -130,8 +133,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         dp.setSenderId(dp.getBeInviteUserId());
         dp.setAddresseeId(dp.getInviteUserId());
-        rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-        rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+        try {
+            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+        } catch (Exception ignored) {
+
+        }
         return ResponseBodyWrapper.success();
     }
 
@@ -182,8 +189,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            try {
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+                rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            } catch (Exception ignored) {
+            }
             return updateInvite(dp);
         } catch (Exception e) {
             logger.error("", e);
