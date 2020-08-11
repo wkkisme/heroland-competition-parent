@@ -82,7 +82,7 @@
     </select>
 
     <select id="countStatisticsByRank" resultType="java.lang.Long">
-        select count(*) from( SELECT
+        SELECT
         count(*)
         FROM heroland_statistics_detail
 
@@ -140,7 +140,7 @@
         </if>
 
         <!--        group by user_id-->
-        ) a
+
 
     </select>
 
