@@ -89,7 +89,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
          */
         rocketMQTemplate.sendAndReceive("competition-invite", dp,
                 new TypeReference<HeroLandInviteRecordDP>() {
-                }.getType(), 30000, 7);
+                }.getType(), 300, 7);
 
         // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
