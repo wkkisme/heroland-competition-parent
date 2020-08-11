@@ -87,9 +87,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         delayTimeLevel  默认延迟等级 : 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h，
         传入1代表1s, 2代表5s, 以此类推
          */
-        rocketMQTemplate.sendAndReceive("competition-invite", dp,
-                new TypeReference<HeroLandInviteRecordDP>() {
-                }.getType(), 300, 7);
+        try {
+            rocketMQTemplate.sendAndReceive("competition-invite", dp,
+                    new TypeReference<HeroLandInviteRecordDP>() {
+                    }.getType(), 300, 7);
+        } catch (Exception ignored) {
+        }
 
         // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
