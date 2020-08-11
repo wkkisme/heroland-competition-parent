@@ -27,11 +27,8 @@ import static com.heroland.competition.common.constant.RedisConstant.ONLINE_TAGS
  *
  * @author mac
  */
-@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "IM_LINE" +
-        "" +
-        "" +
-        "", consumerGroup = "online_consumer")
-@Component
+//@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "IM_LINE:ONLINE|OFFLINE", consumerGroup = "online_consumer")
+//@Component
 @Slf4j
 public class NettyUserConsumer implements RocketMQListener<MessageExt> {
     @Resource
@@ -68,7 +65,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
 
         }else if (tags.equalsIgnoreCase(OFFLINE_TAGS)){
             log.info("用户offline{}",JSON.toJSONString(onlineMsg));
-            onlineMsg.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+            onlineMsg.setUserStatus(UserStatusEnum.OFFLINE.getStatus());
             redisService.sRemove(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg.getSenderId());
             redisService.del("user:"+onlineMsg.getSenderId());
             // 通知所有人

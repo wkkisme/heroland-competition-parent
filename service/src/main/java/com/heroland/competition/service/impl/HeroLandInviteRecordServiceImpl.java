@@ -123,7 +123,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         userStatusDP.setUserId(dp.getInviteUserId());
         userStatusDP.setSenderId(dp.getInviteUserId());
         userStatusDP.setAddresseeId(dp.getBeInviteUserId());
-        userStatusDP.setStatus(UserStatusEnum.ONLINE.getStatus());
+        userStatusDP.setUserStatus(UserStatusEnum.ONLINE.getStatus());
         userStatusDP.setTopicId(dp.getTopicId());
         // 广播所有人和发给对手
         dp.setType(CommandResType.INVITE_CANCEL.getCode());
@@ -175,9 +175,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             userStatusDP.setUserId(dp.getInviteUserId());
             userStatusDP.setSenderId(dp.getInviteUserId());
             userStatusDP.setAddresseeId(dp.getBeInviteUserId());
-            userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+            userStatusDP.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
             userStatusDP.setTopicId(dp.getTopicId());
             // 广播所有人和发给对手
+            // TODO 先判断是否在线
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());

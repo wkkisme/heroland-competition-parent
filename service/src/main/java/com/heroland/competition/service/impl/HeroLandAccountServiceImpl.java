@@ -61,12 +61,12 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users= new HashSet<>();
         members.forEach(userId ->{
-            if (!userId .equals(dp.getUserId()) && StringUtils.isNotBlank(userId+"")) {
+            if (userId != null && !userId .equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
                 // 如果为空去查下是否有这个人
                 if (user == null){
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                    platformSysUserQO.setUserId(userId+"");
+                    platformSysUserQO.setUserId(userId.toString());
                     platformSysUserQO.setPageSize(1);
                     RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
                     // 如果没有这个人，则直接移除掉
@@ -81,7 +81,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 }
                 users.add(JSON.parseObject(user.toString(),OnlineDP.class));
 
-            }else if ( StringUtils.isBlank(userId+"")){
+            }else if ( userId == null || StringUtils.isBlank(userId.toString())){
                 // 说明不存在 删除
                 redisService.sRemove(RedisConstant.ONLINE_KEY+dp.getTopicId(),userId);
             }
