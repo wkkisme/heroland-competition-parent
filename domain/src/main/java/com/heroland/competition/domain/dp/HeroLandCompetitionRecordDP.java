@@ -298,6 +298,18 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         return this;
     }
 
+
+    public List<HeroLandQuestionRecordDetailDP> record2Detail(){
+        if (details != null){
+
+            for (HeroLandQuestionRecordDetailDP detail : details) {
+                detail.setTopicId(topicId);
+            }
+        }
+
+        return details;
+
+    }
     public String getInviteRecordId() {
         return inviteRecordId;
     }

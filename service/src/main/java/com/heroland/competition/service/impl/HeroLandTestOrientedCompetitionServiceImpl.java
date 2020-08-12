@@ -128,11 +128,11 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                 }
                 heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+                heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             } else {
                 // 不是全部答对，直接保存，等下一个人来计算
                 heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+                heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             }
 
 
@@ -161,7 +161,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                     }
                     heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                 }
 
             } else {
@@ -174,7 +174,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     heroLandAccountManageQO.setScore(inviteResult.getScore());
                     heroLandAccountManageQO.setUserId(record.getOpponentId());
                     heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                 } else {
                     // 否则判断每个人的时间和答对数量
                     // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
@@ -186,7 +186,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                     }
                     heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                 }
             }
 
