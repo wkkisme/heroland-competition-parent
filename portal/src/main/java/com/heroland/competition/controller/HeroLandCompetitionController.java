@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- * heroland-competition-parent
+ * 答题相关
  *
  * @author wangkai
  * @date 2020/6/30
@@ -45,6 +45,12 @@ public class HeroLandCompetitionController {
     @Value("${answer.examTime}")
     private Long examTime;
 
+    /**
+     * 答题
+     * @param dp
+     * @param request
+     * @return
+     */
     @PostMapping("/doAnswer")
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp, HttpServletRequest request) {
         dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
