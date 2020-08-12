@@ -56,7 +56,7 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
             }
             recent.add(onlineMsg.getAddresseeId());
             onlineMsg.setUserStatus(UserStatusEnum.ONLINE.getStatus());
-            onlineMsg.setType(CommandResType.ONLINE_SUCCESS.getCode());
+            onlineMsg.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
             redisService.sAdd(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg.getSenderId(),1000*60*60*2L);
             redisService.set("user:"+onlineMsg.getSenderId(),JSON.toJSONString(onlineMsg),1000*60*60*2);
             // 通知所有人

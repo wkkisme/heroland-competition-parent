@@ -102,20 +102,23 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
-        UserStatusDP userStatusDP = new UserStatusDP();
-        userStatusDP.setUserId(dp.getInviteUserId());
-        userStatusDP.setSenderId(dp.getInviteUserId());
-        userStatusDP.setAddresseeId(dp.getBeInviteUserId());
-        userStatusDP.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
-        userStatusDP.setTopicId(dp.getTopicId());
-        userStatusDP.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
+        UserStatusDP inviteUser = new UserStatusDP();
+        inviteUser.setUserId(dp.getInviteUserId());
+        inviteUser.setSenderId(dp.getInviteUserId());
+        inviteUser.setAddresseeId(dp.getBeInviteUserId());
+        inviteUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+        inviteUser.setTopicId(dp.getTopicId());
+        inviteUser.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
         // 广播所有人和发给对手
         dp.setSenderId(dp.getInviteUserId());
         dp.setAddresseeId(dp.getBeInviteUserId());
         dp.setType(CommandResType.BE_INVITE.getCode());
         try {
             rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",inviteUser.toJSONString());
+            inviteUser.setUserId(dp.getBeInviteUserId());
+            inviteUser.setSenderId(dp.getBeInviteUserId());
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",inviteUser.toJSONString());
         } catch (Exception ignored) {
         }
 
@@ -146,6 +149,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setAddresseeId(dp.getInviteUserId());
         try {
             rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            userStatusDP.setUserId(dp.getBeInviteUserId());
+            userStatusDP.setSenderId(dp.getBeInviteUserId());
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
         } catch (Exception ignored) {
 
