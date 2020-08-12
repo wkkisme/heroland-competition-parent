@@ -141,6 +141,12 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     private String topicId;
 
     /**
+     * 科目code
+     */
+    @ApiModelProperty(value="subjectCode科目code")
+    private String subjectCode;
+
+    /**
      * heroland_question_record_detail
      */
     private static final long serialVersionUID = 1L;
@@ -495,5 +501,21 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setTopicId(String topicId) {
         this.topicId = topicId == null ? null : topicId.trim();
+    }
+
+    /**
+     * 科目code
+     * @return subject_code 科目code
+     */
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    /**
+     * 科目code
+     * @param subjectCode 科目code
+     */
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode == null ? null : subjectCode.trim();
     }
 }

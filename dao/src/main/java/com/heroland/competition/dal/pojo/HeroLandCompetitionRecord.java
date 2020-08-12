@@ -129,10 +129,16 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     private String inviteLevel;
 
     /**
-     * 比赛状态 0比赛结束，1 比赛中
+     * 比赛状态 0比赛结束，1 比赛中 2 未开始
      */
-    @ApiModelProperty(value="status比赛状态 0比赛结束，1 比赛中")
+    @ApiModelProperty(value="status比赛状态 0比赛结束，1 比赛中 2 未开始")
     private Integer status;
+
+    /**
+     * 邀请记录id
+     */
+    @ApiModelProperty(value="inviteRecordId邀请记录id")
+    private String inviteRecordId;
 
     /**
      * heroland_competition_record
@@ -460,18 +466,34 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     }
 
     /**
-     * 比赛状态 0比赛结束，1 比赛中
-     * @return status 比赛状态 0比赛结束，1 比赛中
+     * 比赛状态 0比赛结束，1 比赛中 2 未开始
+     * @return status 比赛状态 0比赛结束，1 比赛中 2 未开始
      */
     public Integer getStatus() {
         return status;
     }
 
     /**
-     * 比赛状态 0比赛结束，1 比赛中
-     * @param status 比赛状态 0比赛结束，1 比赛中
+     * 比赛状态 0比赛结束，1 比赛中 2 未开始
+     * @param status 比赛状态 0比赛结束，1 比赛中 2 未开始
      */
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    /**
+     * 邀请记录id
+     * @return invite_record_id 邀请记录id
+     */
+    public String getInviteRecordId() {
+        return inviteRecordId;
+    }
+
+    /**
+     * 邀请记录id
+     * @param inviteRecordId 邀请记录id
+     */
+    public void setInviteRecordId(String inviteRecordId) {
+        this.inviteRecordId = inviteRecordId == null ? null : inviteRecordId.trim();
     }
 }

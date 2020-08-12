@@ -136,6 +136,10 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     private String primaryRedisKey;
 
     /**
+     * 邀请记录id
+     */
+    private String inviteRecordId;
+    /**
      * 机构code
      */
     @ApiModelProperty(value = "orgCode机构code")
@@ -292,6 +296,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         status = CompetitionStatusEnum.UN_START.getStatus();
         questionId = inviteRecordDP.getQuestionId();
         return this;
+    }
+
+    public String getInviteRecordId() {
+        return inviteRecordId;
+    }
+
+    public void setInviteRecordId(String inviteRecordId) {
+        this.inviteRecordId = inviteRecordId;
     }
 
     public Integer getSetUpTime() {

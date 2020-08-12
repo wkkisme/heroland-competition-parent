@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-07
+     * heroland_competition_record 2020-08-12
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1876,6 +1876,76 @@ public class HeroLandCompetitionRecordExample {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
+
+        public Criteria andInviteRecordIdIsNull() {
+            addCriterion("invite_record_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdIsNotNull() {
+            addCriterion("invite_record_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdEqualTo(String value) {
+            addCriterion("invite_record_id =", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdNotEqualTo(String value) {
+            addCriterion("invite_record_id <>", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdGreaterThan(String value) {
+            addCriterion("invite_record_id >", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdGreaterThanOrEqualTo(String value) {
+            addCriterion("invite_record_id >=", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdLessThan(String value) {
+            addCriterion("invite_record_id <", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdLessThanOrEqualTo(String value) {
+            addCriterion("invite_record_id <=", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdLike(String value) {
+            addCriterion("invite_record_id like", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdNotLike(String value) {
+            addCriterion("invite_record_id not like", value, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdIn(List<String> values) {
+            addCriterion("invite_record_id in", values, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdNotIn(List<String> values) {
+            addCriterion("invite_record_id not in", values, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdBetween(String value1, String value2) {
+            addCriterion("invite_record_id between", value1, value2, "inviteRecordId");
+            return (Criteria) this;
+        }
+
+        public Criteria andInviteRecordIdNotBetween(String value1, String value2) {
+            addCriterion("invite_record_id not between", value1, value2, "inviteRecordId");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1889,7 +1959,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-07
+     * heroland_competition_record 2020-08-12
      */
     public static class Criterion {
         private String condition;

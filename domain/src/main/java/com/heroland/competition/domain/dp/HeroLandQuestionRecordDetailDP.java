@@ -3,7 +3,9 @@ package com.heroland.competition.domain.dp;
 import cn.hutool.core.util.ObjectUtil;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.heroland.competition.domain.dto.QuestionOptionDto;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail")
 public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializable {
@@ -146,6 +149,54 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     @ApiModelProperty(value = "题组id")
     private String topicId;
 
+    private String qtId;
+
+    private String course;
+
+    private String grade;
+
+    /**
+     * 科目code
+     */
+    @ApiModelProperty(value="subjectCode科目code")
+    private String subjectCode;
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+        this.subjectCode =course;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+        this.gradeCode=grade;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+        this.course = subjectCode;
+    }
+
+    public String getQtId() {
+        return qtId;
+    }
+
+    public void setQtId(String qtId) {
+        this.qtId = qtId;
+        this.questionId =qtId;
+    }
+
     public HeroLandQuestionRecordDetailDP updateCheck(){
         if (StringUtils.isAnyBlank(this.recordDetailId, this.recordId)) {
             ResponseBodyWrapper.failParamException();
@@ -231,6 +282,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      */
     public void setQuestionId(String questionId) {
         this.questionId = questionId == null ? null : questionId.trim();
+        this.qtId =questionId;
     }
 
     /**
