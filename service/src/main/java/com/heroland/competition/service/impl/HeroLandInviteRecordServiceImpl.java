@@ -108,6 +108,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         userStatusDP.setAddresseeId(dp.getBeInviteUserId());
         userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
         userStatusDP.setTopicId(dp.getTopicId());
+        userStatusDP.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
         // 广播所有人和发给对手
         dp.setSenderId(dp.getInviteUserId());
         dp.setAddresseeId(dp.getBeInviteUserId());
@@ -137,6 +138,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         userStatusDP.setAddresseeId(dp.getBeInviteUserId());
         userStatusDP.setUserStatus(UserStatusEnum.ONLINE.getStatus());
         userStatusDP.setTopicId(dp.getTopicId());
+        userStatusDP.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
         // 广播所有人和发给对手
         dp.setType(CommandResType.INVITE_CANCEL.getCode());
 
@@ -187,12 +189,6 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
-            UserStatusDP userStatusDP = new UserStatusDP();
-            userStatusDP.setUserId(dp.getInviteUserId());
-            userStatusDP.setSenderId(dp.getInviteUserId());
-            userStatusDP.setAddresseeId(dp.getBeInviteUserId());
-            userStatusDP.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
-            userStatusDP.setTopicId(dp.getTopicId());
             // 广播所有人和发给对手
             // TODO 先判断是否在线
             dp.setType(CommandResType.INVITE_AGREE.getCode());
@@ -200,7 +196,6 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setAddresseeId(dp.getInviteUserId());
             try {
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-                rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
             } catch (Exception ignored) {
             }
             return updateInvite(dp);
