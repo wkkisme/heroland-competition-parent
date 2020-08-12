@@ -86,7 +86,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         try {
             responseBody = addInvite(dp.inviteCheck(redisService));
         } catch (AppSystemException e) {
-            ResponseBodyWrapper.failException(e.getMessage());
+            return ResponseBodyWrapper.fail(e.getMessage(),"40002");
         }
         // 邀请放到延时队列中
         /*
@@ -106,7 +106,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         userStatusDP.setUserId(dp.getInviteUserId());
         userStatusDP.setSenderId(dp.getInviteUserId());
         userStatusDP.setAddresseeId(dp.getBeInviteUserId());
-        userStatusDP.setStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+        userStatusDP.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
         userStatusDP.setTopicId(dp.getTopicId());
         userStatusDP.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
         // 广播所有人和发给对手
