@@ -7,6 +7,7 @@ import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.common.UserStatusDP;
 import com.anycommon.response.constant.UserStatusEnum;
+import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
@@ -81,7 +82,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Override
     public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
-        ResponseBody<String> responseBody = addInvite(dp.inviteCheck(redisService));
+        ResponseBody<String> responseBody = null;
+        try {
+            responseBody = addInvite(dp.inviteCheck(redisService));
+        } catch (AppSystemException e) {
+            ResponseBodyWrapper.failException(e.getMessage());
+        }
         // 邀请放到延时队列中
         /*
         delayTimeLevel  默认延迟等级 : 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h，
