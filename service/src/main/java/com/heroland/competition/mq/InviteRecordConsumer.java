@@ -1,5 +1,6 @@
 package com.heroland.competition.mq;
 
+import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
@@ -7,6 +8,7 @@ import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -17,12 +19,15 @@ import java.util.List;
  * 邀请记录超时处理
  * @author mac
  */
-@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "competition-invite", consumerGroup = "competition_invite_consumer")
+@RocketMQMessageListener(topic = "competition-invite", consumerGroup = "competition_invite_consumer")
 @Component
 public class InviteRecordConsumer  implements RocketMQListener<HeroLandInviteRecordDP> {
 
     @Resource
     private HeroLandInviteRecordService heroLandInviteRecordService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     @Override
     public void onMessage(HeroLandInviteRecordDP message) {
@@ -41,6 +46,7 @@ public class InviteRecordConsumer  implements RocketMQListener<HeroLandInviteRec
             if (InviteStatusEnum.WAITING.getStatus().equals(dp.getStatus())){
                 dp.setStatusRemark("自动同意");
                 heroLandInviteRecordService.agreeInvite(dp);
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             }
         }
     }

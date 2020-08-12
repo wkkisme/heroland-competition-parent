@@ -88,4 +88,6 @@ public interface HeroLandCompetitionRecordService {
     List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
     HeroLandCompetitionRecordDP getRecordInfo(String topicId, String inviteId, String opponentId);
+
+    ResponseBody<HeroLandCompetitionRecordDP> getLatestCompetitionRecord(HeroLandCompetitionRecordQO qo);
 }

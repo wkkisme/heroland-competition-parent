@@ -10,7 +10,7 @@ public enum CompetitionStatusEnum {
 
     /**
      * 比赛状态 0比赛结束，1 比赛中 2 比赛未开始
-     * 同意
+     *
      */
     FINISH(0),
     /**

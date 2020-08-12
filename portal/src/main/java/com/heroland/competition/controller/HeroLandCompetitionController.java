@@ -4,6 +4,7 @@ package com.heroland.competition.controller;
 import cn.hutool.core.util.StrUtil;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.common.UserStatusDP;
+import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.constant.UserStatusEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
@@ -11,6 +12,7 @@ import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.factory.CompetitionTopicFactory;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -108,9 +110,25 @@ public class HeroLandCompetitionController {
         return heroLandCompetitionRecordService.getCompetitionRecordByRecordId(qo);
     }
 
-    @GetMapping("/getCompetitionRecords")
+    @PostMapping("/getCompetitionRecords")
     public ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecords(@RequestBody HeroLandCompetitionRecordQO qo) {
 
         return heroLandCompetitionRecordService.getCompetitionRecords(qo);
+    }
+
+    /**
+     * 获取最新用户比赛信息
+     * @param request
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getLatestCompetitionRecord")
+    public ResponseBody<HeroLandCompetitionRecordDP> getLatestCompetitionRecord(HttpServletRequest request,@RequestBody HeroLandCompetitionRecordQO qo) {
+        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData();
+        if (data == null){
+            return ResponseBodyWrapper.fail(ErrMsgEnum.PLEASE_LOGIN);
+        }
+        qo.setUserId(data.getUserId());
+        return heroLandCompetitionRecordService.getLatestCompetitionRecord(qo);
     }
 }

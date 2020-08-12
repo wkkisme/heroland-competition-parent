@@ -94,8 +94,21 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
 
     private Long id;
 
+
     public HeroLandCompetitionRecordQO queryIdCheck() {
         if (StringUtils.isAnyBlank(recordId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+        return this;
+    }
+
+
+    public HeroLandCompetitionRecordQO latestCheck() {
+        if (StringUtils.isAnyBlank(topicId,userId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (topicType == null) {
             ResponseBodyWrapper.failParamException();
         }
 

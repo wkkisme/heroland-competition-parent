@@ -117,7 +117,7 @@ public class HeroLandInviteRecordController {
      * @return e
      */
     @RequestMapping("/getInviting")
-    public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord( HttpServletRequest request) {
+    public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord( HttpServletRequest request, @RequestBody(required = false) HeroLandInviteRecordQO qo) {
         HeroLandInviteRecordQO heroLandInviteRecord = new HeroLandInviteRecordQO();
         RpcResult<PlatformSysUserDP> result = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request));
         PlatformSysUserDP data = result.getData();

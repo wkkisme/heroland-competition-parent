@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  */
 @Component
 @Slf4j
-@RocketMQMessageListener(nameServer = "${platform.rocketmq.nameServer}", topic = "${platform.register.topic}", consumerGroup = "competition_consumer")
+@RocketMQMessageListener( topic = "${platform.register.topic}", consumerGroup = "competition_consumer")
 public class RegisterUserConsumer  implements RocketMQListener<String> {
     @Resource
     private HeroLandAccountService heroLandAccountService;

@@ -159,6 +159,10 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value = "status比赛状态 0比赛结束，1 比赛中 2 比赛未开始")
     private Integer status;
 
+    /**
+     * 设定时间单位s
+     */
+    private Integer setUpTime = 180;
 
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
@@ -288,6 +292,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         status = CompetitionStatusEnum.UN_START.getStatus();
         questionId = inviteRecordDP.getQuestionId();
         return this;
+    }
+
+    public Integer getSetUpTime() {
+        return setUpTime;
+    }
+
+    public void setSetUpTime(Integer setUpTime) {
+        this.setUpTime = setUpTime;
     }
 
     public String getUserId() {

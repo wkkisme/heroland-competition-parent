@@ -14,6 +14,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.crossoverjie.cim.route.api.RouteApi;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.CommandResType;
+import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
@@ -36,6 +37,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -86,7 +88,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         try {
             responseBody = addInvite(dp.inviteCheck(redisService));
         } catch (AppSystemException e) {
-            return ResponseBodyWrapper.fail(e.getMessage(),"40002");
+            return ResponseBodyWrapper.fail(e.getMessage(), "40002");
         }
         // 邀请放到延时队列中
         /*
@@ -114,11 +116,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setAddresseeId(dp.getBeInviteUserId());
         dp.setType(CommandResType.BE_INVITE.getCode());
         try {
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",inviteUser.toJSONString());
+            rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
             inviteUser.setUserId(dp.getBeInviteUserId());
             inviteUser.setSenderId(dp.getBeInviteUserId());
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",inviteUser.toJSONString());
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
         } catch (Exception ignored) {
         }
 
@@ -148,11 +150,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setSenderId(dp.getBeInviteUserId());
         dp.setAddresseeId(dp.getInviteUserId());
         try {
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
             userStatusDP.setUserId(dp.getBeInviteUserId());
             userStatusDP.setSenderId(dp.getBeInviteUserId());
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER",userStatusDP.toJSONString());
+            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
         } catch (Exception ignored) {
 
         }
@@ -165,9 +167,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         long count = 0L;
         try {
             HeroLandInviteRecordExample example = new HeroLandInviteRecordExample();
-            if(qo.getNeedPage()) {
-                example.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
-            }else {
+            if (qo.getNeedPage()) {
+                example.setOrderByClause("gmt_create desc limit " + qo.getStartRow() + "," + qo.getPageSize());
+            } else {
                 example.setOrderByClause("gmt_create desc");
             }
             HeroLandInviteRecordExample.Criteria criteria = example.createCriteria();
@@ -192,6 +194,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             BeanUtil.insertConversion(dp, heroLandCompetitionRecordDP);
             heroLandCompetitionRecordDP.setInviteId(dp.getInviteUserId());
             heroLandCompetitionRecordDP.setOpponentId(dp.getBeInviteUserId());
+            heroLandCompetitionRecordDP.setInviteStartTime(new Date());
+            heroLandCompetitionRecordDP.setOpponentStartTime(heroLandCompetitionRecordDP.getInviteStartTime());
+            heroLandCompetitionRecordDP.setStatus(CompetitionStatusEnum.COMPETING.getStatus());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
@@ -201,7 +206,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
             try {
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE",JSON.toJSONString(dp));
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
             return updateInvite(dp);
@@ -242,9 +247,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         }
         List<HeroLandInviteRecordDP> data = invite.getData();
 
-        if (!CollectionUtils.isEmpty(data)){
+        if (!CollectionUtils.isEmpty(data)) {
             HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
-            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 120000){
+            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 120000) {
                 return ResponseBodyWrapper.success();
             }
         }

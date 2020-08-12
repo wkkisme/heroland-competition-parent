@@ -8,6 +8,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
+import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
 import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
@@ -307,5 +308,20 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             logger.error("e", e);
         }
         return null;
+    }
+
+    @Override
+    public ResponseBody<HeroLandCompetitionRecordDP> getLatestCompetitionRecord(HeroLandCompetitionRecordQO qo) {
+        qo.setPageSize(1);
+        ResponseBody<HeroLandCompetitionRecordDP> result = new ResponseBody<>();
+        ResponseBody<List<HeroLandCompetitionRecordDP>> competitionRecords = getCompetitionRecords(qo.latestCheck());
+        List<HeroLandCompetitionRecordDP> data = competitionRecords.getData();
+        if (!CollectionUtils.isEmpty(data)){
+            HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = data.get(0);
+            if (CompetitionStatusEnum.COMPETING.getStatus().equals(heroLandCompetitionRecordDP.getStatus())) {
+                result.setData(heroLandCompetitionRecordDP);
+            }
+        }
+        return result;
     }
 }
