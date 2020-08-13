@@ -87,7 +87,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Override
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo) {
-        RpcResult<List<PlatformSysUserDP>> responseBody = platformSsoUserServiceFacade.queryUserList(new PlatformSysUserQO());
+        PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+        BeanUtil.copyProperties(qo, platformSysUserQO);
+        RpcResult<List<PlatformSysUserDP>> responseBody = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
         ResponseBody<List<HeroLandUserClassDP>> result = new ResponseBody<>();
         if (!CollectionUtils.isEmpty(responseBody.getData())) {
             ArrayList<HeroLandUserClassDP> heroLandUserClasses = new ArrayList<>();
@@ -180,6 +182,37 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
             heroLandAccounts = heroLandUserClassMapper.selectByExample(heroLandAccountExample);
             count = heroLandUserClassMapper.countByExample(heroLandAccountExample);
+            List<HeroLandUserClassDP> heroLandUserClassDPS = BeanUtil.queryListConversion(heroLandAccounts, HeroLandUserClassDP.class);
+            if (!CollectionUtils.isEmpty(heroLandUserClassDPS)) {
+                heroLandUserClassDPS.parallelStream().forEach(v -> {
+                    HeroLandUserClassDP heroLandUserClass = new HeroLandUserClassDP();
+                    /*
+                     * 查询年级name
+                     */
+                    PageResponse<HerolandBasicDataDP> orgCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getOrgCode()));
+                    BeanUtil.copyProperties(v, heroLandUserClass);
+                    if (orgCode.getItems() != null) {
+                        v.setOrgName(orgCode.getItems().get(0).getDictValue());
+                    }
+                    /*
+                     * 查询班级name
+                     */
+                    PageResponse<HerolandBasicDataDP> classCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getClassCode()));
+                    BeanUtil.copyProperties(v, heroLandUserClass);
+                    if (classCode.getItems() != null) {
+                        v.setClassName(classCode.getItems().get(0).getDictValue());
+                    }
+                /*
+                  查询年级name
+                 */
+                    PageResponse<HerolandBasicDataDP> gradeCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getGradeCode()));
+
+                    if (gradeCode.getItems() != null) {
+                        v.setClassName(gradeCode.getItems().get(0).getDictValue());
+                    }
+                });
+            }
+
         } catch (Exception e) {
             log.error("", e);
             ResponseBodyWrapper.failSysException();
