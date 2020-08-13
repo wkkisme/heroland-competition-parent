@@ -87,7 +87,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Override
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo) {
-        RpcResult<List<PlatformSysUserDP>> responseBody = platformSsoUserServiceFacade.queryUserList(new PlatformSysUserQO());
+        PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+        BeanUtil.copyProperties(qo,platformSysUserQO);
+        RpcResult<List<PlatformSysUserDP>> responseBody = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
         ResponseBody<List<HeroLandUserClassDP>> result = new ResponseBody<>();
         if (!CollectionUtils.isEmpty(responseBody.getData())) {
             ArrayList<HeroLandUserClassDP> heroLandUserClasses = new ArrayList<>();
