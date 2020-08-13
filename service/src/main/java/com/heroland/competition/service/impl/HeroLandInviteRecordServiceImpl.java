@@ -209,17 +209,18 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
+
+            try {
+
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+            } catch (Exception ignored) {
+            }
             try {
                 if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
                     rocketMQTemplate.sendAndReceive("competition-record", dp,
                             new TypeReference<HeroLandCompetitionRecordDP>() {
                             }.getType(), 300, 7);
                 }
-            } catch (Exception ignored) {
-            }
-            try {
-
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
             return updateInvite(dp);
