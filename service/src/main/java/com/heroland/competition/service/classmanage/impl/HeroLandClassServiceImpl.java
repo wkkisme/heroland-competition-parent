@@ -191,7 +191,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
                      */
                     PageResponse<HerolandBasicDataDP> orgCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getOrgCode()));
                     BeanUtil.copyProperties(v, heroLandUserClass);
-                    if (orgCode.getItems() != null) {
+                    if (!CollectionUtils.isEmpty(orgCode.getItems()) ) {
                         v.setOrgName(orgCode.getItems().get(0).getDictValue());
                     }
                     /*
@@ -199,7 +199,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
                      */
                     PageResponse<HerolandBasicDataDP> classCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getClassCode()));
                     BeanUtil.copyProperties(v, heroLandUserClass);
-                    if (classCode.getItems() != null) {
+                    if (!CollectionUtils.isEmpty(classCode.getItems())) {
                         v.setClassName(classCode.getItems().get(0).getDictValue());
                     }
                 /*
@@ -207,7 +207,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
                  */
                     PageResponse<HerolandBasicDataDP> gradeCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getGradeCode()));
 
-                    if (gradeCode.getItems() != null) {
+                    if (!CollectionUtils.isEmpty(gradeCode.getItems())) {
                         v.setClassName(gradeCode.getItems().get(0).getDictValue());
                     }
                 });
