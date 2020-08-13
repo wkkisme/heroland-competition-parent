@@ -95,8 +95,23 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     private Long id;
 
 
+    /**
+     * 邀请记录id
+     */
+    private String inviteRecordId;
+
+
     public HeroLandCompetitionRecordQO queryIdCheck() {
         if (StringUtils.isAnyBlank(recordId)) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+        return this;
+    }
+
+
+    public HeroLandCompetitionRecordQO queryInviteIdCheck() {
+        if (StringUtils.isAnyBlank(inviteRecordId)) {
             ResponseBodyWrapper.failParamException();
         }
 
@@ -122,6 +137,14 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     public HeroLandCompetitionRecordQO setRecordId(String recordId) {
         this.recordId = recordId;
         return this;
+    }
+
+    public String getInviteRecordId() {
+        return inviteRecordId;
+    }
+
+    public void setInviteRecordId(String inviteRecordId) {
+        this.inviteRecordId = inviteRecordId;
     }
 
     public String getUserId() {
