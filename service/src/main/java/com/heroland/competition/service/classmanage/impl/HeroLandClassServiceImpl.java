@@ -96,21 +96,27 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             responseBody.getData().parallelStream().forEach(v -> {
                 HeroLandUserClassDP heroLandUserClass = new HeroLandUserClassDP();
                 /*
-                 * 查询班级name
+                 * 查询年级name
                  */
-                PageResponse<HerolandBasicDataDP> classCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getClassCode()));
+                List<String> keys = new ArrayList<>();
+                keys.add(v.getOrgCode());
+                keys.add(v.getClassCode());
+                keys.add(v.getGradeCode());
+                List<HerolandBasicDataDP> orgCode = heroLandAdminService.getDictInfoByKeys(keys);
                 BeanUtil.copyProperties(v, heroLandUserClass);
-                if (classCode.getItems() != null) {
-                    heroLandUserClass.setClassName(classCode.getItems().get(0).getDictValue());
+                if (!CollectionUtils.isEmpty(orgCode)) {
+                    orgCode.forEach(code -> {
+                        String dictKey = code.getDictKey();
+                        if (dictKey.equals(v.getOrgCode())) {
+                            heroLandUserClass.setOrgName(code.getDictValue());
+                        } else if (dictKey.equalsIgnoreCase(v.getClassCode())) {
+                            heroLandUserClass.setClassName(code.getDictValue());
+                        } else {
+                            heroLandUserClass.setGradeName(code.getDictValue());
+                        }
+                    });
                 }
-                /*
-                  查询年级name
-                 */
-                PageResponse<HerolandBasicDataDP> gradeCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getGradeCode()));
-
-                if (gradeCode.getItems() != null) {
-                    heroLandUserClass.setClassName(gradeCode.getItems().get(0).getDictValue());
-                }
+                BeanUtil.copyProperties(v, heroLandUserClass);
                 heroLandUserClasses.add(heroLandUserClass);
             });
             result.setData(heroLandUserClasses);
@@ -174,42 +180,42 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     @Override
     public ResponseBody<List<HeroLandUserClassDP>> getClassUser(HeroLandUserClassQO qo) {
 
-
-        List<HeroLandUserClass> heroLandAccounts = null;
+        List<HeroLandUserClassDP> heroLandUserClassDPS=new ArrayList<>();
         long count = 0;
         try {
             HeroLandUserClassExample heroLandAccountExample = new HeroLandUserClassExample();
             MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
-            heroLandAccounts = heroLandUserClassMapper.selectByExample(heroLandAccountExample);
+            List<HeroLandUserClass> heroLandAccounts = heroLandUserClassMapper.selectByExample(heroLandAccountExample);
             count = heroLandUserClassMapper.countByExample(heroLandAccountExample);
-            List<HeroLandUserClassDP> heroLandUserClassDPS = BeanUtil.queryListConversion(heroLandAccounts, HeroLandUserClassDP.class);
+            heroLandUserClassDPS = BeanUtil.queryListConversion(heroLandAccounts, HeroLandUserClassDP.class);
             if (!CollectionUtils.isEmpty(heroLandUserClassDPS)) {
                 heroLandUserClassDPS.parallelStream().forEach(v -> {
                     HeroLandUserClassDP heroLandUserClass = new HeroLandUserClassDP();
                     /*
                      * 查询年级name
                      */
-                    PageResponse<HerolandBasicDataDP> orgCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getOrgCode()));
+                    List<String> keys = new ArrayList<>();
+                    keys.add(v.getOrgCode());
+                    keys.add(v.getClassCode());
+                    keys.add(v.getGradeCode());
+                    List<HerolandBasicDataDP> orgCode = heroLandAdminService.getDictInfoByKeys(keys);
                     BeanUtil.copyProperties(v, heroLandUserClass);
-                    if (!CollectionUtils.isEmpty(orgCode.getItems()) ) {
-                        v.setOrgName(orgCode.getItems().get(0).getDictValue());
-                    }
-                    /*
-                     * 查询班级name
-                     */
-                    PageResponse<HerolandBasicDataDP> classCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getClassCode()));
-                    BeanUtil.copyProperties(v, heroLandUserClass);
-                    if (!CollectionUtils.isEmpty(classCode.getItems())) {
-                        v.setClassName(classCode.getItems().get(0).getDictValue());
-                    }
-                /*
-                  查询年级name
-                 */
-                    PageResponse<HerolandBasicDataDP> gradeCode = heroLandAdminService.pageDataByCode(new HerolandDataPageRequest(v.getGradeCode()));
+                    if (!CollectionUtils.isEmpty(orgCode)) {
+                        orgCode.forEach(code -> {
+                            String dictKey = code.getDictKey();
+                            if (dictKey.equals(v.getOrgCode())) {
+                                v.setOrgName(code.getDictValue());
+                            } else if (dictKey.equalsIgnoreCase(v.getClassCode())) {
+                                v.setClassName(code.getDictValue());
+                            } else {
+                                v.setGradeName(code.getDictValue());
+                            }
 
-                    if (!CollectionUtils.isEmpty(gradeCode.getItems())) {
-                        v.setClassName(gradeCode.getItems().get(0).getDictValue());
+
+                        });
+
                     }
+
                 });
             }
 
@@ -218,6 +224,6 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             ResponseBodyWrapper.failSysException();
         }
 
-        return ResponseBodyWrapper.successListWrapper(heroLandAccounts, count, qo, HeroLandUserClassDP.class);
+        return ResponseBodyWrapper.successListWrapper(heroLandUserClassDPS, count, qo, HeroLandUserClassDP.class);
     }
 }
