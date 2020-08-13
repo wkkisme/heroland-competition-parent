@@ -101,6 +101,8 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
         heroLandCompetitionRecordQO.setTopicId(record.getTopicId());
         heroLandCompetitionRecordQO.setQuestionId(record.getQuestionId());
+        heroLandCompetitionRecordQO.setInviteRecordId(record.getInviteRecordId());
+        heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> databaseRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandCompetitionRecordQO);
         if (CollectionUtils.isEmpty(databaseRecord.getData())) {
             ResponseBodyWrapper.fail("比赛不存在", "5000");
@@ -115,7 +117,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setOpponentEndTime(heroLandCompetitionRecordDP.getOpponentStartTime());
         record.setInviteLevel(heroLandCompetitionRecordDP.getInviteLevel());
         record.setOpponentLevel(heroLandCompetitionRecordDP.getOpponentLevel());
-
+        record.setId(heroLandCompetitionRecordDP.getId());
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey, record.getUserId(), "PT2H");
         redisService.set("question:" + redisKey, heroLandQuestionRecordDetailDP, 1200000L);
@@ -129,7 +131,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                     record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                     int levelScore = HeroLevelEnum.getLevelScore(record.getInviteLevel(), record.getOpponentLevel());
                     // 增加分数
-
+                    record.setInviteScore(levelScore);
                     heroLandAccountManageQO.setUserId(record.getUserId());
                     heroLandAccountManageQO.setScore(levelScore);
 
@@ -139,6 +141,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                     // 增加分数
                     heroLandAccountManageQO.setUserId(record.getUserId());
                     heroLandAccountManageQO.setScore(levelScore);
+                    record.setOpponentScore(levelScore);
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                 }
                 heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
