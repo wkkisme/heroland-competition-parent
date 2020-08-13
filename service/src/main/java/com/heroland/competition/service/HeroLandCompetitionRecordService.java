@@ -75,6 +75,13 @@ public interface HeroLandCompetitionRecordService {
      */
     ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByRecordId(HeroLandCompetitionRecordQO recordId);
 
+    /**
+     * 根据邀请id获取
+     * @param recordId
+     * @return
+     */
+    ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByInviteRecordId(HeroLandCompetitionRecordQO recordId);
+
 
     List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo);
 

@@ -242,6 +242,7 @@
         select *
         from heroland_competition_record
         where record_id = #{recordId} and is_deleted = 0
+        limit 1
     </select>
     <select id="selectByTopicIdAndInviteIdAndOpponentId"
             resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
@@ -348,6 +349,20 @@
             and id = #{id}
 
         </if>
+
+
+    </select>
+
+    <select id="selectByInviteRecordId"
+            resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
+        select
+        <include refid="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.Base_Column_List"/>
+
+        from heroland_competition_record
+
+        where invite_record_id = #{inviteRecordId}
+        and is_deleted  =  0
+        limit 1
 
 
     </select>

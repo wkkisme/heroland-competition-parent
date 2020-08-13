@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.common.BaseQO;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -14,30 +15,35 @@ public class HeroLandUserClassQO extends BaseQO implements Serializable {
      * 用户id
      */
     @ApiModelProperty(value="userId用户id")
+    @MybatisCriteriaAnnotation
     private String userId;
 
     /**
      * 课程id
      */
     @ApiModelProperty(value="classCode课程id")
+    @MybatisCriteriaAnnotation
     private String classCode;
 
     /**
      * x学校
      */
     @ApiModelProperty(value="orgCodex学校")
+    @MybatisCriteriaAnnotation
     private String orgCode;
 
     /**
      * 年级code
      */
     @ApiModelProperty(value="gradeCode年级code")
+    @MybatisCriteriaAnnotation
     private String gradeCode;
 
     /**
      * 用户类型
      */
     @ApiModelProperty(value="userType用户类型")
+    @MybatisCriteriaAnnotation
     private Integer userType;
 
 
@@ -45,6 +51,7 @@ public class HeroLandUserClassQO extends BaseQO implements Serializable {
      * 是否班主任
      */
     @ApiModelProperty(value="headTeacher是否班主任")
+    @MybatisCriteriaAnnotation
     private Boolean headTeacher;
 
     /**

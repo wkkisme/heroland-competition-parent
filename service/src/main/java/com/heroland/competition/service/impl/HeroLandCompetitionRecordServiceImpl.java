@@ -186,6 +186,19 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByInviteRecordId(HeroLandCompetitionRecordQO recordId) {
+        try {
+            HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
+            return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecord, HeroLandCompetitionRecordDP.class);
+        } catch (Exception e) {
+            logger.error("",e);
+            ResponseBodyWrapper.failSysException();
+        }
+
+        return ResponseBodyWrapper.success();
+    }
+
+    @Override
     public List<HeroLandStatisticsDetailDP> getTotalScore(HeroLandStatisticsAllQO qo) {
 
         try {

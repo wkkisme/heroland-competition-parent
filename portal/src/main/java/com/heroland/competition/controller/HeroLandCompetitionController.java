@@ -110,6 +110,16 @@ public class HeroLandCompetitionController {
         return heroLandCompetitionRecordService.getCompetitionRecordByRecordId(qo);
     }
 
+    /**
+     * 查询 比赛记录根据邀请记录id
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getRecordByInviteRecord")
+    public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByInviteRecordId(@RequestBody HeroLandCompetitionRecordQO qo) {
+        return heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(qo);
+    }
+
     @PostMapping("/getCompetitionRecords")
     public ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecords(@RequestBody HeroLandCompetitionRecordQO qo) {
 

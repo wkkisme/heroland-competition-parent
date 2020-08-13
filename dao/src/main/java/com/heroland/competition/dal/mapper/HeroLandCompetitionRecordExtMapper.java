@@ -33,6 +33,12 @@ public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionR
 
     HeroLandCompetitionRecord selectByRecordId(String recordId);
 
+    /**
+     * @param recordId recordId
+     * @return
+     */
+    HeroLandCompetitionRecord selectByInviteRecordId(String recordId);
+
     HeroLandCompetitionRecord selectByTopicIdAndInviteIdAndOpponentId(@Param("topicId") String topicId,
                                                                       @Param("inviteId") String inviteId,
                                                                       @Param("opponentId") String opponentId);
