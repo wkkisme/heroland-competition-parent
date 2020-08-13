@@ -117,7 +117,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setOpponentLevel(heroLandCompetitionRecordDP.getOpponentLevel());
 
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
-        boolean lock = redisService.setNx(redisKey, record, "PT2H");
+        boolean lock = redisService.setNx(redisKey, record.getUserId(), "PT2H");
         redisService.set("question:" + redisKey, heroLandQuestionRecordDetailDP, 1200000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
         if (lock) {
@@ -153,6 +153,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             //  后一个答题者
         } else {
             // 前一个答题者答案
+            Object o = redisService.get(redisKey);
             HeroLandQuestionRecordDetailDP preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey);
             // 如果正确 且未超时 则看前一个答题者答案正确与否
             if (isRight && !timeout) {

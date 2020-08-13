@@ -198,6 +198,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setOpponentStartTime(heroLandCompetitionRecordDP.getInviteStartTime());
             heroLandCompetitionRecordDP.setStatus(CompetitionStatusEnum.COMPETING.getStatus());
             heroLandCompetitionRecordDP.setInviteRecordId(dp.getRecordId());
+            heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
+            heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
