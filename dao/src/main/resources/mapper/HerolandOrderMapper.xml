@@ -334,4 +334,23 @@
     </if>
   </select>
 
+  <update id="closeOrders" >
+    update heroland_pay
+    set
+    <if test="closeReason != null">
+      close_reason = #{closeReason,jdbcType=VARCHAR},
+    </if>
+    <if test="closeTime != null">
+      close_time = #{closeTime,jdbcType=TIMESTAMP},
+    </if>
+    `state` = "CLOSED"
+    where
+    <if test="bizNos != null and bizNos.size > 0">
+    and biz_no IN
+    <foreach collection="bizNos" open="(" close=")" item="bizNo" separator=",">
+      #{bizNo}
+    </foreach>
+  </if>
+  </update>
+
 </mapper>

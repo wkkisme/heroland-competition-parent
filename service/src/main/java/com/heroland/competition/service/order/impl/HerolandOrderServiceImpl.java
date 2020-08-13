@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -163,5 +164,13 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     @Override
     public void closeOrder(Long orderId, String userId) {
 
+    }
+
+    @Override
+    public void closeOrders(String closeReason, Date closeTime, List<String> bizNos) {
+        if (CollectionUtils.isEmpty(bizNos)){
+            return;
+        }
+        herolandOrderMapper.closeOrders(closeReason, closeTime, bizNos);
     }
 }

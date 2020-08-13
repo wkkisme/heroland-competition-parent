@@ -6,6 +6,7 @@ import com.heroland.competition.domain.dto.HerolandOrderListDto;
 import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.PayOrderQO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,4 +41,7 @@ public interface HerolandOrderService {
      */
     void closeOrder(Long orderId, String userId);
 
+//    List<HerolandOrderDP> getByBizNos(List<String> bizNos);
+
+    void closeOrders(String closeReason, Date closeTime, List<String> bizNos);
 }
