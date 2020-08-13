@@ -215,6 +215,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
                             new TypeReference<HeroLandCompetitionRecordDP>() {
                             }.getType(), 300, 7);
                 }
+            } catch (Exception ignored) {
+            }
+            try {
+
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
