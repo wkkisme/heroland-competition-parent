@@ -14,6 +14,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.crossoverjie.cim.route.api.RouteApi;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.CommandResType;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
@@ -209,9 +210,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
             try {
-                rocketMQTemplate.sendAndReceive("competition-record", dp,
-                        new TypeReference<HeroLandCompetitionRecordDP>() {
-                        }.getType(), 300, 7);
+                if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
+                    rocketMQTemplate.sendAndReceive("competition-record", dp,
+                            new TypeReference<HeroLandCompetitionRecordDP>() {
+                            }.getType(), 300, 7);
+                }
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
