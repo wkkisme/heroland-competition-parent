@@ -180,6 +180,9 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                     record.setResult(CompetitionResultEnum.DRAW.getResult());
                 }
 
+            }else {
+                // 若两人都超时 则也是平局
+                record.setResult(CompetitionResultEnum.DRAW.getResult());
             }
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
             heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());

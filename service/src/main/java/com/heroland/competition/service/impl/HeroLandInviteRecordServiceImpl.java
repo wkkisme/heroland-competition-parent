@@ -209,6 +209,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
             try {
+                rocketMQTemplate.sendAndReceive("competition-record", dp,
+                        new TypeReference<HeroLandCompetitionRecordDP>() {
+                        }.getType(), 300, 7);
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
