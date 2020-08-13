@@ -55,7 +55,7 @@ public class HeroLandCompetitionController {
      */
     @PostMapping("/doAnswer")
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp, HttpServletRequest request) {
-        dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
+        dp.setUserId("2");
         ResponseBody<HeroLandCompetitionRecordDP> result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
         try {
             // 通知所有人 可以被邀请了

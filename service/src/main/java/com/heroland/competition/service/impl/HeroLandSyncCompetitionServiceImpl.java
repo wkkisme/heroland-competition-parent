@@ -95,6 +95,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             heroLandQuestionRecordDetailDP.setCorrectAnswer(false);
             isRight = false;
         }
+
         boolean timeout = false;
         //  数据库记录
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
@@ -107,6 +108,13 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         } else if (System.currentTimeMillis() - databaseRecord.getData().get(0).getInviteStartTime().getTime() > 120000L) {
             timeout = true;
         }
+        HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = databaseRecord.getData().get(0);
+        record.setInviteId(heroLandCompetitionRecordDP.getInviteId());
+        record.setInviteStartTime(heroLandCompetitionRecordDP.getInviteStartTime());
+        record.setOpponentId(heroLandCompetitionRecordDP.getOpponentId());
+        record.setOpponentEndTime(heroLandCompetitionRecordDP.getOpponentStartTime());
+        record.setInviteLevel(heroLandCompetitionRecordDP.getInviteLevel());
+        record.setOpponentLevel(heroLandCompetitionRecordDP.getOpponentLevel());
 
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey, record, "PT2H");
