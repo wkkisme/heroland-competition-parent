@@ -101,9 +101,13 @@ public class HeroLandAdminDataController {
      */
     @RequestMapping(value = "/getDictInfo", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<HerolandBasicDataDP> getDictInfoById(@RequestParam("id") Long id) {
-        throw new AppSystemException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
-//        return null;
+    public ResponseBody<List<HerolandBasicDataDP>> getDictInfoById(@RequestParam("keys") String keys) {
+        ResponseBody<List<HerolandBasicDataDP>> responseBody = new ResponseBody<List<HerolandBasicDataDP>>();
+        List<String> strings = Arrays.asList(keys.split(","));
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(strings);
+        responseBody.setData(dictInfoByKeys);
+        return responseBody;
+
     }
 
 

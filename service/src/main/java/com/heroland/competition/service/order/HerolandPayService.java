@@ -4,6 +4,9 @@ import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.PrePayQO;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author
  *
@@ -25,6 +28,12 @@ public interface HerolandPayService {
     HerolandPayDP getPayById(Long id);
 
     PrePayDto prePay(PrePayQO prePayQO);
+
+    List<HerolandPayDP> getPayByExpireTimeAndState(Date time, List<String> states);
+
+    List<HerolandPayDP> getOrderByState(Date time, List<String> states);
+
+    void updatePayState(String state, List<Long> payId);
 
 
 }

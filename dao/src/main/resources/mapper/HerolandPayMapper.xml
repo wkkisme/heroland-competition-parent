@@ -6,8 +6,6 @@
     <result column="biz_no" jdbcType="VARCHAR" property="bizNo" />
     <result column="state" jdbcType="VARCHAR" property="state" />
     <result column="buy_id" jdbcType="VARCHAR" property="buyId" />
-    <result column="mch_id" jdbcType="BIGINT" property="mchId" />
-    <result column="mch_name" jdbcType="VARCHAR" property="mchName" />
     <result column="pay_tool" jdbcType="VARCHAR" property="payTool" />
     <result column="payment_no" jdbcType="VARCHAR" property="paymentNo" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
@@ -15,11 +13,8 @@
     <result column="trade_desc" jdbcType="VARCHAR" property="tradeDesc" />
     <result column="pay_way" jdbcType="VARCHAR" property="payWay" />
     <result column="pay_finish_time" jdbcType="TIMESTAMP" property="payFinishTime" />
-    <result column="apply_amt" jdbcType="BIGINT" property="applyAmt" />
     <result column="settle_amt" jdbcType="BIGINT" property="settleAmt" />
     <result column="currency_type" jdbcType="VARCHAR" property="currencyType" />
-    <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime" />
-    <result column="settle_time" jdbcType="TIMESTAMP" property="settleTime" />
     <result column="biz_ext" jdbcType="VARCHAR" property="bizExt" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
@@ -335,4 +330,58 @@
     </set>
     where  biz_no = #{bizNo,jdbcType=VARCHAR}
   </update>
+
+  <update id="updatePayState" >
+    update heroland_pay
+    set `state` = #{state,jdbcType=VARCHAR}
+    where
+    <if test="payIds != null and payIds.size > 0">
+      and id IN (
+      <foreach collection="payIds" item="id" index="index" separator=",">
+        #{id,jdbcType=BIGINT}
+      </foreach>
+      )
+    </if>
+  </update>
+
+  <select id="selectByExpireTimeAndStates"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_pay
+    where is_deleted = 0
+    <if test="time != null">
+    <![CDATA[
+        and `expire_time` <= #{time,jdbcType=TIMESTAMP}
+        ]]>
+    </if>
+    <if test="states != null and states.size > 0">
+      and state IN (
+      <foreach collection="states" item="state" index="index" separator=",">
+        #{state,jdbcType=VARCHAR}
+      </foreach>
+      )
+    </if>
+
+  </select>
+
+  <select id="selectByStates"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_pay
+    where is_deleted = 0
+    <if test="time != null">
+      <![CDATA[
+        and `expire_time` > #{time,jdbcType=TIMESTAMP}
+        ]]>
+    </if>
+    <if test="states != null and states.size > 0">
+      and state IN (
+      <foreach collection="states" item="state" index="index" separator=",">
+        #{state,jdbcType=VARCHAR}
+      </foreach>
+      )
+    </if>
+
+  </select>
+
 </mapper>

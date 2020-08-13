@@ -46,7 +46,8 @@ public class HerolandPayDP extends BaseDO implements Serializable {
         AssertUtils.notBlank(bizNo);
         this.state = OrderStateEnum.CREATED.getCode();
         this.startTime = new Date();
-        this.startTime = DateUtils.plusMill(this.startTime,30*60*1000);
+        //约定超过25min钟后自动关单
+        this.expireTime = DateUtils.plusMill(this.startTime,25*60*1000);
         this.setId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.PAY));
         return this;
     }

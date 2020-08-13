@@ -2,6 +2,7 @@ package com.heroland.competition.service.order.impl;
 
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
 import com.heroland.competition.common.constants.PayEnvEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
@@ -20,9 +21,13 @@ import com.platfrom.payment.response.PrePayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  */
@@ -65,13 +70,7 @@ public class HerolandPayServiceImpl implements HerolandPayService {
         if (Objects.isNull(herolandPay)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PAY.getErrorMessage());
         }
-
-        try {
-           result  = BeanUtil.conversion(herolandPay, new HerolandPayDP());
-        } catch (Exception e) {
-            log.error("getPayById error", e);
-            ResponseBodyWrapper.failSysException();
-        }
+        result = convertToDP(herolandPay);
         return result;
     }
 
@@ -99,5 +98,52 @@ public class HerolandPayServiceImpl implements HerolandPayService {
             prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
         }
         return prePayDto;
+    }
+
+    @Override
+    public List<HerolandPayDP> getPayByExpireTimeAndState(Date time, List<String> states) {
+        List<HerolandPay> pays = herolandPayMapper.selectByExpireTimeAndStates(time, states);
+        if (CollectionUtils.isEmpty(pays)){
+            return Lists.newArrayList();
+        }
+        List<HerolandPayDP> result = pays.stream().map(this::convertToDP).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public List<HerolandPayDP> getOrderByState(Date time, List<String> states) {
+        List<HerolandPay> pays = herolandPayMapper.selectByStates(time, states);
+        if (CollectionUtils.isEmpty(pays)){
+            return Lists.newArrayList();
+        }
+        List<HerolandPayDP> result = pays.stream().map(this::convertToDP).collect(Collectors.toList());
+        return result;
+    }
+
+    @Override
+    public void updatePayState(String state, List<Long> payIds) {
+        if (CollectionUtils.isEmpty(payIds)){
+            return;
+        }
+        herolandPayMapper.updatePayState(state, payIds);
+    }
+
+    private HerolandPayDP convertToDP(HerolandPay pay){
+        HerolandPayDP payDP = new HerolandPayDP();
+        payDP.setId(pay.getId());
+        payDP.setBizExt(pay.getBizExt());
+        payDP.setBizNo(pay.getBizNo());
+        payDP.setBuyId(pay.getBuyId());
+        payDP.setCurrencyType(pay.getCurrencyType());
+        payDP.setExpireTime(pay.getExpireTime());
+        payDP.setStartTime(pay.getStartTime());
+        payDP.setPayFinishTime(pay.getPayFinishTime());
+        payDP.setPaymentNo(pay.getPaymentNo());
+        payDP.setPayTool(pay.getPayTool());
+        payDP.setPayWay(pay.getPayWay());
+        payDP.setState(pay.getState());
+        payDP.setSettleAmt(pay.getSettleAmt());
+        payDP.setTradeDesc(pay.getTradeDesc());
+        return payDP;
     }
 }
