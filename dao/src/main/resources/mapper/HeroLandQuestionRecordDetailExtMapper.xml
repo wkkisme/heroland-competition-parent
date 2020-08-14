@@ -107,7 +107,8 @@
         solution, parse, level_code,
         your_answer, user_id, record_id,
         record_detail_id, begin_date, end_date,
-        score, is_correct_answer, topic_id
+        score, is_correct_answer, topic_id,
+        subject_code
         )
         values
 
@@ -120,7 +121,8 @@
             #{do.solution,jdbcType=VARCHAR}, #{do.parse,jdbcType=VARCHAR}, #{do.levelCode,jdbcType=VARCHAR},
             #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR}, #{do.recordId,jdbcType=VARCHAR},
             #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP}, #{do.endDate,jdbcType=TIMESTAMP},
-            #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT}, #{do.topicId,jdbcType=VARCHAR}
+            #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT}, #{do.topicId,jdbcType=VARCHAR},
+            #{do.subjectCode,jdbcType=VARCHAR}
             )
         </foreach>
 
