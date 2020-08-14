@@ -23,6 +23,7 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
@@ -187,7 +188,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     }
 
     @Override
-    public ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp) {
+    public ResponseBody<String> agreeInvite(HeroLandInviteRecordDP dp) {
         dp.setStatus(InviteStatusEnum.AGREE.getStatus());
         //  需要提前将比赛记录初始化进去
         HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = new HeroLandCompetitionRecordDP();
@@ -209,21 +210,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
-
-            try {
-
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
-            } catch (Exception ignored) {
-            }
-            try {
-                if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
-                    rocketMQTemplate.sendAndReceive("competition-record", dp,
-                            new TypeReference<HeroLandCompetitionRecordDP>() {
-                            }.getType(), 300, 7);
-                }
-            } catch (Exception ignored) {
-            }
-            return updateInvite(dp);
+            updateInvite(dp);
+            return ResponseBodyWrapper.successWrapper(dp.getRecordId());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

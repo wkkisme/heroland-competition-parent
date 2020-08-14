@@ -51,7 +51,7 @@ public interface HeroLandInviteRecordService {
      * @param dp
      * @return
      */
-    ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp);
+    ResponseBody<String> agreeInvite(HeroLandInviteRecordDP dp);
 
 
 
