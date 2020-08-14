@@ -42,7 +42,7 @@ public class HeroLandInviteRecordRemoteServiceImpl implements HeroLandInviteReco
 
     @Override
     public ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp) {
-        return inviteRecordService.agreeInvite(dp);
+        return null;
     }
 
     @Override
