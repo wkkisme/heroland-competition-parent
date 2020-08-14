@@ -73,7 +73,15 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     @ApiModelProperty(value = "questionId题目id")
     private String questionId;
 
+    private String subjectCode;
 
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
 
     private static final String INVITE_KEY = "invite_competition:";
 

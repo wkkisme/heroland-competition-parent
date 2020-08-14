@@ -96,22 +96,7 @@ public class HeroLandInviteRecordController {
     public ResponseBody<Boolean> agreeInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
         ResponseBody<String> booleanResponseBody = heroLandInviteRecordService.agreeInvite(heroLandInviteRecord);
-        ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByRecordId =new ResponseBody<>();
-        try {
-            HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
-            heroLandCompetitionRecordQO.setRecordId(booleanResponseBody.getData());
-            competitionRecordByRecordId = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(heroLandCompetitionRecordQO);
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(competitionRecordByRecordId.getData()));
-        } catch (Exception ignored) {
-        }
-        try {
-            if (CompetitionEnum.SYNC.getType().equals(heroLandInviteRecord.getTopicType())) {
-                rocketMQTemplate.sendAndReceive("competition-record", competitionRecordByRecordId.getData(),
-                        new TypeReference<HeroLandCompetitionRecordDP>() {
-                        }.getType(), 300, 7);
-            }
-        } catch (Exception ignored) {
-        }
+
         return ResponseBodyWrapper.success();
     }
 

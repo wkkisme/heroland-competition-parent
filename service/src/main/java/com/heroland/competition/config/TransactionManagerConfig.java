@@ -31,7 +31,7 @@ import java.util.Map;
 public class TransactionManagerConfig {
     private final static Logger logger = LoggerFactory.getLogger(TransactionManagerConfig.class);
     private static final int AOP_TIME_OUT = 50000;
-    private static final String AOP_POINTCUT_EXPRESSION = "execution(* com.heroland.competition.service.impl.*.*(..)))";
+    private static final String AOP_POINTCUT_EXPRESSION = "execution(* com.heroland.competition.*.impl.*.*(..)))";
 
     @Resource
     private PlatformTransactionManager transactionManager;

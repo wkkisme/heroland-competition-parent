@@ -122,6 +122,11 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         boolean lock = redisService.setNx(redisKey, record.getUserId(), "PT2H");
         redisService.set("question:" + redisKey, heroLandQuestionRecordDetailDP, 1200000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
+        if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+            record.setInviteEndTime(new Date());
+        }else {
+            record.setOpponentEndTime(new Date());
+        }
         if (lock) {
             //  如果正确 且先拿到锁，说明先答题，更新记录为当前人胜 且没有超时 如果第一个都超时，后一个没有必要再更新记录
             if (isRight && !timeout) {
