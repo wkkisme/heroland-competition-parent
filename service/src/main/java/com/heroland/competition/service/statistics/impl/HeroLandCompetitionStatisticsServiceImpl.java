@@ -406,7 +406,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dp.setTopicId(questionTopicDP.getTopicId());
                 dp.setTopicName(questionTopicDP.getTopicName());
                 dp.setType(questionTopicDP.getTopicType());
-                dp.setDiff(questionTopicDP.getTopicDiff());
+                dp.setDiff(questionTopicDP.getDiff());
                 result.add(dp);
             });
         }

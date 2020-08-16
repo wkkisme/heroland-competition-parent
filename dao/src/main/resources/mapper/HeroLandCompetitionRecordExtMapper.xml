@@ -171,7 +171,7 @@
         <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
             #{topicId}
         </foreach>
-        and invite_id = #{userId} or opponent_id = #{userId}
+        and (invite_id = #{userId} or opponent_id = #{userId})
     </select>
 
     <select id="getCompleteRate" resultMap="StatisticsMap">
