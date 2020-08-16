@@ -362,6 +362,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dp.setTopicId(questionTopicDP.getTopicId());
                 dp.setDiff(questionTopicDP.getTopicDiff());
                 dp.setType(questionTopicDP.getType());
+                dp.setStartTime(questionTopicDP.getStartTime());
+                dp.setEndTime(questionTopicDP.getEndTime());
                 dp.setKnowledge(questionTopicDP.getKnowledges());
                 if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
                     HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(String.valueOf(questionTopicDP.getTopicId()));

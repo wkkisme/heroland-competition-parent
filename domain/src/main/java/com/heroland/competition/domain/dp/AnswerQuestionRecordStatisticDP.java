@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 查询比赛记录
@@ -75,5 +76,10 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
      * 对手
      */
     private Integer opponent;
+
+    private Date startTime;
+
+    private Date endTime;
+
 
 }

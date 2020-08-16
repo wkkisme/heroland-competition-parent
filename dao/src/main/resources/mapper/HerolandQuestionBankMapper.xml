@@ -484,7 +484,9 @@
         htg.type                  as topicType,
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
-        htq.topic_id              as topicId
+        htq.topic_id              as topicId,
+        htg.start_time            as start_time,
+        htg.end_time            as end_time
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id
@@ -533,7 +535,9 @@
         htg.type                  as topicType,
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
-        htq.topic_id              as topicId
+        htq.topic_id              as topicId,
+        htg.start_time            as start_time,
+        htg.end_time              as end_time
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id
