@@ -470,7 +470,16 @@
             and is_deleted = 0
         </where>
     </select>
-    <select id="selectQuestionTopicByQuestion" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
+    <resultMap id="TopicBankMap" type="com.heroland.competition.dal.pojo.HerolandQuestionBank" extends="BaseResultMap">
+
+    </resultMap>
+    <resultMap id="QuestionTopicDPMap" type="com.heroland.competition.domain.dp.QuestionTopicDP" extends="TopicBankMap">
+        <result column="level_code" property="topicLevelCode"/>
+        <result column="type" property="topicType"/>
+        <result column="diff" property="topicDiff"/>
+    </resultMap>
+
+    <select id="selectQuestionTopicByQuestion" resultMap="QuestionTopicDPMap">
         select htq.id,
         htq.question_id           as questionId,
         hqb.snapshot_no           as snapshotNo,
@@ -521,7 +530,7 @@
         </if>
         group by htq.id
     </select>
-    <select id="selectQuestionTopicByTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
+    <select id="selectQuestionTopicByTopic" resultMap="TopicBankMap">
         select htq.id,
         htq.question_id           as questionId,
         hqb.snapshot_no           as snapshotNo,
