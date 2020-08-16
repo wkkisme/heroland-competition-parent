@@ -470,16 +470,8 @@
             and is_deleted = 0
         </where>
     </select>
-    <resultMap id="TopicBankMap" type="com.heroland.competition.dal.pojo.HerolandQuestionBank" extends="BaseResultMap">
 
-    </resultMap>
-    <resultMap id="QuestionTopicDPMap" type="com.heroland.competition.domain.dp.QuestionTopicDP" extends="TopicBankMap">
-        <result column="level_code" property="topicLevelCode"/>
-        <result column="type" property="topicType"/>
-        <result column="diff" property="topicDiff"/>
-    </resultMap>
-
-    <select id="selectQuestionTopicByQuestion" resultMap="QuestionTopicDPMap">
+    <select id="selectQuestionTopicByQuestion" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
         select htq.id,
         htq.question_id           as questionId,
         hqb.snapshot_no           as snapshotNo,
@@ -494,8 +486,8 @@
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
         htq.topic_id              as topicId,
-        htg.start_time            as start_time,
-        htg.end_time            as end_time
+        htg.start_time            as startTime,
+        htg.end_time            as endTime
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id
@@ -530,7 +522,7 @@
         </if>
         group by htq.id
     </select>
-    <select id="selectQuestionTopicByTopic" resultMap="TopicBankMap">
+    <select id="selectQuestionTopicByTopic" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
         select htq.id,
         htq.question_id           as questionId,
         hqb.snapshot_no           as snapshotNo,
@@ -545,8 +537,8 @@
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
         htq.topic_id              as topicId,
-        htg.start_time            as start_time,
-        htg.end_time              as end_time
+        htg.start_time            as startTime,
+        htg.end_time            as endTime
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id
