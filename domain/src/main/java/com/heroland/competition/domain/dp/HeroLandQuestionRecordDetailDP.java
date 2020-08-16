@@ -155,6 +155,8 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     private String grade;
 
+    private Integer diff;
+
     /**
      * 科目code
      */
@@ -229,6 +231,17 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      * heroland_question_record_detail
      */
     private static final long serialVersionUID = 1L;
+
+    public Integer getDiff() {
+        return diff;
+    }
+
+    public void setDiff(Integer diff) {
+        if (diff != null) {
+            this.levelCode = diff.toString();
+        }
+        this.diff = diff;
+    }
 
     /**
      * 年级code
@@ -462,6 +475,9 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      * @param levelCode 难度code
      */
     public void setLevelCode(String levelCode) {
+        if (StringUtils.isNotBlank(levelCode)) {
+            this.diff = Integer.valueOf(levelCode);
+        }
         this.levelCode = levelCode == null ? null : levelCode.trim();
     }
 
