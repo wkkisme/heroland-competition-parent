@@ -127,7 +127,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             topicIds.set(request.getTopicIds());
         }
         Page<HerolandTopicQuestion> questions = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandTopicQuestionMapper.selectByTopics(topicIds.get(), request.getQuestionId()));
+                () -> herolandTopicQuestionMapper.selectByTopics(request.getTopicIds(), request.getQuestionId()));
         if (CollectionUtils.isEmpty(questions.getResult())) {
             return pageResult;
         }
