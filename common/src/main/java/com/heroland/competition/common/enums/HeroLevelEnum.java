@@ -30,7 +30,7 @@ public enum HeroLevelEnum {
         HeroLevelEnum before = null;
         try {
             before = HeroLevelEnum.valueOf(beforeLevel);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
 
             before = ADVERSITY_HERO;
         }
@@ -38,7 +38,7 @@ public enum HeroLevelEnum {
         HeroLevelEnum after = null;
         try {
             after = HeroLevelEnum.valueOf(afterLevel);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             after = ADVERSITY_HERO;
         }
         if (before.equals(after)) {
