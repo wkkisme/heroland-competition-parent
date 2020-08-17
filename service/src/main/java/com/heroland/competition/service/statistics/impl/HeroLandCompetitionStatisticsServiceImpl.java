@@ -350,6 +350,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
 
         // 真正要返回的题目
+        if (qo.getTopicIds() == null){
+            return ResponseBodyWrapper.fail("题目参数为空","40002");
+        }
         PageResponse<HeroLandQuestionListForTopicDto> topicQuestions = heroLandQuestionService.getTopicQuestions(qo);
 
         // 根据topicId 加questionId查出 题目的对战情况

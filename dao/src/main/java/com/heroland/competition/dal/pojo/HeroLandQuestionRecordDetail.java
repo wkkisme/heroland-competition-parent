@@ -301,20 +301,12 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
         this.score = score;
     }
 
-    /**
-     * 是否回答正确
-     * @return is_correct_answer 是否回答正确
-     */
-    public Boolean getIsCorrectAnswer() {
+    public Boolean getCorrectAnswer() {
         return isCorrectAnswer;
     }
 
-    /**
-     * 是否回答正确
-     * @param isCorrectAnswer 是否回答正确
-     */
-    public void setIsCorrectAnswer(Boolean isCorrectAnswer) {
-        this.isCorrectAnswer = isCorrectAnswer;
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
     }
 
     /**

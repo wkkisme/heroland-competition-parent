@@ -503,19 +503,11 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
         this.inviteRecordId = inviteRecordId == null ? null : inviteRecordId.trim();
     }
 
-    /**
-     * 是否正确（同步作业赛）
-     * @return is_correct_answer 是否正确（同步作业赛）
-     */
-    public Boolean getIsCorrectAnswer() {
+    public Boolean getCorrectAnswer() {
         return isCorrectAnswer;
     }
 
-    /**
-     * 是否正确（同步作业赛）
-     * @param isCorrectAnswer 是否正确（同步作业赛）
-     */
-    public void setIsCorrectAnswer(Boolean isCorrectAnswer) {
-        this.isCorrectAnswer = isCorrectAnswer;
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
     }
 }

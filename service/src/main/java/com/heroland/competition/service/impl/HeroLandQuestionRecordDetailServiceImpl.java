@@ -59,7 +59,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             heroLandQuestionRecordDetails.forEach(v -> {
                 recordDetails.forEach(detail -> {
                     if (v.getQuestionId().equals(detail.getQuestionId())) {
-                        v.setIsCorrectAnswer(detail.isCorrectAnswer());
+                        v.setCorrectAnswer(detail.isCorrectAnswer());
                         v.setAnswer(detail.getAnswer());
                     }
                 });
