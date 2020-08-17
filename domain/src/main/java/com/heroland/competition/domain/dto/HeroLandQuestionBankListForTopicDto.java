@@ -93,6 +93,12 @@ public class HeroLandQuestionBankListForTopicDto implements Serializable {
     private String answer;
 
     /**
+     * 题库类型
+     * 为赛事而区分
+     */
+    private Integer bankType;
+
+    /**
      * 当根据章节来选的时候，该题目属于的章节
      */
     private List<Long> chapterId = Lists.newArrayList();

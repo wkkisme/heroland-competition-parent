@@ -128,6 +128,12 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
 
     private String information;
 
+    /**
+     * 题库类型
+     * 为赛事而区分
+     */
+    private Integer bankType;
+
 
 
 

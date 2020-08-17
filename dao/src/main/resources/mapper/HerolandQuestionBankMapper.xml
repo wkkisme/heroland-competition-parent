@@ -23,6 +23,7 @@
         <result column="passage_id" jdbcType="BIGINT" property="passageId"/>
         <result column="storage" jdbcType="VARCHAR" property="storage"/>
         <result column="think" jdbcType="INTEGER" property="think"/>
+        <result column="bank_type" jdbcType="INTEGER" property="bankType"/>
 
     </resultMap>
 
@@ -38,7 +39,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, course, title,
-    `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no, passage_id,storage,think
+    `type`, sub_type, diff, `year`, area, `source`, paper_type, qt_id, snapshot_no, passage_id,storage,think, bank_type
   </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
@@ -133,6 +134,9 @@
             <if test="think != null">
                 think,
             </if>
+            <if test="bankType != null">
+                bank_type,
+            </if>
 
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -197,6 +201,9 @@
             <if test="think != null">
                 #{think,jdbcType=INTEGER},
             </if>
+            <if test="bankType != null">
+                #{bankType,jdbcType=INTEGER},
+            </if>
 
         </trim>
     </insert>
@@ -253,6 +260,9 @@
             </if>
             <if test="snapshotNo != null">
                 snapshot_no = #{snapshotNo,jdbcType=INTEGER},
+            </if>
+            <if test="bankType != null">
+                bank_type = #{bankType,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=BIGINT}

@@ -110,5 +110,11 @@ public class HerolandQuestionBankImportDP extends BaseDO implements Serializable
      */
     private String reference;
 
+    /**
+     * 题库类型
+     * 为赛事而区分
+     */
+    private Integer bankType;
+
 
 }
