@@ -151,6 +151,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDP.setStormAnswer(e.getAnswer0());
             bankDP.setStorage(e.getStorage());
             bankDP.setInformation(e.getInformation());
+            bankDP.setBankType(e.getBankType());
             try {
                 if (!StringUtils.isEmpty(e.getKnowledgeId())) {
                     List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
