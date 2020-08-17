@@ -291,13 +291,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
 
         AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMap = new AtomicReference<>();
-        AtomicReference<Map<String, List<HeroLandQuestionRecordDetailDP>>> questionRecordMap = new AtomicReference<>();
+        AtomicReference<Map<String, List<HeroLandQuestionRecordDetail>>> questionRecordMap = new AtomicReference<>();
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId)));
             List<String> competitionRecordIds = heroLandCompetitionRecords.stream().map(HeroLandCompetitionRecord::getRecordId).collect(Collectors.toList());
-            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds, qo.getUserId());
+            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(competitionRecordIds, qo.getUserId());
             if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
-                questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId)));
+                questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetail::getTopicId)));
             }
         }
         List<CompetitionCourseFinishStatisticDP> dps = new ArrayList<>();
@@ -325,7 +325,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         dp.setWinRate(winRate);
                     }
                     if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
-                        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
+                        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
                         if (CollUtil.isNotEmpty(questionRecordDetails)) {
                             // 完成情况
                             dp.setFinishQuestion(questionRecordDetails.size());
@@ -389,7 +389,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     List<HeroLandQuestionRecordDetailDP> details = recordDP.getDetails();
                     if (!CollectionUtils.isEmpty(details) && CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
                         details.forEach(detail -> {
-                            v.setIsCorrectAnswer(detail.getCorrectAnswer());
+                            v.setCorrectAnswer(detail.getCorrectAnswer());
                         });
                     }
                     v.setResult(recordDP.getResult());
@@ -447,13 +447,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setTotalScore(competitionRecord.getOpponentScore());
         }
         // 获取题目的比赛详情
-        List<HeroLandQuestionRecordDetailDP> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(Lists.newArrayList(qo.getCompetitionRecordId()), qo.getUserId());
+        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordDetailExtMapper.selectByCompetitionRecordId(Lists.newArrayList(qo.getCompetitionRecordId()), qo.getUserId());
         List<AnswerCompetitionResultDP.AnswerDetail> answerDetails = new ArrayList<>();
         questionRecordDetails.forEach(questionRecord -> {
             AnswerCompetitionResultDP.AnswerDetail answerDetail = new AnswerCompetitionResultDP.AnswerDetail();
             // TODO 题型
 //            answerDetail.setDiff(questionRecord.ge);
-            answerDetail.setIsCorrectAnswer(questionRecord.isCorrectAnswer());
+            answerDetail.setCorrectAnswer(questionRecord.getCorrectAnswer());
             answerDetail.setScore(questionRecord.getScore());
             // TODO 用时
 //            answerDetail.setUseTime();

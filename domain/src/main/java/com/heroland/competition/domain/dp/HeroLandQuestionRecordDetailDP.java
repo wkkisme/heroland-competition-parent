@@ -92,8 +92,8 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     /**
      * 是否回答正确
      */
-    @ApiModelProperty(value = "isCorrectAnswer是否回答正确")
-    private Boolean isCorrectAnswer;
+    @ApiModelProperty(value="correctAnswer是否回答正确")
+    private Boolean correctAnswer;
 
     /**
      * 题组id
@@ -345,14 +345,13 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         return score;
     }
 
-    public boolean isCorrectAnswer() {
-        return isCorrectAnswer;
+    public Boolean getCorrectAnswer() {
+        return correctAnswer;
     }
 
-    public void setCorrectAnswer(boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
-
 
     public String getTopicId() {
         return topicId;
@@ -370,13 +369,6 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         this.questionId = questionId;
     }
 
-    public Boolean getCorrectAnswer() {
-        return isCorrectAnswer;
-    }
-
-    public void setCorrectAnswer(Boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
-    }
 
     public String getOpponentName() {
         return opponentName;

@@ -83,8 +83,8 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     /**
      * 是否回答正确
      */
-    @ApiModelProperty(value="isCorrectAnswer是否回答正确")
-    private Boolean isCorrectAnswer;
+    @ApiModelProperty(value="correctAnswer是否回答正确")
+    private Boolean correctAnswer;
 
     /**
      * 题组id
@@ -301,12 +301,20 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
         this.score = score;
     }
 
+    /**
+     * 是否回答正确
+     * @return correct_answer 是否回答正确
+     */
     public Boolean getCorrectAnswer() {
-        return isCorrectAnswer;
+        return correctAnswer;
     }
 
+    /**
+     * 是否回答正确
+     * @param correctAnswer 是否回答正确
+     */
     public void setCorrectAnswer(Boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
+        this.correctAnswer = correctAnswer;
     }
 
     /**

@@ -1937,63 +1937,63 @@ public class HeroLandCompetitionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerIsNull() {
-            addCriterion("is_correct_answer is null");
+        public Criteria andCorrectAnswerIsNull() {
+            addCriterion("correct_answer is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerIsNotNull() {
-            addCriterion("is_correct_answer is not null");
+        public Criteria andCorrectAnswerIsNotNull() {
+            addCriterion("correct_answer is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerEqualTo(Boolean value) {
-            addCriterion("is_correct_answer =", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerEqualTo(Boolean value) {
+            addCriterion("correct_answer =", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerNotEqualTo(Boolean value) {
-            addCriterion("is_correct_answer <>", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerNotEqualTo(Boolean value) {
+            addCriterion("correct_answer <>", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerGreaterThan(Boolean value) {
-            addCriterion("is_correct_answer >", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerGreaterThan(Boolean value) {
+            addCriterion("correct_answer >", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("is_correct_answer >=", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("correct_answer >=", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerLessThan(Boolean value) {
-            addCriterion("is_correct_answer <", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerLessThan(Boolean value) {
+            addCriterion("correct_answer <", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerLessThanOrEqualTo(Boolean value) {
-            addCriterion("is_correct_answer <=", value, "isCorrectAnswer");
+        public Criteria andCorrectAnswerLessThanOrEqualTo(Boolean value) {
+            addCriterion("correct_answer <=", value, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerIn(List<Boolean> values) {
-            addCriterion("is_correct_answer in", values, "isCorrectAnswer");
+        public Criteria andCorrectAnswerIn(List<Boolean> values) {
+            addCriterion("correct_answer in", values, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerNotIn(List<Boolean> values) {
-            addCriterion("is_correct_answer not in", values, "isCorrectAnswer");
+        public Criteria andCorrectAnswerNotIn(List<Boolean> values) {
+            addCriterion("correct_answer not in", values, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_correct_answer between", value1, value2, "isCorrectAnswer");
+        public Criteria andCorrectAnswerBetween(Boolean value1, Boolean value2) {
+            addCriterion("correct_answer between", value1, value2, "correctAnswer");
             return (Criteria) this;
         }
 
-        public Criteria andIsCorrectAnswerNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("is_correct_answer not between", value1, value2, "isCorrectAnswer");
+        public Criteria andCorrectAnswerNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("correct_answer not between", value1, value2, "correctAnswer");
             return (Criteria) this;
         }
     }

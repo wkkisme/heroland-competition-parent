@@ -56,7 +56,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 是否回答正确
      */
-    private Boolean isCorrectAnswer;
+    private Boolean correctAnswer;
 
     /**
      * 得分

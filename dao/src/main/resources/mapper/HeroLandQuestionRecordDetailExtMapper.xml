@@ -1,102 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper">
-    <resultMap id="BaseResultMap" type="com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="creator" jdbcType="VARCHAR" property="creator"/>
-        <result column="modifier" jdbcType="VARCHAR" property="modifier"/>
-        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
-        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
-        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
-        <result column="grade_code" jdbcType="VARCHAR" property="gradeCode"/>
-        <result column="class_code" jdbcType="VARCHAR" property="classCode"/>
-        <result column="question_id" jdbcType="VARCHAR" property="questionId"/>
-        <result column="title" jdbcType="VARCHAR" property="title"/>
-        <result column="option_a" jdbcType="VARCHAR" property="optionA"/>
-        <result column="option_b" jdbcType="VARCHAR" property="optionB"/>
-        <result column="option_c" jdbcType="VARCHAR" property="optionC"/>
-        <result column="option_d" jdbcType="VARCHAR" property="optionD"/>
-        <result column="option_e" jdbcType="VARCHAR" property="optionE"/>
-        <result column="answer" jdbcType="VARCHAR" property="answer"/>
-        <result column="solution" jdbcType="VARCHAR" property="solution"/>
-        <result column="parse" jdbcType="VARCHAR" property="parse"/>
-        <result column="level_code" jdbcType="VARCHAR" property="levelCode"/>
-        <result column="your_answer" jdbcType="VARCHAR" property="yourAnswer"/>
-        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
-        <result column="record_id" jdbcType="VARCHAR" property="recordId"/>
-        <result column="record_detail_id" jdbcType="VARCHAR" property="recordDetailId"/>
-        <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate"/>
-        <result column="end_date" jdbcType="TIMESTAMP" property="endDate"/>
-        <result column="score" jdbcType="INTEGER" property="score"/>
-        <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer"/>
-        <result column="topic_id" jdbcType="VARCHAR" property="topicId"/>
-    </resultMap>
-    <sql id="Example_Where_Clause">
-        <where>
-            <foreach collection="oredCriteria" item="criteria" separator="or">
-                <if test="criteria.valid">
-                    <trim prefix="(" prefixOverrides="and" suffix=")">
-                        <foreach collection="criteria.criteria" item="criterion">
-                            <choose>
-                                <when test="criterion.noValue">
-                                    and ${criterion.condition}
-                                </when>
-                                <when test="criterion.singleValue">
-                                    and ${criterion.condition} #{criterion.value}
-                                </when>
-                                <when test="criterion.betweenValue">
-                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                                </when>
-                                <when test="criterion.listValue">
-                                    and ${criterion.condition}
-                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
-                                             separator=",">
-                                        #{listItem}
-                                    </foreach>
-                                </when>
-                            </choose>
-                        </foreach>
-                    </trim>
-                </if>
-            </foreach>
-        </where>
-    </sql>
-    <sql id="Update_By_Example_Where_Clause">
-        <where>
-            <foreach collection="example.oredCriteria" item="criteria" separator="or">
-                <if test="criteria.valid">
-                    <trim prefix="(" prefixOverrides="and" suffix=")">
-                        <foreach collection="criteria.criteria" item="criterion">
-                            <choose>
-                                <when test="criterion.noValue">
-                                    and ${criterion.condition}
-                                </when>
-                                <when test="criterion.singleValue">
-                                    and ${criterion.condition} #{criterion.value}
-                                </when>
-                                <when test="criterion.betweenValue">
-                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                                </when>
-                                <when test="criterion.listValue">
-                                    and ${criterion.condition}
-                                    <foreach close=")" collection="criterion.value" item="listItem" open="("
-                                             separator=",">
-                                        #{listItem}
-                                    </foreach>
-                                </when>
-                            </choose>
-                        </foreach>
-                    </trim>
-                </if>
-            </foreach>
-        </where>
-    </sql>
-    <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code,
-    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution,
-    parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date,
-    end_date, score, is_correct_answer
-  </sql>
 
     <insert id="insertBach">
         insert into heroland_question_record_detail (creator, modifier, gmt_create,
@@ -115,14 +19,14 @@
             #{do.classCode,jdbcType=VARCHAR}, #{do.questionId,jdbcType=BIGINT}, #{do.title,jdbcType=VARCHAR},
             #{do.answer,jdbcType=VARCHAR}, #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR},
             #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
-            #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT},
+            #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.correctAnswer,jdbcType=BIT},
             #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR}
 
             )
         </foreach>
 
     </insert>
-    <select id="selectByTopicIdsAndUserId" resultMap="BaseResultMap">
+    <select id="selectByTopicIdsAndUserId" resultMap="com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper.BaseResultMap">
         select a.*, b.topic_id
         from heroland_competition_record b
         left join heroland_question_record_detail a
@@ -212,8 +116,8 @@
             <if test="score != null">
                 score = #{score,jdbcType=INTEGER},
             </if>
-            <if test="isCorrectAnswer != null">
-                is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+            <if test="correctAnswer != null">
+                correct_answer = #{correctAnswer,jdbcType=BIT},
             </if>
         </set>
         where record_id = #{recordId,jdbcType=VARCHAR}
@@ -296,8 +200,8 @@
             <if test="score != null">
                 score = #{score,jdbcType=INTEGER},
             </if>
-            <if test="isCorrectAnswer != null">
-                is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+            <if test="correctAnswer != null">
+                correct_answer = #{correctAnswer,jdbcType=BIT},
             </if>
             <if test="topicId != null">
                 topic_id = #{topicId,jdbcType=VARCHAR},
@@ -306,7 +210,7 @@
         where record_detail_id = #{recordDetailId,jdbcType=VARCHAR}
     </update>
     <select id="selectByCompetitionRecordId"
-            resultMap="BaseResultMap">
+            resultMap="com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper.BaseResultMap">
         select * from heroland_question_record_detail
         where record_id in
         <foreach collection="recordIds" open="(" separator="," close=")" item="recordId" index="i">

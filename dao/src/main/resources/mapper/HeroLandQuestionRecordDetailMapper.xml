@@ -20,7 +20,7 @@
     <result column="begin_date" jdbcType="TIMESTAMP" property="beginDate" />
     <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="score" jdbcType="INTEGER" property="score" />
-    <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer" />
+    <result column="correct_answer" jdbcType="BIT" property="correctAnswer" />
     <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
     <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
     <result column="opponent_name" jdbcType="VARCHAR" property="opponentName" />
@@ -86,7 +86,7 @@
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
     question_id, title, answer, your_answer, user_id, record_id, record_detail_id, begin_date, 
-    end_date, score, is_correct_answer, topic_id, subject_code, opponent_name
+    end_date, score, correct_answer, topic_id, subject_code, opponent_name
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
@@ -127,7 +127,7 @@
       class_code, question_id, title, 
       answer, your_answer, user_id, 
       record_id, record_detail_id, begin_date, 
-      end_date, score, is_correct_answer, 
+      end_date, score, correct_answer, 
       topic_id, subject_code, opponent_name
       )
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
@@ -135,7 +135,7 @@
       #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{yourAnswer,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
       #{recordId,jdbcType=VARCHAR}, #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
-      #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{correctAnswer,jdbcType=BIT}, 
       #{topicId,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{opponentName,jdbcType=VARCHAR}
       )
   </insert>
@@ -196,8 +196,8 @@
       <if test="score != null">
         score,
       </if>
-      <if test="isCorrectAnswer != null">
-        is_correct_answer,
+      <if test="correctAnswer != null">
+        correct_answer,
       </if>
       <if test="topicId != null">
         topic_id,
@@ -261,8 +261,8 @@
       <if test="score != null">
         #{score,jdbcType=INTEGER},
       </if>
-      <if test="isCorrectAnswer != null">
-        #{isCorrectAnswer,jdbcType=BIT},
+      <if test="correctAnswer != null">
+        #{correctAnswer,jdbcType=BIT},
       </if>
       <if test="topicId != null">
         #{topicId,jdbcType=VARCHAR},
@@ -338,8 +338,8 @@
       <if test="record.score != null">
         score = #{record.score,jdbcType=INTEGER},
       </if>
-      <if test="record.isCorrectAnswer != null">
-        is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
+      <if test="record.correctAnswer != null">
+        correct_answer = #{record.correctAnswer,jdbcType=BIT},
       </if>
       <if test="record.topicId != null">
         topic_id = #{record.topicId,jdbcType=VARCHAR},
@@ -375,7 +375,7 @@
       begin_date = #{record.beginDate,jdbcType=TIMESTAMP},
       end_date = #{record.endDate,jdbcType=TIMESTAMP},
       score = #{record.score,jdbcType=INTEGER},
-      is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
+      correct_answer = #{record.correctAnswer,jdbcType=BIT},
       topic_id = #{record.topicId,jdbcType=VARCHAR},
       subject_code = #{record.subjectCode,jdbcType=VARCHAR},
       opponent_name = #{record.opponentName,jdbcType=VARCHAR}
@@ -437,8 +437,8 @@
       <if test="score != null">
         score = #{score,jdbcType=INTEGER},
       </if>
-      <if test="isCorrectAnswer != null">
-        is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+      <if test="correctAnswer != null">
+        correct_answer = #{correctAnswer,jdbcType=BIT},
       </if>
       <if test="topicId != null">
         topic_id = #{topicId,jdbcType=VARCHAR},
@@ -471,11 +471,10 @@
       begin_date = #{beginDate,jdbcType=TIMESTAMP},
       end_date = #{endDate,jdbcType=TIMESTAMP},
       score = #{score,jdbcType=INTEGER},
-      is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+      correct_answer = #{correctAnswer,jdbcType=BIT},
       topic_id = #{topicId,jdbcType=VARCHAR},
       subject_code = #{subjectCode,jdbcType=VARCHAR},
       opponent_name = #{opponentName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
 </mapper>

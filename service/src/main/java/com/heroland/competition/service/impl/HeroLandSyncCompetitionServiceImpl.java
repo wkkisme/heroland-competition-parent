@@ -175,7 +175,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             // 如果正确 且未超时 则看前一个答题者答案正确与否
             if (isRight && !timeout) {
                 // 如果前一个人答案正确则直接不管，因为前面已经判赢了，如果前面答题错了则本人胜利
-                if (!preAnswer.isCorrectAnswer()) {
+                if (!preAnswer.getCorrectAnswer()) {
                     // 如果我是邀请人
                     if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());

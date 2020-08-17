@@ -30,7 +30,7 @@
     <result column="invite_level" jdbcType="VARCHAR" property="inviteLevel" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="invite_record_id" jdbcType="VARCHAR" property="inviteRecordId" />
-    <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer" />
+    <result column="correct_answer" jdbcType="BIT" property="correctAnswer" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -95,7 +95,7 @@
     opponent_score, creator, invite_id, invite_score, modifier, gmt_create, gmt_modified, 
     is_deleted, subject_code, question_id, invite_start_time, invite_end_time, opponent_start_time, 
     opponent_end_time, org_code, class_code, grade_code, invite_level, status, invite_record_id, 
-    is_correct_answer
+    correct_answer
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample" resultMap="BaseResultMap">
     select
@@ -140,7 +140,7 @@
       invite_end_time, opponent_start_time, opponent_end_time, 
       org_code, class_code, grade_code, 
       invite_level, status, invite_record_id, 
-      is_correct_answer)
+      correct_answer)
     values (#{topicId,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{topicType,jdbcType=INTEGER}, 
       #{recordId,jdbcType=VARCHAR}, #{result,jdbcType=INTEGER}, #{opponentId,jdbcType=VARCHAR}, 
       #{opponentLevel,jdbcType=VARCHAR}, #{opponentScore,jdbcType=INTEGER}, #{creator,jdbcType=VARCHAR}, 
@@ -150,7 +150,7 @@
       #{inviteEndTime,jdbcType=TIMESTAMP}, #{opponentStartTime,jdbcType=TIMESTAMP}, #{opponentEndTime,jdbcType=TIMESTAMP}, 
       #{orgCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
       #{inviteLevel,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{inviteRecordId,jdbcType=VARCHAR}, 
-      #{isCorrectAnswer,jdbcType=BIT})
+      #{correctAnswer,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandCompetitionRecord">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -239,8 +239,8 @@
       <if test="inviteRecordId != null">
         invite_record_id,
       </if>
-      <if test="isCorrectAnswer != null">
-        is_correct_answer,
+      <if test="correctAnswer != null">
+        correct_answer,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -325,8 +325,8 @@
       <if test="inviteRecordId != null">
         #{inviteRecordId,jdbcType=VARCHAR},
       </if>
-      <if test="isCorrectAnswer != null">
-        #{isCorrectAnswer,jdbcType=BIT},
+      <if test="correctAnswer != null">
+        #{correctAnswer,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -423,8 +423,8 @@
       <if test="record.inviteRecordId != null">
         invite_record_id = #{record.inviteRecordId,jdbcType=VARCHAR},
       </if>
-      <if test="record.isCorrectAnswer != null">
-        is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
+      <if test="record.correctAnswer != null">
+        correct_answer = #{record.correctAnswer,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -461,7 +461,7 @@
       invite_level = #{record.inviteLevel,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=INTEGER},
       invite_record_id = #{record.inviteRecordId,jdbcType=VARCHAR},
-      is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT}
+      correct_answer = #{record.correctAnswer,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -550,8 +550,8 @@
       <if test="inviteRecordId != null">
         invite_record_id = #{inviteRecordId,jdbcType=VARCHAR},
       </if>
-      <if test="isCorrectAnswer != null">
-        is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
+      <if test="correctAnswer != null">
+        correct_answer = #{correctAnswer,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -585,8 +585,7 @@
       invite_level = #{inviteLevel,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       invite_record_id = #{inviteRecordId,jdbcType=VARCHAR},
-      is_correct_answer = #{isCorrectAnswer,jdbcType=BIT}
+      correct_answer = #{correctAnswer,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
 </mapper>

@@ -168,7 +168,7 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
     /**
      * 是否回答正确
      */
-    private Boolean isCorrectAnswer;
+    private Boolean correctAnswer;
 
 
     /**

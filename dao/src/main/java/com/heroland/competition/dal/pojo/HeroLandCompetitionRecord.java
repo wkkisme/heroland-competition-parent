@@ -143,8 +143,8 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
     /**
      * 是否正确（同步作业赛）
      */
-    @ApiModelProperty(value="isCorrectAnswer是否正确（同步作业赛）")
-    private Boolean isCorrectAnswer;
+    @ApiModelProperty(value="correctAnswer是否正确（同步作业赛）")
+    private Boolean correctAnswer;
 
     /**
      * heroland_competition_record
@@ -503,11 +503,19 @@ public class HeroLandCompetitionRecord extends BaseDO implements Serializable {
         this.inviteRecordId = inviteRecordId == null ? null : inviteRecordId.trim();
     }
 
+    /**
+     * 是否正确（同步作业赛）
+     * @return correct_answer 是否正确（同步作业赛）
+     */
     public Boolean getCorrectAnswer() {
-        return isCorrectAnswer;
+        return correctAnswer;
     }
 
+    /**
+     * 是否正确（同步作业赛）
+     * @param correctAnswer 是否正确（同步作业赛）
+     */
     public void setCorrectAnswer(Boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
+        this.correctAnswer = correctAnswer;
     }
 }

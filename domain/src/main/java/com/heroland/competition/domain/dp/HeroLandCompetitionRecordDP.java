@@ -169,10 +169,10 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     private Integer setUpTime = 180;
 
     /**
-     * 是否正确（同步作业赛）
+     * 是否回答正确
      */
-    @ApiModelProperty(value = "isCorrectAnswer是否正确（同步作业赛）")
-    private Boolean isCorrectAnswer;
+    @ApiModelProperty(value="correctAnswer是否回答正确")
+    private Boolean correctAnswer;
 
     /**
      * 难度
@@ -337,11 +337,11 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     }
 
     public Boolean getCorrectAnswer() {
-        return isCorrectAnswer;
+        return correctAnswer;
     }
 
     public void setCorrectAnswer(Boolean correctAnswer) {
-        isCorrectAnswer = correctAnswer;
+        this.correctAnswer = correctAnswer;
     }
 
     public Integer getDiff() {
