@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.GroupByEnum;
+import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -392,6 +393,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(),recordDP.getOpponentLevel()));
+                    }else {
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(),recordDP.getInviteLevel()));
+                    }
                     // 如果questionid相等  同步作业赛
                     List<HeroLandQuestionRecordDetailDP> details = recordDP.getDetails();
                     if (!CollectionUtils.isEmpty(details)) {
@@ -403,11 +409,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
-                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-//                    v.setOpponent(recordDP.getOpponentId());
-                    }
+
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
@@ -429,15 +431,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
-
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(),recordDP.getOpponentLevel()));
+                    }else {
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(),recordDP.getInviteLevel()));
+                    }
                     v.setResult(recordDP.getResult());
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
-                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-//                        v.setOpponent(recordDP.getOpponentId());
-                    }
+
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {

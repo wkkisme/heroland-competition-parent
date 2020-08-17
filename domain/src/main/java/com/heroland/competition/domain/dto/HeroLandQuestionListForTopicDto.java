@@ -163,7 +163,7 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
 
     private Integer result;
 
-    private String opponent;
+    private Integer opponent;
 
     /**
      * 是否回答正确

@@ -76,7 +76,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 对手
      */
-    private String opponent;
+    private Integer opponent;
 
     private Date startTime;
 
