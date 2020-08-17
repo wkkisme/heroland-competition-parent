@@ -76,6 +76,11 @@
     id, topic_id, org_code, grade_code, class_code, course_code, creator, modifier, gmt_create, 
     gmt_modified, is_deleted
   </sql>
+
+  <sql id="Insert_Column_List">
+        topic_id, org_code,`grade_code`,class_code, course_code
+    </sql>
+
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -303,4 +308,19 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into heroland_knowledge_refer
+    (<include refid="Insert_Column_List"/>)
+    values
+    <foreach collection="records" item="item" index="index" separator=",">
+      (#{item.topicId,jdbcType=BIGINT},
+      #{item.orgCode,jdbcType=VARCHAR},
+      #{item.gradeCode,jdbcType=VARCHAR},
+      #{item.classCode,jdbcType=VARCHAR},
+      #{item.courseCode,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
 </mapper>

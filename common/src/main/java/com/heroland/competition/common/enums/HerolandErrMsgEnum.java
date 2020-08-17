@@ -24,6 +24,10 @@ public enum HerolandErrMsgEnum {
 
     ERROR_PARSE("70102", "解析错误"),
 
+    HAS_JOINED("70103", "该用户已报名"),
+
+    NOT_JOINED("70104", "该用户还未报名"),
+
 
    ;
 

@@ -27,4 +27,6 @@ public interface HerolandTopicGroupPartMapper {
     int updateByPrimaryKeySelective(HerolandTopicGroupPart record);
 
     int updateByPrimaryKey(HerolandTopicGroupPart record);
+
+    int batchInsert(@Param("records") List<HerolandTopicGroupPart> list);
 }

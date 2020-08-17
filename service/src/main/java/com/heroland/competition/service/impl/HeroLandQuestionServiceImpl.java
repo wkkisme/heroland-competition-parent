@@ -29,6 +29,7 @@ import com.heroland.competition.service.admin.HeroLandAdminService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -36,6 +37,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -260,7 +262,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
             return Lists.newArrayList();
         }
-
+        Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
         List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(qo.getTopicIds(), null);
 
         if (CollectionUtils.isEmpty(herolandTopicQuestions)) {
@@ -322,6 +324,20 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()) {
             HeroLandQuestionTopicListDto topicDto = new HeroLandQuestionTopicListDto();
             topicDto.setId(entry.getKey());
+            if (topicGroupMap.containsKey(topicDto.getId())){
+                BeanUtils.copyProperties(topicGroupMap.get(topicDto.getId()), topicDto);
+                List<String> codes = Lists.newArrayList();
+                codes.add(topicDto.getCourseCode());
+                codes.add(topicDto.getGradeCode());
+                codes.add(topicDto.getOrgCode());
+                codes.add(topicDto.getClassCode());
+                List<HerolandBasicDataDP> dataDPS = heroLandAdminService.getDictInfoByKeys(codes);
+                Map<String, List<HerolandBasicDataDP>> dataMap = dataDPS.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+                topicDto.setCourseName(dataMap.containsKey(topicDto.getCourseCode()) ? keysMap.get(topicDto.getCourseCode()).get(0).getDictValue() : "");
+                topicDto.setGradeName(dataMap.containsKey(topicDto.getGradeCode()) ? keysMap.get(topicDto.getGradeCode()).get(0).getDictValue() : "");
+                topicDto.setClassName(dataMap.containsKey(topicDto.getClassCode()) ? keysMap.get(topicDto.getClassCode()).get(0).getDictValue() : "");
+                topicDto.setOrgName(dataMap.containsKey(topicDto.getOrgCode()) ? keysMap.get(topicDto.getOrgCode()).get(0).getDictValue() : "");
+            }
             List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
             entry.getValue().forEach(e -> {
                 if (questionMap.containsKey(e.getQuestionId())) {
