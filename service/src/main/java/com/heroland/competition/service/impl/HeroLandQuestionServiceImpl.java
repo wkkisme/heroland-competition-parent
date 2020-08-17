@@ -2,6 +2,7 @@ package com.heroland.competition.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
+import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -187,10 +188,10 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
         });
         List<HeroLandQuestionListForTopicDto> finalTopicDtos = Lists.newArrayList();
-        for (Map.Entry<Long, List<QuestionTopicDP>> entry : topicIdQuestionMap.entrySet()){
+        for (Map.Entry<Long, List<QuestionTopicDP>> entry : topicIdQuestionMap.entrySet()) {
             List<Long> subQuestionIds = entry.getValue().stream().map(QuestionTopicDP::getQuestionId).collect(Collectors.toList());
             topicDtos.stream().forEach(e -> {
-                if (subQuestionIds.contains(e.getId())){
+                if (subQuestionIds.contains(e.getId())) {
                     HeroLandQuestionListForTopicDto newTopicDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionListForTopicDto.class);
                     newTopicDto.setTopicId(entry.getKey());
                     finalTopicDtos.add(newTopicDto);
@@ -265,6 +266,18 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
+    public List<HeroLandTopicDto> getTopics(HeroLandTopicQuestionsPageRequest request) {
+        HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);
+        try {
+            return BeanUtil.queryListConversion(heroLandTopicGroups, HeroLandTopicDto.class);
+        } catch (Exception e) {
+            logger.error("", e);
+        }
+        return null;
+    }
+
+    @Override
     public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
         HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(qo, HeroLandTopicGroupQO.class);
         List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);
@@ -333,7 +346,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicMap.entrySet()) {
             HeroLandQuestionTopicListDto topicDto = new HeroLandQuestionTopicListDto();
             topicDto.setId(entry.getKey());
-            if (topicGroupMap.containsKey(topicDto.getId())){
+            if (topicGroupMap.containsKey(topicDto.getId())) {
                 BeanUtils.copyProperties(topicGroupMap.get(topicDto.getId()), topicDto);
                 List<String> codes = Lists.newArrayList();
                 codes.add(topicDto.getCourseCode());
@@ -360,7 +373,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         return result;
     }
 
-    private List<HeroLandQuestionTopicListDto> getTopicsQuestionsByQO(HeroLandTopicQuestionsQo qo){
+    private List<HeroLandQuestionTopicListDto> getTopicsQuestionsByQO(HeroLandTopicQuestionsQo qo) {
         HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(qo, HeroLandTopicGroupQO.class);
         List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);
         if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
@@ -492,9 +505,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         HeroLandTopicGroupQO qo = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupQO.class);
         Page<QuestionTopicDP> topicGroupsPageResult = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
                 () -> {
-                    if (request.getType().equals(0)){
+                    if (request.getType().equals(0)) {
                         herolandQuestionBankMapper.selectQuestionTopicByQuestion(qo);
-                    }else {
+                    } else {
                         herolandQuestionBankMapper.selectQuestionTopicByTopic(qo);
                     }
                 });

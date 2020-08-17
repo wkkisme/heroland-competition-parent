@@ -64,12 +64,12 @@
         from heroland_competition_record
         where is_deleted = 0
         <if test="type != null">
-            and `type` = #{type}
+            and topic_type = #{type}
         </if>
 
         GROUP BY org_code
         <if test="groupByType == true">
-            ,`type`
+            ,`topic_type`
         </if>
         <if test="groupByGradeCode == true">
             ,grade_code
@@ -91,13 +91,13 @@
         from heroland_competition_record
         where is_deleted = 0
         <if test="type != null">
-            and `type` = #{type}
+            and `topic_type` = #{type}
         </if>
 
 
         GROUP BY org_code
         <if test="groupByType == true">
-            ,`type`
+            ,`topic_type`
         </if>
         <if test="groupByGradeCode == true">
             ,grade_code

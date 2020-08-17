@@ -56,6 +56,8 @@ public interface HeroLandQuestionService{
 
     HeroLandTopicDto getTopic(HeroLandTopicPageRequest request);
 
+    List<HeroLandTopicDto> getTopics(HeroLandTopicQuestionsPageRequest request);
+
     List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
 
 

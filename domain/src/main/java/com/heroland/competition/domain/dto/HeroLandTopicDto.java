@@ -92,4 +92,20 @@ public class HeroLandTopicDto implements Serializable {
      * 题型
      */
     private Integer diff;
+
+    private Integer result;
+
+    private String opponent;
+
+    /**
+     * 是否回答正确
+     */
+    private Boolean correctAnswer;
+
+
+    /**
+     * 得分
+     */
+    private Integer score;
+
 }
