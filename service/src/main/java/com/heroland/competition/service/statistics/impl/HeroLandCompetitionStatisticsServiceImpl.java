@@ -256,7 +256,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     /**
      * 获取科目相关统计
-     * 时间不多，写不出好代码，如果有后来人看到这些垃圾凑数一样的代码，不要骂我，我也是无奈哈！见谅！真的没时间改了！！
+     *
      *
      * @param qo
      * @return
@@ -321,7 +321,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     /**
      * 获取答题记录
-     * 时间不多，写不出好代码，如果有后来人看到这些垃圾凑数一样的代码，不要骂我，我也是无奈哈！见谅！真的没时间改了！！
+     *
      *
      * @param qo
      * @return
@@ -362,6 +362,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dp.setTopicId(questionTopicDP.getTopicId());
                 dp.setDiff(questionTopicDP.getTopicDiff());
                 dp.setType(questionTopicDP.getType());
+                dp.setStartTime(questionTopicDP.getStartTime());
+                dp.setEndTime(questionTopicDP.getEndTime());
                 dp.setKnowledge(questionTopicDP.getKnowledges());
                 if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
                     HeroLandCompetitionRecord heroLandCompetitionRecord = competitionRecordMap.get().get(String.valueOf(questionTopicDP.getTopicId()));
@@ -404,7 +406,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dp.setTopicId(questionTopicDP.getTopicId());
                 dp.setTopicName(questionTopicDP.getTopicName());
                 dp.setType(questionTopicDP.getTopicType());
-                dp.setDiff(questionTopicDP.getTopicDiff());
+                dp.setDiff(questionTopicDP.getDiff());
                 result.add(dp);
             });
         }

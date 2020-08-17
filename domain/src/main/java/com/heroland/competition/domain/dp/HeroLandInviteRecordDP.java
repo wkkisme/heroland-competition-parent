@@ -34,6 +34,9 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     @ApiModelProperty(value = "inviteUserId邀请人id")
     private String inviteUserId;
 
+    private String inviteLevel;
+    private String opponentLevel ;
+
     /**
      * 被邀请人id
      */
@@ -70,7 +73,15 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     @ApiModelProperty(value = "questionId题目id")
     private String questionId;
 
+    private String subjectCode;
 
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
 
     private static final String INVITE_KEY = "invite_competition:";
 
@@ -103,6 +114,23 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
 //        }
         return this;
     }
+
+    public String getInviteLevel() {
+        return inviteLevel;
+    }
+
+    public void setInviteLevel(String inviteLevel) {
+        this.inviteLevel = inviteLevel;
+    }
+
+    public String getOpponentLevel() {
+        return opponentLevel;
+    }
+
+    public void setOpponentLevel(String opponentLevel) {
+        this.opponentLevel = opponentLevel;
+    }
+
     /**
      * 是否被邀请
      *

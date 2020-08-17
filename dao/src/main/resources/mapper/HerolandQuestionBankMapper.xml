@@ -480,6 +480,7 @@
             and is_deleted = 0
         </where>
     </select>
+
     <select id="selectQuestionTopicByQuestion" resultType="com.heroland.competition.domain.dp.QuestionTopicDP">
         select htq.id,
         htq.question_id           as questionId,
@@ -494,7 +495,9 @@
         htg.type                  as topicType,
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
-        htq.topic_id              as topicId
+        htq.topic_id              as topicId,
+        htg.start_time            as startTime,
+        htg.end_time            as endTime
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id
@@ -543,7 +546,9 @@
         htg.type                  as topicType,
         htg.diff                  as topicDiff,
         group_concat(a.knowledge) as knowledges,
-        htq.topic_id              as topicId
+        htq.topic_id              as topicId,
+        htg.start_time            as startTime,
+        htg.end_time            as endTime
         from heroland_topic_question htq
         left join heroland_topic_group htg on htg.id = htq.topic_id
         left join heroland_question_bank hqb on htq.question_id = hqb.id

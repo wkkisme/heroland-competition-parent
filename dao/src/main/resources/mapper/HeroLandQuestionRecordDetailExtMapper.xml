@@ -107,20 +107,22 @@
         solution, parse, level_code,
         your_answer, user_id, record_id,
         record_detail_id, begin_date, end_date,
-        score, is_correct_answer, topic_id
+        score, is_correct_answer, topic_id,
+        subject_code
         )
         values
 
-        <foreach collection="details" item="detail" separator=",">
-            (#{detail.creator,jdbcType=VARCHAR}, #{detail.modifier,jdbcType=VARCHAR}, #{detail.detail.gmtCreate,jdbcType=TIMESTAMP},
-            #{detail.gmtModified,jdbcType=TIMESTAMP}, #{detail.isDeleted,jdbcType=BIT}, #{detail.gradeCode,jdbcType=VARCHAR},
-            #{detail.classCode,jdbcType=VARCHAR}, #{detail.questionId,jdbcType=VARCHAR}, #{detail.title,jdbcType=VARCHAR},
-            #{detail.optionA,jdbcType=VARCHAR}, #{detail.optionB,jdbcType=VARCHAR}, #{detail.optionC,jdbcType=VARCHAR},
-            #{detail.optionD,jdbcType=VARCHAR}, #{detail.optionE,jdbcType=VARCHAR}, #{detail.answer,jdbcType=VARCHAR},
-            #{detail.solution,jdbcType=VARCHAR}, #{detail.parse,jdbcType=VARCHAR}, #{detail.levelCode,jdbcType=VARCHAR},
-            #{detail.yourAnswer,jdbcType=VARCHAR}, #{detail.userId,jdbcType=VARCHAR}, #{detail.recordId,jdbcType=VARCHAR},
-            #{detail.recordDetailId,jdbcType=VARCHAR}, #{detail.beginDate,jdbcType=TIMESTAMP}, #{detail.endDate,jdbcType=TIMESTAMP},
-            #{detail.score,jdbcType=INTEGER}, #{detail.isCorrectAnswer,jdbcType=BIT}, #{detail.topicId,jdbcType=VARCHAR}
+        <foreach collection="details" item="do" separator=",">
+            (#{do.creator,jdbcType=VARCHAR}, #{do.modifier,jdbcType=VARCHAR}, #{do.gmtCreate,jdbcType=TIMESTAMP},
+            #{do.gmtModified,jdbcType=TIMESTAMP}, #{do.isDeleted,jdbcType=BIT}, #{do.gradeCode,jdbcType=VARCHAR},
+            #{do.classCode,jdbcType=VARCHAR}, #{do.questionId,jdbcType=VARCHAR}, #{do.title,jdbcType=VARCHAR},
+            #{do.optionA,jdbcType=VARCHAR}, #{do.optionB,jdbcType=VARCHAR}, #{do.optionC,jdbcType=VARCHAR},
+            #{do.optionD,jdbcType=VARCHAR}, #{do.optionE,jdbcType=VARCHAR}, #{do.answer,jdbcType=VARCHAR},
+            #{do.solution,jdbcType=VARCHAR}, #{do.parse,jdbcType=VARCHAR}, #{do.levelCode,jdbcType=VARCHAR},
+            #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR}, #{do.recordId,jdbcType=VARCHAR},
+            #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP}, #{do.endDate,jdbcType=TIMESTAMP},
+            #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT}, #{do.topicId,jdbcType=VARCHAR},
+            #{do.subjectCode,jdbcType=VARCHAR}
             )
         </foreach>
 

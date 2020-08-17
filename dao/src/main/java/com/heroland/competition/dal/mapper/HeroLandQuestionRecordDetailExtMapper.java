@@ -16,5 +16,5 @@ public interface HeroLandQuestionRecordDetailExtMapper extends HeroLandQuestionR
     List<HeroLandQuestionRecordDetailDP> selectByCompetitionRecordId(@Param("recordIds")List<String> recordIds,
                                                                      @Param("userId") String userId);
 
-    int insertBach(List<HeroLandQuestionRecordDetail> details);
+    int insertBach(@Param("details")List<HeroLandQuestionRecordDetail> details);
 }

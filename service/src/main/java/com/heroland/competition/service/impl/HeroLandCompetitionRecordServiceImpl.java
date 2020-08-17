@@ -177,6 +177,12 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {
+            if (qo.getInviteRecordId() != null) {
+                HeroLandCompetitionRecord  record = (HeroLandCompetitionRecord) redisService.get("competition-record:" + qo.getInviteRecordId());
+                if (record != null){
+                    heroLandCompetitionRecord = record;
+                }
+            }
             heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByRecordId(qo.queryIdCheck().getRecordId());
         } catch (Exception e) {
             logger.error("", e);

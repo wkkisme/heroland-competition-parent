@@ -6,16 +6,16 @@ public enum HeroLevelEnum {
     /**
      * 逆境英雄
      */
-    ADVERSITYHERO,
+    ADVERSITY_HERO,
     /**
      * 奋勇英雄
      */
-    COURAGEOUSHERO,
+    COURAGEOUS_HERO,
 
     /**
      * 至尊英雄
      */
-    SUPREMEHERO;
+    SUPREME_HERO;
 
 
     /**
@@ -26,14 +26,27 @@ public enum HeroLevelEnum {
      * @return 差距
      */
     public static int getLevelDistance(String beforeLevel, String afterLevel) {
-        HeroLevelEnum before = HeroLevelEnum.valueOf(beforeLevel);
-        HeroLevelEnum after = HeroLevelEnum.valueOf(afterLevel);
+
+        HeroLevelEnum before = null;
+        try {
+            before = HeroLevelEnum.valueOf(beforeLevel);
+        } catch (Exception e) {
+
+            before = ADVERSITY_HERO;
+        }
+
+        HeroLevelEnum after = null;
+        try {
+            after = HeroLevelEnum.valueOf(afterLevel);
+        } catch (Exception e) {
+            after = ADVERSITY_HERO;
+        }
         if (before.equals(after)) {
             return 0;
         }
 
-        if (before.equals(ADVERSITYHERO)) {
-            if (after.equals(COURAGEOUSHERO)) {
+        if (before.equals(ADVERSITY_HERO)) {
+            if (after.equals(COURAGEOUS_HERO)) {
 
                 return -1;
             } else {
@@ -42,18 +55,18 @@ public enum HeroLevelEnum {
             }
 
         }
-        if (before.equals(COURAGEOUSHERO)) {
+        if (before.equals(COURAGEOUS_HERO)) {
 
-            if (after.equals(ADVERSITYHERO)) {
+            if (after.equals(ADVERSITY_HERO)) {
                 return 1;
             } else {
                 return -1;
             }
         }
 
-        if (before.equals(SUPREMEHERO)) {
+        if (before.equals(SUPREME_HERO)) {
 
-            if (after.equals(ADVERSITYHERO)) {
+            if (after.equals(ADVERSITY_HERO)) {
                 return 2;
             } else {
                 return 1;

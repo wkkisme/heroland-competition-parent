@@ -37,5 +37,6 @@
         select <include refid="com.heroland.competition.dal.mapper.HeroLandAccountMapper.Base_Column_List"/>
         from heroland_account
         where user_id=#{userId}
+        limit 1
     </select>
 </mapper>

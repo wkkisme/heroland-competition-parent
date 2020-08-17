@@ -3,6 +3,7 @@ package com.heroland.competition.domain.dp;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author wushuaiping
@@ -75,4 +76,8 @@ public class QuestionTopicDP implements Serializable {
      * 题组id
      */
     private Long topicId;
+
+    private Date startTime;
+
+    private Date endTime;
 }

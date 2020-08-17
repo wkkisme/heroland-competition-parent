@@ -171,7 +171,7 @@
         <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
             #{topicId}
         </foreach>
-        and invite_id = #{userId} or opponent_id = #{userId}
+        and (invite_id = #{userId} or opponent_id = #{userId})
     </select>
 
     <select id="getCompleteRate" resultMap="StatisticsMap">
@@ -268,6 +268,11 @@
             and record_id = #{recordId}
 
         </if>
+
+        <if test="inviteRecordId != null">
+            and invite_record_id = #{inviteRecordId}
+
+        </if>
         <if test="topicId != null">
             and topic_id = #{topicId}
 
@@ -315,6 +320,10 @@
         where is_deleted =0
         <if test="userId != null">
             and (invite_id = #{userId} or opponent_id = #{userId})
+        </if>
+        <if test="inviteRecordId != null">
+            and invite_record_id = #{inviteRecordId}
+
         </if>
         <if test="recordId != null">
             and record_id = #{recordId}

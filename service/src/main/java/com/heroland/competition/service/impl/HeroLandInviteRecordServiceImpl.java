@@ -14,6 +14,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.crossoverjie.cim.route.api.RouteApi;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.CommandResType;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandInviteRecordExtMapper;
@@ -22,6 +23,7 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
@@ -186,7 +188,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     }
 
     @Override
-    public ResponseBody<Boolean> agreeInvite(HeroLandInviteRecordDP dp) {
+    public ResponseBody<String> agreeInvite(HeroLandInviteRecordDP dp) {
         dp.setStatus(InviteStatusEnum.AGREE.getStatus());
         //  需要提前将比赛记录初始化进去
         HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = new HeroLandCompetitionRecordDP();
@@ -198,7 +200,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setOpponentStartTime(heroLandCompetitionRecordDP.getInviteStartTime());
             heroLandCompetitionRecordDP.setStatus(CompetitionStatusEnum.COMPETING.getStatus());
             heroLandCompetitionRecordDP.setInviteRecordId(dp.getRecordId());
+            heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
+            heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
+            redisService.set("competition-record:" + heroLandCompetitionRecordDP.getInviteRecordId(),heroLandCompetitionRecordDP,180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
             // 广播所有人和发给对手
@@ -206,11 +211,21 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
+            updateInvite(dp);
             try {
+                if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
+                    rocketMQTemplate.sendAndReceive("competition-record", dp,
+                            new TypeReference<HeroLandCompetitionRecordDP>() {
+                            }.getType(), 300, 7);
+                }
+            } catch (Exception ignored) {
+            }
+            try {
+
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             } catch (Exception ignored) {
             }
-            return updateInvite(dp);
+            return ResponseBodyWrapper.successWrapper(dp.getRecordId());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

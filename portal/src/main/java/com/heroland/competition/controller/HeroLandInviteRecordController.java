@@ -1,19 +1,26 @@
 package com.heroland.competition.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandAccountService;
+import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import com.platform.sso.client.sso.util.CookieUtils;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +49,12 @@ public class HeroLandInviteRecordController {
 
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+    @Resource
+    private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
+
+    @Resource(name = "rocketMQTemplate")
+    private RocketMQTemplate rocketMQTemplate;
+
     /**
      * 去邀请人
      * @param heroLandInviteRecord h
@@ -82,7 +95,9 @@ public class HeroLandInviteRecordController {
     @RequestMapping("/agreeInvite")
     public ResponseBody<Boolean> agreeInvite(@RequestBody HeroLandInviteRecordDP heroLandInviteRecord) {
 
-        return heroLandInviteRecordService.agreeInvite(heroLandInviteRecord);
+        ResponseBody<String> booleanResponseBody = heroLandInviteRecordService.agreeInvite(heroLandInviteRecord);
+
+        return ResponseBodyWrapper.success();
     }
 
     /**

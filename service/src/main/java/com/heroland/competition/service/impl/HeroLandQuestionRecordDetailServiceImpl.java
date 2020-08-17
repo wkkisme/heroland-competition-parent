@@ -52,7 +52,16 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             recordDetail.addCheck();
         }
         try {
-            questionRecordDetailExtMapper.insertBach(BeanUtil.queryListConversion(recordDetails,HeroLandQuestionRecordDetail.class));
+            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = BeanUtil.queryListConversion(recordDetails, HeroLandQuestionRecordDetail.class);
+            heroLandQuestionRecordDetails.forEach(v->{
+                recordDetails.forEach(detail->{
+                    if (v.getQuestionId().equalsIgnoreCase(detail.getQuestionId())){
+                        v.setIsCorrectAnswer(detail.isCorrectAnswer());
+                        v.setAnswer(detail.getAnswer());
+                    }
+                });
+            });
+            questionRecordDetailExtMapper.insertBach(heroLandQuestionRecordDetails);
         } catch (Exception e) {
             logger.error("e",e);
             ResponseBodyWrapper.failSysException();
