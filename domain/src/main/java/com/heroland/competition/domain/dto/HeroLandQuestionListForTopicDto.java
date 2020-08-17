@@ -177,5 +177,6 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
     private Integer score;
 
 
+    private String topicName;
 
 }

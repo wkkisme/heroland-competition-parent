@@ -24,10 +24,7 @@ import com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandStatisticsTotalExtMapper;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
-import com.heroland.competition.domain.dto.HeroLandTopicDto;
-import com.heroland.competition.domain.dto.HerolandQuestionKnowledgeSimpleDto;
+import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -347,7 +344,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
      * @return
      */
     @Override
-    public ResponseBody<Object> getAnswerQuestionRecordStatistic(HeroLandTopicQuestionsPageRequest qo) {
+    public ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(HeroLandTopicQuestionsPageRequest qo) {
 
 
         // 真正要返回的题目
@@ -381,7 +378,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
 
         List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
-        ResponseBody<Object> responseBody = new ResponseBody<>();
+        ResponseBody<List<AnswerQuestionRecordStatisticDP>> responseBody = new ResponseBody<>();
 
         List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
         if (!CollectionUtils.isEmpty(questionRecord.getData()) && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
@@ -406,11 +403,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-//                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-//                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
-//                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-                    v.setOpponent(recordDP.getOpponentId());
-//                    }
+                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
+                        v.setOpponent(rpcResult.getData().get(0).getUserName());
+//                    v.setOpponent(recordDP.getOpponentId());
+                    }
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
@@ -436,11 +433,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     v.setResult(recordDP.getResult());
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-//                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-//                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
-//                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-                    v.setOpponent(recordDP.getOpponentId());
-//                    }
+                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
+                        v.setOpponent(rpcResult.getData().get(0).getUserName());
+//                        v.setOpponent(recordDP.getOpponentId());
+                    }
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
@@ -453,8 +450,30 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
 
         }
+        List<AnswerQuestionRecordStatisticDP> result = new ArrayList<>();
         if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
-            responseBody.setData(topicQuestions.getItems());
+
+            List<HeroLandQuestionListForTopicDto> questionsItems = topicQuestions.getItems();
+            questionsItems.forEach(v -> {
+                AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
+                answerQuestionRecordStatisticDP.setDiff(v.getDiff());
+                List<HerolandKnowledgeSimpleDto> knowledges = v.getKnowledges();
+                if (!CollectionUtils.isEmpty(knowledges)) {
+                    answerQuestionRecordStatisticDP.setKnowledge(knowledges.stream().map(HerolandKnowledgeSimpleDto::getKnowledge).collect(Collectors.toList()));
+                }
+                answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
+                answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
+                answerQuestionRecordStatisticDP.setScore(v.getScore());
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
+                answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
+                answerQuestionRecordStatisticDP.setType(v.getType());
+                answerQuestionRecordStatisticDP.setQuestionId(v.getId());
+                answerQuestionRecordStatisticDP.setId(v.getId());
+                answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
+                result.add(answerQuestionRecordStatisticDP);
+
+            });
+            responseBody.setData(result);
             responseBody.setPage(new
 
                     Pagination(qo.getPageIndex(), qo.
@@ -463,7 +482,20 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                     getTotal()));
         } else {
-            responseBody.setData(topics);
+            topics.forEach(v -> {
+
+                AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
+                answerQuestionRecordStatisticDP.setDiff(Integer.valueOf(v.getLevelCode()));
+                answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
+                answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
+                answerQuestionRecordStatisticDP.setScore(v.getScore());
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
+                answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
+                answerQuestionRecordStatisticDP.setType(v.getDiff());
+                answerQuestionRecordStatisticDP.setId(v.getId());
+                result.add(answerQuestionRecordStatisticDP);
+            });
+            responseBody.setData(result);
             responseBody.setPage(new
                     Pagination(qo.getPageIndex(), qo.
 

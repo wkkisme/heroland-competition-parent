@@ -84,7 +84,7 @@ public class HeroLandCompetitionStatisticsController {
      * @return
      */
     @PostMapping("/getAnswerQuestionRecordStatistic")
-    ResponseBody<Object> getAnswerQuestionRecordStatistic(@RequestBody HeroLandTopicQuestionsPageRequest qo) {
+    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(@RequestBody HeroLandTopicQuestionsPageRequest qo) {
         return heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(qo);
     }
 

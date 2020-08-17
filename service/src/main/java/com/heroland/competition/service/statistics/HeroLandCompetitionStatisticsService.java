@@ -81,7 +81,7 @@ public interface HeroLandCompetitionStatisticsService {
      * @param qo
      * @return
      */
-    ResponseBody<Object> getAnswerQuestionRecordStatistic(HeroLandTopicQuestionsPageRequest qo);
+    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(HeroLandTopicQuestionsPageRequest qo);
 
     /**
      * 获取比赛结果
