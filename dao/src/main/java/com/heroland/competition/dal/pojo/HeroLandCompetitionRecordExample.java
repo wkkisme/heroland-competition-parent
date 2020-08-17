@@ -74,7 +74,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-12
+     * heroland_competition_record 2020-08-17
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1237,62 +1237,52 @@ public class HeroLandCompetitionRecordExample {
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdEqualTo(String value) {
+        public Criteria andQuestionIdEqualTo(Long value) {
             addCriterion("question_id =", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdNotEqualTo(String value) {
+        public Criteria andQuestionIdNotEqualTo(Long value) {
             addCriterion("question_id <>", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdGreaterThan(String value) {
+        public Criteria andQuestionIdGreaterThan(Long value) {
             addCriterion("question_id >", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdGreaterThanOrEqualTo(String value) {
+        public Criteria andQuestionIdGreaterThanOrEqualTo(Long value) {
             addCriterion("question_id >=", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdLessThan(String value) {
+        public Criteria andQuestionIdLessThan(Long value) {
             addCriterion("question_id <", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdLessThanOrEqualTo(String value) {
+        public Criteria andQuestionIdLessThanOrEqualTo(Long value) {
             addCriterion("question_id <=", value, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdLike(String value) {
-            addCriterion("question_id like", value, "questionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuestionIdNotLike(String value) {
-            addCriterion("question_id not like", value, "questionId");
-            return (Criteria) this;
-        }
-
-        public Criteria andQuestionIdIn(List<String> values) {
+        public Criteria andQuestionIdIn(List<Long> values) {
             addCriterion("question_id in", values, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdNotIn(List<String> values) {
+        public Criteria andQuestionIdNotIn(List<Long> values) {
             addCriterion("question_id not in", values, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdBetween(String value1, String value2) {
+        public Criteria andQuestionIdBetween(Long value1, Long value2) {
             addCriterion("question_id between", value1, value2, "questionId");
             return (Criteria) this;
         }
 
-        public Criteria andQuestionIdNotBetween(String value1, String value2) {
+        public Criteria andQuestionIdNotBetween(Long value1, Long value2) {
             addCriterion("question_id not between", value1, value2, "questionId");
             return (Criteria) this;
         }
@@ -1946,6 +1936,66 @@ public class HeroLandCompetitionRecordExample {
             addCriterion("invite_record_id not between", value1, value2, "inviteRecordId");
             return (Criteria) this;
         }
+
+        public Criteria andIsCorrectAnswerIsNull() {
+            addCriterion("is_correct_answer is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerIsNotNull() {
+            addCriterion("is_correct_answer is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerEqualTo(Boolean value) {
+            addCriterion("is_correct_answer =", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotEqualTo(Boolean value) {
+            addCriterion("is_correct_answer <>", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerGreaterThan(Boolean value) {
+            addCriterion("is_correct_answer >", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_correct_answer >=", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerLessThan(Boolean value) {
+            addCriterion("is_correct_answer <", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_correct_answer <=", value, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerIn(List<Boolean> values) {
+            addCriterion("is_correct_answer in", values, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotIn(List<Boolean> values) {
+            addCriterion("is_correct_answer not in", values, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_correct_answer between", value1, value2, "isCorrectAnswer");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCorrectAnswerNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_correct_answer not between", value1, value2, "isCorrectAnswer");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1959,7 +2009,7 @@ public class HeroLandCompetitionRecordExample {
     }
 
     /**
-     * heroland_competition_record 2020-08-12
+     * heroland_competition_record 2020-08-17
      */
     public static class Criterion {
         private String condition;

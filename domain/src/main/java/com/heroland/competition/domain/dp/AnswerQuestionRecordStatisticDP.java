@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 查询比赛记录
@@ -40,7 +41,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 知识点
      */
-    private String knowledge;
+    private List<String> knowledge;
 
     /**
      * 对手等级
@@ -75,7 +76,7 @@ public class AnswerQuestionRecordStatisticDP extends BaseDO implements Serializa
     /**
      * 对手
      */
-    private Integer opponent;
+    private String opponent;
 
     private Date startTime;
 

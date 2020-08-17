@@ -17,8 +17,10 @@ import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
 import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
+import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
@@ -30,9 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 比赛记录
@@ -173,13 +174,38 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
+    public ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecordsAndDetail(HeroLandCompetitionRecordQO qo) {
+        ResponseBody<List<HeroLandCompetitionRecordDP>> competitionRecords = getCompetitionRecords(qo);
+        List<HeroLandCompetitionRecordDP> data = competitionRecords.getData();
+        if (!CollectionUtils.isEmpty(data)) {
+            Set<Long> topicIds = data.stream().map(HeroLandCompetitionRecordDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet());
+            HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
+            heroLandQuestionQO.setTopicIds(topicIds);
+            heroLandQuestionQO.setUserId(qo.getUserId());
+            ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
+            List<HeroLandQuestionRecordDetailDP> questionRecordData = questionRecord.getData();
+            if (!CollectionUtils.isEmpty(questionRecordData)) {
+                Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecordData.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getTopicId));
+                data.forEach(v -> {
+                    if (collect.get(v.getTopicId()) != null) {
+                        v.setDetails(collect.get(v.getTopicId()));
+                    }
+                });
+            }
+        }
+
+        return competitionRecords;
+
+    }
+
+    @Override
     public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByRecordId(HeroLandCompetitionRecordQO qo) {
         HeroLandCompetitionRecord heroLandCompetitionRecord = null;
 
         try {
             if (qo.getInviteRecordId() != null) {
-                HeroLandCompetitionRecord  record = (HeroLandCompetitionRecord) redisService.get("competition-record:" + qo.getInviteRecordId());
-                if (record != null){
+                HeroLandCompetitionRecord record = (HeroLandCompetitionRecord) redisService.get("competition-record:" + qo.getInviteRecordId());
+                if (record != null) {
                     heroLandCompetitionRecord = record;
                 }
             }
@@ -197,7 +223,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
             return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecord, HeroLandCompetitionRecordDP.class);
         } catch (Exception e) {
-            logger.error("",e);
+            logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
 
@@ -335,7 +361,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         ResponseBody<HeroLandCompetitionRecordDP> result = new ResponseBody<>();
         ResponseBody<List<HeroLandCompetitionRecordDP>> competitionRecords = getCompetitionRecords(qo.latestCheck());
         List<HeroLandCompetitionRecordDP> data = competitionRecords.getData();
-        if (!CollectionUtils.isEmpty(data)){
+        if (!CollectionUtils.isEmpty(data)) {
             HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = data.get(0);
             if (CompetitionStatusEnum.COMPETING.getStatus().equals(heroLandCompetitionRecordDP.getStatus())) {
                 result.setData(heroLandCompetitionRecordDP);

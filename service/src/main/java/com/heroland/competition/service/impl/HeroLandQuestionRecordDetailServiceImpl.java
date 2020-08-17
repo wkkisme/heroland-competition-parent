@@ -15,9 +15,12 @@ import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author wushuaiping
@@ -53,9 +56,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
         }
         try {
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = BeanUtil.queryListConversion(recordDetails, HeroLandQuestionRecordDetail.class);
-            heroLandQuestionRecordDetails.forEach(v->{
-                recordDetails.forEach(detail->{
-                    if (v.getQuestionId().equalsIgnoreCase(detail.getQuestionId())){
+            heroLandQuestionRecordDetails.forEach(v -> {
+                recordDetails.forEach(detail -> {
+                    if (v.getQuestionId().equals(detail.getQuestionId())) {
                         v.setIsCorrectAnswer(detail.isCorrectAnswer());
                         v.setAnswer(detail.getAnswer());
                     }
@@ -63,7 +66,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             });
             questionRecordDetailExtMapper.insertBach(heroLandQuestionRecordDetails);
         } catch (Exception e) {
-            logger.error("e",e);
+            logger.error("e", e);
             ResponseBodyWrapper.failSysException();
         }
         return ResponseBodyWrapper.success();
@@ -89,10 +92,19 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
         try {
             HeroLandQuestionRecordDetailExample example = new HeroLandQuestionRecordDetailExample();
             HeroLandQuestionRecordDetailExample.Criteria criteria = example.createCriteria();
+            if (qo.getStartTime() != null) {
+                criteria.andGmtCreateGreaterThanOrEqualTo(qo.getStartTime());
+            }
+            if (qo.getEndTime() != null) {
+                criteria.andGmtCreateLessThanOrEqualTo(qo.getEndTime());
+            }
+            if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
+                criteria.andTopicIdIn(qo.getTopicIds().stream().map(String::valueOf).collect(Collectors.toList()));
+            }
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
-            if(qo.getNeedPage()) {
-                example.setOrderByClause("gmt_create desc limit " +qo.getStartRow() +","+qo.getPageSize() );
-            }else {
+            if (qo.getNeedPage()) {
+                example.setOrderByClause("gmt_create desc limit " + qo.getStartRow() + "," + qo.getPageSize());
+            } else {
                 example.setOrderByClause("gmt_create desc");
             }
             heroLandQuestions = questionRecordDetailExtMapper.selectByExample(example);

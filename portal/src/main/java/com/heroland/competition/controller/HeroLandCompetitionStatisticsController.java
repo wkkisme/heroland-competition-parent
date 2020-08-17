@@ -6,10 +6,10 @@ import com.heroland.competition.domain.dp.AnswerCompetitionResultDP;
 import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
 import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
-import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
-import com.heroland.competition.domain.qo.AnswerResultQO;
-import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
-import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.qo.*;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -84,29 +84,7 @@ public class HeroLandCompetitionStatisticsController {
      * @return
      */
     @PostMapping("/getAnswerQuestionRecordStatistic")
-    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(@RequestBody AnswerQuestionRecordStatisticQO qo) {
-//        List<AnswerQuestionRecordStatisticDP> list = new ArrayList<>();
-//        for (int i = 1; i < 33; i++) {
-//            AnswerQuestionRecordStatisticDP dp = new AnswerQuestionRecordStatisticDP();
-//            dp.setDiff(1);
-//            boolean b = i % 2 == 0;
-//            dp.setIsCorrectAnswer(b);
-//            dp.setKnowledge("四則運算");
-//            dp.setLevelCode("2");
-//            dp.setOpponentLevel(b ? "同級" : b == (i % 3 == 0) ? "高兩級" : "低一級");
-//            dp.setResult(b ? 1 : b == (i % 3 == 0) ? 0 : 2);
-//            dp.setScore(b ? 4 : b == (i % 3 == 0) ? 6 : 3);
-//            dp.setQuestionId(1L);
-//            dp.setTopicName("測試" + i);
-//            list.add(dp);
-//        }
-//        BaseQO baseQO = new BaseQO();
-//        baseQO.setPageIndex(1);
-//        baseQO.setPageSize(40);
-//        ResponseBody tResponseBody = new ResponseBody();
-//        tResponseBody.setData(list);
-//        tResponseBody.setPage(new Pagination(qo.getPageIndex(), qo.getPageSize(), 33));
-//        return tResponseBody;
+    ResponseBody<List<HeroLandQuestionListForTopicDto>> getAnswerQuestionRecordStatistic(@RequestBody HeroLandTopicQuestionsPageRequest qo) {
         return heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(qo);
     }
 

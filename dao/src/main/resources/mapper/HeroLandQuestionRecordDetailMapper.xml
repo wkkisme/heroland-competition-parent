@@ -10,17 +10,9 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
-    <result column="question_id" jdbcType="VARCHAR" property="questionId" />
+    <result column="question_id" jdbcType="BIGINT" property="questionId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="option_a" jdbcType="VARCHAR" property="optionA" />
-    <result column="option_b" jdbcType="VARCHAR" property="optionB" />
-    <result column="option_c" jdbcType="VARCHAR" property="optionC" />
-    <result column="option_d" jdbcType="VARCHAR" property="optionD" />
-    <result column="option_e" jdbcType="VARCHAR" property="optionE" />
     <result column="answer" jdbcType="VARCHAR" property="answer" />
-    <result column="solution" jdbcType="VARCHAR" property="solution" />
-    <result column="parse" jdbcType="VARCHAR" property="parse" />
-    <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
     <result column="your_answer" jdbcType="VARCHAR" property="yourAnswer" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="record_id" jdbcType="VARCHAR" property="recordId" />
@@ -31,6 +23,7 @@
     <result column="is_correct_answer" jdbcType="BIT" property="isCorrectAnswer" />
     <result column="topic_id" jdbcType="VARCHAR" property="topicId" />
     <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
+    <result column="opponent_name" jdbcType="VARCHAR" property="opponentName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,9 +85,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
-    question_id, title, option_a, option_b, option_c, option_d, option_e, answer, solution, 
-    parse, level_code, your_answer, user_id, record_id, record_detail_id, begin_date, 
-    end_date, score, is_correct_answer, topic_id, subject_code
+    question_id, title, answer, your_answer, user_id, record_id, record_detail_id, begin_date, 
+    end_date, score, is_correct_answer, topic_id, subject_code, opponent_name
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
@@ -133,23 +125,19 @@
     insert into heroland_question_record_detail (creator, modifier, gmt_create, 
       gmt_modified, is_deleted, grade_code, 
       class_code, question_id, title, 
-      option_a, option_b, option_c, 
-      option_d, option_e, answer, 
-      solution, parse, level_code, 
-      your_answer, user_id, record_id, 
-      record_detail_id, begin_date, end_date, 
-      score, is_correct_answer, topic_id, 
-      subject_code)
+      answer, your_answer, user_id, 
+      record_id, record_detail_id, begin_date, 
+      end_date, score, is_correct_answer, 
+      topic_id, subject_code, opponent_name
+      )
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
-      #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{optionA,jdbcType=VARCHAR}, #{optionB,jdbcType=VARCHAR}, #{optionC,jdbcType=VARCHAR}, 
-      #{optionD,jdbcType=VARCHAR}, #{optionE,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, 
-      #{solution,jdbcType=VARCHAR}, #{parse,jdbcType=VARCHAR}, #{levelCode,jdbcType=VARCHAR}, 
-      #{yourAnswer,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, 
-      #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
-      #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT}, #{topicId,jdbcType=VARCHAR}, 
-      #{subjectCode,jdbcType=VARCHAR})
+      #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{yourAnswer,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{recordId,jdbcType=VARCHAR}, #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{isCorrectAnswer,jdbcType=BIT}, 
+      #{topicId,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{opponentName,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -184,32 +172,8 @@
       <if test="title != null">
         title,
       </if>
-      <if test="optionA != null">
-        option_a,
-      </if>
-      <if test="optionB != null">
-        option_b,
-      </if>
-      <if test="optionC != null">
-        option_c,
-      </if>
-      <if test="optionD != null">
-        option_d,
-      </if>
-      <if test="optionE != null">
-        option_e,
-      </if>
       <if test="answer != null">
         answer,
-      </if>
-      <if test="solution != null">
-        solution,
-      </if>
-      <if test="parse != null">
-        parse,
-      </if>
-      <if test="levelCode != null">
-        level_code,
       </if>
       <if test="yourAnswer != null">
         your_answer,
@@ -241,6 +205,9 @@
       <if test="subjectCode != null">
         subject_code,
       </if>
+      <if test="opponentName != null">
+        opponent_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -265,37 +232,13 @@
         #{classCode,jdbcType=VARCHAR},
       </if>
       <if test="questionId != null">
-        #{questionId,jdbcType=VARCHAR},
+        #{questionId,jdbcType=BIGINT},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="optionA != null">
-        #{optionA,jdbcType=VARCHAR},
-      </if>
-      <if test="optionB != null">
-        #{optionB,jdbcType=VARCHAR},
-      </if>
-      <if test="optionC != null">
-        #{optionC,jdbcType=VARCHAR},
-      </if>
-      <if test="optionD != null">
-        #{optionD,jdbcType=VARCHAR},
-      </if>
-      <if test="optionE != null">
-        #{optionE,jdbcType=VARCHAR},
-      </if>
       <if test="answer != null">
         #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="solution != null">
-        #{solution,jdbcType=VARCHAR},
-      </if>
-      <if test="parse != null">
-        #{parse,jdbcType=VARCHAR},
-      </if>
-      <if test="levelCode != null">
-        #{levelCode,jdbcType=VARCHAR},
       </if>
       <if test="yourAnswer != null">
         #{yourAnswer,jdbcType=VARCHAR},
@@ -326,6 +269,9 @@
       </if>
       <if test="subjectCode != null">
         #{subjectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="opponentName != null">
+        #{opponentName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -363,37 +309,13 @@
         class_code = #{record.classCode,jdbcType=VARCHAR},
       </if>
       <if test="record.questionId != null">
-        question_id = #{record.questionId,jdbcType=VARCHAR},
+        question_id = #{record.questionId,jdbcType=BIGINT},
       </if>
       <if test="record.title != null">
         title = #{record.title,jdbcType=VARCHAR},
       </if>
-      <if test="record.optionA != null">
-        option_a = #{record.optionA,jdbcType=VARCHAR},
-      </if>
-      <if test="record.optionB != null">
-        option_b = #{record.optionB,jdbcType=VARCHAR},
-      </if>
-      <if test="record.optionC != null">
-        option_c = #{record.optionC,jdbcType=VARCHAR},
-      </if>
-      <if test="record.optionD != null">
-        option_d = #{record.optionD,jdbcType=VARCHAR},
-      </if>
-      <if test="record.optionE != null">
-        option_e = #{record.optionE,jdbcType=VARCHAR},
-      </if>
       <if test="record.answer != null">
         answer = #{record.answer,jdbcType=VARCHAR},
-      </if>
-      <if test="record.solution != null">
-        solution = #{record.solution,jdbcType=VARCHAR},
-      </if>
-      <if test="record.parse != null">
-        parse = #{record.parse,jdbcType=VARCHAR},
-      </if>
-      <if test="record.levelCode != null">
-        level_code = #{record.levelCode,jdbcType=VARCHAR},
       </if>
       <if test="record.yourAnswer != null">
         your_answer = #{record.yourAnswer,jdbcType=VARCHAR},
@@ -425,6 +347,9 @@
       <if test="record.subjectCode != null">
         subject_code = #{record.subjectCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.opponentName != null">
+        opponent_name = #{record.opponentName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -440,17 +365,9 @@
       is_deleted = #{record.isDeleted,jdbcType=BIT},
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
-      question_id = #{record.questionId,jdbcType=VARCHAR},
+      question_id = #{record.questionId,jdbcType=BIGINT},
       title = #{record.title,jdbcType=VARCHAR},
-      option_a = #{record.optionA,jdbcType=VARCHAR},
-      option_b = #{record.optionB,jdbcType=VARCHAR},
-      option_c = #{record.optionC,jdbcType=VARCHAR},
-      option_d = #{record.optionD,jdbcType=VARCHAR},
-      option_e = #{record.optionE,jdbcType=VARCHAR},
       answer = #{record.answer,jdbcType=VARCHAR},
-      solution = #{record.solution,jdbcType=VARCHAR},
-      parse = #{record.parse,jdbcType=VARCHAR},
-      level_code = #{record.levelCode,jdbcType=VARCHAR},
       your_answer = #{record.yourAnswer,jdbcType=VARCHAR},
       user_id = #{record.userId,jdbcType=VARCHAR},
       record_id = #{record.recordId,jdbcType=VARCHAR},
@@ -460,7 +377,8 @@
       score = #{record.score,jdbcType=INTEGER},
       is_correct_answer = #{record.isCorrectAnswer,jdbcType=BIT},
       topic_id = #{record.topicId,jdbcType=VARCHAR},
-      subject_code = #{record.subjectCode,jdbcType=VARCHAR}
+      subject_code = #{record.subjectCode,jdbcType=VARCHAR},
+      opponent_name = #{record.opponentName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -490,37 +408,13 @@
         class_code = #{classCode,jdbcType=VARCHAR},
       </if>
       <if test="questionId != null">
-        question_id = #{questionId,jdbcType=VARCHAR},
+        question_id = #{questionId,jdbcType=BIGINT},
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="optionA != null">
-        option_a = #{optionA,jdbcType=VARCHAR},
-      </if>
-      <if test="optionB != null">
-        option_b = #{optionB,jdbcType=VARCHAR},
-      </if>
-      <if test="optionC != null">
-        option_c = #{optionC,jdbcType=VARCHAR},
-      </if>
-      <if test="optionD != null">
-        option_d = #{optionD,jdbcType=VARCHAR},
-      </if>
-      <if test="optionE != null">
-        option_e = #{optionE,jdbcType=VARCHAR},
-      </if>
       <if test="answer != null">
         answer = #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="solution != null">
-        solution = #{solution,jdbcType=VARCHAR},
-      </if>
-      <if test="parse != null">
-        parse = #{parse,jdbcType=VARCHAR},
-      </if>
-      <if test="levelCode != null">
-        level_code = #{levelCode,jdbcType=VARCHAR},
       </if>
       <if test="yourAnswer != null">
         your_answer = #{yourAnswer,jdbcType=VARCHAR},
@@ -552,6 +446,9 @@
       <if test="subjectCode != null">
         subject_code = #{subjectCode,jdbcType=VARCHAR},
       </if>
+      <if test="opponentName != null">
+        opponent_name = #{opponentName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -564,17 +461,9 @@
       is_deleted = #{isDeleted,jdbcType=BIT},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
-      question_id = #{questionId,jdbcType=VARCHAR},
+      question_id = #{questionId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
-      option_a = #{optionA,jdbcType=VARCHAR},
-      option_b = #{optionB,jdbcType=VARCHAR},
-      option_c = #{optionC,jdbcType=VARCHAR},
-      option_d = #{optionD,jdbcType=VARCHAR},
-      option_e = #{optionE,jdbcType=VARCHAR},
       answer = #{answer,jdbcType=VARCHAR},
-      solution = #{solution,jdbcType=VARCHAR},
-      parse = #{parse,jdbcType=VARCHAR},
-      level_code = #{levelCode,jdbcType=VARCHAR},
       your_answer = #{yourAnswer,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR},
       record_id = #{recordId,jdbcType=VARCHAR},
@@ -584,7 +473,9 @@
       score = #{score,jdbcType=INTEGER},
       is_correct_answer = #{isCorrectAnswer,jdbcType=BIT},
       topic_id = #{topicId,jdbcType=VARCHAR},
-      subject_code = #{subjectCode,jdbcType=VARCHAR}
+      subject_code = #{subjectCode,jdbcType=VARCHAR},
+      opponent_name = #{opponentName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

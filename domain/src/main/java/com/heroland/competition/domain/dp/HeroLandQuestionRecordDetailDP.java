@@ -33,7 +33,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      * 全局id
      */
     @ApiModelProperty(value = "questionId全局id")
-    private String questionId;
+    private Long questionId;
 
     /**
      * 题目
@@ -42,58 +42,10 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String title;
 
     /**
-     * a选项
-     */
-    @ApiModelProperty(value = "optionAa选项")
-    private String optionA;
-
-    /**
-     * b选项
-     */
-    @ApiModelProperty(value = "optionBb选项")
-    private String optionB;
-
-    /**
-     * c选项
-     */
-    @ApiModelProperty(value = "optionCc选项")
-    private String optionC;
-
-    /**
-     * d选项
-     */
-    @ApiModelProperty(value = "optionDd选项")
-    private String optionD;
-
-    /**
-     * e选项
-     */
-    @ApiModelProperty(value = "optionEe选项")
-    private String optionE;
-
-    /**
      * 正确答案
      */
     @ApiModelProperty(value = "answer正确答案")
     private String answer;
-
-    /**
-     * 解答
-     */
-    @ApiModelProperty(value = "solution解答")
-    private String solution;
-
-    /**
-     * 解析
-     */
-    @ApiModelProperty(value = "parse解析")
-    private String parse;
-
-    /**
-     * 难度code
-     */
-    @ApiModelProperty(value = "levelCode难度code")
-    private String levelCode;
 
     /**
      * 你的答案
@@ -114,42 +66,53 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String recordId;
 
     /**
-     * 答题记录唯一id
+     * detail 唯一id
      */
-    @ApiModelProperty(value = "答题记录唯一id")
+    @ApiModelProperty(value = "recordDetailIddetail 唯一id")
     private String recordDetailId;
 
     /**
-     * 用户该题答题开始时间
+     * 该题答题开始时间
      */
-    @ApiModelProperty(value = "用户该题答题开始时间")
+    @ApiModelProperty(value = "beginDate该题答题开始时间")
     private Date beginDate;
 
     /**
-     * 用户该题答题结束时间
+     * 该题答题结束时间
      */
-    @ApiModelProperty(value = "用户该题答题结束时间")
+    @ApiModelProperty(value = "endDate该题答题结束时间")
     private Date endDate;
 
     /**
      * 该题得分
      */
-    @ApiModelProperty(value = "该题得分")
+    @ApiModelProperty(value = "score该题得分")
     private Integer score;
 
     /**
-     * 是否答对
+     * 是否回答正确
      */
-    @ApiModelProperty(value = "是否答对")
-    private boolean isCorrectAnswer;
+    @ApiModelProperty(value = "isCorrectAnswer是否回答正确")
+    private Boolean isCorrectAnswer;
 
     /**
      * 题组id
      */
-    @ApiModelProperty(value = "题组id")
+    @ApiModelProperty(value = "topicId题组id")
     private String topicId;
 
-    private String qtId;
+    /**
+     * 科目code
+     */
+    @ApiModelProperty(value = "subjectCode科目code")
+    private String subjectCode;
+
+    /**
+     * 对手名字
+     */
+    @ApiModelProperty(value = "opponentName对手名字")
+    private String opponentName;
+
 
     private String course;
 
@@ -157,19 +120,13 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     private Integer diff;
 
-    /**
-     * 科目code
-     */
-    @ApiModelProperty(value="subjectCode科目code")
-    private String subjectCode;
-
     public String getCourse() {
         return course;
     }
 
     public void setCourse(String course) {
         this.course = course;
-        this.subjectCode =course;
+        this.subjectCode = course;
     }
 
     public String getGrade() {
@@ -178,7 +135,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     public void setGrade(String grade) {
         this.grade = grade;
-        this.gradeCode=grade;
+        this.gradeCode = grade;
     }
 
     public String getSubjectCode() {
@@ -190,16 +147,8 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         this.course = subjectCode;
     }
 
-    public String getQtId() {
-        return qtId;
-    }
 
-    public void setQtId(String qtId) {
-        this.qtId = qtId;
-        this.questionId =qtId;
-    }
-
-    public HeroLandQuestionRecordDetailDP updateCheck(){
+    public HeroLandQuestionRecordDetailDP updateCheck() {
         if (StringUtils.isAnyBlank(this.recordDetailId, this.recordId)) {
             ResponseBodyWrapper.failParamException();
         }
@@ -211,7 +160,10 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     }
 
     public HeroLandQuestionRecordDetailDP addCheck() {
-        if (ObjectUtil.isNull(beginDate) || StringUtils.isAnyBlank(this.userId, this.questionId, this.yourAnswer, this.recordId)) {
+        if (getId() != null){
+            this.questionId = getId();
+        }
+        if (ObjectUtil.isNull(beginDate) || this.questionId == null || StringUtils.isAnyBlank(this.userId, this.yourAnswer, this.recordId)) {
             ResponseBodyWrapper.failParamException();
         }
 
@@ -232,16 +184,6 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
      */
     private static final long serialVersionUID = 1L;
 
-    public Integer getDiff() {
-        return diff;
-    }
-
-    public void setDiff(Integer diff) {
-        if (diff != null) {
-            this.levelCode = diff.toString();
-        }
-        this.diff = diff;
-    }
 
     /**
      * 年级code
@@ -279,24 +221,6 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         this.classCode = classCode == null ? null : classCode.trim();
     }
 
-    /**
-     * 全局id
-     *
-     * @return question_id 全局id
-     */
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    /**
-     * 全局id
-     *
-     * @param questionId 全局id
-     */
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId == null ? null : questionId.trim();
-        this.qtId =questionId;
-    }
 
     /**
      * 题目
@@ -317,96 +241,6 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     }
 
     /**
-     * a选项
-     *
-     * @return option_a a选项
-     */
-    public String getOptionA() {
-        return optionA;
-    }
-
-    /**
-     * a选项
-     *
-     * @param optionA a选项
-     */
-    public void setOptionA(String optionA) {
-        this.optionA = optionA == null ? null : optionA.trim();
-    }
-
-    /**
-     * b选项
-     *
-     * @return option_b b选项
-     */
-    public String getOptionB() {
-        return optionB;
-    }
-
-    /**
-     * b选项
-     *
-     * @param optionB b选项
-     */
-    public void setOptionB(String optionB) {
-        this.optionB = optionB == null ? null : optionB.trim();
-    }
-
-    /**
-     * c选项
-     *
-     * @return option_c c选项
-     */
-    public String getOptionC() {
-        return optionC;
-    }
-
-    /**
-     * c选项
-     *
-     * @param optionC c选项
-     */
-    public void setOptionC(String optionC) {
-        this.optionC = optionC == null ? null : optionC.trim();
-    }
-
-    /**
-     * d选项
-     *
-     * @return option_d d选项
-     */
-    public String getOptionD() {
-        return optionD;
-    }
-
-    /**
-     * d选项
-     *
-     * @param optionD d选项
-     */
-    public void setOptionD(String optionD) {
-        this.optionD = optionD == null ? null : optionD.trim();
-    }
-
-    /**
-     * e选项
-     *
-     * @return option_e e选项
-     */
-    public String getOptionE() {
-        return optionE;
-    }
-
-    /**
-     * e选项
-     *
-     * @param optionE e选项
-     */
-    public void setOptionE(String optionE) {
-        this.optionE = optionE == null ? null : optionE.trim();
-    }
-
-    /**
      * 正确答案
      *
      * @return answer 正确答案
@@ -424,62 +258,6 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
         this.answer = answer == null ? null : answer.trim();
     }
 
-    /**
-     * 解答
-     *
-     * @return solution 解答
-     */
-    public String getSolution() {
-        return solution;
-    }
-
-    /**
-     * 解答
-     *
-     * @param solution 解答
-     */
-    public void setSolution(String solution) {
-        this.solution = solution == null ? null : solution.trim();
-    }
-
-    /**
-     * 解析
-     *
-     * @return parse 解析
-     */
-    public String getParse() {
-        return parse;
-    }
-
-    /**
-     * 解析
-     *
-     * @param parse 解析
-     */
-    public void setParse(String parse) {
-        this.parse = parse == null ? null : parse.trim();
-    }
-
-    /**
-     * 难度code
-     *
-     * @return level_code 难度code
-     */
-    public String getLevelCode() {
-        return levelCode;
-    }
-
-    /**
-     * 难度code
-     *
-     * @param levelCode 难度code
-     */
-    public void setLevelCode(String levelCode) {
-        if (StringUtils.isNotBlank(levelCode)) {
-            this.diff = Integer.valueOf(levelCode);
-        }
-        this.levelCode = levelCode == null ? null : levelCode.trim();
-    }
 
     /**
      * 你的答案
@@ -582,5 +360,37 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     public void setTopicId(String topicId) {
         this.topicId = topicId;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
+    }
+
+    public Boolean getCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
+    }
+
+    public String getOpponentName() {
+        return opponentName;
+    }
+
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName;
+    }
+
+    public Integer getDiff() {
+        return diff;
+    }
+
+    public void setDiff(Integer diff) {
+        this.diff = diff;
     }
 }

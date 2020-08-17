@@ -26,4 +26,9 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
      * 题目id
      */
     private Long questionId;
+
+    private String userId;
+
+    private Integer topicType;
+
 }

@@ -160,4 +160,22 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
      * 关联的知识点列表
      */
     private List<HerolandKnowledgeSimpleDto> knowledges = Lists.newArrayList();
+
+    private Integer result;
+
+    private String opponent;
+
+    /**
+     * 是否回答正确
+     */
+    private Boolean isCorrectAnswer;
+
+
+    /**
+     * 得分
+     */
+    private Integer score;
+
+
+
 }
