@@ -80,4 +80,26 @@ public class QuestionTopicDP implements Serializable {
     private Date startTime;
 
     private Date endTime;
+
+    /**
+     * 机构code
+     */
+    private String orgCode;
+
+    /**
+     * topic的年级code
+     */
+    private String topicGradeCode;
+
+    /**
+     * 班级code
+     */
+    private String classCode;
+
+    /**
+     * 科目code
+     */
+    private String courseCode;
+
+
 }

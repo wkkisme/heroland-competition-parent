@@ -1,9 +1,7 @@
-package com.heroland.competition.domain.request;
+package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.common.BaseQO;
-import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,12 +9,10 @@ import java.util.List;
 
 /**
  * @author smjyouzan
- * @date 2020/7/24
+ * @date 2020/8/17
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Serializable {
-
+public class HerolandTopicQuestionQo extends BaseQO implements Serializable {
     /**
      * 比赛组id
      */
@@ -43,6 +39,10 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
     private String classCode;
 
     /**
+     * 类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
+     */
+    private Integer type;
+    /**
      * 科目code
      */
     private String courseCode;
@@ -57,9 +57,4 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
      * 结束时间
      */
     private Date endTime;
-
-    private String userId;
-
-    private Integer topicType;
-
 }

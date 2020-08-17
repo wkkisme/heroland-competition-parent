@@ -21,6 +21,7 @@ import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
+import com.heroland.competition.domain.qo.HerolandTopicQuestionQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
@@ -124,9 +125,10 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request) {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
-
-        Page<HerolandTopicQuestion> questions = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandTopicQuestionMapper.selectByTopics(request.getTopicIds(), request.getQuestionId()));
+        HerolandTopicQuestionQo herolandTopicQuestionQo = BeanCopyUtils.copyByJSON(request, HerolandTopicQuestionQo.class);
+        herolandTopicQuestionQo.setType(request.getTopicType());
+        Page<HerolandTopicQuestion> questions = PageHelper.startPage(herolandTopicQuestionQo.getPageIndex(), herolandTopicQuestionQo.getPageSize(), true).doSelectPage(
+                () -> herolandTopicQuestionMapper.selectQuestionsByTopic(herolandTopicQuestionQo));
         if (CollectionUtils.isEmpty(questions.getResult())) {
             return pageResult;
         }

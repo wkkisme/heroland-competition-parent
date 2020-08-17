@@ -1,6 +1,8 @@
 package com.heroland.competition.dal.mapper;
 
 import com.heroland.competition.dal.pojo.HerolandTopicQuestion;
+import com.heroland.competition.domain.dp.QuestionTopicDP;
+import com.heroland.competition.domain.qo.HerolandTopicQuestionQo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,4 +26,6 @@ public interface HerolandTopicQuestionMapper {
                                                @Param("questionId") Long questionId);
 
     int saveBatch(@Param("records") List<HerolandTopicQuestion> list);
+
+    List<QuestionTopicDP> selectQuestionsByTopic(@Param("item") HerolandTopicQuestionQo herolandTopicQuestionQo);
 }
