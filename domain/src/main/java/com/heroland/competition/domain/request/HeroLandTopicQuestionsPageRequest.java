@@ -62,4 +62,6 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
 
     private Integer topicType;
 
+    private Integer type;
+
 }

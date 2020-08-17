@@ -351,17 +351,17 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
 
         // 真正要返回的题目
-        if (qo.getTopicIds() == null){
-            return ResponseBodyWrapper.fail("题目参数为空","40002");
+        if (qo.getTopicIds() == null) {
+            return ResponseBodyWrapper.fail("题目参数为空", "40002");
         }
-        List<HeroLandTopicDto> topics= Lists.newArrayList();
+        List<HeroLandTopicDto> topics = Lists.newArrayList();
         PageResponse<HeroLandQuestionListForTopicDto> topicQuestions = new PageResponse<>();
-        if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
-             topicQuestions = heroLandQuestionService.getTopicQuestions(qo);
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+            topicQuestions = heroLandQuestionService.getTopicQuestions(qo);
             if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
                 return ResponseBodyWrapper.success();
             }
-        }else {
+        } else {
             topics = heroLandQuestionService.getTopics(qo);
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
@@ -375,20 +375,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         heroLandQuestionQO.setUserId(qo.getUserId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord;
         if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
-             questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
-        }else {
+            questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
+        } else {
             questionRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandQuestionQO);
         }
 
         List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
-
-        if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
-            return ResponseBodyWrapper.success();
-        }
         ResponseBody<Object> responseBody = new ResponseBody<>();
 
         List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
-        if (!CollectionUtils.isEmpty(questionRecord.getData()) &&  CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
+        if (!CollectionUtils.isEmpty(questionRecord.getData()) && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
 
@@ -413,7 +409,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 //                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
 //                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
 //                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-                        v.setOpponent(recordDP.getOpponentId());
+                    v.setOpponent(recordDP.getOpponentId());
 //                    }
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
@@ -424,8 +420,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 }
             });
 
-            responseBody.setData(topicQuestions.getItems());
-        }else {
+
+        } else if (!CollectionUtils.isEmpty(questionRecord.getData())) {
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
 
@@ -454,10 +450,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 }
             });
 
+
+        }
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+            responseBody.setData(topicQuestions.getItems());
+        } else {
             responseBody.setData(topics);
         }
-
-
 
         responseBody.setPage(new
 
