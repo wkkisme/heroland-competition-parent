@@ -102,27 +102,22 @@
         insert into heroland_question_record_detail (creator, modifier, gmt_create,
         gmt_modified, is_deleted, grade_code,
         class_code, question_id, title,
-        option_a, option_b, option_c,
-        option_d, option_e, answer,
-        solution, parse, level_code,
-        your_answer, user_id, record_id,
-        record_detail_id, begin_date, end_date,
-        score, is_correct_answer, topic_id,
-        subject_code
+        answer, your_answer, user_id,
+        record_id, record_detail_id, begin_date,
+        end_date, score, is_correct_answer,
+        topic_id, subject_code, opponent_name
         )
         values
 
         <foreach collection="details" item="do" separator=",">
             (#{do.creator,jdbcType=VARCHAR}, #{do.modifier,jdbcType=VARCHAR}, #{do.gmtCreate,jdbcType=TIMESTAMP},
             #{do.gmtModified,jdbcType=TIMESTAMP}, #{do.isDeleted,jdbcType=BIT}, #{do.gradeCode,jdbcType=VARCHAR},
-            #{do.classCode,jdbcType=VARCHAR}, #{do.questionId,jdbcType=VARCHAR}, #{do.title,jdbcType=VARCHAR},
-            #{do.optionA,jdbcType=VARCHAR}, #{do.optionB,jdbcType=VARCHAR}, #{do.optionC,jdbcType=VARCHAR},
-            #{do.optionD,jdbcType=VARCHAR}, #{do.optionE,jdbcType=VARCHAR}, #{do.answer,jdbcType=VARCHAR},
-            #{do.solution,jdbcType=VARCHAR}, #{do.parse,jdbcType=VARCHAR}, #{do.levelCode,jdbcType=VARCHAR},
-            #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR}, #{do.recordId,jdbcType=VARCHAR},
-            #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP}, #{do.endDate,jdbcType=TIMESTAMP},
-            #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT}, #{do.topicId,jdbcType=VARCHAR},
-            #{do.subjectCode,jdbcType=VARCHAR}
+            #{do.classCode,jdbcType=VARCHAR}, #{do.questionId,jdbcType=BIGINT}, #{do.title,jdbcType=VARCHAR},
+            #{do.answer,jdbcType=VARCHAR}, #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR},
+            #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
+            #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.isCorrectAnswer,jdbcType=BIT},
+            #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR}
+
             )
         </foreach>
 

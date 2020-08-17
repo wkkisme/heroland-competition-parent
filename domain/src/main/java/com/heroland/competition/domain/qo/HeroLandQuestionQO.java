@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,6 +38,42 @@ public class HeroLandQuestionQO extends BaseQO {
      */
     @MybatisCriteriaAnnotation
     private String userId;
+
+    @MybatisCriteriaAnnotation
+    private String subjectCode;
+
+    private Date startTime;
+
+    private Date endTime;
+
+    /**
+     * 机构code
+     */
+    private String orgCode;
+
+    /**
+     * 年级code
+     */
+    private String gradeCode;
+
+    /**
+     * 班级code
+     */
+    private String classCode;
+
+    /**
+     * 科目code
+     */
+    private String courseCode;
+
+    /**
+     * 类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
+     */
+    private Integer type;
+
+    private List<String> questionIds;
+
+    private Set<Long> topicIds;
 
     public HeroLandQuestionQO querySynCheck() {
 

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 科目完成情况统计
@@ -76,5 +77,8 @@ public class CompetitionCourseFinishStatisticDP extends BaseDO implements Serial
      * 完成多少节
      */
     private Integer finishSection;
+
+
+    private List<Long> topicIds;
 
 }

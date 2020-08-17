@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
+import java.util.Set;
 
 public class HeroLandCompetitionRecordQO extends BaseQO {
 
@@ -101,6 +102,7 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
     private String inviteRecordId;
 
 
+    private Set<Long> topicIds;
     public HeroLandCompetitionRecordQO queryIdCheck() {
         if (StringUtils.isAnyBlank(recordId)) {
             ResponseBodyWrapper.failParamException();
@@ -257,5 +259,13 @@ public class HeroLandCompetitionRecordQO extends BaseQO {
 
     public void setOpponentEndTime(Date opponentEndTime) {
         this.opponentEndTime = opponentEndTime;
+    }
+
+    public Set<Long> getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(Set<Long> topicIds) {
+        this.topicIds = topicIds;
     }
 }

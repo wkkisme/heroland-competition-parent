@@ -89,7 +89,6 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         HeroLandQuestionBankDto question = heroLandQuestionBankService.getById(heroLandQuestionRecordDetailDP.getId());
         boolean isRight;
         heroLandQuestionRecordDetailDP.setAnswer(question.getOptionAnswer());
-        heroLandQuestionRecordDetailDP.setParse(question.getParse());
         if (question.getOptionAnswer().equalsIgnoreCase(heroLandQuestionRecordDetailDP.getYourAnswer())) {
             heroLandQuestionRecordDetailDP.setCorrectAnswer(true);
             isRight = true;
@@ -103,7 +102,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         //  数据库记录
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
         heroLandCompetitionRecordQO.setTopicId(record.getTopicId());
-        heroLandCompetitionRecordQO.setQuestionId(record.getQuestionId());
+        heroLandCompetitionRecordQO.setQuestionId(String.valueOf(record.getQuestionId()));
         heroLandCompetitionRecordQO.setInviteRecordId(record.getInviteRecordId());
         heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> databaseRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandCompetitionRecordQO);

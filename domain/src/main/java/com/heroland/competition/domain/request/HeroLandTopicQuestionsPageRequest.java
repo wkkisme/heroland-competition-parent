@@ -61,4 +61,9 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
      * 结束时间
      */
     private Date endTime;
+
+    private String userId;
+
+    private Integer topicType;
+
 }

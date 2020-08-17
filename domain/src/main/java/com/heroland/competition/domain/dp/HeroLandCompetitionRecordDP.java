@@ -99,7 +99,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
      * 题目id
      */
     @ApiModelProperty(value = "questionId题目id")
-    private String questionId;
+    private Long questionId;
 
     /**
      * 邀请者比赛开始时间
@@ -168,6 +168,25 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
      */
     private Integer setUpTime = 180;
 
+    /**
+     * 是否正确（同步作业赛）
+     */
+    @ApiModelProperty(value = "isCorrectAnswer是否正确（同步作业赛）")
+    private Boolean isCorrectAnswer;
+
+    /**
+     * 难度
+     */
+    @ApiModelProperty(value = "diff难度")
+    private Integer diff;
+
+    /**
+     * 知识点
+     */
+    @ApiModelProperty(value = "knowledge知识点")
+    private String knowledge;
+
+
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
             primaryRedisKey = topicId + questionId + inviteId + opponentId;
@@ -224,7 +243,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
     public HeroLandCompetitionRecordDP addSynchronizeCheck() {
 
-        if (StringUtils.isAnyBlank(this.questionId)) {
+        if (this.questionId == null) {
             ResponseBodyWrapper.failParamException();
         }
         if (CollectionUtils.isEmpty(details)) {
@@ -294,13 +313,13 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         opponentId = inviteRecordDP.getBeInviteUserId();
         topicType = inviteRecordDP.getTopicType();
         status = CompetitionStatusEnum.UN_START.getStatus();
-        questionId = inviteRecordDP.getQuestionId();
+        questionId = Long.valueOf(inviteRecordDP.getQuestionId());
         return this;
     }
 
 
-    public List<HeroLandQuestionRecordDetailDP> record2Detail(){
-        if (details != null){
+    public List<HeroLandQuestionRecordDetailDP> record2Detail() {
+        if (details != null) {
 
             for (HeroLandQuestionRecordDetailDP detail : details) {
                 detail.setTopicId(topicId);
@@ -316,6 +335,31 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         return details;
 
     }
+
+    public Boolean getCorrectAnswer() {
+        return isCorrectAnswer;
+    }
+
+    public void setCorrectAnswer(Boolean correctAnswer) {
+        isCorrectAnswer = correctAnswer;
+    }
+
+    public Integer getDiff() {
+        return diff;
+    }
+
+    public void setDiff(Integer diff) {
+        this.diff = diff;
+    }
+
+    public String getKnowledge() {
+        return knowledge;
+    }
+
+    public void setKnowledge(String knowledge) {
+        this.knowledge = knowledge;
+    }
+
     public String getInviteRecordId() {
         return inviteRecordId;
     }
@@ -639,21 +683,11 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         this.subjectCode = subjectCode == null ? null : subjectCode.trim();
     }
 
-    /**
-     * 题目id
-     *
-     * @return question_id 题目id
-     */
-    public String getQuestionId() {
+    public Long getQuestionId() {
         return questionId;
     }
 
-    /**
-     * 题目id
-     *
-     * @param questionId 题目id
-     */
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId == null ? null : questionId.trim();
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 }

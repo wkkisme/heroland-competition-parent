@@ -2,10 +2,10 @@ package com.heroland.competition.service.statistics;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.*;
-import com.heroland.competition.domain.qo.AnswerQuestionRecordStatisticQO;
-import com.heroland.competition.domain.qo.AnswerResultQO;
-import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
-import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.qo.*;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
 import java.util.List;
 
@@ -81,7 +81,7 @@ public interface HeroLandCompetitionStatisticsService {
      * @param qo
      * @return
      */
-    ResponseBody<List<AnswerQuestionRecordStatisticDP>> getAnswerQuestionRecordStatistic(AnswerQuestionRecordStatisticQO qo);
+    ResponseBody<List<HeroLandQuestionListForTopicDto>> getAnswerQuestionRecordStatistic(HeroLandTopicQuestionsPageRequest qo);
 
     /**
      * 获取比赛结果

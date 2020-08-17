@@ -118,7 +118,7 @@ public class HeroLandSyncCalculatorServiceImpl implements HeroLandCalculatorServ
         //  数据库记录
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
         heroLandCompetitionRecordQO.setTopicId(record.getTopicId());
-        heroLandCompetitionRecordQO.setQuestionId(record.getQuestionId());
+        heroLandCompetitionRecordQO.setQuestionId(String.valueOf(record.getQuestionId()));
         ResponseBody<List<HeroLandCompetitionRecordDP>> databaseRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandCompetitionRecordQO);
         if (CollectionUtils.isEmpty(databaseRecord.getData())) {
             ResponseBodyWrapper.fail("比赛不存在", "5000");

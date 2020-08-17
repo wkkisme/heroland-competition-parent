@@ -66,6 +66,12 @@ public interface HeroLandCompetitionRecordService {
      * @return 值
      */
     ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecords(HeroLandCompetitionRecordQO qo);
+    /**
+     * 获取多次比赛记录 和详情
+     * @param qo 对象
+     * @return 值
+     */
+    ResponseBody<List<HeroLandCompetitionRecordDP>> getCompetitionRecordsAndDetail(HeroLandCompetitionRecordQO qo);
 
 
     /**
