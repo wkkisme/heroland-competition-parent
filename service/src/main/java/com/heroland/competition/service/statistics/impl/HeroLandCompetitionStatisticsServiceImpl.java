@@ -447,6 +447,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         v.setScore(recordDP.getInviteScore());
                     }
 
+
                 }
             });
 

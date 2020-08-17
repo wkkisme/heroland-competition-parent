@@ -108,4 +108,15 @@ public class HeroLandTopicDto implements Serializable {
      */
     private Integer score;
 
+
+    private Long topicId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.topicId = id;
+        this.id = id;
+    }
 }
