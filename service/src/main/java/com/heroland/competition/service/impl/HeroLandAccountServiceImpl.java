@@ -203,7 +203,10 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             heroLandAccountQO.setUserId(dp.getUserId());
             heroLandAccountQO.setPageSize(1);
             ResponseBody<List<HeroLandAccountDP>> account = getAccount(heroLandAccountQO);
-            HeroLandAccountDP heroLandAccountDP = account.getData().get(0);
+            HeroLandAccountDP heroLandAccountDP =null;
+            if (CollectionUtils.isEmpty(account.getData())){
+                 heroLandAccountDP = account.getData().get(0);
+            }
             if (heroLandAccountDP == null){
                 HeroLandAccountDP accountDP = new HeroLandAccountDP();
                 accountDP.setUserId(dp.getUserId());
