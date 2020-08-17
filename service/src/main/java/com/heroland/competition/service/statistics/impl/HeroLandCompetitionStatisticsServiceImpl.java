@@ -38,6 +38,7 @@ import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.docx4j.wml.P;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -487,7 +488,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             topics.forEach(v -> {
 
                 AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
-                answerQuestionRecordStatisticDP.setDiff(Integer.valueOf(v.getLevelCode()));
+                if (StringUtils.isNotBlank(v.getLevelCode() )) {
+                    answerQuestionRecordStatisticDP.setDiff(Integer.valueOf(v.getLevelCode()));
+                }
                 answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
                 answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
                 answerQuestionRecordStatisticDP.setScore(v.getScore());
