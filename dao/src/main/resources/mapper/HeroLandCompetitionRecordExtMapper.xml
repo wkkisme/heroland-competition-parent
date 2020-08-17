@@ -303,6 +303,14 @@
 
         </if>
 
+        <if test="topicIds != null and topicIds.size()>0">
+           and  topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
+        </if>
+
+
 
         order by id desc
         <if test="startRow != null and startRow != -1 and pageSize != null">
@@ -359,6 +367,13 @@
 
         </if>
 
+
+        <if test="topicIds != null and topicIds.size()>0">
+            and  topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
+        </if>
 
     </select>
 

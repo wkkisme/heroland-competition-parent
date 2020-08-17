@@ -356,11 +356,17 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
         heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
         heroLandQuestionQO.setNeedPage(false);
-        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
+        heroLandQuestionQO.setUserId(qo.getUserId());
+        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord;
+        if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
+             questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
+        }else {
+            questionRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandQuestionQO);
+        }
 
         List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
 
-        if (!CollectionUtils.isEmpty(topicQuestions.getItems())) {
+        if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
             return ResponseBodyWrapper.success();
         }
 
@@ -387,10 +393,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
-                        v.setOpponent(rpcResult.getData().get(0).getUserName());
-                    }
+//                    RpcResult<List<PlatformSysUserDP>> rpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+//                    if (!CollectionUtils.isEmpty(rpcResult.getData())) {
+//                        v.setOpponent(rpcResult.getData().get(0).getUserName());
+                        v.setOpponent(recordDP.getOpponentId());
+//                    }
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {

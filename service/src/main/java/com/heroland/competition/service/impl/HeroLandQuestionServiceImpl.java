@@ -127,14 +127,14 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
         HerolandTopicQuestionQo herolandTopicQuestionQo = BeanCopyUtils.copyByJSON(request, HerolandTopicQuestionQo.class);
         herolandTopicQuestionQo.setType(request.getTopicType());
-        Page<HerolandTopicQuestion> questions = PageHelper.startPage(herolandTopicQuestionQo.getPageIndex(), herolandTopicQuestionQo.getPageSize(), true).doSelectPage(
+        Page<QuestionTopicDP> questions = PageHelper.startPage(herolandTopicQuestionQo.getPageIndex(), herolandTopicQuestionQo.getPageSize(), true).doSelectPage(
                 () -> herolandTopicQuestionMapper.selectQuestionsByTopic(herolandTopicQuestionQo));
         if (CollectionUtils.isEmpty(questions.getResult())) {
             return pageResult;
         }
 
-        List<Long> questionIds = questions.getResult().stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
-        Map<Long, List<HerolandTopicQuestion>> topicIdQuestionMap = questions.getResult().stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
+        List<Long> questionIds = questions.getResult().stream().map(QuestionTopicDP::getQuestionId).collect(Collectors.toList());
+        Map<Long, List<QuestionTopicDP>> topicIdQuestionMap = questions.getResult().stream().collect(Collectors.groupingBy(QuestionTopicDP::getTopicId));
         List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
         List<String> courseKeys = banks.stream().map(HerolandQuestionBank::getCourse).distinct().collect(Collectors.toList());
         List<String> gradeKeys = banks.stream().map(HerolandQuestionBank::getGradeCode).distinct().collect(Collectors.toList());
@@ -187,8 +187,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
         });
         List<HeroLandQuestionListForTopicDto> finalTopicDtos = Lists.newArrayList();
-        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicIdQuestionMap.entrySet()){
-            List<Long> subQuestionIds = entry.getValue().stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+        for (Map.Entry<Long, List<QuestionTopicDP>> entry : topicIdQuestionMap.entrySet()){
+            List<Long> subQuestionIds = entry.getValue().stream().map(QuestionTopicDP::getQuestionId).collect(Collectors.toList());
             topicDtos.stream().forEach(e -> {
                 if (subQuestionIds.contains(e.getId())){
                     HeroLandQuestionListForTopicDto newTopicDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionListForTopicDto.class);
