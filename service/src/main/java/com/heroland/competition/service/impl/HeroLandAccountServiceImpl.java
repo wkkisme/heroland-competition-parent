@@ -204,7 +204,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             heroLandAccountQO.setPageSize(1);
             ResponseBody<List<HeroLandAccountDP>> account = getAccount(heroLandAccountQO);
             HeroLandAccountDP heroLandAccountDP =null;
-            if (CollectionUtils.isEmpty(account.getData())){
+            if (!CollectionUtils.isEmpty(account.getData())){
                  heroLandAccountDP = account.getData().get(0);
             }
             if (heroLandAccountDP == null){
