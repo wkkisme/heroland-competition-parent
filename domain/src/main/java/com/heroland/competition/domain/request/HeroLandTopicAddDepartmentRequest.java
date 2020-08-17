@@ -10,11 +10,6 @@ import java.util.List;
 public class HeroLandTopicAddDepartmentRequest implements Serializable {
 
     /**
-     * 编辑时需要传
-     */
-    private Long id;
-
-    /**
      * 赛事id
      */
     @NotNull

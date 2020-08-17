@@ -1,7 +1,6 @@
-package com.heroland.competition.domain.request;
+package com.heroland.competition.domain.qo;
 
 import com.anycommon.response.common.BaseQO;
-import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,16 +14,17 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Serializable {
+public class HeroLandTopicQO extends BaseQO implements Serializable {
 
     /**
      * 比赛组id
      */
     private List<Long> topicIds;
+
     /**
-     * 题目id
+     * 是否需要题目detail表中的详情
      */
-    private Long questionId;
+    private Boolean includeDetail = false;
 
 
     /**
@@ -61,4 +61,5 @@ public class HeroLandTopicQuestionsPageRequest extends BaseQO implements Seriali
      * 结束时间
      */
     private Date endTime;
+
 }

@@ -3,6 +3,7 @@ package com.heroland.competition.service.impl;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
@@ -12,6 +13,7 @@ import com.heroland.competition.domain.dp.HeroLandCompetitionResultDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.*;
 import org.springframework.stereotype.Service;
@@ -86,7 +88,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
         // 先查出题目
         HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
-        heroLandTopicQuestionsPageRequest.setTopicId(Long.valueOf(record.getTopicId()));
+        heroLandTopicQuestionsPageRequest.setTopicIds(Lists.newArrayList(Long.valueOf(record.getTopicId())));
         PageResponse<HeroLandQuestionListForTopicDto> topicQuestions = heroLandQuestionService.getTopicQuestions(heroLandTopicQuestionsPageRequest);
         if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
             ResponseBodyWrapper.fail("比赛不存在", "50003");
@@ -98,7 +100,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         }
         // 判断是否超时
 
-        HeroLandTopicQuestionsPageRequest topicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
+        HeroLandTopicPageRequest topicQuestionsPageRequest = new HeroLandTopicPageRequest();
         topicQuestionsPageRequest.setTopicId(Long.valueOf(record.getTopicId()));
         // 先查出该场比赛的是否在比赛时间内
 

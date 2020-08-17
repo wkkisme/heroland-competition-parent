@@ -14,6 +14,12 @@ import java.util.List;
 
 @Data
 public class HeroLandTopicGroupQO extends BaseQO implements Serializable {
+
+    /**
+     * topicIds
+     */
+    private List<Long> topicIds;
+
     /**
      * 机构code
      */

@@ -11,4 +11,6 @@ import java.util.List;
 public interface HerolandTopicGroupPartService {
 
     Boolean addBatchDepartment(List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPs);
+
+    Boolean deleteDepartment(List<Long> list);
 }

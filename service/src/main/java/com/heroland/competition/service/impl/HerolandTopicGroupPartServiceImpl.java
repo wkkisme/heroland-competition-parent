@@ -46,4 +46,12 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
         });
         return herolandTopicGroupPartMapper.batchInsert(list) > 0;
     }
+
+    @Override
+    public Boolean deleteDepartment(List<Long> list) {
+        if (CollectionUtils.isEmpty(list)){
+            return false;
+        }
+        return herolandTopicGroupPartMapper.batchDeleteById(list) > 0;
+    }
 }

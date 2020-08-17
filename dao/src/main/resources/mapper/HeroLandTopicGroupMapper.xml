@@ -402,6 +402,13 @@
     <include refid="Base_Column_List" />
     from heroland_topic_group
     where is_deleted = 0
+    <if test="item.topicIds != null and item.topicIds.size > 0">
+      and id IN (
+      <foreach collection="item.topicIds" item="id" index="index" separator=",">
+        #{id,jdbcType=BIGINT}
+      </foreach>
+      )
+    </if>
     <if test="item.orgCode != null">
       and org_code = #{item.orgCode,jdbcType=VARCHAR}
     </if>

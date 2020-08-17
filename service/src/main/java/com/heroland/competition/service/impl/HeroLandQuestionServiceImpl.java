@@ -22,6 +22,7 @@ import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -123,11 +124,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request) {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
-        AtomicReference<List<Long>> topicIds = new AtomicReference<>();
-        ;
-        if (CollUtil.isEmpty(request.getTopicIds())) {
-            topicIds.set(request.getTopicIds());
-        }
+
         Page<HerolandTopicQuestion> questions = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
                 () -> herolandTopicQuestionMapper.selectByTopics(request.getTopicIds(), request.getQuestionId()));
         if (CollectionUtils.isEmpty(questions.getResult())) {
@@ -135,8 +132,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
 
         List<Long> questionIds = questions.getResult().stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+        Map<Long, List<HerolandTopicQuestion>> topicIdQuestionMap = questions.getResult().stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
         List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
-
         List<String> courseKeys = banks.stream().map(HerolandQuestionBank::getCourse).distinct().collect(Collectors.toList());
         List<String> gradeKeys = banks.stream().map(HerolandQuestionBank::getGradeCode).distinct().collect(Collectors.toList());
         courseKeys.addAll(gradeKeys);
@@ -187,7 +184,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             topicDtos.add(dto);
 
         });
-        pageResult.setItems(topicDtos);
+        List<HeroLandQuestionListForTopicDto> finalTopicDtos = Lists.newArrayList();
+        for (Map.Entry<Long, List<HerolandTopicQuestion>> entry : topicIdQuestionMap.entrySet()){
+            List<Long> subQuestionIds = entry.getValue().stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+            topicDtos.stream().forEach(e -> {
+                if (subQuestionIds.contains(e.getId())){
+                    HeroLandQuestionListForTopicDto newTopicDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionListForTopicDto.class);
+                    newTopicDto.setTopicId(entry.getKey());
+                    finalTopicDtos.add(newTopicDto);
+                }
+            });
+        }
+
+        pageResult.setItems(finalTopicDtos);
         pageResult.setPageSize(questions.getPageSize());
         pageResult.setPage(questions.getPageNum());
         pageResult.setTotal((int) questions.getTotal());
@@ -225,7 +234,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
-    public HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request) {
+    public HeroLandTopicDto getTopic(HeroLandTopicPageRequest request) {
         if (NumberUtils.nullOrZeroLong(request.getTopicId())) {
             return null;
         }
@@ -255,10 +264,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Override
     public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
-        if (CollectionUtils.isEmpty(qo.getTopicIds())) {
-            return Lists.newArrayList();
-        }
-        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByPrimaryKeys(qo.getTopicIds());
+        HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(qo, HeroLandTopicGroupQO.class);
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);
         if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
             return Lists.newArrayList();
         }
@@ -266,7 +273,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         List<HerolandTopicQuestion> herolandTopicQuestions = herolandTopicQuestionMapper.selectByTopics(qo.getTopicIds(), null);
 
         if (CollectionUtils.isEmpty(herolandTopicQuestions)) {
-            return Lists.newArrayList();
+            return getTopicsQuestionsByQO(qo);
         }
         List<HeroLandQuestionTopicListDto> result = Lists.newArrayList();
         List<Long> questionIds = herolandTopicQuestions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
@@ -349,6 +356,17 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
 
         return result;
+    }
+
+    private List<HeroLandQuestionTopicListDto> getTopicsQuestionsByQO(HeroLandTopicQuestionsQo qo){
+        HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(qo, HeroLandTopicGroupQO.class);
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)) {
+            return Lists.newArrayList();
+        }
+
+
+        return null;
     }
 
 

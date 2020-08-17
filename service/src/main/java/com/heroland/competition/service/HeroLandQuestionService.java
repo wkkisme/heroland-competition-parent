@@ -10,6 +10,7 @@ import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatistic
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
@@ -53,7 +54,7 @@ public interface HeroLandQuestionService{
 
     Boolean saveAssign(HeroLandTopicAssignRequest request);
 
-    HeroLandTopicDto getTopic(HeroLandTopicQuestionsPageRequest request);
+    HeroLandTopicDto getTopic(HeroLandTopicPageRequest request);
 
     List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
 

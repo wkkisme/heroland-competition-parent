@@ -323,4 +323,15 @@
     </foreach>
   </insert>
 
+  <update id="batchDeleteById" >
+    update heroland_topic_group_part
+    set
+      is_deleted = 1
+    where id IN (
+    <foreach collection="ids" item="id" index="index" separator=",">
+      #{id,jdbcType=BIGINT}
+    </foreach>
+    )
+  </update>
+
 </mapper>

@@ -10,10 +10,7 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
-import com.heroland.competition.domain.request.HeroLandTopicAddDepartmentRequest;
-import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
-import com.heroland.competition.domain.request.HeroLandTopicGroupRequest;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * 題目組
@@ -70,7 +70,7 @@ public class HeroLandTopicQuestionController {
      * @module 題目組
      */
     @RequestMapping("/getTopic")
-    public ResponseBody<HeroLandTopicDto> getTopic(@RequestBody HeroLandTopicQuestionsPageRequest request){
+    public ResponseBody<HeroLandTopicDto> getTopic(@RequestBody HeroLandTopicPageRequest request){
         ResponseBody<HeroLandTopicDto> result = new ResponseBody<>();
         HeroLandTopicDto topic = heroLandQuestionService.getTopic(request);
         result.setData(topic);
@@ -141,6 +141,39 @@ public class HeroLandTopicQuestionController {
         result.setData(false);
         return result;
     }
+
+    /**
+     * 批量删除某项赛事的参赛机构
+     * @param ids
+     * @return
+     */
+    @RequestMapping("/deleteDepartment")
+    public ResponseBody<Boolean> deleteDepartmentForTopic(@RequestParam("ids") String ids){
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        List<Long> list = Arrays.asList(ids.split(",")).stream().map(Long::parseLong).collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(list)){
+            result.setData(herolandTopicGroupPartService.deleteDepartment(list));
+        }
+        result.setData(true);
+        return result;
+    }
+
+    /**
+     * 教师能看到的当前的校际赛事
+     * 教师选择
+     * @param
+     * @return
+     */
+    @RequestMapping("/qualifiedStudent")
+    public ResponseBody<Boolean> qualifiedTopic(QualifiedTopicForSchoolRequest request){
+        ResponseBody<Boolean> result = new ResponseBody<>();
+
+        result.setData(true);
+        return result;
+    }
+
+
 
 
 }
