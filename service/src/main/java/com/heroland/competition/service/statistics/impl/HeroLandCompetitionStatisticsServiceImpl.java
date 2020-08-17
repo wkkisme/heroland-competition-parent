@@ -454,17 +454,22 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
             responseBody.setData(topicQuestions.getItems());
+            responseBody.setPage(new
+
+                    Pagination(qo.getPageIndex(), qo.
+
+                    getPageSize(), topicQuestions.
+
+                    getTotal()));
         } else {
             responseBody.setData(topics);
+            responseBody.setPage(new
+                    Pagination(qo.getPageIndex(), qo.
+
+                    getPageSize(), topics.size()));
         }
 
-        responseBody.setPage(new
 
-                Pagination(qo.getPageIndex(), qo.
-
-                getPageSize(), topicQuestions.
-
-                getTotal()));
         return responseBody;
     }
 
