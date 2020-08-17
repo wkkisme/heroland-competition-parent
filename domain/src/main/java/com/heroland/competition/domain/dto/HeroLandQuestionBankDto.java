@@ -115,6 +115,12 @@ public class HeroLandQuestionBankDto implements Serializable {
     private Integer think;
 
     /**
+     * 题库类型
+     * 为赛事而区分
+     */
+    private Integer bankType;
+
+    /**
      * 关联的知识点列表
      */
     private List<HerolandKnowledgeSimpleDto> knowledges = Lists.newArrayList();

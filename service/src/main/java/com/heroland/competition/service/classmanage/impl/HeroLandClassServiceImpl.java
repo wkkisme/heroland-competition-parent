@@ -14,9 +14,11 @@ import com.heroland.competition.dal.pojo.HeroLandUserClassExample;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
+import com.heroland.competition.domain.dto.HeroLandUserDepartmentDto;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
+import com.heroland.competition.domain.request.UserDepartmentRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -225,5 +227,11 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         }
 
         return ResponseBodyWrapper.successListWrapper(heroLandUserClassDPS, count, qo, HeroLandUserClassDP.class);
+    }
+
+    @Override
+    public ResponseBody<List<HeroLandUserDepartmentDto>> getClassUserDepartment(UserDepartmentRequest request) {
+
+        return null;
     }
 }
