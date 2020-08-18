@@ -158,6 +158,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 // 当前人是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" +getType() +record.getOpponentId());
+                    log.info("rightCount{}", JSON.toJSONString(rightCount));
                     record.setInviteScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     if (rightCount.getRightCount() == questionCount) {
@@ -184,6 +185,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                     // 当前人是被邀请人
                     HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
+                    log.info("inviteResult{}", JSON.toJSONString(inviteResult));
                     record.setOpponentScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     if (inviteResult.getRightCount() == questionCount) {
