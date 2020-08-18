@@ -8,7 +8,7 @@
         class_code, question_id, title,
         answer, your_answer, user_id,
         record_id, record_detail_id, begin_date,
-        end_date, score, is_correct_answer,
+        end_date, score, correct_answer,
         topic_id, subject_code, opponent_name
         )
         values
