@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
@@ -16,6 +17,7 @@ import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
  * @author wangkai
  */
 @Service("HeroLandTestOrientedCompetitionService")
+@Slf4j
 public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompetitionService {
 
     @Resource
@@ -125,7 +128,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             HeroLandCompetitionResultDP resultDP = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
 
             redisService.set("question:" + getType() + record.getUserId(), resultDP);
-
+            log.info("resultDP{}", JSON.toJSONString(resultDP));
             // 如果全部答对 直接判胜利
             if (resultDP.getRightCount() == questionCount) {
                 //  如果是邀请人
@@ -154,7 +157,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                 // 当前人是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
-                    HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + record.getOpponentId());
+                    HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" +getType() +record.getOpponentId());
                     record.setInviteScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     if (rightCount.getRightCount() == questionCount) {
