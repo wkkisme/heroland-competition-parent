@@ -139,60 +139,64 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
 
         } else {
-            // 后答题的人进入
-            HeroLandCompetitionResultDP otherResult = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
+            try {
+                // 后答题的人进入
+                HeroLandCompetitionResultDP otherResult = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
 
-            // 当前人是邀请人
-            if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
-                HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + record.getOpponentId());
-                // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
-                if (rightCount.getRightCount() == questionCount) {
-                    HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
-                    heroLandAccountManageQO.setScore(rightCount.getScore());
-                    heroLandAccountManageQO.setUserId(record.getInviteId());
-                    heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
-                } else {
-                    // 否则判断每个人的时间和答对数量
-                    // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
-                    if (rightCount.getRightCount().equals(otherResult.getRightCount()) || rightCount.getRightCount() > otherResult.getRightCount()) {
-
-                        record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                        // 否则就是答对比对方多 胜
+                // 当前人是邀请人
+                if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + record.getOpponentId());
+                    // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
+                    if (rightCount.getRightCount() == questionCount) {
+                        HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
+                        heroLandAccountManageQO.setScore(rightCount.getScore());
+                        heroLandAccountManageQO.setUserId(record.getInviteId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+                        heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
                     } else {
-                        record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                        // 否则判断每个人的时间和答对数量
+                        // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
+                        if (rightCount.getRightCount().equals(otherResult.getRightCount()) || rightCount.getRightCount() > otherResult.getRightCount()) {
+
+                            record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            // 否则就是答对比对方多 胜
+                        } else {
+                            record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                        }
+                        heroLandCompetitionRecordService.updateCompetitionRecord(record);
+                        heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                     }
-                    heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
+
+                } else {
+
+                    // 当前人是被邀请人
+                    HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
+                    // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
+                    if (inviteResult.getRightCount() == questionCount) {
+                        HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
+                        heroLandAccountManageQO.setScore(inviteResult.getScore());
+                        heroLandAccountManageQO.setUserId(record.getOpponentId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+                        heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
+                    } else {
+                        // 否则判断每个人的时间和答对数量
+                        // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
+                        if (inviteResult.getRightCount().equals(otherResult.getRightCount()) || inviteResult.getRightCount() > otherResult.getRightCount()) {
+
+                            record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            // 否则就是答对比对方多 胜
+                        } else {
+                            record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                        }
+                        heroLandCompetitionRecordService.updateCompetitionRecord(record);
+                        heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
+                    }
                 }
 
-            } else {
 
-                // 当前人是被邀请人
-                HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
-                // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
-                if (inviteResult.getRightCount() == questionCount) {
-                    HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
-                    heroLandAccountManageQO.setScore(inviteResult.getScore());
-                    heroLandAccountManageQO.setUserId(record.getOpponentId());
-                    heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
-                } else {
-                    // 否则判断每个人的时间和答对数量
-                    // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
-                    if (inviteResult.getRightCount().equals(otherResult.getRightCount()) || inviteResult.getRightCount() > otherResult.getRightCount()) {
-
-                        record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                        // 否则就是答对比对方多 胜
-                    } else {
-                        record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                    }
-                    heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                    heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
-                }
+            } finally {
+                redisService.del(redisKey);
             }
-
-            redisService.del(redisKey);
         }
 
 
