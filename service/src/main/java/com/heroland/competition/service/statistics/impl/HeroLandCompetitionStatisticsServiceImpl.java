@@ -373,7 +373,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         heroLandQuestionQO.setNeedPage(false);
         heroLandQuestionQO.setUserId(qo.getUserId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord;
-        if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
             questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
         } else {
             questionRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandQuestionQO);
@@ -472,6 +472,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 answerQuestionRecordStatisticDP.setType(v.getType());
                 answerQuestionRecordStatisticDP.setQuestionId(v.getId());
                 answerQuestionRecordStatisticDP.setId(v.getId());
+                answerQuestionRecordStatisticDP.setTopicId(v.getTopicId());
                 answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
                 result.add(answerQuestionRecordStatisticDP);
 
@@ -498,6 +499,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
                 answerQuestionRecordStatisticDP.setType(v.getDiff());
                 answerQuestionRecordStatisticDP.setId(v.getId());
+                answerQuestionRecordStatisticDP.setTopicId(v.getId());
                 result.add(answerQuestionRecordStatisticDP);
             });
             responseBody.setData(result);
