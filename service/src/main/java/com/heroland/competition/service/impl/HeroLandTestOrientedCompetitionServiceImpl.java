@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +113,11 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
         String redisKey = record.getTopicId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey, record.getTopicId(), "PT24H");
-
+        if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+            record.setInviteEndTime(new Date());
+        } else if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
+            record.setOpponentEndTime(new Date());
+        }
         // 谁先拿到锁 谁先答完题
         if (lock) {
             // 先拿到锁的人进入
@@ -120,15 +125,19 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             HeroLandCompetitionResultDP resultDP = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
 
             redisService.set("question:" + getType() + record.getUserId(), resultDP);
+
             // 如果全部答对 直接判胜利
             if (resultDP.getRightCount() == questionCount) {
                 //  如果是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                    record.setInviteScore(resultDP.getScore());
                 } else if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                     // 如果是被邀请人
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                    record.setOpponentScore(resultDP.getScore());
                 }
+
                 heroLandCompetitionRecordService.updateCompetitionRecord(record);
                 heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             } else {
@@ -146,6 +155,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 // 当前人是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + record.getOpponentId());
+                    record.setInviteScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     if (rightCount.getRightCount() == questionCount) {
                         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
@@ -171,6 +181,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                     // 当前人是被邀请人
                     HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
+                    record.setOpponentScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     if (inviteResult.getRightCount() == questionCount) {
                         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
