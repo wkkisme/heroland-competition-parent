@@ -190,10 +190,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         List<HeroLandQuestionListForTopicDto> finalTopicDtos = Lists.newArrayList();
         for (Map.Entry<Long, List<QuestionTopicDP>> entry : topicIdQuestionMap.entrySet()) {
             List<Long> subQuestionIds = entry.getValue().stream().map(QuestionTopicDP::getQuestionId).collect(Collectors.toList());
+            QuestionTopicDP questionTopicDP = entry.getValue().get(0);
             topicDtos.stream().forEach(e -> {
                 if (subQuestionIds.contains(e.getId())) {
                     HeroLandQuestionListForTopicDto newTopicDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionListForTopicDto.class);
                     newTopicDto.setTopicId(entry.getKey());
+                    newTopicDto.setTopicName(questionTopicDP.getTopicName());
+                    newTopicDto.setTopicDiff(questionTopicDP.getTopicDiff());
+                    newTopicDto.setTopicType(questionTopicDP.getTopicType());
+                    newTopicDto.setTopicLevelCode(questionTopicDP.getTopicLevelCode());
+                    newTopicDto.setTopicOrgCode(questionTopicDP.getOrgCode());
+                    newTopicDto.setTopicGradeCode(questionTopicDP.getTopicGradeCode());
+                    newTopicDto.setTopicClassCode(questionTopicDP.getClassCode());
+                    newTopicDto.setTopicCourseCode(questionTopicDP.getCourseCode());
                     finalTopicDtos.add(newTopicDto);
                 }
             });

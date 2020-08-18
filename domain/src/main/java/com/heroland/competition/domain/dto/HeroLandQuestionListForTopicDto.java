@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -151,10 +152,6 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
 
     private String similarQt;
 
-    /**
-     * 题组id
-     */
-    private Long topicId;
 
     /**
      * 关联的知识点列表
@@ -177,6 +174,68 @@ public class HeroLandQuestionListForTopicDto implements Serializable {
     private Integer score;
 
 
+
+
+    //-----------------------------------------------以下字段为topic_group表中的字段
+    /**
+     * 题组id
+     */
+    private Long topicId;
+
+
     private String topicName;
+
+    /**
+     * 机构code
+     */
+    private String topicOrgCode;
+
+    private String topicOrgName;
+
+    /**
+     * 年级code
+     */
+    private String topicGradeCode;
+
+    private String topicGradeName;
+
+    /**
+     * 班级code
+     */
+    private String topicClassCode;
+
+    private String topicClassName;
+
+    /**
+     * 科目code
+     */
+    private String topicCourseCode;
+
+    private String topicCourseName;
+
+    /**
+     * 类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
+     */
+    private Integer topicType;
+
+    /**
+     * 比赛开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 比赛结束时间
+     */
+    private Date endTime;
+
+    /**
+     * 题组难度
+     */
+    private String topicLevelCode;
+
+    /**
+     * 题型
+     */
+    private Integer topicDiff;
 
 }
