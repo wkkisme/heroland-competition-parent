@@ -58,7 +58,7 @@
         sum(total_score) total_score,user_id ,type,grade_code,class_code ,org_code,
         sum(total_score)/sum(competitionCount) average_score,sum(competitionCount) total_games ,subject_code
         from (
-        select sum(invite_score) total_score,invite_id user_id ,topic_type
+        select sum(invite_score) total_score,invite_id user_id ,topic_type type
         ,class_code ,grade_code ,org_code ,subject_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
@@ -85,7 +85,7 @@
 
         union all
 
-        select sum(opponent_score) total_score , opponent_id user_id ,topic_type
+        select sum(opponent_score) total_score , opponent_id user_id ,topic_type type
         ,class_code ,grade_code ,org_code ,subject_code,
         count(opponent_score) competitionCount
         from heroland_competition_record
@@ -122,7 +122,7 @@
         select
         sum(total_score) total_score,user_id ,type,grade_code,class_code ,org_code,subject_code
         sum(total_score)/sum(competitionCount) avgScore,sum(competitionCount) total_games from (
-        select sum(invite_score) total_score,invite_id user_id ,topic_type topic_type
+        select sum(invite_score) total_score,invite_id user_id ,topic_type type
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         ,count(invite_score) competitionCount
         from heroland_competition_record
@@ -134,7 +134,7 @@
         ,invite_id
         union all
 
-        select sum(opponent_score) total_score , opponent_id user_id ,topic_type topic_type
+        select sum(opponent_score) total_score , opponent_id user_id ,topic_type type
         ,class_code class_code,grade_code grade_code,org_code org_code,subject_code
         count(opponent_score) competitionCount
         from heroland_competition_record
@@ -182,7 +182,7 @@
         <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
         select
 
-        invite_id user_id ,topic_type
+        invite_id user_id ,topic_type type
         ,class_code ,grade_code ,org_code ,subject_code
         ,count(*) right_count
 
