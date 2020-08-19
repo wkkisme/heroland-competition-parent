@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
+import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionResultDP;
@@ -18,6 +19,7 @@ import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -56,6 +58,9 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
     @Resource
     private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
+
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     /**
      * type类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
@@ -157,6 +162,8 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                 // 当前人是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    record.setSenderId(record.getInviteId());
+                    record.setAddresseeId(record.getOpponentId());
                     HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" +getType() +record.getOpponentId());
                     log.info("rightCount{}", JSON.toJSONString(rightCount));
                     record.setInviteScore(otherResult.getScore());
@@ -185,6 +192,8 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                     // 当前人是被邀请人
                     HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
+                    record.setSenderId(record.getOpponentId());
+                    record.setAddresseeId(record.getInviteId());
                     log.info("inviteResult{}", JSON.toJSONString(inviteResult));
                     record.setOpponentScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
@@ -207,6 +216,9 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandCompetitionRecordService.updateCompetitionRecord(record);
                         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                     }
+
+
+                    rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
                 }
 
 
