@@ -64,22 +64,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             if (userId != null && !userId .equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
                 // 如果为空去查下是否有这个人
-                if (user == null){
-                    PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                    platformSysUserQO.setUserId(userId.toString());
-                    platformSysUserQO.setPageSize(1);
-                    RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-                    // 如果没有这个人，则直接移除掉
-                    if (CollectionUtils.isEmpty(userList.getData() )){
-                        redisService.sRemove(RedisConstant.ONLINE_KEY+dp.getTopicId(),userId);
-                        return;
-                    }
-                    PlatformSysUserDP userDP = userList.getData().get(0);
-                    user = userDP;
-                    // 继续缓存住这个人 2小时
-                    redisService.set("user:"+userDP.getUserId(),userDP,7200000);
+                if (user != null) {
+                    users.add(JSON.parseObject(user.toString(), OnlineDP.class));
                 }
-                users.add(JSON.parseObject(user.toString(),OnlineDP.class));
 
             }else if ( userId == null || StringUtils.isBlank(userId.toString())){
                 // 说明不存在 删除
