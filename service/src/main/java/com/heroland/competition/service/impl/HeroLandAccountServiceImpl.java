@@ -79,7 +79,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     // 继续缓存住这个人 2小时
                     redisService.set("user:"+userDP.getUserId(),userDP,7200000);
                 }
-                users.add(JSON.parseObject(user.toString(),OnlineDP.class));
+                users.add(JSON.parseObject(JSON.toJSONString(user),OnlineDP.class));
 
             }else if ( userId == null || StringUtils.isBlank(userId.toString())){
                 // 说明不存在 删除
