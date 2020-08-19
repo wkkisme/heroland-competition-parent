@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.heroland.competition.common.enums.Constants.CommandReqType.STOP_ANSWER_QUESTIONS;
+
 /**
  * 应试赛规则：
  * * 整盤勝負及計分方法：
@@ -216,7 +218,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandCompetitionRecordService.updateCompetitionRecord(record);
                         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                     }
-
+                    record.setType(STOP_ANSWER_QUESTIONS.getCode());
 
                     rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
                 }
