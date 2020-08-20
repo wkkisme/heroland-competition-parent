@@ -25,6 +25,11 @@ import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DE
  */
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandCompetitionRecord")
 public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable {
+    private Integer userStatus;
+    private String senderId;
+    private String addresseeId;
+    private Integer type;
+
     private String userId;
     /**
      * 记录唯一id
@@ -334,6 +339,38 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
         return details;
 
+    }
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
+    }
+
+    public String getAddresseeId() {
+        return addresseeId;
+    }
+
+    public void setAddresseeId(String addresseeId) {
+        this.addresseeId = addresseeId;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Boolean getCorrectAnswer() {

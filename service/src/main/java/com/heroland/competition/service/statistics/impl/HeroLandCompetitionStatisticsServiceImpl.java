@@ -52,6 +52,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 统计
@@ -392,8 +393,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString());
 
                 if (heroLandCompetitionRecordDPS != null) {
-                    // 因为一个人下的topicId只会有一场比赛 取出来即可
-                    HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
+                    // 因为一个人下的topicId会有多场比赛 取最新的展示
+                    List<HeroLandCompetitionRecordDP> sorted = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList());
+                    HeroLandCompetitionRecordDP recordDP = sorted.get(0);
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
                         v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(),recordDP.getOpponentLevel()));
                     }else {

@@ -2,6 +2,7 @@ package com.heroland.competition.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.common.UserStatusDP;
 import com.anycommon.response.constant.ErrMsgEnum;
@@ -14,6 +15,7 @@ import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.platform.sso.client.sso.util.CookieUtils;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/heroland/competition")
+@Slf4j
 public class HeroLandCompetitionController {
 
     @Resource
@@ -56,6 +59,7 @@ public class HeroLandCompetitionController {
     @PostMapping("/doAnswer")
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp, HttpServletRequest request) {
         dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
+        log.info("doanswer{}", JSON.toJSONString(dp));
         ResponseBody<HeroLandCompetitionRecordDP> result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
         try {
             // 通知所有人 可以被邀请了
