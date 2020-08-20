@@ -242,10 +242,13 @@
     <if test="code != null">
       and  code = #{code,jdbcType=VARCHAR}
     </if>
-    and key IN
-    <foreach collection="keys" item="key" open="(" close=")" separator=",">
-      #{key,jdbcType=VARCHAR}
-    </foreach>
+    <if test="keys != null and keys.size > 0">
+      AND `key` IN
+      <foreach collection="keys" item="key" index="index"
+               open="(" close=")" separator=",">
+        #{key}
+      </foreach>
+    </if>
   </select>
 
   <select id="getByParentAndName"  resultMap="BaseResultMap">
