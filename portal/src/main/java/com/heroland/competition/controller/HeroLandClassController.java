@@ -83,7 +83,7 @@ public class HeroLandClassController {
     }
 
     /**
-     * 查询老师所在的组织机构列表
+     * 查询user所在的组织机构列表
      * @param dp
      * @return
      */

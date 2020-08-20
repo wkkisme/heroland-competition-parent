@@ -20,6 +20,9 @@ public class HeroLandUserDepartmentDto extends BaseDO implements Serializable {
     /**
      * 机构类型
      * 学校|年级|班级
+     *  SH 学校
+     *  CA 班级
+     *  GA 年级
      */
     private String departmentType;
 
@@ -32,12 +35,6 @@ public class HeroLandUserDepartmentDto extends BaseDO implements Serializable {
      * 机构名称
      */
     private String departmentName;
-
-
-    /**
-     * 是否班主任
-     */
-    private Boolean headTeacher;
 
     /**
      * heroland_user_class

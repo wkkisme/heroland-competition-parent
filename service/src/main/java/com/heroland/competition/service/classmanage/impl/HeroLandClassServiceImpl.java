@@ -4,6 +4,8 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.google.common.collect.Lists;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandClassMapper;
@@ -21,6 +23,7 @@ import com.heroland.competition.domain.request.HerolandDataPageRequest;
 import com.heroland.competition.domain.request.UserDepartmentRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
@@ -35,6 +38,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 班级管理
@@ -231,7 +235,33 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     @Override
     public ResponseBody<List<HeroLandUserDepartmentDto>> getClassUserDepartment(UserDepartmentRequest request) {
-
-        return null;
+        ResponseBody<List<HeroLandUserDepartmentDto>> responseBody = new ResponseBody<>();
+        PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
+        List<HeroLandUserDepartmentDto> list = Lists.newArrayList();
+        qo.setUserId(request.getUserId());
+        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())){
+            responseBody.setData(list);
+            return responseBody;
+        }
+        List<String> departmentCode = Lists.newArrayList();
+        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(request.getDepartmentType())){
+            departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getOrgCode).distinct().collect(Collectors.toList());
+        }else if (AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(request.getDepartmentType())){
+            departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());
+        }else {
+            departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());
+        }
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(departmentCode);
+        dictInfoByKeys.stream().forEach(e -> {
+            HeroLandUserDepartmentDto departmentDto = new HeroLandUserDepartmentDto();
+            departmentDto.setDepartmentCode(e.getDictKey());
+            departmentDto.setDepartmentName(e.getDictValue());
+            departmentDto.setDepartmentType(e.getCode());
+            departmentDto.setUserId(request.getUserId());
+            departmentDto.setUserType(listResponseBody.getData().get(0).getUserType());
+            list.add(departmentDto);
+        });
+        return responseBody;
     }
 }

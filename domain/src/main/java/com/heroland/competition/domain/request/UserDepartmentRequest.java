@@ -19,13 +19,11 @@ public class UserDepartmentRequest implements Serializable {
     private String userId;
 
     /**
-     * 是否班主任
-     */
-    private Boolean headTeacher;
-
-    /**
      * 机构类型
      * 学校|年级|班级
+     * SH 学校
+     * CA 班级
+     * GA年级
      */
     @NotNull
     private String departmentType;
