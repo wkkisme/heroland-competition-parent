@@ -10,9 +10,12 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
+import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
+import com.heroland.competition.service.HerolandTopicJoinUserService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +47,9 @@ public class HeroLandTopicQuestionController {
     @Resource
     private HerolandTopicGroupPartService herolandTopicGroupPartService;
 
+    @Resource
+    private HerolandTopicJoinUserService herolandTopicJoinUserService;
+
 
     /**
      * 查询某个题组下的所有题目
@@ -63,6 +69,38 @@ public class HeroLandTopicQuestionController {
         result.setPage(pagination);
         return result;
     }
+
+    /**
+     * 校际赛的赛事列表
+     * todo biz逻辑未完善，需要具体页面具体对待
+     * @param request
+     * @return
+     */
+    @RequestMapping("/queryTopicsForS")
+    public ResponseBody<HerolandTopicCanSeeDto> getTopicsForS(@RequestBody HerolandTopicCanSeeQO request){
+        ResponseBody<HerolandTopicCanSeeDto> result = new ResponseBody<>();
+        HerolandTopicCanSeeDto herolandTopicCanSeeDto = herolandTopicJoinUserService.canOperableTopics(request);
+        result.setData(herolandTopicCanSeeDto);
+        return result;
+    }
+
+    /**
+     * 某一校际赛的题目信息
+     * @param request
+     * @return
+     */
+    @RequestMapping("/queryTopicQuestionsForS")
+    public ResponseBody<List<HeroLandQuestionListForTopicDto>> getTopicQuestionsForS(@RequestBody HerolandTopicCanSeeQO request){
+        ResponseBody<List<HeroLandQuestionListForTopicDto>> result = new ResponseBody<>();
+        HerolandTopicCanSeeDto herolandTopicCanSeeDto = herolandTopicJoinUserService.canOperableTopics(request);
+        result.setData(null);
+        return result;
+    }
+
+
+
+
+
 
     /**
      * 查询某个题组信息

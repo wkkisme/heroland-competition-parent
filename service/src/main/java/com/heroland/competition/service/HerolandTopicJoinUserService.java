@@ -1,7 +1,10 @@
 package com.heroland.competition.service;
 
 import com.heroland.competition.domain.dp.HerolandTopicJoinUserDP;
+import com.heroland.competition.domain.dto.HerolandTopicCanJoinDto;
+import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
 import com.heroland.competition.domain.dto.HerolandTopicJoinStatisticsDto;
+import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 
 /**
  * @author smjyouzan
@@ -14,4 +17,6 @@ public interface HerolandTopicJoinUserService {
     Boolean cancel(HerolandTopicJoinUserDP dp);
 
     HerolandTopicJoinStatisticsDto statistics(HerolandTopicJoinUserDP dp);
+
+    HerolandTopicCanSeeDto canOperableTopics(HerolandTopicCanSeeQO qo);
 }

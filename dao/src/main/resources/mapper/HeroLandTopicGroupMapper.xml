@@ -435,4 +435,32 @@
     </if>
   </select>
 
+  <select id="selectByTypeAndState"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_topic_group
+    where is_deleted = 0
+    and `type` = #{type,jdbcType=INTEGER}
+    <if test="state != null">
+      <choose>
+        <when test="state == 'DOING' ">
+          <![CDATA[
+         and  `start_time` <= now() and `end_time` >= now()
+        ]]>
+        </when>
+        <when test="state == 'NOTSTART' ">
+          <![CDATA[
+         and  `start_time` >= now()
+        ]]>
+        </when>
+        <otherwise>
+          <![CDATA[
+         and  `end_time` <= now()
+        ]]>
+        </otherwise>
+      </choose>
+    </if>
+  </select>
+  order by end_time
+
 </mapper>

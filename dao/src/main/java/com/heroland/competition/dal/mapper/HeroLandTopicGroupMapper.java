@@ -33,4 +33,6 @@ public interface HeroLandTopicGroupMapper {
     int updateByPrimaryKey(HeroLandTopicGroup record);
 
     List<HeroLandTopicGroup> selectByQuery(@Param("item") HeroLandTopicGroupQO qo);
+
+    List<HeroLandTopicGroup> selectByTypeAndState(@Param("type") Integer type,@Param("state") String state);
 }

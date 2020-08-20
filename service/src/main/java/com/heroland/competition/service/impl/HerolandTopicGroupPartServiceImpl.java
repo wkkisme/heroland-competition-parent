@@ -3,15 +3,24 @@ package com.heroland.competition.service.impl;
 import com.google.common.collect.Lists;
 import com.heroland.competition.dal.mapper.HerolandTopicGroupPartMapper;
 import com.heroland.competition.dal.pojo.HerolandTopicGroupPart;
+import com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.dto.HeroLandTopicForSDto;
+import com.heroland.competition.domain.qo.HerolandTopicGroupGradeQO;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author smjyouzan
@@ -23,6 +32,9 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
 
     @Resource
     private HerolandTopicGroupPartMapper herolandTopicGroupPartMapper;
+
+    @Resource
+    private HeroLandQuestionService heroLandQuestionService;
 
     @Override
     public Boolean addBatchDepartment(List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPs) {
@@ -53,5 +65,30 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
             return false;
         }
         return herolandTopicGroupPartMapper.batchDeleteById(list) > 0;
+    }
+
+    @Override
+    public List<HeroLandTopicForSDto> listDepartmentByGrades(HerolandTopicGroupGradeQO qo) {
+        List<HeroLandTopicForSDto> result = Lists.newArrayList();
+        HerolandTopicGroupPartExample example = new HerolandTopicGroupPartExample();
+        example.createCriteria().andOrgCodeEqualTo(qo.getOrgCode()).andCourseCodeIn(qo.getGradeCodes());
+        List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(topicGroupParts)){
+            return Lists.newArrayList();
+        }
+        List<Long> topicIds = topicGroupParts.stream().map(HerolandTopicGroupPart::getTopicId).collect(Collectors.toList());
+        HeroLandTopicQuestionsPageRequest request = new HeroLandTopicQuestionsPageRequest();
+        request.setTopicIds(topicIds);
+        List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(request);
+        topics.stream().forEach(e -> {
+            HeroLandTopicForSDto heroLandTopicForSDto = new HeroLandTopicForSDto();
+            heroLandTopicForSDto.setTopicId(e.getTopicId());
+            heroLandTopicForSDto.setStartTime(e.getStartTime());
+            heroLandTopicForSDto.setEndTime(e.getEndTime());
+            heroLandTopicForSDto.setTopicName(e.getTopicName());
+            result.add(heroLandTopicForSDto);
+        });
+
+        return result;
     }
 }

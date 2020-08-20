@@ -287,6 +287,22 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     }
 
     @Override
+    public List<TopicSimpleDto> getTopicsByTypeAndState(Integer topicType, String topicState) {
+        List<TopicSimpleDto> result = Lists.newArrayList();
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByTypeAndState(topicType, topicState);
+        heroLandTopicGroups.stream().forEach(e -> {
+            TopicSimpleDto topicSimpleDto = new TopicSimpleDto();
+            topicSimpleDto.setTopicId(e.getId());
+            topicSimpleDto.setTopicType(e.getType());
+            topicSimpleDto.setTopicName(e.getTopicName());
+            topicSimpleDto.setStartTime(e.getStartTime());
+            topicSimpleDto.setEndTime(e.getEndTime());
+            result.add(topicSimpleDto);
+        });
+        return result;
+    }
+
+    @Override
     public List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo) {
         HeroLandTopicGroupQO groupQO = BeanCopyUtils.copyByJSON(qo, HeroLandTopicGroupQO.class);
         List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(groupQO);

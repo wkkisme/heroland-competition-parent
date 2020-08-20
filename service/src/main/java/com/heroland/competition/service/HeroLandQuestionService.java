@@ -4,16 +4,14 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandQuestionDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.QuestionTopicDP;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.dto.HeroLandQuestionTopicListDto;
-import com.heroland.competition.domain.dto.HeroLandQuestionTopicListForStatisticDto;
-import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
 import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +55,8 @@ public interface HeroLandQuestionService{
     HeroLandTopicDto getTopic(HeroLandTopicPageRequest request);
 
     List<HeroLandTopicDto> getTopics(HeroLandTopicQuestionsPageRequest request);
+
+    List<TopicSimpleDto> getTopicsByTypeAndState(Integer topicType, String topicState);
 
     List<HeroLandQuestionTopicListDto> getTopicsQuestions(HeroLandTopicQuestionsQo qo);
 
