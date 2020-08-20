@@ -16,12 +16,15 @@ import com.heroland.competition.dal.pojo.HeroLandUserClassExample;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
+import com.heroland.competition.domain.dto.HeroLandUserClassInfoDto;
 import com.heroland.competition.domain.dto.HeroLandUserDepartmentDto;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
+import com.heroland.competition.domain.request.UserClassRequest;
 import com.heroland.competition.domain.request.UserDepartmentRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
+import com.heroland.competition.service.admin.HeroLandSchoolService;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -34,10 +37,13 @@ import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +73,9 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     @Resource
     private HeroLandAdminService heroLandAdminService;
 
+    @Resource
+    private HeroLandSchoolService heroLandSchoolService;
+
     @Override
     public ResponseBody<Boolean> addClass(HeroLandClassDP dp) {
 
@@ -92,6 +101,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     }
 
     @Override
+    @Deprecated
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(PlatformSysUserClassQO qo) {
         PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
         BeanUtil.copyProperties(qo, platformSysUserQO);
@@ -130,6 +140,84 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         }
         return result;
 
+    }
+
+    @Override
+    public ResponseBody<List<HeroLandUserClassInfoDto>> getClassInfoList(UserClassRequest request) {
+        ResponseBody<List<HeroLandUserClassInfoDto>> result = new ResponseBody();
+        List<HeroLandUserClassInfoDto> list = Lists.newArrayList();
+        result.setData(list);
+        PlatformSysUserClassQO platformSysUserQO = new PlatformSysUserClassQO();
+        platformSysUserQO.setUserId(request.getUserId());
+        //参数为空
+        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(platformSysUserQO);
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())){
+            return result;
+        }
+        if (CollectionUtils.isEmpty(request.getDepartmentCode())){
+            List<PlatformSysUserClassDP> allClassData = listResponseBody.getData();
+            list = processClassInfo(allClassData, request);
+        }else {
+            //默认以年级作为参数
+            if (StringUtils.isEmpty(request.getDepartmentType())){
+                request.setDepartmentType("GA");
+            }
+            //查询参数不为空
+            switch (request.getDepartmentType()){
+                //暂时不根据班级去查
+                case "CA":
+                    List<PlatformSysUserClassDP> classInfoByClass = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getClassCode())).collect(Collectors.toList());
+                    list = processClassInfo(classInfoByClass, request);
+
+                    break;
+                case "GA":
+                    List<PlatformSysUserClassDP> classInfoByGrades = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getGradeCode())).collect(Collectors.toList());
+                    list = processClassInfo(classInfoByGrades, request);
+                    break;
+
+                    //暂时不根据学校去查
+                case "SH":
+                    List<PlatformSysUserClassDP> classInfoByOrgs = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getOrgCode())).collect(Collectors.toList());
+                    list = processClassInfo(classInfoByOrgs, request);
+                    break;
+            }
+        }
+        result.setData(list);
+        return result;
+
+    }
+
+    private List<HeroLandUserClassInfoDto> processClassInfo(List<PlatformSysUserClassDP> classDPS, UserClassRequest request){
+        List<HeroLandUserClassInfoDto> list = Lists.newArrayList();
+        List<String> classCodeList = classDPS.stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());;
+        List<String> gradeCodeList = classDPS.stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());;
+        List<String> orgCodeList = classDPS.stream().map(PlatformSysUserClassDP::getOrgCode).distinct().collect(Collectors.toList());;
+
+        //批量查询班级人数
+        List<String> departmentCode =  Lists.newArrayList();
+        departmentCode.addAll(classCodeList);
+        departmentCode.addAll(gradeCodeList);
+        departmentCode.addAll(orgCodeList);
+        List<HerolandBasicDataDP> adminDataList = heroLandAdminService.getDictInfoByKeys(departmentCode);
+        Map<String, HerolandBasicDataDP> adminDataMap = adminDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
+
+        Map<String, Integer> ca = heroLandSchoolService.listCountByKeys(classCodeList, "CA");
+        classDPS.stream().forEach(e -> {
+            HeroLandUserClassInfoDto infoDto = new HeroLandUserClassInfoDto();
+            infoDto.setUserId(request.getUserId());
+            infoDto.setUserType(e.getUserType());
+            infoDto.setClassCode(e.getClassCode());
+            infoDto.setGradeCode(e.getGradeCode());
+            infoDto.setOrgCode(e.getOrgCode());
+            infoDto.setClassName(adminDataMap.containsKey(infoDto.getClassCode()) ? adminDataMap.get(infoDto.getClassCode()).getDictValue() : "");
+            infoDto.setGradeName(adminDataMap.containsKey(infoDto.getGradeCode()) ? adminDataMap.get(infoDto.getGradeCode()).getDictValue() : "");
+            infoDto.setOrgName(adminDataMap.containsKey(infoDto.getOrgCode()) ? adminDataMap.get(infoDto.getOrgCode()).getDictValue() : "");
+            infoDto.setClassDefaultStudentCount(ca.containsKey(infoDto.getClassCode()) ? ca.get(infoDto.getClassCode()) : 0);
+            //todo
+            infoDto.setClassHasStudentCount(98);
+            list.add(infoDto);
+        });
+        return list;
     }
 
     @Override

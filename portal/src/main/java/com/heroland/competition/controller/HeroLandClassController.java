@@ -3,9 +3,11 @@ package com.heroland.competition.controller;
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.domain.dp.HeroLandClassDP;
 import com.heroland.competition.domain.dp.HeroLandUserClassDP;
+import com.heroland.competition.domain.dto.HeroLandUserClassInfoDto;
 import com.heroland.competition.domain.dto.HeroLandUserDepartmentDto;
 import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
+import com.heroland.competition.domain.request.UserClassRequest;
 import com.heroland.competition.domain.request.UserDepartmentRequest;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
@@ -70,6 +72,16 @@ public class HeroLandClassController {
     @RequestMapping(value = "/getClassList")
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(@RequestBody PlatformSysUserClassQO dp) {
         return heroLandClassService.getClassList(dp);
+    }
+
+    /**
+     * 查询班级列表
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getClassInfoList")
+    public ResponseBody<List<HeroLandUserClassInfoDto>> getClassInfoList(@RequestBody UserClassRequest request) {
+        return heroLandClassService.getClassInfoList(request);
     }
 
     /**

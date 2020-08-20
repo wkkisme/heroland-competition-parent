@@ -8,6 +8,7 @@ import com.heroland.competition.domain.request.HerolandSchoolPageRequest;
 import com.heroland.competition.domain.request.HerolandSchoolRequest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author smjyouzan
@@ -29,6 +30,8 @@ public interface HeroLandSchoolService {
 
 
     PageResponse<HerolandSchoolSimpleDto> pageQuery(HerolandSchoolPageRequest request);
+
+    Map<String, Integer> listCountByKeys(List<String> keys, String code);
 
 
 }

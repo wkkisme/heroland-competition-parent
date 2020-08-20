@@ -238,7 +238,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
                 classQO.setClassCode(dto.getKey());
                 ResponseBody<Long> responseBody = platformSsoUserClassServiceFacade.queryUserClassCount(classQO);
                 if (responseBody.isSuccess()){
-                    simpleDto.setHadCapacity(responseBody.getData());
+                    simpleDto.setHadCapacity(NumberUtils.parseInt(responseBody.getData()));
                 }
             }
 
@@ -257,6 +257,17 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         pageResult.setPage(dataPage.getPageNum());
         pageResult.setTotal((int) dataPage.getTotal());
         return pageResult;
+    }
+
+    @Override
+    public Map<String, Integer> listCountByKeys(List<String> keys,  String code) {
+        Map<String, Integer> countMap = Maps.newHashMap();
+        if (CollectionUtils.isEmpty(keys)){
+            return countMap;
+        }
+        List<HerolandSchool> byKeysAndCode = herolandSchoolMapper.getByKeysAndCode(keys, code);
+        byKeysAndCode.stream().forEach(e -> countMap.put(e.getKey(), e.getDefaultValue()));
+        return countMap;
     }
 
     private void getChildren(String parent, List<HerolandSchool> children){

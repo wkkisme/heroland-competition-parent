@@ -234,6 +234,20 @@
     </if>
   </select>
 
+  <select id="getByKeysAndCode"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_school
+    where is_deleted = 0
+    <if test="code != null">
+      and  code = #{code,jdbcType=VARCHAR}
+    </if>
+    and key IN
+    <foreach collection="keys" item="key" open="(" close=")" separator=",">
+      #{key,jdbcType=VARCHAR}
+    </foreach>
+  </select>
+
   <select id="getByParentAndName"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

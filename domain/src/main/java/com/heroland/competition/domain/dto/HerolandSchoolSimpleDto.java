@@ -80,11 +80,11 @@ public class HerolandSchoolSimpleDto implements Serializable {
     /**
      * 默认值，例如班级的基本容量
      */
-    private String defaultValue;
+    private Integer defaultValue;
 
     /**
      * 班级的当前人数
      */
-    private Long hadCapacity;
+    private Integer hadCapacity;
 
 }
