@@ -67,6 +67,11 @@ public class HerolandSchoolAddRequest implements Serializable {
      */
     private String desc;
 
+    /**
+     * 默认容量
+     */
+    private Integer defaultValue;
+
 
 
 }

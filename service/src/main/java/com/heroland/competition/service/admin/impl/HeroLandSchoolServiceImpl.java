@@ -82,6 +82,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setEmail(schoolDP.getEmail());
         herolandSchool.setAxis(schoolDP.getAxis());
         herolandSchool.setDesc(schoolDP.getDesc());
+        herolandSchool.setDefaultValue(schoolDP.getDefaultValue());
         //如果父节点在school表中没有则也需要增加上
         if (Objects.equals(AdminFieldEnum.SCHOOL.getCode(),schoolDP.getCode())){
             HerolandSchool area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
@@ -114,6 +115,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setEmail(schoolDP.getEmail());
         herolandSchool.setAxis(schoolDP.getAxis());
         herolandSchool.setDesc(schoolDP.getDesc());
+        herolandSchool.setDefaultValue(schoolDP.getDefaultValue());
         herolandSchoolMapper.updateByPrimaryKeySelective(herolandSchool);
         HerolandSchool school = herolandSchoolMapper.selectByPrimaryKey(herolandSchool.getId());
         List<HerolandBasicDataDP> data = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(school.getKey()));

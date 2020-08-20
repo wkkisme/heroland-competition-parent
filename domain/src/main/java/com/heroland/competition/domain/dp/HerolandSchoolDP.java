@@ -79,7 +79,7 @@ public class HerolandSchoolDP extends BaseDO implements Serializable {
     /**
      * 默认值，例如班级的默认人数
      */
-    private String defaultValue;
+    private Integer defaultValue;
 
     public HerolandSchoolDP checkAndBuildBeforeCreate(){
         AssertUtils.notBlank(code);

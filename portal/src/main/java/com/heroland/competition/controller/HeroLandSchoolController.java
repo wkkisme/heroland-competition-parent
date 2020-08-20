@@ -90,6 +90,7 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setEmail(request.getEmail());
         herolandSchoolDP.setAxis(request.getAxis());
         herolandSchoolDP.setDesc(request.getDesc());
+        herolandSchoolDP.setDefaultValue(request.getDefaultValue());
         heroLandSchoolService.addNode(herolandSchoolDP);
         result.setData(true);
         return result;
