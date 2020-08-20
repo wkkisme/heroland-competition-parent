@@ -2,6 +2,8 @@ package com.heroland.competition.task;
 
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
+import com.heroland.competition.common.utils.DateUtils;
+import com.heroland.competition.dal.mapper.HerolandPayMapper;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
@@ -26,8 +28,6 @@ import java.util.stream.Collectors;
 
 
 /**
- *支付那边是超过30min就不可以再继续支付了
- *这边对于数据库中expireTime已经过去的订单进行关单
  *
  */
 @Component
@@ -41,6 +41,9 @@ public class QueryOrderTask {
 
     @Resource
     private PayQueryRemoteService payQueryRemoteService;
+
+    @Resource
+    private HerolandPayMapper herolandPayMapper;
 
     private final String CLOSE_REASON = "超時關單";
 
@@ -69,10 +72,12 @@ public class QueryOrderTask {
                 }
                 if (entry.getKey().equalsIgnoreCase("SUCCESS")){
                     entry.getValue().stream().forEach(payId -> {
-                        HerolandPayDP payById = herolandPayService.getPayById(Long.parseLong(payId.getBizId()));
-                        payById.setState(OrderStateEnum.PAID.getCode());
-//                        payById.setPayFinishTime();
-
+                        HerolandPayDP paydP = herolandPayService.getPayById(Long.parseLong(payId.getBizId()));
+                        paydP.setState(OrderStateEnum.PAID.getCode());
+                        paydP.setPayFinishTime(DateUtils.string2Date(payId.getPayFinishTime(),"yyyy-MM-dd HH:mm:ss"));
+                        herolandPayService.updatePay(paydP);
+                        //处理order
+                        herolandOrderService.updateStateByBiz(paydP.getBizNo(), paydP.getPayFinishTime());
                     });
                 }
                 if (entry.getKey().equalsIgnoreCase("FAILED")){

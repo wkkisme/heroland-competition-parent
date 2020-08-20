@@ -24,4 +24,6 @@ public interface HerolandOrderMapper {
     List<HerolandOrder> getByBizNos(@Param("bizNos") List<String> bizNos);
 
     int closeOrders(@Param("closeReason") String closeReason,@Param("closeTime") Date closeTime,@Param("bizNos") List<String> bizNos);
+
+    int updateStateByBiz(@Param("bizNo") String bizNo,@Param("paidTime") Date paidTime);
 }

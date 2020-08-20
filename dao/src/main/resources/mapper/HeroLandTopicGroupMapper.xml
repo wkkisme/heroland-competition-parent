@@ -460,7 +460,7 @@
         </otherwise>
       </choose>
     </if>
+    order by end_time
   </select>
-  order by end_time
 
 </mapper>

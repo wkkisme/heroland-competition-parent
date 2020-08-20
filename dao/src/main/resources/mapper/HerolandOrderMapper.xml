@@ -353,4 +353,12 @@
   </if>
   </update>
 
+  <update id="updateStateByBiz" >
+    update heroland_pay
+    set
+    `state` = "PAID", paid_time = #{paidTime,jdbcType=TIMESTAMP}
+    where
+       biz_no =  #{bizNo}
+  </update>
+
 </mapper>

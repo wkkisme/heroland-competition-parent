@@ -123,6 +123,15 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     }
 
     @Override
+    public Boolean updateStateByBiz(String bizNo, Date paidTime) {
+        if (paidTime == null){
+            paidTime = new Date();
+        }
+        herolandOrderMapper.updateStateByBiz(bizNo, paidTime);
+        return true;
+    }
+
+    @Override
     public PageResponse<HerolandOrderListDto> listOrder(HerolandOrderQueryQO qo) {
         AssertUtils.notBlank(qo.getBuyerId());
         PageResponse<HerolandOrderListDto> pageResult = new PageResponse<>();

@@ -27,6 +27,8 @@ public interface HerolandOrderService {
      */
     Boolean payOrderCallBack(PayOrderQO qo);
 
+    Boolean updateStateByBiz(String bizNo, Date paidTime);
+
     /**
      * 获取用户的订单列表
 
