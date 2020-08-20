@@ -262,6 +262,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             departmentDto.setUserType(listResponseBody.getData().get(0).getUserType());
             list.add(departmentDto);
         });
+        responseBody.setData(list);
         return responseBody;
     }
 }
