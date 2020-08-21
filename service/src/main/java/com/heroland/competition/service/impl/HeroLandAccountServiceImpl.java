@@ -204,7 +204,15 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             }
             HeroLandAccount heroLandAccount = new HeroLandAccount();
             heroLandAccount.setLevelScore(heroLandAccountDP.getLevelScore()+ dp.getScore());
-            heroLandAccountExtMapper.updateByExampleSelective(BeanUtil.updateConversion(dp, heroLandAccount),new HeroLandAccountExample());
+            HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
+            HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
+           criteria.andUserIdEqualTo(dp.getUserId());
+           if (dp.getAccountId() != null){
+               criteria.andAccountIdEqualTo(dp.getAccountId());
+           }
+            criteria.andIsDeletedEqualTo(false);
+
+            heroLandAccountExtMapper.updateByExampleSelective(BeanUtil.updateConversion(dp, heroLandAccount), heroLandAccountExample);
         } catch (Exception e) {
 
             logger.error("",e);
