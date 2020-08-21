@@ -74,7 +74,7 @@ public class HeroLandClassController {
     public ResponseBody<List<HeroLandUserClassDP>> getClassList(@RequestBody PlatformSysUserClassQO dp) {
         return heroLandClassService.getClassList(dp);
     }
-    }
+
 
     /**
      * 查询班级列表
