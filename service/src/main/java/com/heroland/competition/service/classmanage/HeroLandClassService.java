@@ -10,6 +10,8 @@ import com.heroland.competition.domain.qo.HeroLandClassManageQO;
 import com.heroland.competition.domain.qo.HeroLandUserClassQO;
 import com.heroland.competition.domain.request.UserClassRequest;
 import com.heroland.competition.domain.request.UserDepartmentRequest;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 
 import java.util.List;
@@ -39,7 +41,7 @@ public interface HeroLandClassService {
 
     ResponseBody<Boolean> deleteClassUser(HeroLandUserClassDP dp);
 
-    ResponseBody<List<HeroLandUserClassDP>> getClassUser(HeroLandUserClassQO dp);
+    ResponseBody<List<PlatformSysUserDP>> getClassUser(PlatformSysUserClassQO dp);
 
     ResponseBody<List<HeroLandUserDepartmentDto>> getClassUserDepartment(UserDepartmentRequest request);
 }

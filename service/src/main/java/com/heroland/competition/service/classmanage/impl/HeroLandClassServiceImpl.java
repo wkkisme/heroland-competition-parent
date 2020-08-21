@@ -151,15 +151,15 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         platformSysUserQO.setUserId(request.getUserId());
         //参数为空
         ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(platformSysUserQO);
-        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())){
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
             return result;
         }
-        if (CollectionUtils.isEmpty(request.getDepartmentCode())){
+        if (CollectionUtils.isEmpty(request.getDepartmentCode())) {
             List<PlatformSysUserClassDP> allClassData = listResponseBody.getData();
             list = processClassInfo(allClassData, request);
-        }else {
+        } else {
             //默认以年级作为参数
-            if (StringUtils.isEmpty(request.getDepartmentType())){
+            if (StringUtils.isEmpty(request.getDepartmentType())) {
                 request.setDepartmentType("GA");
             }
             //查询参数不为空
@@ -272,53 +272,21 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     }
 
     @Override
-    public ResponseBody<List<HeroLandUserClassDP>> getClassUser(HeroLandUserClassQO qo) {
+    public ResponseBody<List<PlatformSysUserDP>> getClassUser(PlatformSysUserClassQO qo) {
+        ResponseBody<List<PlatformSysUserDP>> result = new ResponseBody<>();
+        ResponseBody<List<PlatformSysUserClassDP>> classListWrapper = platformSsoUserClassServiceFacade.queryUserClassList(qo);
 
-        List<HeroLandUserClassDP> heroLandUserClassDPS=new ArrayList<>();
-        long count = 0;
-        try {
-            HeroLandUserClassExample heroLandAccountExample = new HeroLandUserClassExample();
-            MybatisCriteriaConditionUtil.createExample(heroLandAccountExample.createCriteria(), qo);
-            List<HeroLandUserClass> heroLandAccounts = heroLandUserClassMapper.selectByExample(heroLandAccountExample);
-            count = heroLandUserClassMapper.countByExample(heroLandAccountExample);
-            heroLandUserClassDPS = BeanUtil.queryListConversion(heroLandAccounts, HeroLandUserClassDP.class);
-            if (!CollectionUtils.isEmpty(heroLandUserClassDPS)) {
-                heroLandUserClassDPS.parallelStream().forEach(v -> {
-                    HeroLandUserClassDP heroLandUserClass = new HeroLandUserClassDP();
-                    /*
-                     * 查询年级name
-                     */
-                    List<String> keys = new ArrayList<>();
-                    keys.add(v.getOrgCode());
-                    keys.add(v.getClassCode());
-                    keys.add(v.getGradeCode());
-                    List<HerolandBasicDataDP> orgCode = heroLandAdminService.getDictInfoByKeys(keys);
-                    BeanUtil.copyProperties(v, heroLandUserClass);
-                    if (!CollectionUtils.isEmpty(orgCode)) {
-                        orgCode.forEach(code -> {
-                            String dictKey = code.getDictKey();
-                            if (dictKey.equals(v.getOrgCode())) {
-                                v.setOrgName(code.getDictValue());
-                            } else if (dictKey.equalsIgnoreCase(v.getClassCode())) {
-                                v.setClassName(code.getDictValue());
-                            } else {
-                                v.setGradeName(code.getDictValue());
-                            }
-
-
-                        });
-
-                    }
-
-                });
-            }
-
-        } catch (Exception e) {
-            log.error("", e);
-            ResponseBodyWrapper.failSysException();
+        List<PlatformSysUserClassDP> classList = classListWrapper.getData();
+        if (CollectionUtils.isEmpty(classList)) {
+            return result;
         }
-
-        return ResponseBodyWrapper.successListWrapper(heroLandUserClassDPS, count, qo, HeroLandUserClassDP.class);
+        PlatformSysUserQO userQO = new PlatformSysUserQO();
+        List<String> userIds = classList.stream().map(PlatformSysUserClassDP::getUserId).collect(Collectors.toList());
+        userQO.setUserIds(userIds);
+        RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(userQO);
+        result.setData(listRpcResult.getData());
+        result.setPage(classListWrapper.getPage());
+        return result;
     }
 
     @Override
@@ -328,7 +296,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         List<HeroLandUserDepartmentDto> list = Lists.newArrayList();
         qo.setUserId(request.getUserId());
         ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
-        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())){
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
             responseBody.setData(list);
             return responseBody;
         }
