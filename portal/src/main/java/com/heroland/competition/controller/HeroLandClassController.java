@@ -77,7 +77,7 @@ public class HeroLandClassController {
 
 
     /**
-     * 查询班级列表
+     * 查询班级里所有的人的信息 根据usertype和classCode 来精确查询某个班某个类型的人的信息
      * @param dp
      * @return
      */
