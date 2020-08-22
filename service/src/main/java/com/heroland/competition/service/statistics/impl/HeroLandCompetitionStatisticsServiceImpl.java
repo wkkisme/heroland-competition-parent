@@ -396,29 +396,30 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     // 因为一个人下的topicId会有多场比赛 取最新的展示
                     List<HeroLandCompetitionRecordDP> sorted = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList());
                     HeroLandCompetitionRecordDP recordDP = sorted.get(0);
-                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
-                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(),recordDP.getOpponentLevel()));
-                    }else {
-                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(),recordDP.getInviteLevel()));
-                    }
                     // 如果questionid相等  同步作业赛
                     List<HeroLandQuestionRecordDetailDP> details = recordDP.getDetails();
                     if (!CollectionUtils.isEmpty(details)) {
                         details.forEach(detail -> {
-                            v.setCorrectAnswer(detail.getCorrectAnswer());
+                            if (detail.getQuestionId().equals(v.getId())) {
+                                if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
+                                } else {
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
+                                }
+                                v.setCorrectAnswer(detail.getCorrectAnswer());
+                                v.setResult(recordDP.getResult());
+
+                                PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+                                platformSysUserQO.setUserId(recordDP.getOpponentId());
+
+                                if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
+                                    v.setScore(recordDP.getOpponentScore());
+                                } else {
+                                    v.setScore(recordDP.getInviteScore());
+                                }
+                            }
                         });
                     }
-                    v.setResult(recordDP.getResult());
-
-                    PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                    platformSysUserQO.setUserId(recordDP.getOpponentId());
-
-                    if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
-                        v.setScore(recordDP.getOpponentScore());
-                    } else {
-                        v.setScore(recordDP.getInviteScore());
-                    }
-
                 }
             });
 
@@ -435,9 +436,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
-                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(),recordDP.getOpponentLevel()));
-                    }else {
-                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(),recordDP.getInviteLevel()));
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
+                    } else {
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
                     }
                     v.setResult(recordDP.getResult());
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
@@ -491,7 +492,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             topics.forEach(v -> {
 
                 AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
-                if (StringUtils.isNotBlank(v.getLevelCode() )) {
+                if (StringUtils.isNotBlank(v.getLevelCode())) {
                     answerQuestionRecordStatisticDP.setDiff(Integer.valueOf(v.getLevelCode()));
                 }
                 answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
