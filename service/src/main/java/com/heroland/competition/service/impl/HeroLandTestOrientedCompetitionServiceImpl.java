@@ -252,16 +252,19 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             HeroLandQuestionListForTopicDto heroLandQuestionListForTopicDto = topicDtoHashMap.get(v.getId());
             //如果答对
             if (heroLandQuestionListForTopicDto != null && heroLandQuestionListForTopicDto.getOptionAnswer().equalsIgnoreCase(v.getYourAnswer())) {
+                v.setAnswer(heroLandQuestionListForTopicDto.getOptionAnswer());
                 // 如果是邀请者
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     int levelScore = HeroLevelEnum.getLevelScore(record.getInviteLevel(), record.getOpponentLevel());
                     v.setCorrectAnswer(true);
+                    v.setScore(levelScore);
                     rightCount.addAndGet(1);
                     score.addAndGet(levelScore);
                 } else {
                     // 如果是被邀请者
                     int levelScore = HeroLevelEnum.getLevelScore(record.getOpponentLevel(), record.getInviteLevel());
                     v.setCorrectAnswer(true);
+                    v.setScore(levelScore);
                     rightCount.addAndGet(1);
                     score.addAndGet(levelScore);
                 }
@@ -269,6 +272,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             } else if (heroLandQuestionListForTopicDto == null || !heroLandQuestionListForTopicDto.getOptionAnswer().equalsIgnoreCase(v.getYourAnswer())) {
                 // 没有找到题 直接错误
                 v.setCorrectAnswer(false);
+                v.setScore(0);
             }
 
         });
