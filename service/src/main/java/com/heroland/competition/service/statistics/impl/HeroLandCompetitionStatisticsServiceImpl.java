@@ -399,8 +399,30 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         details.forEach(detail -> {
                             if (detail.getQuestionId().equals(v.getId())) {
                                 if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                                    if (recordDP.getResult() != null){
+                                        // 如果当前人是邀请者 0负1胜2平局
+                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                            // 如果是被邀请者胜
+                                        }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                        }else {
+                                            v.setResult(recordDP.getResult());
+                                        }
+                                    }
                                     v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
                                 } else {
+                                    if (recordDP.getResult() != null){
+                                        // 如果当前人是被邀请者 0负1胜2平局
+                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                            // 如果是被邀请者胜
+                                        }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                        }else {
+                                            v.setResult(recordDP.getResult());
+                                        }
+                                    }
                                     v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
                                 }
                                 v.setCorrectAnswer(detail.getCorrectAnswer());
@@ -408,7 +430,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                                 platformSysUserQO.setUserId(recordDP.getOpponentId());
-                                v.setResult(recordDP.getResult());
+
                                 if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                                     v.setScore(recordDP.getOpponentScore());
                                 } else {
@@ -433,14 +455,37 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+
+                        if (recordDP.getResult() != null){
+                            // 如果当前人是邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                // 如果是被邀请者胜
+                            }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            }else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
                         v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
                     } else {
+                        if (recordDP.getResult() != null){
+                            // 如果当前人是被邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                // 如果是被邀请者胜
+                            }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            }else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
                         v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
                     }
-                    v.setResult(recordDP.getResult());
+
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
-                    v.setResult(recordDP.getResult());
+
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
@@ -467,16 +512,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
                 answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
                 answerQuestionRecordStatisticDP.setScore(v.getScore());
-                if (v.getResult() != null){
-                    // 如果当前人是邀请者 0负1胜2平局
-                    if (v.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
-                        answerQuestionRecordStatisticDP.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                    }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
-                        answerQuestionRecordStatisticDP.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                    }else {
-                        answerQuestionRecordStatisticDP.setResult(v.getResult());
-                    }
-                }
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
                 answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
                 answerQuestionRecordStatisticDP.setType(v.getType());
                 answerQuestionRecordStatisticDP.setQuestionId(v.getId());
@@ -508,16 +544,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
                 answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
                 answerQuestionRecordStatisticDP.setScore(v.getScore());
-                if (v.getResult() != null){
-                    // 如果当前人是邀请者 0负1胜2平局
-                    if (v.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
-                        answerQuestionRecordStatisticDP.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                    }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
-                        answerQuestionRecordStatisticDP.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                    }else {
-                        answerQuestionRecordStatisticDP.setResult(v.getResult());
-                    }
-                }
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
                 answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
                 answerQuestionRecordStatisticDP.setType(v.getDiff());
                 answerQuestionRecordStatisticDP.setId(v.getId());
