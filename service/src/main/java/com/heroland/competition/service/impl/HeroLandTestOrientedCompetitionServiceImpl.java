@@ -121,7 +121,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             ResponseBodyWrapper.fail("请在规定时间范围内答题", "50005");
         }
 
-        String redisKey = record.getTopicId() + record.getInviteId() + record.getOpponentId();
+        String redisKey = record.getTopicId() + record.getInviteId() + record.getOpponentId() +record.getId();
         boolean lock = redisService.setNx(redisKey, record.getTopicId(), "PT24H");
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
@@ -240,8 +240,8 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
     }
 
     private HeroLandCompetitionResultDP judgeAnswerAndCalculateScore(HeroLandCompetitionRecordDP record, List<HeroLandQuestionListForTopicDto> items) {
-        Map<String, HeroLandQuestionListForTopicDto> topicDtoHashMap = items.stream().collect(
-                Collectors.toMap(HeroLandQuestionListForTopicDto::getQtId, item -> item, (a, b) -> b, () -> new HashMap<>(items.size())));
+        Map<Long, HeroLandQuestionListForTopicDto> topicDtoHashMap = items.stream().collect(
+                Collectors.toMap(HeroLandQuestionListForTopicDto::getId, item -> item, (a, b) -> b, () -> new HashMap<>(items.size())));
 
 
         //  1 account插入计算分数 如果胜利之后再乘
