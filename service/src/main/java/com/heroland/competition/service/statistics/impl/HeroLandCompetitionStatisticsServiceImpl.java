@@ -12,10 +12,7 @@ import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.TopicTypeConstants;
-import com.heroland.competition.common.enums.CompetitionEnum;
-import com.heroland.competition.common.enums.GroupByEnum;
-import com.heroland.competition.common.enums.HeroLevelEnum;
-import com.heroland.competition.common.enums.OrderByEnum;
+import com.heroland.competition.common.enums.*;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.HeroLevelUtils;
@@ -407,15 +404,36 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                     v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
                                 }
                                 v.setCorrectAnswer(detail.getCorrectAnswer());
-                                v.setResult(recordDP.getResult());
+
 
                                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                                 platformSysUserQO.setUserId(recordDP.getOpponentId());
 
                                 if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                                     v.setScore(recordDP.getOpponentScore());
+                                    if (recordDP.getResult() != null){
+                                        // 如果当前人是被邀请者 0负1胜2平局
+                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                        }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                        }else {
+                                            v.setResult(recordDP.getResult());
+                                        }
+                                    }
                                 } else {
                                     v.setScore(recordDP.getInviteScore());
+
+                                    if (recordDP.getResult() != null){
+                                        // 如果当前人是邀请者 0负1胜2平局
+                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                        }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                        }else {
+                                            v.setResult(recordDP.getResult());
+                                        }
+                                    }
                                 }
                             }
                         });
@@ -446,8 +464,30 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
+
+                        if (recordDP.getResult() != null){
+                            // 如果当前人是邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            }else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
                     } else {
                         v.setScore(recordDP.getInviteScore());
+
+                        if (recordDP.getResult() != null){
+                            // 如果当前人是邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            }else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
                     }
 
 
@@ -477,6 +517,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 answerQuestionRecordStatisticDP.setId(v.getId());
                 answerQuestionRecordStatisticDP.setTopicId(v.getTopicId());
                 answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
+                if (v.getKnowledges() != null){
+
+                    answerQuestionRecordStatisticDP.setKnowledge(v.getKnowledges().stream().map(HerolandKnowledgeSimpleDto ::getKnowledge).collect(Collectors.toList()));
+                }
                 result.add(answerQuestionRecordStatisticDP);
 
             });
