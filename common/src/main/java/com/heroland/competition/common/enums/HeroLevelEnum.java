@@ -27,7 +27,7 @@ public enum HeroLevelEnum {
      */
     public static int getLevelDistance(String beforeLevel, String afterLevel) {
 
-        HeroLevelEnum before = null;
+        HeroLevelEnum before;
         try {
             before = HeroLevelEnum.valueOf(beforeLevel);
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public enum HeroLevelEnum {
             before = ADVERSITY_HERO;
         }
 
-        HeroLevelEnum after = null;
+        HeroLevelEnum after;
         try {
             after = HeroLevelEnum.valueOf(afterLevel);
         } catch (Exception e) {

@@ -1,12 +1,14 @@
 package com.heroland.competition.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
+import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionBankDto;
@@ -15,12 +17,15 @@ import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.*;
 import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+
+import static com.heroland.competition.common.enums.Constants.CommandReqType.STOP_ANSWER_QUESTIONS;
 
 /**
  * 同步比賽
@@ -32,7 +37,8 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
 
     @Resource
     private RedisService redisService;
-
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
 
     @Resource
     private HeroLandAccountService heroLandAccountService;
@@ -127,9 +133,13 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
             record.setInviteScore(0);
+            record.setSenderId(record.getInviteId());
+            record.setAddresseeId(record.getOpponentId());
         }else {
             record.setOpponentEndTime(new Date());
             record.setOpponentScore(0);
+            record.setSenderId(record.getOpponentId());
+            record.setAddresseeId(record.getInviteId());
         }
         if (lock) {
             //  如果正确 且先拿到锁，说明先答题，更新记录为当前人胜 且没有超时 如果第一个都超时，后一个没有必要再更新记录
@@ -208,10 +218,15 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                 // 若两人都超时 则也是平局
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
             }
+
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
             heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             heroLandCompetitionRecordService.updateCompetitionRecord(record);
             redisService.del(redisKey);
+
+            record.setType(STOP_ANSWER_QUESTIONS.getCode());
+
+            rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
         }
         return ResponseBodyWrapper.successWrapper(record);
     }
