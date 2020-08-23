@@ -150,7 +150,13 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
 
                 heroLandCompetitionRecordService.updateCompetitionRecord(record);
                 heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
-            } else {
+            } else if (resultDP.getRightCount() == 0){
+                if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    record.setInviteScore(0);
+                }else {
+                    record.setOpponentScore(0);
+                }
+            }else {
                 // 不是全部答对，直接保存，等下一个人来计算
                 heroLandCompetitionRecordService.updateCompetitionRecord(record);
                 heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
