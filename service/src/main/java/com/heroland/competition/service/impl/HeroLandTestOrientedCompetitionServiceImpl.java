@@ -249,7 +249,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         AtomicInteger rightCount = new AtomicInteger();
         AtomicInteger score = new AtomicInteger();
         record.getDetails().forEach(v -> {
-            HeroLandQuestionListForTopicDto heroLandQuestionListForTopicDto = topicDtoHashMap.get(v.getQuestionId());
+            HeroLandQuestionListForTopicDto heroLandQuestionListForTopicDto = topicDtoHashMap.get(v.getId());
             //如果答对
             if (heroLandQuestionListForTopicDto != null && heroLandQuestionListForTopicDto.getOptionAnswer().equalsIgnoreCase(v.getYourAnswer())) {
                 // 如果是邀请者
