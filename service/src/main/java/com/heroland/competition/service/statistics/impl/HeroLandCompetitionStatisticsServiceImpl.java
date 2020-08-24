@@ -404,7 +404,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                         if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                                             // 如果是被邀请者胜
-                                        }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                        }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
                                             v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                                         }else {
                                             v.setResult(recordDP.getResult());
@@ -417,7 +417,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                         if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                                             // 如果是被邀请者胜
-                                        }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                                        }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
                                             v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                                         }else {
                                             v.setResult(recordDP.getResult());
@@ -461,7 +461,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                 v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                                 // 如果是被邀请者胜
-                            }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                            }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
                                 v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                             }else {
                                 v.setResult(recordDP.getResult());
@@ -474,7 +474,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                 v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                                 // 如果是被邀请者胜
-                            }else if (v.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
+                            }else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())){
                                 v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                             }else {
                                 v.setResult(recordDP.getResult());
