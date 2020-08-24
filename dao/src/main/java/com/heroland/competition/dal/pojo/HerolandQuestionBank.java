@@ -2,12 +2,14 @@ package com.heroland.competition.dal.pojo;
 
 import com.anycommon.response.common.BaseDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.Objects;
 
 
 @Data
-public class HerolandQuestionBank extends BaseDO {
+public class HerolandQuestionBank {
 
     private String gradeCode;
 
@@ -60,6 +62,24 @@ public class HerolandQuestionBank extends BaseDO {
     private Integer bankType;
 
 
+    private Long id;
+    private String creator;
+    private Date gmtCreate;
+    private Date gmtModified;
+    private String modifier;
+    private Boolean isDeleted;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HerolandQuestionBank bank = (HerolandQuestionBank) o;
+        return Objects.equals(id, bank.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -19,4 +19,7 @@ public interface HerolandCourseMapper {
 
     List<HerolandCourse> get(@Param("grade") String grade,@Param("gradeSlice") Integer gradeSlice,@Param("course") String course,@Param("edition") String edition,@Param("subType") String subType);
 
+
+    List<HerolandCourse> selectByPrimaryKeys( @Param("ids") List<Long> ids);
+
 }

@@ -40,4 +40,8 @@ public interface HerolandQuestionBankMapper {
     List<QuestionTopicDP> selectQuestionTopicByQuestion(@Param("item") HeroLandTopicGroupQO qo);
 
     List<QuestionTopicDP> selectQuestionTopicByTopic(@Param("item") HeroLandTopicGroupQO qo);
+
+    List<HerolandQuestionBank> selectQuestionsByGradeAndCoursesForS(@Param("grade") String grade,@Param("course") String course, @Param("bankType") Integer bankType,@Param("lastId") Long lastId, @Param("count") Integer count );
+
+    Long maxId(@Param("grade") String grade,@Param("course") String course, @Param("bankType") Integer bankType );
 }

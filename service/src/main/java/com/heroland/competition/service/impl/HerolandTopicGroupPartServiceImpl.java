@@ -91,4 +91,9 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
 
         return result;
     }
+
+    @Override
+    public List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicGroupGradeQO qo) {
+        return null;
+    }
 }

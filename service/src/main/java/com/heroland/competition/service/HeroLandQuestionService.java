@@ -6,10 +6,7 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.QuestionTopicDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
-import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
-import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.domain.request.*;
 
 import java.util.Date;
 import java.util.List;
@@ -75,4 +72,10 @@ public interface HeroLandQuestionService{
 
     PageResponse<QuestionTopicDP> getQuestionTopic(HeroLandTopicQuestionForCourseRequest request);
 
+    /**
+     * 给某一个学生选择校际赛的题目
+     * @param request
+     * @return
+     */
+    TopicQuestionsForSDto questionsAvailableForS(TopicQuestionsForSRequest request);
 }

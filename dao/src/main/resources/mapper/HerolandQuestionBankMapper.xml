@@ -322,7 +322,7 @@
         select
         <include refid="Base_Column_List"/>
         from heroland_question_bank
-        where is_deleted = 0
+        where is_deleted = 0 and (bank_type = 1 or bank_type = 2)
         <if test="item.grade != null">
             and grade_code = #{item.grade,jdbcType=VARCHAR}
         </if>
@@ -372,7 +372,7 @@
         select
         <include refid="Base_Column_List"/>
         from heroland_question_bank
-        where is_deleted = 0
+        where is_deleted = 0 and (bank_type = 1 or bank_type = 2)
         <if test="item.grade != null">
             and grade_code = #{item.grade,jdbcType=VARCHAR}
         </if>
@@ -507,6 +507,7 @@
         where hkr.type = 2) as a on hqb.id = a.refer_id
         where htg.is_deleted = 0
         and htq.is_deleted = 0
+        and (hqb.bank_type = 1 or hqb.bank_type = 2)
         <if test="item.orgCode != null">
             and htg.org_code = #{item.orgCode,jdbcType=VARCHAR}
         </if>
@@ -558,6 +559,7 @@
         where hkr.type = 2) as a on hqb.id = a.refer_id
         where htg.is_deleted = 0
         and htq.is_deleted = 0
+        and (hqb.bank_type = 1 or hqb.bank_type = 2)
         <if test="item.orgCode != null">
             and htg.org_code = #{item.orgCode,jdbcType=VARCHAR}
         </if>
@@ -583,5 +585,46 @@
         </if>
         group by htq.topic_id
     </select>
+
+    <select id="selectQuestionsByGradeAndCoursesForS" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        <where>
+            <if test="grade != null">
+                and grade_code = #{grade,jdbcType=VARCHAR}
+            </if>
+            <if test="course != null ">
+                and course = #{course,jdbcType=VARCHAR}
+            </if>
+            <if test="bankType != null">
+                and bank_type = #{bankType,jdbcType=INTEGER}
+            </if>
+            <if test="lastId != null">
+                and id > #{lastId,jdbcType=BIGINT}
+            </if>
+            and is_deleted = 0
+        </where>
+        <if test="count != null">
+            limit #{count,jdbcType=INTEGER}
+        </if>
+
+    </select>
+
+    <select id="maxId" resultType="java.lang.Long">
+    select max(id) from heroland_question_bank
+        <where>
+            <if test="grade != null">
+                and grade_code = #{grade,jdbcType=VARCHAR}
+            </if>
+            <if test="course != null ">
+                and course = #{course,jdbcType=VARCHAR}
+            </if>
+            <if test="bankType != null">
+                and bank_type = #{bankType,jdbcType=INTEGER}
+            </if>
+            and is_deleted = 0
+        </where>
+  </select>
 
 </mapper>

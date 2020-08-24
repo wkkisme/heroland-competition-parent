@@ -2,14 +2,17 @@ package com.heroland.competition.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
+import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.heroland.competition.common.constants.BankTypeEnum;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.constants.KnowledgeReferEnum;
+import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -22,13 +25,16 @@ import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
+import com.heroland.competition.domain.qo.HerolandTopicForSQO;
 import com.heroland.competition.domain.qo.HerolandTopicQuestionQo;
-import com.heroland.competition.domain.request.HeroLandTopicAssignRequest;
-import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
+import com.heroland.competition.service.admin.HeroLandCourseService;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +79,18 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Resource
     private HerolandQuestionBankDetailMapper herolandQuestionBankDetailMapper;
+
+    @Resource
+    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
+
+    @Resource
+    private HerolandTopicGroupPartService herolandTopicGroupPartService;
+
+    @Resource
+    private HerolandSchoolCourseMapper herolandSchoolCourseMapper;
+
+    @Resource
+    private HerolandCourseMapper herolandCourseMapper;
 
 
     @Override
@@ -544,6 +562,75 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         pageResult.setPage(topicGroupsPageResult.getPageNum());
         pageResult.setTotal((int) topicGroupsPageResult.getTotal());
         return pageResult;
+    }
+
+    @Override
+    public TopicQuestionsForSDto questionsAvailableForS(TopicQuestionsForSRequest request) {
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(request.getTopicId());
+        if (!heroLandTopicGroup.getType().equals(TopicTypeConstants.IntegerER_SCHOOL_COMPETITION)) {
+            logger.error("this is not a school competition");
+            return null;
+        }
+        TopicQuestionsForSDto dto = new TopicQuestionsForSDto();
+        dto.setTopicId(request.getTopicId());
+        dto.setTopicName(heroLandTopicGroup.getTopicName());
+        dto.setUserId(request.getUserId());
+        PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
+        qo.setUserId(request.getUserId());
+        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
+            return null;
+        }
+        String school = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getOrgCode).findFirst().orElse(null);
+        String grade = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).findFirst().orElse(null);
+        if (StringUtils.isBlank(school) || StringUtils.isBlank(grade)) {
+            logger.error("query error department");
+            return null;
+        }
+        HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+        sqo.setTopicIds(Lists.newArrayList(request.getTopicId()));
+        sqo.setOrgCode(school);
+        sqo.setGradeCode(grade);
+        List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+        if (CollectionUtils.isEmpty(herolandTopicGroupPartDPS)) {
+            return null;
+        }
+        //根据grade和org去查所有的科目
+        List<HerolandSchoolCourse> schoolCourses = herolandSchoolCourseMapper.getBySchoolListAndCourse(Lists.newArrayList(school), null);
+        if (CollectionUtils.isEmpty(schoolCourses)) {
+            return null;
+        }
+        List<Long> courseIds = schoolCourses.stream().map(HerolandSchoolCourse::getCourseId).collect(Collectors.toList());
+        List<HerolandCourse> herolandCourses = herolandCourseMapper.selectByPrimaryKeys(courseIds);
+        List<String> courseCodeList = herolandCourses.stream().filter(e -> grade.equalsIgnoreCase(e.getGrade())).map(HerolandCourse::getCourse).collect(Collectors.toList());
+        //如果为空则默认查所有的科目
+        if (CollectionUtils.isEmpty(request.getCourseList())) {
+
+        } else {
+            //获取交集
+            request.getCourseList().retainAll(courseCodeList);
+            Long maxId = herolandQuestionBankMapper.maxId(null, null, BankTypeEnum.INTERSCHOOL.getLevel());
+            request.getCourseList().stream().forEach(e -> {
+                //todo lastId
+                //通过随机一个数
+                Long lastId = 2L;
+                List<HerolandQuestionBank> availQues = Lists.newArrayList();
+                List<HerolandQuestionBank> bankList = herolandQuestionBankMapper.selectQuestionsByGradeAndCoursesForS(grade, e, BankTypeEnum.INTERSCHOOL.getLevel(), lastId, 12);
+                //如果查出的是少于12题，则从头继续轮询
+                if (bankList.size() < 12){
+                    Integer count = 12 - bankList.size();
+                    List<HerolandQuestionBank> bankListAppend = herolandQuestionBankMapper.selectQuestionsByGradeAndCoursesForS(grade, e, BankTypeEnum.INTERSCHOOL.getLevel(), null, count);
+                    availQues.addAll(bankListAppend);
+                    //去重，已重写hashCode和equals
+                    availQues = availQues.stream().distinct().collect(Collectors.toList());
+                }
+                List<HeroLandQuestionBankSimpleDto> simpleDtos = BeanCopyUtils.copyArrayByJSON(availQues, HeroLandQuestionBankSimpleDto.class);
+                dto.getQuestionsMap().put(e, simpleDtos);
+                dto.getQuestions().addAll(simpleDtos);
+            });
+        }
+
+        return dto;
     }
 
 }

@@ -2,6 +2,7 @@ package com.heroland.competition.service;
 
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.HeroLandTopicForSDto;
+import com.heroland.competition.domain.qo.HerolandTopicForSQO;
 import com.heroland.competition.domain.qo.HerolandTopicGroupGradeQO;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface HerolandTopicGroupPartService {
     Boolean deleteDepartment(List<Long> list);
 
     List<HeroLandTopicForSDto> listDepartmentByGrades(HerolandTopicGroupGradeQO qo);
+
+    List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicForSQO qo);
 }

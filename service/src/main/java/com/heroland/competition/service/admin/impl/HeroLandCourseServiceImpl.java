@@ -161,6 +161,16 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         return dto;
     }
 
+    @Override
+    public List<HerolandCourseDto> getByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)){
+            return Lists.newArrayList();
+        }
+        List<HerolandCourse> herolandCourses = herolandCourseMapper.selectByPrimaryKeys(ids);
+
+        return null;
+    }
+
     private HerolandCourseDto getAdminData(HerolandCourse herolandCourse){
         HerolandCourseDto dto = new HerolandCourseDto();
         dto.setCourse(herolandCourse.getCourse());

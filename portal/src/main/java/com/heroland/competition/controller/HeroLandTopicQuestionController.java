@@ -11,6 +11,7 @@ import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
+import com.heroland.competition.domain.dto.TopicQuestionsForSDto;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -208,6 +209,20 @@ public class HeroLandTopicQuestionController {
         ResponseBody<Boolean> result = new ResponseBody<>();
 
         result.setData(true);
+        return result;
+    }
+
+    /**
+     * 学生能看到的校际赛的题目
+     * 教师选择
+     * @param
+     * @return
+     */
+    @RequestMapping("/questionsAvailableForS")
+    public ResponseBody<TopicQuestionsForSDto> questionsAvailableForS(TopicQuestionsForSRequest request){
+        ResponseBody<TopicQuestionsForSDto> result = new ResponseBody<>();
+        TopicQuestionsForSDto topicQuestionsForSDto = heroLandQuestionService.questionsAvailableForS(request);
+        result.setData(topicQuestionsForSDto);
         return result;
     }
 
