@@ -210,17 +210,19 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                         heroLandAccountManageQO.setScore(levelScore);
                     }
                     heroLandQuestionRecordDetailDP.setCorrectAnswer(true);
-                    // 如果两个人都答错 则都不加分 平局
-                }else {
-                    heroLandQuestionRecordDetailDP.setScore(0);
-                    heroLandQuestionRecordDetailDP.setCorrectAnswer(false);
-                    record.setInviteScore(0);
-                    record.setOpponentScore(0);
-                    record.setResult(CompetitionResultEnum.DRAW.getResult());
+                    // 如果两个人都后来者错 则不管
                 }
 
-            }else {
+                // 如果都答错了 平局
+            }else if (!isRight && !preAnswer.getCorrectAnswer() && !timeout){
+                heroLandQuestionRecordDetailDP.setScore(0);
+                record.setOpponentScore(0);
+                record.setInviteScore(0);
                 // 若两人都超时 则也是平局
+                record.setResult(CompetitionResultEnum.DRAW.getResult());
+
+                // 如果第二个人超时 且第一个人答错 则更新为平局
+            }else if (timeout && !preAnswer.getCorrectAnswer()){
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
             }
 
