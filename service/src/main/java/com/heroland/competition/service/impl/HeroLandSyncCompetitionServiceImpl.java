@@ -134,13 +134,13 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
             record.setInviteScore(0);
-            record.setSenderId(record.getInviteId());
-            record.setAddresseeId(record.getOpponentId());
+            record.setSenderId(record.getOpponentId());
+            record.setAddresseeId(record.getInviteId());
         }else {
             record.setOpponentEndTime(new Date());
             record.setOpponentScore(0);
-            record.setSenderId(record.getOpponentId());
-            record.setAddresseeId(record.getInviteId());
+            record.setSenderId(record.getInviteId());
+            record.setAddresseeId(record.getOpponentId());
         }
         if (lock) {
             //  如果正确 且先拿到锁，说明先答题，更新记录为当前人胜 且没有超时 如果第一个都超时，后一个没有必要再更新记录
