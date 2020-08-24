@@ -174,6 +174,13 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                 record.setInviteScore(0);
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
 
+            }else {
+                if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    record.setInviteScore(0);
+                }else {
+                    record.setOpponentScore(0);
+                }
+                heroLandQuestionRecordDetailDP.setScore(0);
             }
             heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             heroLandCompetitionRecordService.updateCompetitionRecord(record);
