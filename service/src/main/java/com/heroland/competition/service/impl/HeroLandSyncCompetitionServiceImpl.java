@@ -129,7 +129,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setId(heroLandCompetitionRecordDP.getId());
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey, record.getUserId(), "PT2H");
-        redisService.set("question:" + redisKey, heroLandQuestionRecordDetailDP, 1200000L);
+        redisService.set("question:" + redisKey+record.getUserId(), heroLandQuestionRecordDetailDP, 1200000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
@@ -181,8 +181,12 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             //  后一个答题者
         } else {
             // 前一个答题者答案
-            Object o = redisService.get(redisKey);
-            HeroLandQuestionRecordDetailDP preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey);
+            HeroLandQuestionRecordDetailDP preAnswer ;
+            if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey+record.getInviteId());
+            }else {
+                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey+record.getOpponentId());
+            }
             // 如果正确 且未超时 则看前一个答题者答案正确与否
             if (isRight && !timeout) {
                 // 如果前一个人答案正确则直接不管，因为前面已经判赢了，如果前面答题错了则本人胜利
