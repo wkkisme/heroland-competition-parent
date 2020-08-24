@@ -128,19 +128,19 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setOpponentLevel(heroLandCompetitionRecordDP.getOpponentLevel());
         record.setId(heroLandCompetitionRecordDP.getId());
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
-        boolean lock = redisService.setNx(redisKey, record.getUserId(), "PT2H");
+        boolean lock = redisService.setNx(redisKey+record.getId(), record.getUserId(), "PT2H");
         redisService.set("question:" + redisKey+record.getUserId(), heroLandQuestionRecordDetailDP, 1200000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
             record.setInviteScore(0);
-            record.setSenderId(record.getOpponentId());
-            record.setAddresseeId(record.getInviteId());
+            record.setSenderId(record.getInviteId());
+            record.setAddresseeId(record.getOpponentId());
         }else {
             record.setOpponentEndTime(new Date());
             record.setOpponentScore(0);
-            record.setSenderId(record.getInviteId());
-            record.setAddresseeId(record.getOpponentId());
+            record.setSenderId(record.getOpponentId());
+            record.setAddresseeId(record.getInviteId());
         }
         if (lock) {
             //  如果正确 且先拿到锁，说明先答题，更新记录为当前人胜 且没有超时 如果第一个都超时，后一个没有必要再更新记录
@@ -227,8 +227,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
             heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             heroLandCompetitionRecordService.updateCompetitionRecord(record);
-            redisService.del(redisKey+record.getOpponentId());
-            redisService.del(redisKey+record.getInviteId());
+            redisService.del(redisKey);
 
             record.setType(STOP_ANSWER_QUESTIONS.getCode());
 
