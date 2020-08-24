@@ -11,6 +11,7 @@ import com.heroland.competition.domain.request.UserClassRequest;
 import com.heroland.competition.domain.request.UserDepartmentRequest;
 import com.heroland.competition.service.classmanage.HeroLandClassService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -74,6 +75,17 @@ public class HeroLandClassController {
         return heroLandClassService.getClassList(dp);
     }
 
+
+    /**
+     * 查询班级里所有的人的信息 根据usertype和classCode 来精确查询某个班某个类型的人的信息
+     * @param dp
+     * @return
+     */
+    @RequestMapping(value = "/getClassUserList")
+    public ResponseBody<List<PlatformSysUserDP>> getClassUserList(@RequestBody PlatformSysUserClassQO dp) {
+        return heroLandClassService.getClassUser(dp);
+    }
+
     /**
      * 查询班级列表
      * @param request
@@ -90,7 +102,7 @@ public class HeroLandClassController {
      * @return
      */
     @RequestMapping(value = "/getTeacherInfo")
-    public ResponseBody<List<HeroLandUserClassDP>> getTeacherInfo(@RequestBody HeroLandUserClassQO dp) {
+    public ResponseBody<List<PlatformSysUserDP>> getTeacherInfo(@RequestBody PlatformSysUserClassQO dp) {
         return heroLandClassService.getClassUser(dp);
     }
 
