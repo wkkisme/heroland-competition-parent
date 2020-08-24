@@ -101,6 +101,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         } else {
             heroLandQuestionRecordDetailDP.setAnswer(question.getOptionAnswer());
             heroLandQuestionRecordDetailDP.setScore(0);
+            heroLandQuestionRecordDetailDP.setCorrectAnswer(false);
             isRight = false;
         }
 
