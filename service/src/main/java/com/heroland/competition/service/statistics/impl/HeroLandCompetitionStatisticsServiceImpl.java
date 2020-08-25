@@ -383,11 +383,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
         if (!CollectionUtils.isEmpty(questionRecord.getData()) && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
             //根据topicId和questionId group by
-            Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
+            Map<Long, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getQuestionId));
 
             topicQuestionsItems.forEach(v -> {
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
-                List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString());
+                List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getId());
 
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId会有多场比赛 取最新的展示
