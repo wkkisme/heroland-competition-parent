@@ -158,7 +158,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
                 request.setDepartmentType("GA");
             }
             //查询参数不为空
-            switch (request.getDepartmentType()){
+            switch (request.getDepartmentType()) {
                 //暂时不根据班级去查
                 case "CA":
                     List<PlatformSysUserClassDP> classInfoByClass = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getClassCode())).collect(Collectors.toList());
@@ -170,7 +170,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
                     list = processClassInfo(classInfoByGrades, request);
                     break;
 
-                    //暂时不根据学校去查
+                //暂时不根据学校去查
                 case "SH":
                     List<PlatformSysUserClassDP> classInfoByOrgs = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getOrgCode())).collect(Collectors.toList());
                     list = processClassInfo(classInfoByOrgs, request);
@@ -182,14 +182,17 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
     }
 
-    private List<HeroLandUserClassInfoDto> processClassInfo(List<PlatformSysUserClassDP> classDPS, UserClassRequest request){
+    private List<HeroLandUserClassInfoDto> processClassInfo(List<PlatformSysUserClassDP> classDPS, UserClassRequest request) {
         List<HeroLandUserClassInfoDto> list = Lists.newArrayList();
-        List<String> classCodeList = classDPS.stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());;
-        List<String> gradeCodeList = classDPS.stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());;
-        List<String> orgCodeList = classDPS.stream().map(PlatformSysUserClassDP::getOrgCode).distinct().collect(Collectors.toList());;
+        List<String> classCodeList = classDPS.stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());
+        ;
+        List<String> gradeCodeList = classDPS.stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());
+        ;
+        List<String> orgCodeList = classDPS.stream().map(PlatformSysUserClassDP::getOrgCode).distinct().collect(Collectors.toList());
+        ;
 
         //批量查询班级人数
-        List<String> departmentCode =  Lists.newArrayList();
+        List<String> departmentCode = Lists.newArrayList();
         departmentCode.addAll(classCodeList);
         departmentCode.addAll(gradeCodeList);
         departmentCode.addAll(orgCodeList);
@@ -279,7 +282,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         List<String> userIds = classList.stream().map(PlatformSysUserClassDP::getUserId).collect(Collectors.toList());
         userQO.setUserIds(userIds);
         RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(userQO);
-        result.setData(listRpcResult.getData());
+        result.setData(listRpcResult.getData() == null ? Lists.newArrayList() : listRpcResult.getData());
         result.setPage(classListWrapper.getPage());
         return result;
     }
@@ -296,11 +299,11 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             return responseBody;
         }
         List<String> departmentCode = Lists.newArrayList();
-        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(request.getDepartmentType())){
+        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(request.getDepartmentType())) {
             departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getOrgCode).distinct().collect(Collectors.toList());
-        }else if (AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(request.getDepartmentType())){
+        } else if (AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(request.getDepartmentType())) {
             departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());
-        }else {
+        } else {
             departmentCode = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());
         }
         List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(departmentCode);
