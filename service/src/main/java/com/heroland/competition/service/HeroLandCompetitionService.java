@@ -1,6 +1,7 @@
 package com.heroland.competition.service;
 
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 
@@ -11,7 +12,7 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 public interface HeroLandCompetitionService {
 
     /**
-     * 标明自己的类型 {@link HeroLandTopicGroupDP#getType()}
+     * 标明自己的类型 {@link CompetitionEnum}
      * @return type
      */
     Integer getType();
