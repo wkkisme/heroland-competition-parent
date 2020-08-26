@@ -39,10 +39,12 @@ public class CloseOrderTask {
     /**
      * 0 15 10 * * ? *
      */
-    @Scheduled(cron = "0 27 23 ? * *")
+//    @Scheduled(cron = "0 27 23 ? * *")
+    @Scheduled(fixedRate = 10000)
     @Transactional(value="defaultTransactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
     public void batchCloseOrder() {
         Date now = new Date();
+        log.info("CloseOrderTask begin ## [{}]", now);
         List<HerolandPayDP> payDPS = herolandPayService.getPayByExpireTimeAndState(now, Lists.newArrayList(OrderStateEnum.CREATED.getCode()));
         if (!CollectionUtils.isEmpty(payDPS)){
             //进行关单操作

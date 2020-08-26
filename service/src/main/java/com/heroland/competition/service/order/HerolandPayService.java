@@ -25,6 +25,15 @@ public interface HerolandPayService {
     void updatePay(HerolandPayDP herolandPay);
 
 
+    /**
+     * 更新
+     * @param herolandPay
+     */
+    void completePay(HerolandPayDP herolandPay);
+
+    void failPay(Long payId);
+
+
     HerolandPayDP getPayById(Long id);
 
     PrePayDto prePay(PrePayQO prePayQO);

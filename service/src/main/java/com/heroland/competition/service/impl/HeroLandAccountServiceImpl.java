@@ -4,10 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandAccount;
@@ -144,7 +146,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         dp.queryDecrCheck();
         try {
 
-            if (!redisService.setNx("user_diamond_decr:" + userId, dp, "PT2h")) {
+            if (redisService.setNx("user_diamond_decr:" + userId, dp, "PT2h")) {
 
                 HeroLandAccountQO qo = new HeroLandAccountQO();
                 qo.setUserId(userId);
@@ -152,10 +154,16 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 ResponseBody<List<HeroLandAccountDP>> account = getAccount(qo);
                 List<HeroLandAccountDP> data = account.getData();
                 AssertUtils.assertThat(CollectionUtils.isEmpty(data), "用户账户不存在");
-
+                if (data.get(0).getBalance() == null || data.get(0).getBalance() < dp.getNum()){
+                    throw new AppSystemException(HerolandErrMsgEnum.FUNDS_INSUFFICIENT.getErrorMessage());
+                }
                 if (data.get(0).getBalance() != null && data.get(0).getBalance() >= dp.getNum()) {
                     HeroLandAccount heroLandAccount = new HeroLandAccount();
-                    BeanUtil.updateConversion(dp, heroLandAccount);
+                    try {
+                        BeanUtil.updateConversion(dp, heroLandAccount);
+                    }catch (Exception e){
+                        ResponseBodyWrapper.failSysException();
+                    }
                     HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
                     HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
                     criteria.andAccountIdEqualTo(dp.getAccountId());
@@ -172,10 +180,6 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     herolandDiamondService.createDiamondRecord(herolandDiamRequest);
                 }
             }
-        } catch (Exception e) {
-            logger.error("", e);
-            ResponseBodyWrapper.failSysException();
-
         } finally {
             redisService.del("user_diamond_decr:" + userId);
         }
@@ -191,7 +195,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             heroLandAccountQO.setPageSize(1);
             ResponseBody<List<HeroLandAccountDP>> account = getAccount(heroLandAccountQO);
             HeroLandAccountDP heroLandAccountDP =null;
-            if (!CollectionUtils.isEmpty(account.getData())){
+            if (CollectionUtils.isEmpty(account.getData())){
                  heroLandAccountDP = account.getData().get(0);
             }
             if (heroLandAccountDP == null){
@@ -226,32 +230,29 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         String userId = dp.getUserId();
         dp.queryIncrCheck();
         try {
+            HeroLandAccountQO qo = new HeroLandAccountQO();
+            qo.setUserId(userId);
 
-            if (!redisService.setNx("user_diamond_incr:" + userId, dp, "PT2h")) {
-
-                HeroLandAccountQO qo = new HeroLandAccountQO();
-                qo.setUserId(userId);
-
-                qo.setAccountId(dp.getAccountId());
-                ResponseBody<List<HeroLandAccountDP>> account = getAccount(qo);
-                List<HeroLandAccountDP> data = account.getData();
-                AssertUtils.assertThat(CollectionUtils.isEmpty(data), "用户账户不存在");
-                HeroLandAccountDP heroLandAccountDp = data.get(0);
-                HeroLandAccount heroLandAccount = new HeroLandAccount();
-                BeanUtil.updateConversion(dp, heroLandAccount);
-                HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
-                HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
-                criteria.andAccountIdEqualTo(dp.getAccountId());
-                criteria.andUserIdEqualTo(userId);
-                if (heroLandAccountDp.getBalance() == null) {
-                    heroLandAccountDp.setBalance(0L);
-                    heroLandAccount.setBalance(heroLandAccountDp.getBalance() + dp.getNum());
-                }
-                heroLandAccountExtMapper.updateByExampleSelective(heroLandAccount, heroLandAccountExample);
+            qo.setAccountId(dp.getAccountId());
+            ResponseBody<List<HeroLandAccountDP>> account = getAccount(qo);
+            List<HeroLandAccountDP> data = account.getData();
+            AssertUtils.assertThat(CollectionUtils.isEmpty(data), "用户账户不存在");
+            HeroLandAccountDP heroLandAccountDp = data.get(0);
+            HeroLandAccount heroLandAccount = new HeroLandAccount();
+            BeanUtil.updateConversion(dp, heroLandAccount);
+            HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
+            HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
+            criteria.andAccountIdEqualTo(dp.getAccountId());
+            criteria.andUserIdEqualTo(userId);
+            if (heroLandAccountDp.getBalance() == null) {
+                heroLandAccountDp.setBalance(0L);
+                heroLandAccount.setBalance(heroLandAccountDp.getBalance() + dp.getNum());
             }
+            heroLandAccountExtMapper.updateByExampleSelective(heroLandAccount, heroLandAccountExample);
+
         } catch (Exception e) {
             logger.error("", e);
-            ResponseBodyWrapper.failSysException();
+            ResponseBodyWrapper.failException(e.getMessage());
 
         } finally {
             redisService.del("user_diamond_incr:" + userId);

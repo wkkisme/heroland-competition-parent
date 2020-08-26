@@ -1,19 +1,26 @@
 package com.heroland.competition.service.order.impl;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.constants.OrderStateEnum;
-import com.heroland.competition.common.constants.PayEnvEnum;
+import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.constants.*;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
+import com.heroland.competition.dal.mapper.HerolandOrderMapper;
 import com.heroland.competition.dal.mapper.HerolandPayMapper;
+import com.heroland.competition.dal.pojo.HerolandDiamondStockLog;
+import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.dal.pojo.order.HerolandPay;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.PrePayQO;
+import com.heroland.competition.domain.request.HerolandDiamRequest;
+import com.heroland.competition.service.diamond.HerolandDiamondService;
+import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
 import com.platfrom.payment.api.PrePayRemoteService;
 import com.platfrom.payment.request.PrePayRequest;
@@ -21,6 +28,7 @@ import com.platfrom.payment.response.PrePayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -41,6 +49,21 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     @Resource
     private PrePayRemoteService prePayRemoteService;
 
+    @Resource
+    private HerolandOrderService herolandOrderService;
+
+    @Resource
+    private HerolandOrderMapper herolandOrderMapper;
+
+    @Resource
+    private HerolandDiamondService herolandDiamondService;
+
+    @Resource
+    private RedisService redisService;
+
+    private final String CLOSE_REASON = "查詢失敗";
+
+
     @Override
     public Long createPay(HerolandPayDP herolandPayDP) {
         HerolandPay herolandOrder = BeanCopyUtils.copyByJSON(herolandPayDP.checkAndBuildBeforeCreate(), HerolandPay.class);
@@ -49,17 +72,52 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     }
 
     @Override
-    public void updatePay(HerolandPayDP herolandPay) {
-        if (StringUtils.isBlank(herolandPay.getBizNo())){
-            ResponseBodyWrapper.failSysException();
+    public void updatePay(HerolandPayDP herolandPayDP) {
+        HerolandPay herolandPay = BeanCopyUtils.copyByJSON(herolandPayDP, HerolandPay.class);
+        if (!NumberUtils.nullOrZeroLong(herolandPay.getId())){
+           herolandPayMapper.updateByPrimaryKeySelective(herolandPay);
+           return;
+        }else {
+            if (StringUtils.isBlank(herolandPay.getBizNo())){
+                ResponseBodyWrapper.failSysException();
+            }
+            herolandPayMapper.updateByBizNo(herolandPay);
         }
-        try {
-            HerolandPay pay = BeanUtil.updateConversion(herolandPay, new HerolandPay());
-            herolandPayMapper.updateByBizNo(pay);
-        } catch (Exception e) {
-            log.error("updatePay error", e);
-            ResponseBodyWrapper.failSysException();
+    }
+
+    @Override
+    @Transactional
+    public void completePay(HerolandPayDP herolandPay) {
+        String key = String.format(RedisConstant.ORDER_DIAMOND_KEY, herolandPay.getBizNo());
+
+        if (redisService.setNx(key, herolandPay.getBizNo(), "PT1h")) {
+            //1 更新pay
+            updatePay(herolandPay);
+            //更新order
+            herolandOrderService.updateStateByBiz(herolandPay.getBizNo(), herolandPay.getPayFinishTime());
+
+            //加库存日志
+            //加账户总额
+            List<HerolandOrder> byBizNos = herolandOrderMapper.getByBizNos(Lists.newArrayList(herolandPay.getBizNo()));
+            if (!CollectionUtils.isEmpty(byBizNos)){
+                HerolandDiamRequest request = new HerolandDiamRequest();
+                request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
+                request.setBizName(DiamBizTypeEnum.PAY.getValue());
+                request.setNum(byBizNos.get(0).getSkuNum());
+                request.setUserId(byBizNos.get(0).getBuyerId());
+                request.setChangeStockType(StockEnum.INCREASE.getLevel());
+                herolandDiamondService.createDiamondRecord(request);
+            }
         }
+    }
+
+    @Override
+    @Transactional
+    public void failPay(Long payId) {
+        Date now = new Date();
+        updatePayState(OrderStateEnum.CLOSED.getCode(), Lists.newArrayList(payId));
+        HerolandPayDP payById = getPayById(payId);
+        herolandOrderService.closeOrders(CLOSE_REASON, now, Lists.newArrayList(payById.getBizNo()));
     }
 
     @Override

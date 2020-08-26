@@ -28,6 +28,8 @@ public enum HerolandErrMsgEnum {
 
     NOT_JOINED("70104", "该用户还未报名"),
 
+    FUNDS_INSUFFICIENT("70105", "账户余额不足"),
+
 
    ;
 

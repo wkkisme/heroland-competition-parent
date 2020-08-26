@@ -33,8 +33,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class QueryOrderTask {
-    @Resource
-    private HerolandOrderService herolandOrderService;
 
     @Resource
     private HerolandPayService herolandPayService;
@@ -42,18 +40,15 @@ public class QueryOrderTask {
     @Resource
     private PayQueryRemoteService payQueryRemoteService;
 
-    @Resource
-    private HerolandPayMapper herolandPayMapper;
-
-    private final String CLOSE_REASON = "超時關單";
-
     /**
      * 0 15 10 * * ? *
      */
-    @Scheduled(cron = "0 27 23 ? * *")
+//    @Scheduled(cron = "0 27 23 ? * *")
+    @Scheduled(fixedRate = 10000)
     @Transactional(value="defaultTransactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
     public void queryOrder() {
         Date now = new Date();
+        log.info("queryOrder begin ## [{}]", now);
         List<HerolandPayDP> payDPS = herolandPayService.getOrderByState(now, Lists.newArrayList(OrderStateEnum.CREATED.getCode()));
         if (!CollectionUtils.isEmpty(payDPS)){
             List<Long> ids = payDPS.stream().map(HerolandPayDP::getId).distinct().collect(Collectors.toList());
@@ -75,16 +70,12 @@ public class QueryOrderTask {
                         HerolandPayDP paydP = herolandPayService.getPayById(Long.parseLong(payId.getBizId()));
                         paydP.setState(OrderStateEnum.PAID.getCode());
                         paydP.setPayFinishTime(DateUtils.string2Date(payId.getPayFinishTime(),"yyyy-MM-dd HH:mm:ss"));
-                        herolandPayService.updatePay(paydP);
-                        //处理order
-                        herolandOrderService.updateStateByBiz(paydP.getBizNo(), paydP.getPayFinishTime());
+                        herolandPayService.completePay(paydP);
                     });
                 }
                 if (entry.getKey().equalsIgnoreCase("FAILED")){
                     List<Long> bizIds = entry.getValue().stream().map(PayOrderDTO::getBizId).map(Long::parseLong).collect(Collectors.toList());
-                    herolandPayService.updatePayState(OrderStateEnum.CLOSED.getCode(), ids);
-                    List<String> bizNos = payDPS.stream().map(HerolandPayDP::getBizNo).distinct().collect(Collectors.toList());
-                    herolandOrderService.closeOrders(CLOSE_REASON, now, bizNos);
+                    bizIds.stream().forEach(e -> herolandPayService.failPay(e));
                 }
             }
         }

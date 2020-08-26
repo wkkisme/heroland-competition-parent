@@ -8,6 +8,8 @@ public class RedisConstant {
 
     public static final String ADMIN_KEY ="ADMIN:%s";
 
+    public static final String ORDER_DIAMOND_KEY ="ORDER_DIAMOND:%s";
+
 
     public static final Integer EXPIRE_SECONDS = 86400;
 }
