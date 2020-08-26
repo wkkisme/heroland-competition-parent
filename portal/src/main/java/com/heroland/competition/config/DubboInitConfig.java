@@ -16,8 +16,8 @@ public class DubboInitConfig {
     @Reference(group = "heroland-competition",version = "1.0.0",check = false)
     private PrePayRemoteService prePayRemoteService;
 
-    @Reference(group = "heroland-competition",version = "1.0.0",check = false)
-    private PayQueryRemoteService payQueryRemoteService;
+//    @Reference(group = "heroland-competition",version = "1.1.0",check = false)
+//    private PayQueryRemoteService payQueryRemoteService;
 
 
     @Reference(group = "platform-sso",version = "1.0.0",check = false)
@@ -39,10 +39,10 @@ public class DubboInitConfig {
         return prePayRemoteService;
     }
 
-    @Bean("payQueryRemoteService")
-    public PayQueryRemoteService getPayQueryRemoteService(){
-        return payQueryRemoteService;
-    }
+//    @Bean("payQueryRemoteService")
+//    public PayQueryRemoteService getPayQueryRemoteService(){
+//        return payQueryRemoteService;
+//    }
 
 
     @Bean("platformSsoServiceFacade")
