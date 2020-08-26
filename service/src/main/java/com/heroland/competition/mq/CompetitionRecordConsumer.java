@@ -3,6 +3,7 @@ package com.heroland.competition.mq;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
@@ -42,7 +43,12 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
         HeroLandCompetitionRecordDP data = competitionRecordByInviteRecordId.getData();
         if (data != null) {
             if (data.getResult() == null) {
-                String redisKey = data.getTopicId() + data.getInviteId() + data.getOpponentId() +data.getId();
+                String redisKey;
+                if (CompetitionEnum.SYNC.getType().equals(message.getTopicType())) {
+                     redisKey = data.getTopicId() + data.getQuestionId() + data.getInviteId() + data.getOpponentId() + data.getId();
+                }else {
+                    redisKey = data.getTopicId()  + data.getInviteId() + data.getOpponentId() + data.getId();
+                }
 
                 message.setRecordId(data.getRecordId());
                 message.setId(data.getId());

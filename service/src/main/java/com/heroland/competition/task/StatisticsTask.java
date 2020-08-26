@@ -1,13 +1,20 @@
 package com.heroland.competition.task;
 
 import com.anycommon.response.utils.BeanUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.domain.qo.PlatformSysUserQO;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -34,6 +41,13 @@ public class StatisticsTask {
 
     @Resource
     private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
+
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
 
     /**
      * 统计所有人的比赛记录
@@ -80,7 +94,7 @@ public class StatisticsTask {
         totalQo.setGroupByType(true);
 
         List<HeroLandStatisticsDetailDP> totalSyncTotalScore = heroLandCompetitionRecordService.getTotalScore(totalQo);
-        if (CollectionUtils.isEmpty(totalSyncTotalScore)){
+        if (CollectionUtils.isEmpty(totalSyncTotalScore)) {
             return;
         }
         Map<String, HeroLandStatisticsDetailDP> mergeMap = Maps.newHashMapWithExpectedSize(totalSyncTotalScore.size());
@@ -137,8 +151,37 @@ public class StatisticsTask {
         }
 
         try {
+            Collection<HeroLandStatisticsDetailDP> values = mergeMap.values();
 
-            heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(mergeMap.values()));
+            // 查询字典
+            List<String> departmentCode = Lists.newArrayList();
+            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getClassCode).collect(Collectors.toList()));
+            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getGradeCode).collect(Collectors.toList()));
+            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getSubjectCode).collect(Collectors.toList()));
+            List<HerolandBasicDataDP> adminDataList = heroLandAdminService.getDictInfoByKeys(departmentCode);
+            Map<String, HerolandBasicDataDP> adminDataMap = adminDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
+
+
+            // 查询人信息
+            PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+            platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList()));
+            RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+            values.forEach(v -> {
+                v.setHistory(false);
+                if (!CollectionUtils.isEmpty(userList.getData())) {
+                    userList.getData().forEach(u -> {
+                        if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
+                            v.setUserName(u.getUserName());
+                        }
+                    });
+                }
+                if (!CollectionUtils.isEmpty(adminDataMap)) {
+                    v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
+                    v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
+                    v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
+                }
+            });
+            heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
         } catch (Exception e) {
             log.error("", e);
         }

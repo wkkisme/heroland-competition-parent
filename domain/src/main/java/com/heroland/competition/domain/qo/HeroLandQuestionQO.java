@@ -74,6 +74,9 @@ public class HeroLandQuestionQO extends BaseQO {
     private List<String> questionIds;
 
     private Set<Long> topicIds;
+    private Set<String> records;
+
+
 
     public HeroLandQuestionQO querySynCheck() {
 

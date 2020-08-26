@@ -7,6 +7,7 @@ import com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.dto.HeroLandTopicForSDto;
+import com.heroland.competition.domain.qo.HerolandTopicForSQO;
 import com.heroland.competition.domain.qo.HerolandTopicGroupGradeQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -93,7 +94,7 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
     }
 
     @Override
-    public List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicGroupGradeQO qo) {
+    public List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicForSQO qo) {
         return null;
     }
 }

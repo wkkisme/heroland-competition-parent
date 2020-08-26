@@ -178,10 +178,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         ResponseBody<List<HeroLandCompetitionRecordDP>> competitionRecords = getCompetitionRecords(qo);
         List<HeroLandCompetitionRecordDP> data = competitionRecords.getData();
         if (!CollectionUtils.isEmpty(data)) {
-            Set<Long> topicIds = data.stream().map(HeroLandCompetitionRecordDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet());
+            Set<String> records = data.stream().map(HeroLandCompetitionRecordDP::getRecordId).collect(Collectors.toSet());
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
-            heroLandQuestionQO.setTopicIds(topicIds);
             heroLandQuestionQO.setUserId(qo.getUserId());
+            heroLandQuestionQO.setRecords(records);
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             List<HeroLandQuestionRecordDetailDP> questionRecordData = questionRecord.getData();
             if (!CollectionUtils.isEmpty(questionRecordData)) {
