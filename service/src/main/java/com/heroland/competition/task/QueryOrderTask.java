@@ -5,6 +5,7 @@ import com.heroland.competition.common.constants.OrderStateEnum;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.service.order.HerolandPayService;
+import com.platfrom.payment.api.PayQueryRemoteService;
 import com.platfrom.payment.dto.PayOrderDTO;
 import com.platfrom.payment.request.QueryPayRequest;
 import com.platfrom.payment.response.QueryPayResponse;
@@ -33,8 +34,8 @@ public class QueryOrderTask {
     @Resource
     private HerolandPayService herolandPayService;
 
-//    @Resource
-//    private PayQueryRemoteService payQueryRemoteService;
+    @Resource
+    private PayQueryRemoteService payQueryRemoteService;
 
     /**
      * 0 15 10 * * ? *
@@ -51,8 +52,8 @@ public class QueryOrderTask {
             QueryPayRequest request = new QueryPayRequest();
             request.setBizId(ids.stream().map(e -> (e+"")).collect(Collectors.toList()));
             request.setBizType("competition");
-//            QueryPayResponse payResponse = payQueryRemoteService.batchFindPayOrder(request);
-            QueryPayResponse payResponse = null;
+            QueryPayResponse payResponse = payQueryRemoteService.batchFindPayOrder(request);
+//            QueryPayResponse payResponse = null;
             if (payResponse == null){
                 return;
             }

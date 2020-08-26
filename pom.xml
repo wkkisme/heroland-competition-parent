@@ -48,7 +48,8 @@
         <cache.version>1.0.1-SNAPSHOT</cache.version>
         <poi.version>1.0.0-SNAPSHOT</poi.version>
         <rocketmq-spring-boot-starter-version>2.1.1</rocketmq-spring-boot-starter-version>
-        <jetcache.version>2.6.0</jetcache.version>
+        <!--<jetcache.version>2.6.0</jetcache.version>-->
+        <curator.version>4.0.1</curator.version>
         <!--<ZHConverter.version>1.0.0</ZHConverter.version>-->
     </properties>
 
@@ -408,6 +409,13 @@
                 <!--<artifactId>jetcache-starter-redis</artifactId>-->
                 <!--<version>${jetcache.version}</version>-->
             <!--</dependency>-->
+
+            <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-framework -->
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
 
         </dependencies>
 
