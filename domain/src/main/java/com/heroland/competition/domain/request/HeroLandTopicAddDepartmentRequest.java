@@ -55,5 +55,5 @@ public class HeroLandTopicAddDepartmentRequest implements Serializable {
      * 添加的学校科目相关的列表
      * 如果是世界赛则不需要分配，该字段不需要
      */
-    List<HerolandTopicAddSchoolCourseRequest> schoolCourses;
+    private List<HerolandTopicAddSchoolCourseRequest> schoolCourses;
 }
