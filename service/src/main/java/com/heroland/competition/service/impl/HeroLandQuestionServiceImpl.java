@@ -101,24 +101,27 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     @Transactional
     public Boolean editTopic(HeroLandTopicGroupDP dp) {
-        if (NumberUtils.nullOrZeroLong(dp.getId())) {
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
-        }
+        checkBeforeUpdateEditTopic(dp);
         if (StringUtils.isAnyBlank(dp.getOrgCode(), dp.getTopicName())) {
-            ResponseBodyWrapper.failParamException();
-        }
-        if (dp.getStartTime() == null || dp.getEndTime() == null) {
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
-        }
-        if (dp.getStartTime().after(dp.getEndTime())) {
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
-        }
-
-        if (dp.getType() == null) {
             ResponseBodyWrapper.failParamException();
         }
         HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
         return heroLandTopicGroupMapper.updateByPrimaryKeySelective(heroLandTopicGroup) > 0;
+    }
+
+    private void checkBeforeUpdateEditTopic(HeroLandTopicGroupDP dp){
+        dp.updateCheck();
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(dp.getId());
+        if (Objects.equals(heroLandTopicGroup.getType(), dp.getType())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_TYPE.getErrorMessage());
+        }
+        Date now = new Date();
+        if (heroLandTopicGroup.getStartTime().after(now)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_BEGIN.getErrorMessage());
+        }
+        if (heroLandTopicGroup.getEndTime().before(now)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_END.getErrorMessage());
+        }
     }
 
     @Override
@@ -139,6 +142,38 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
         heroLandTopicGroupMapper.insertSelective(heroLandTopicGroup);
         return heroLandTopicGroup.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long addTopicForS(HeroLandTopicAddDepartmentRequest request) {
+        Long id = null;
+        HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
+        if (NumberUtils.nullOrZeroLong(request.getId())){
+            //新增
+            dp = dp.addCheckAndInit();
+            HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
+            heroLandTopicGroupMapper.insertSelective(heroLandTopicGroup);
+            id = heroLandTopicGroup.getId();
+        }else {
+            //编辑
+            checkBeforeUpdateEditTopic(dp);
+            HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
+            heroLandTopicGroupMapper.updateByPrimaryKeySelective(heroLandTopicGroup);
+            id = request.getId();
+            herolandTopicGroupPartService.deleteDepartmentBytopicIds(Lists.newArrayList(id));
+        }
+        Long topicId = id;
+        if (!CollectionUtils.isEmpty(request.getSchoolCourses())){
+            List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
+            request.getSchoolCourses().stream().forEach(e -> {
+                HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(request, HerolandTopicGroupPartDP.class);
+                partDP.setTopicId(topicId);
+                list.add(partDP);
+            });
+            herolandTopicGroupPartService.addBatchDepartment(list);
+        }
+        return topicId;
     }
 
     @Override

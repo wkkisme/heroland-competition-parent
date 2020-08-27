@@ -40,6 +40,9 @@ public interface HeroLandQuestionService{
      */
     Long addTopic(HeroLandTopicGroupDP dp);
 
+
+    Long addTopicForS(HeroLandTopicAddDepartmentRequest request);
+
     /**
      * 获取题组下的题
      * @param request

@@ -63,10 +63,19 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
     @Override
     public Boolean deleteDepartment(List<Long> list) {
         if (CollectionUtils.isEmpty(list)){
-            return false;
+            return true;
         }
         return herolandTopicGroupPartMapper.batchDeleteById(list) > 0;
     }
+
+    @Override
+    public Boolean deleteDepartmentBytopicIds(List<Long> list) {
+        if (CollectionUtils.isEmpty(list)){
+            return true;
+        }
+        return herolandTopicGroupPartMapper.batchDeleteByTopicIds(list) > 0;
+    }
+
 
     @Override
     public List<HeroLandTopicForSDto> listDepartmentByGrades(HerolandTopicGroupGradeQO qo) {

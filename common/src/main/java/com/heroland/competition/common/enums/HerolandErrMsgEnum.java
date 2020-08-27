@@ -30,6 +30,12 @@ public enum HerolandErrMsgEnum {
 
     FUNDS_INSUFFICIENT("70105", "账户余额不足"),
 
+    ERROR_UPDATE_PARAM_TYPE("70106", "比赛类型不能修改"),
+
+    ERROR_UPDATE_PARAM_BEGIN("70107", "比赛已经开始，不支持修改"),
+
+    ERROR_UPDATE_PARAM_END("70108", "比赛已经结束，不支持修改"),
+
 
    ;
 

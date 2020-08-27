@@ -72,6 +72,11 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
     @ApiModelProperty(value = "questions题目")
     private List<HerolandQuestionUniqDP> questions;
 
+    /**
+     * 简介
+     */
+    private String desc;
+
 
     public HeroLandTopicGroupDP addCheckAndInit() {
         if (StringUtils.isAnyBlank(this.getOrgCode(), this.getTopicName())) {
@@ -87,6 +92,9 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         if (startTime.after(endTime)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
+        if (StringUtils.isBlank(topicName)) {
+            ResponseBodyWrapper.failParamException();
+        }
 
         this.topicId = IDGenerateUtils.getKey(AdminFieldEnum.TOPIC);
         this.beforeInsert();
@@ -99,6 +107,25 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         }
         this.beforeDelete();
 
+        return this;
+    }
+
+    public HeroLandTopicGroupDP updateCheck() {
+        if (this.getId() == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (this.getType() == null) {
+            ResponseBodyWrapper.failParamException();
+        }
+        if (startTime == null || endTime == null){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (startTime.after(endTime)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (StringUtils.isBlank(topicName)) {
+            ResponseBodyWrapper.failParamException();
+        }
         return this;
     }
 }

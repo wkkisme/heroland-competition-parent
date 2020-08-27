@@ -31,4 +31,6 @@ public interface HerolandTopicGroupPartMapper {
     int batchInsert(@Param("records") List<HerolandTopicGroupPart> list);
 
     int batchDeleteById(@Param("ids") List<Long> list);
+
+    int batchDeleteByTopicIds(@Param("topicIds") List<Long> topicIds);
 }

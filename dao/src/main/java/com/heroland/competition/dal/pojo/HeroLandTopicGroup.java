@@ -69,6 +69,12 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
     private Integer diff;
 
     /**
+     * 简介
+     */
+    @ApiModelProperty(value="简介")
+    private String desc;
+
+    /**
      * heroland_topic_group
      */
     private static final long serialVersionUID = 1L;
@@ -231,5 +237,13 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
      */
     public void setDiff(Integer diff) {
         this.diff = diff;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

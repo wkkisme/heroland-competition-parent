@@ -172,11 +172,25 @@ public class HeroLandTopicQuestionController {
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
             request.getSchoolCourses().stream().forEach(e -> {
                 HerolandTopicGroupPartDP dp = BeanCopyUtils.copyByJSON(request, HerolandTopicGroupPartDP.class);
-                dp.setTopicId(request.getTopicId());
+                dp.setTopicId(request.getId());
                 list.add(dp);
             });
             result.setData(herolandTopicGroupPartService.addBatchDepartment(list));
         }
+        result.setData(false);
+        return result;
+    }
+
+    /**
+     * 新增一个校际赛|世界赛
+     * @param request
+     * @return e
+     * @module 題目組
+     */
+    @RequestMapping("/schoolTopic")
+    public ResponseBody<Boolean> addSchoolTopic(@RequestBody HeroLandTopicAddDepartmentRequest request){
+        ResponseBody<Boolean> result = new ResponseBody<>();
+        heroLandQuestionService.addTopicForS(request);
         result.setData(false);
         return result;
     }

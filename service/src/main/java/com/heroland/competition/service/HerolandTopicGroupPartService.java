@@ -17,6 +17,8 @@ public interface HerolandTopicGroupPartService {
 
     Boolean deleteDepartment(List<Long> list);
 
+    Boolean deleteDepartmentBytopicIds(List<Long> list);
+
     List<HeroLandTopicForSDto> listDepartmentByGrades(HerolandTopicGroupGradeQO qo);
 
     List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicForSQO qo);
