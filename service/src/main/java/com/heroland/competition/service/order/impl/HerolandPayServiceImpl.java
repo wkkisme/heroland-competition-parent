@@ -90,23 +90,29 @@ public class HerolandPayServiceImpl implements HerolandPayService {
         String key = String.format(RedisConstant.ORDER_DIAMOND_KEY, herolandPay.getBizNo());
 
         if (redisService.setNx(key, herolandPay.getBizNo(), "PT1h")) {
-            //1 更新pay
-            updatePay(herolandPay);
-            //更新order
-            herolandOrderService.updateStateByBiz(herolandPay.getBizNo(), herolandPay.getPayFinishTime());
 
-            //加库存日志
-            //加账户总额
-            List<HerolandOrder> byBizNos = herolandOrderMapper.getByBizNos(Lists.newArrayList(herolandPay.getBizNo()));
-            if (!CollectionUtils.isEmpty(byBizNos)){
-                HerolandDiamRequest request = new HerolandDiamRequest();
-                request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
-                request.setBizName(DiamBizTypeEnum.PAY.getValue());
-                request.setNum(byBizNos.get(0).getSkuNum());
-                request.setUserId(byBizNos.get(0).getBuyerId());
-                request.setChangeStockType(StockEnum.INCREASE.getLevel());
-                herolandDiamondService.createDiamondRecord(request);
+            try {
+                //1 更新pay
+                updatePay(herolandPay);
+                //更新order
+                herolandOrderService.updateStateByBiz(herolandPay.getBizNo(), herolandPay.getPayFinishTime());
+
+                //加库存日志
+                //加账户总额
+                List<HerolandOrder> byBizNos = herolandOrderMapper.getByBizNos(Lists.newArrayList(herolandPay.getBizNo()));
+                if (!CollectionUtils.isEmpty(byBizNos)){
+                    HerolandDiamRequest request = new HerolandDiamRequest();
+                    request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
+                    request.setBizName(DiamBizTypeEnum.PAY.getValue());
+                    request.setNum(byBizNos.get(0).getSkuNum());
+                    request.setUserId(byBizNos.get(0).getBuyerId());
+                    request.setChangeStockType(StockEnum.INCREASE.getLevel());
+                    herolandDiamondService.createDiamondRecord(request);
+                }
+            }catch (Exception e){
+                redisService.del(key);
             }
+
         }
     }
 

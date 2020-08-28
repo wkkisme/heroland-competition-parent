@@ -334,7 +334,7 @@
   <update id="updatePayState" >
     update heroland_pay
     set `state` = #{state,jdbcType=VARCHAR}
-    where
+    <where>
     <if test="payIds != null and payIds.size > 0">
       and id IN (
       <foreach collection="payIds" item="id" index="index" separator=",">
@@ -342,6 +342,7 @@
       </foreach>
       )
     </if>
+    </where>
   </update>
 
   <select id="selectByExpireTimeAndStates"  resultMap="BaseResultMap">
