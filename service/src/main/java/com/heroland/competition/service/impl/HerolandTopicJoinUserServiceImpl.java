@@ -46,7 +46,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
     private HeroLandQuestionService heroLandQuestionService;
 
     @Override
-    public Boolean join(HerolandTopicJoinUserDP dp) {
+    public Boolean addJoin(HerolandTopicJoinUserDP dp) {
         HerolandTopicJoinUserDP herolandTopicJoinUserDP = dp.checkAndBuildBefore();
         HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
         example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserEqualTo(dp.getJoinUser()).andStateEqualTo(dp.getState());

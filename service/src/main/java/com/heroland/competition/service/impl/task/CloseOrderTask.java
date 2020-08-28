@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl.task;
 
+import com.anycommon.response.expception.AppSystemException;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
 import com.heroland.competition.domain.dp.HerolandPayDP;
@@ -50,7 +51,8 @@ public class CloseOrderTask {
             List<Long> ids = payDPS.stream().map(HerolandPayDP::getId).distinct().collect(Collectors.toList());
             herolandPayService.updatePayState(OrderStateEnum.CLOSED.getCode(), ids);
             List<String> bizNos = payDPS.stream().map(HerolandPayDP::getBizNo).distinct().collect(Collectors.toList());
-            herolandOrderService.closeOrders(CLOSE_REASON, now, bizNos);
+            throw new AppSystemException();
+//            herolandOrderService.closeOrders(CLOSE_REASON, now, bizNos);
         }
     }
 

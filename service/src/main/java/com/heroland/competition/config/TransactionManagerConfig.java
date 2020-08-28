@@ -31,7 +31,7 @@ import java.util.Map;
 public class TransactionManagerConfig {
     private final static Logger logger = LoggerFactory.getLogger(TransactionManagerConfig.class);
     private static final int AOP_TIME_OUT = 50000;
-    private static final String AOP_POINTCUT_EXPRESSION = "execution(* com.heroland.competition..*.impl.*.*(..)))";
+    private static final String AOP_POINTCUT_EXPRESSION = "execution(* com.heroland.competition..*.impl..*.*(..)))";
 
     @Resource
     private PlatformTransactionManager transactionManager;
@@ -58,11 +58,14 @@ public class TransactionManagerConfig {
         /* 可以提及事务或回滚事务的方法 */
         methodMap.put("add*", requiredTx);
         methodMap.put("save*", requiredTx);
+        methodMap.put("create*", requiredTx);
+        methodMap.put("import*", requiredTx);
         methodMap.put("update*", requiredTx);
         methodMap.put("modify*", requiredTx);
         methodMap.put("edit*", requiredTx);
         methodMap.put("insert*", requiredTx);
         methodMap.put("delete*", requiredTx);
+        methodMap.put("cancel*", requiredTx);
         methodMap.put("remove*", requiredTx);
         methodMap.put("repair*", requiredTx);
         methodMap.put("binding*", requiredTx);
@@ -74,6 +77,7 @@ public class TransactionManagerConfig {
         methodMap.put("batchClose*", requiredTx);
         methodMap.put("complete*", requiredTx);
         methodMap.put("fail*", requiredTx);
+        methodMap.put("close*", requiredTx);
 
         /* 其他方法无事务，只读 */
         methodMap.put("*", readOnlyTx);

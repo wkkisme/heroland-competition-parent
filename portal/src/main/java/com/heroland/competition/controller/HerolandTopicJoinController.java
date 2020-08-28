@@ -34,7 +34,7 @@ public class HerolandTopicJoinController {
     public ResponseBody<Boolean> join(@RequestBody HerolandTopicJoinRequest request) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         HerolandTopicJoinUserDP dp = BeanCopyUtils.copyByJSON(request, HerolandTopicJoinUserDP.class);
-        result.setData(herolandTopicJoinUserService.join(dp));
+        result.setData(herolandTopicJoinUserService.addJoin(dp));
         return result;
     }
 

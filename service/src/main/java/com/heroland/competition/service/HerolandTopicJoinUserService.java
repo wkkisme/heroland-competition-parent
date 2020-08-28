@@ -12,7 +12,7 @@ import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
  */
 public interface HerolandTopicJoinUserService {
 
-    Boolean join(HerolandTopicJoinUserDP dp);
+    Boolean addJoin(HerolandTopicJoinUserDP dp);
 
     Boolean cancel(HerolandTopicJoinUserDP dp);
 
