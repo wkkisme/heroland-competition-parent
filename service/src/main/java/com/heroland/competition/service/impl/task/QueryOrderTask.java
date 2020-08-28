@@ -1,4 +1,4 @@
-package com.heroland.competition.task;
+package com.heroland.competition.service.impl.task;
 
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
@@ -12,9 +12,6 @@ import com.platfrom.payment.response.QueryPayResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -42,7 +39,6 @@ public class QueryOrderTask {
      */
 //    @Scheduled(cron = "0 27 23 ? * *")
     @Scheduled(fixedRate = 10000)
-    @Transactional(value="defaultTransactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
     public void queryOrder() {
         Date now = new Date();
         log.info("queryOrder begin ## [{}]", now);

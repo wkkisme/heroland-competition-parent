@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 /**
  * @author wangkai
  */
-@SpringBootApplication(scanBasePackages = {"com.heroland.competition","com.anycommon"})
+@SpringBootApplication(scanBasePackages = {"com.heroland.competition"})
 //@ImportResource(locations = {"classpath*:heroland-*.xml"})
 @MapperScan("com.heroland.competition.dal")
 @RestController

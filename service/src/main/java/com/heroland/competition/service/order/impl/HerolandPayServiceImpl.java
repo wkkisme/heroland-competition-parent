@@ -86,7 +86,6 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     }
 
     @Override
-    @Transactional
     public void completePay(HerolandPayDP herolandPay) {
         String key = String.format(RedisConstant.ORDER_DIAMOND_KEY, herolandPay.getBizNo());
 
@@ -112,7 +111,6 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     }
 
     @Override
-    @Transactional
     public void failPay(Long payId) {
         Date now = new Date();
         updatePayState(OrderStateEnum.CLOSED.getCode(), Lists.newArrayList(payId));

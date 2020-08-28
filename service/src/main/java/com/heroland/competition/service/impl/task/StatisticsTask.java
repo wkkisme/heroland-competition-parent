@@ -1,10 +1,8 @@
-package com.heroland.competition.task;
+package com.heroland.competition.service.impl.task;
 
-import com.anycommon.response.utils.BeanUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsTotalDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;

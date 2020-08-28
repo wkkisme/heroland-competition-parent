@@ -165,4 +165,33 @@ public class HeroLandSchoolController {
         return result;
     }
 
+    /**
+     * 获取固定的地区信息
+     * @return
+     */
+    @RequestMapping(value = "/schoolsByGrades", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades() {
+        ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
+        List<HerolandSchoolSimpleDto> list = Lists.newArrayList();
+        HerolandDataPageRequest request = new HerolandDataPageRequest();
+        request.setCode(AdminFieldEnum.AREA.getCode());
+        request.setNeedPage(false);
+        PageResponse<HerolandBasicDataDP> area = heroLandAdminService.pageDataByCode(request);
+        if (!CollectionUtils.isEmpty(area.getItems())){
+            area.getItems().stream().forEach(e -> {
+                HerolandSchoolSimpleDto simpleDto = new HerolandSchoolSimpleDto();
+                simpleDto.setId(e.getId());
+                simpleDto.setCode(AdminFieldEnum.AREA.getCode());
+                simpleDto.setKey(e.getDictKey());
+                simpleDto.setName(e.getDictValue());
+                simpleDto.setBizNo(e.getBizNo());
+                simpleDto.setBizI18N(e.getBizI18N());
+                list.add(simpleDto);
+            });
+        }
+        result.setData(list);
+        return result;
+    }
+
 }

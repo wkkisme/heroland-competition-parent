@@ -1,11 +1,10 @@
-package com.heroland.competition.task;
+package com.heroland.competition.service.impl.task;
 
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.OrderStateEnum;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
-import com.platfrom.payment.api.PrePayRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,7 @@ public class CloseOrderTask {
      */
 //    @Scheduled(cron = "0 27 23 ? * *")
     @Scheduled(fixedRate = 10000)
-    @Transactional(value="defaultTransactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
+    @Transactional(value="transactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
     public void batchCloseOrder() {
         Date now = new Date();
         log.info("CloseOrderTask begin ## [{}]", now);
