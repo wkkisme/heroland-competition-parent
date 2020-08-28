@@ -40,7 +40,6 @@ public class CloseOrderTask {
      */
 //    @Scheduled(cron = "0 27 23 ? * *")
     @Scheduled(fixedRate = 10000)
-    @Transactional(value="transactionManager",propagation= Propagation.REQUIRED,isolation= Isolation.READ_UNCOMMITTED,rollbackFor=Throwable.class)
     public void batchCloseOrder() {
         Date now = new Date();
         log.info("CloseOrderTask begin ## [{}]", now);
