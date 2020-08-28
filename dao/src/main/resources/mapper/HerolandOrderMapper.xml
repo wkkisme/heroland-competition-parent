@@ -335,7 +335,7 @@
   </select>
 
   <update id="closeOrders" >
-    update heroland_pay
+    update heroland_order
     set
     <if test="closeReason != null">
       close_reason = #{closeReason,jdbcType=VARCHAR},
@@ -354,7 +354,7 @@
   </update>
 
   <update id="updateStateByBiz" >
-    update heroland_pay
+    update heroland_order
     set
     `state` = "PAID", paid_time = #{paidTime,jdbcType=TIMESTAMP}
     where
