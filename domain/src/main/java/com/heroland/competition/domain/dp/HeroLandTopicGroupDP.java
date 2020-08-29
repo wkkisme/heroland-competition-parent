@@ -75,7 +75,7 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
     /**
      * 简介
      */
-    private String desc;
+    private String description;
 
 
     public HeroLandTopicGroupDP addCheckAndInit() {

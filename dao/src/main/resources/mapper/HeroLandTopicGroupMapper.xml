@@ -18,7 +18,7 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
     <result column="diff" jdbcType="INTEGER" property="diff" />
-    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +80,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, org_code, topic_name, grade_code, class_code, course_code, type, creator, modifier, 
-    gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,desc
+    gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,description
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
     select
@@ -134,13 +134,13 @@
       class_code, course_code, type, 
       creator, modifier, gmt_create, 
       gmt_modified, is_deleted, start_time, 
-      end_time, level_code, diff,desc
+      end_time, level_code, diff,description
       )
     values (#{orgCode,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{courseCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{levelCode,jdbcType=VARCHAR}, #{diff,jdbcType=INTEGER},#{desc,jdbcType=VARCHAR}
+      #{endTime,jdbcType=TIMESTAMP}, #{levelCode,jdbcType=VARCHAR}, #{diff,jdbcType=INTEGER},#{description,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroup">
@@ -194,8 +194,8 @@
       <if test="diff != null">
         diff,
       </if>
-      <if test="desc != null">
-        desc,
+      <if test="description != null">
+        description,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -244,8 +244,8 @@
       <if test="diff != null">
         #{diff,jdbcType=INTEGER},
       </if>
-      <if test="desc != null">
-        #{desc,jdbcType=VARCHAR},
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -306,8 +306,8 @@
       <if test="record.diff != null">
         diff = #{record.diff,jdbcType=INTEGER},
       </if>
-      <if test="record.desc != null">
-        desc = #{record.desc,jdbcType=VARCHAR},
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -332,7 +332,7 @@
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       level_code = #{record.levelCode,jdbcType=VARCHAR},
       diff = #{record.diff,jdbcType=INTEGER},
-    desc = #{record.desc,jdbcType=VARCHAR}
+    description = #{record.description,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -385,8 +385,8 @@
       <if test="diff != null">
         diff = #{diff,jdbcType=INTEGER},
       </if>
-      <if test="desc != null">
-        desc = #{desc,jdbcType=VARCHAR},
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
       </if>
 
     </set>
@@ -409,7 +409,7 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       level_code = #{levelCode,jdbcType=VARCHAR},
       diff = #{diff,jdbcType=INTEGER},
-       desc = #{desc,jdbcType=VARCHAR}
+       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

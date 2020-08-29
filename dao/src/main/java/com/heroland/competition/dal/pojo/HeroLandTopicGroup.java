@@ -72,7 +72,7 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
      * 简介
      */
     @ApiModelProperty(value="简介")
-    private String desc;
+    private String description;
 
     /**
      * heroland_topic_group
@@ -239,11 +239,12 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
         this.diff = diff;
     }
 
-    public String getDesc() {
-        return desc;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

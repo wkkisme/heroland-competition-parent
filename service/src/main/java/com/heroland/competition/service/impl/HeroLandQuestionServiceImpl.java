@@ -149,6 +149,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     public Long addTopicForS(HeroLandTopicAddDepartmentRequest request) {
         Long id = null;
         HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
+        dp.setDescription(request.getDesc());
         if (NumberUtils.nullOrZeroLong(request.getId())){
             //新增
             dp = dp.addCheckAndInit();
