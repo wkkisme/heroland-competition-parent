@@ -242,7 +242,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             BeanUtil.updateConversion(dp, heroLandAccount);
             HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
             HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
-            criteria.andAccountIdEqualTo(dp.getAccountId());
+//            criteria.andAccountIdEqualTo(dp.getAccountId());
             criteria.andUserIdEqualTo(userId);
             if (heroLandAccountDp.getBalance() == null) {
                 heroLandAccountDp.setBalance(0L);
