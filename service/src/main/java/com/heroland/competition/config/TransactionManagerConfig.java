@@ -80,7 +80,7 @@ public class TransactionManagerConfig {
         methodMap.put("close*", requiredTx);
 
         /* 其他方法无事务，只读 */
-        methodMap.put("*", readOnlyTx);
+//        methodMap.put("*", readOnlyTx);
         source.setNameMap(methodMap);
 
         return new TransactionInterceptor(transactionManager, source);
