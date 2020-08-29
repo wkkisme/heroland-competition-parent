@@ -257,8 +257,13 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         }
         HerolandQuestionBank bank = herolandQuestionBankMapper.selectByPrimaryKey(id);
+        HeroLandQuestionBankDto bankDto = build(bank);
+        return bankDto;
+    }
+
+    private HeroLandQuestionBankDto build(HerolandQuestionBank bank){
         HeroLandQuestionBankDto bankDto = getAdminData(bank);
-        List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(id), KnowledgeReferEnum.QUESTION.getType());
+        List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(bank.getId()), KnowledgeReferEnum.QUESTION.getType());
         List<Long> knowledgeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
         List<HerolandKnowledgeSimpleDto> dtoList = Lists.newArrayList();
         if (!CollectionUtils.isEmpty(knowledgeIds)) {
@@ -266,7 +271,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             dtoList = herolandKnowledges.stream().map(this::convert).collect(Collectors.toList());
         }
 
-        List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(Lists.newArrayList(id));
+        List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(Lists.newArrayList(bank.getId()));
         if (!CollectionUtils.isEmpty(byQtId)) {
             bankDto.setAnswer(byQtId.get(0).getAnswer());
             bankDto.setOptionAnswer(byQtId.get(0).getOptionAnswer());
@@ -278,6 +283,17 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         }
         bankDto.setKnowledges(dtoList);
         return bankDto;
+    }
+
+    @Override
+    public HeroLandQuestionBankDto getByQtId(String qtId) {
+        if (StringUtils.isEmpty(qtId)) {
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        }
+        HerolandQuestionBank bank = herolandQuestionBankMapper.selectByQtId(qtId);
+        HeroLandQuestionBankDto bankDto = build(bank);
+        return bankDto;
+
     }
 
     private HerolandKnowledgeSimpleDto convert(HerolandKnowledge knowledge) {

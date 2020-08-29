@@ -38,12 +38,14 @@ public interface HeroLandQuestionBankService {
     /**
      * 根据id进行删除
      * 只删除当前快照号的
-     * @param qtId
+     * @param id
      * @return
      */
-    Boolean deleteById(Long qtId);
+    Boolean deleteById(Long id);
 
-    HeroLandQuestionBankDto getById(Long qtId);
+    HeroLandQuestionBankDto getById(Long id);
+
+    HeroLandQuestionBankDto getByQtId(String qtId);
 
     PageResponse<HeroLandQuestionBankSimpleDto> pageQuery(HerolandQuestionBankPageRequest request);
 

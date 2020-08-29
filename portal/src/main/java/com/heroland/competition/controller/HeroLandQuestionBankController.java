@@ -60,6 +60,14 @@ public class HeroLandQuestionBankController {
         return result;
     }
 
+    @RequestMapping(value = "/qtId", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<HeroLandQuestionBankDto> createQuestion(@RequestParam("qtId") String id) {
+        ResponseBody<HeroLandQuestionBankDto> result = new ResponseBody<>();
+        result.setData(heroLandQuestionBankService.getByQtId(id));
+        return result;
+    }
+
     /**
      * 删除
      * @return
