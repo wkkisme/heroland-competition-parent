@@ -246,8 +246,8 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             criteria.andUserIdEqualTo(userId);
             if (heroLandAccountDp.getBalance() == null) {
                 heroLandAccountDp.setBalance(0L);
-                heroLandAccount.setBalance(heroLandAccountDp.getBalance() + dp.getNum());
             }
+            heroLandAccount.setBalance(heroLandAccountDp.getBalance() + dp.getNum());
             heroLandAccountExtMapper.updateByExampleSelective(heroLandAccount, heroLandAccountExample);
 
         } catch (Exception e) {
