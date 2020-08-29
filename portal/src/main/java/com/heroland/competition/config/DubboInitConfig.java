@@ -16,7 +16,7 @@ public class DubboInitConfig {
     @Reference(group = "heroland-competition",version = "1.0.0",check = false)
     private PrePayRemoteService prePayRemoteService;
 
-    @Reference(group = "heroland-competition",version = "1.1.0",check = false)
+    @Reference(group = "heroland-competition",version = "1.0.0",check = false)
     private PayQueryRemoteService payQueryRemoteService;
 
 
