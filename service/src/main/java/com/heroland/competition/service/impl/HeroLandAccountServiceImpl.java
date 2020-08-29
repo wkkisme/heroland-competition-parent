@@ -236,7 +236,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             qo.setAccountId(dp.getAccountId());
             ResponseBody<List<HeroLandAccountDP>> account = getAccount(qo);
             List<HeroLandAccountDP> data = account.getData();
-            AssertUtils.assertThat(CollectionUtils.isEmpty(data), "用户账户不存在");
+            AssertUtils.assertThat(!CollectionUtils.isEmpty(data), "用户账户不存在");
             HeroLandAccountDP heroLandAccountDp = data.get(0);
             HeroLandAccount heroLandAccount = new HeroLandAccount();
             BeanUtil.updateConversion(dp, heroLandAccount);
