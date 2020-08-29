@@ -48,6 +48,16 @@
         from heroland_question_bank
         where id = #{id,jdbcType=BIGINT}
     </select>
+
+    <select id="selectByQtId"  resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        where qt_id = #{qtId,jdbcType=VARCHAR} and is_deleted = 0
+        order by id desc
+        limit 1
+    </select>
+
     <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
     update  heroland_question_bank set is_deleted = 1
     where id = #{id,jdbcType=BIGINT}

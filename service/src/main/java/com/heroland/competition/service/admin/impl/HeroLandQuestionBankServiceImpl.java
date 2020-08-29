@@ -80,11 +80,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
 
     @Override
-    @Transactional
     public Boolean createQuestion(HerolandQuestionBankDP dp) {
-        if (!NumberUtils.nullOrZeroLong(dp.getId())) {
-            return editQuestion(dp);
-        }
         dp = dp.checkAndBuildBeforeCreate();
         HerolandQuestionBank bank = new HerolandQuestionBank();
         bank.setCourse(dp.getCourse());
@@ -102,6 +98,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         bank.setStorage(dp.getStorage());
         bank.setThink(dp.getThink());
         bank.setPassageId(dp.getPassageId());
+        bank.setBankType(dp.getBankType());
         herolandQuestionBankMapper.insertSelective(bank);
 
         //添加detail相关部分
@@ -206,20 +203,21 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
      * @return
      */
     @Override
-    @Transactional
     public Boolean editQuestion(HerolandQuestionBankDP dp) {
-        if (NumberUtils.nullOrZeroLong(dp.getId())) {
+        if (StringUtils.isEmpty(dp.getQtId())) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         }
-        HerolandQuestionBank bank = herolandQuestionBankMapper.selectByPrimaryKey(dp.getId());
-        herolandQuestionBankMapper.deleteByPrimaryKey(dp.getId());
-//        bank.getQtId()
-
+        HerolandQuestionBank bank = herolandQuestionBankMapper.selectByQtId(dp.getQtId());
+        if (bank != null){
+            herolandQuestionBankMapper.deleteByPrimaryKey(dp.getId());
+        }
+        dp.setSnapshotNo(bank.getSnapshotNo() + 1);
+        dp.setQtId(dp.getQtId());
+        createQuestion(dp);
         return true;
     }
 
     @Override
-    @Transactional
     public Boolean deleteByqtId(String ids) {
 //        if (StringUtils.isEmpty(ids)) {
 //            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
@@ -242,7 +240,6 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     @Override
-    @Transactional
     public Boolean deleteById(Long id) {
         if (NumberUtils.nullOrZeroLong(id)) {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());

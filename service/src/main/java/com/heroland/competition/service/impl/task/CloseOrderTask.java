@@ -51,8 +51,8 @@ public class CloseOrderTask {
             List<Long> ids = payDPS.stream().map(HerolandPayDP::getId).distinct().collect(Collectors.toList());
             herolandPayService.updatePayState(OrderStateEnum.CLOSED.getCode(), ids);
             List<String> bizNos = payDPS.stream().map(HerolandPayDP::getBizNo).distinct().collect(Collectors.toList());
-            throw new AppSystemException();
-//            herolandOrderService.closeOrders(CLOSE_REASON, now, bizNos);
+//            throw new AppSystemException();
+            herolandOrderService.closeOrders(CLOSE_REASON, now, bizNos);
         }
     }
 

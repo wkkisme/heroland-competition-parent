@@ -1,8 +1,5 @@
 package com.heroland.competition.controller;
 
-import cn.hutool.poi.word.WordUtil;
-import com.anycommon.poi.word.Question;
-import com.anycommon.poi.word.WordFileService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.ResponseBodyWrapper;
@@ -20,21 +17,14 @@ import com.heroland.competition.domain.request.HerolandQuestionBankListForChapte
 import com.heroland.competition.domain.request.HerolandQuestionBankPageRequest;
 import com.heroland.competition.domain.request.HerolandQuestionBankRequest;
 import com.heroland.competition.service.admin.HeroLandQuestionBankService;
-import com.heroland.competition.service.order.HerolandPayService;
-import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.MultipartRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,10 +39,8 @@ public class HeroLandQuestionBankController {
     @Resource
     private HeroLandQuestionBankService heroLandQuestionBankService;
 
-    @Resource
-    private HerolandPayService herolandPayService;
     /**
-     * 创建题目
+     * 后台创建和修改题目
      * @param request
      * @return
      */
@@ -61,7 +49,13 @@ public class HeroLandQuestionBankController {
     public ResponseBody<Boolean> createQuestion(@RequestBody HerolandQuestionBankRequest request) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         HerolandQuestionBankDP bankDP = BeanCopyUtils.copyByJSON(request, HerolandQuestionBankDP.class);
-        heroLandQuestionBankService.createQuestion(bankDP);
+        if (StringUtils.isBlank(request.getQtId())){
+            //新增
+            heroLandQuestionBankService.createQuestion(bankDP);
+        }else {
+            // 编辑
+            heroLandQuestionBankService.editQuestion(bankDP);
+        }
         result.setData(true);
         return result;
     }
@@ -159,7 +153,6 @@ public class HeroLandQuestionBankController {
 
     /**
      * 题库导入 入参为文件
-     * @param request
      * @return
      */
     @RequestMapping(value = "/importQuestions")

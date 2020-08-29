@@ -19,6 +19,8 @@ public interface HerolandQuestionBankMapper {
 
     HerolandQuestionBank selectByPrimaryKey(Long id);
 
+    HerolandQuestionBank selectByQtId(@Param("qtId") String qtId);
+
     int updateByPrimaryKeySelective(HerolandQuestionBank record);
 
     int updateByPrimaryKeyWithBLOBs(HerolandQuestionBank record);

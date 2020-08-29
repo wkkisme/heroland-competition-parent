@@ -5,15 +5,32 @@ import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class HerolandQuestionBankRequest implements Serializable {
 
     /**
-     *题库id 编辑时必传
+     *题目id，非主键id
+     *
+     */
+    private String qtId;
+
+    /**
+     * 题目id
+     * 当前的主键id
      */
     private Long id;
+
+
+    /**
+     * 不知道是啥
+     * 可暂时不管
+     */
+    private Long passageId;
+
+
 
     /**
      * 年级
@@ -32,7 +49,6 @@ public class HerolandQuestionBankRequest implements Serializable {
 
     /**
      * 题目类型
-     *
      */
     private Integer type;
 
@@ -50,6 +66,7 @@ public class HerolandQuestionBankRequest implements Serializable {
      * 年份 如2006
      */
     private String year;
+
 
     /**
      * 地区 如上海市
@@ -72,9 +89,20 @@ public class HerolandQuestionBankRequest implements Serializable {
     private List<QuestionOptionDto> options = Lists.newArrayList();
 
     /**
-     * 选项答案
+     * 选项答案|填空题答案
      */
     private String optionAnswer;
+
+    /**
+     * 胡乱答案
+     */
+    private String stormAnswer;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
 
     /**
      * 解答题答案
@@ -82,14 +110,39 @@ public class HerolandQuestionBankRequest implements Serializable {
     private String answer;
 
     /**
-     * 答案解析
+     * 解析（特殊场景）
      */
     private String parse;
+
+    /**
+     * 题库类型
+     */
+    private String storage;
+
+    /**
+     * 思维
+     */
+    private Integer think;
+
+    /**
+     * 示例
+     */
+    private String information;
+
+    /**
+     * 题库类型
+     * 为赛事而区分
+     */
+    private Integer bankType;
 
     /**
      * 关联知识点
      */
     private List<Long> knowledges = Lists.newArrayList();
 
+    /**
+     * 相似题，记录的是 qtId
+     */
+    private List<String> similarQt = Lists.newArrayList();
 
 }

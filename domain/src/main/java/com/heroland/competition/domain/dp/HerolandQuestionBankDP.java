@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.domain.dto.QuestionOptionDto;
 import lombok.Data;
 import org.springframework.util.StringUtils;
@@ -148,14 +149,17 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
     private List<String> similarQt = Lists.newArrayList();
 
 
-    //todo 补全
     public HerolandQuestionBankDP checkAndBuildBeforeCreate(){
         if (year != null) {
             Date yearD = DateUtils.string2Date(year + "-01-01", "");
             this.yearD = yearD;
         }
-        this.qtId = IDGenerateUtils.getKey(AdminFieldEnum.QUEST);
-        this.snapshotNo = 1;
+        if (StringUtils.isEmpty(qtId)){
+            this.qtId = IDGenerateUtils.getKey(AdminFieldEnum.QUEST);
+        }
+        if (NumberUtils.nullOrZero(snapshotNo)){
+            this.snapshotNo = 1;
+        }
         return this;
     }
 
