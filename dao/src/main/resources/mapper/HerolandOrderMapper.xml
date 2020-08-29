@@ -344,13 +344,14 @@
       close_time = #{closeTime,jdbcType=TIMESTAMP},
     </if>
     `state` = "CLOSED"
-    where
-    <if test="bizNos != null and bizNos.size > 0">
-    and biz_no IN
-    <foreach collection="bizNos" open="(" close=")" item="bizNo" separator=",">
-      #{bizNo}
-    </foreach>
-  </if>
+    <where>
+      <if test="bizNos != null and bizNos.size > 0">
+      and biz_no IN
+      <foreach collection="bizNos" open="(" close=")" item="bizNo" separator=",">
+        #{bizNo}
+      </foreach>
+      </if>
+    </where>
   </update>
 
   <update id="updateStateByBiz" >
