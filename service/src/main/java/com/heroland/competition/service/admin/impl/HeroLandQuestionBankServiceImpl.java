@@ -262,6 +262,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     }
 
     private HeroLandQuestionBankDto build(HerolandQuestionBank bank){
+        if (bank == null){
+            return null;
+        }
         HeroLandQuestionBankDto bankDto = getAdminData(bank);
         List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(Lists.newArrayList(bank.getId()), KnowledgeReferEnum.QUESTION.getType());
         List<Long> knowledgeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).distinct().collect(Collectors.toList());
