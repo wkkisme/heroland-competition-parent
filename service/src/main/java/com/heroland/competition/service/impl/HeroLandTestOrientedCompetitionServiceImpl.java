@@ -259,6 +259,11 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             }
         }
 
+        if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+            record.setScore(record.getInviteScore());
+        }else {
+            record.setScore(record.getOpponentScore());
+        }
 
         return ResponseBodyWrapper.successWrapper(record);
     }
