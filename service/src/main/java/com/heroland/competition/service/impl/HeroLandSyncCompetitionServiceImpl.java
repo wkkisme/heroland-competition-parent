@@ -241,6 +241,13 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                 // 如果第二个人超时 且第一个人答错 则更新为平局
             } else if (timeout && !preAnswer.getCorrectAnswer()) {
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
+                // 如果是没有超时，对方答对了则得零分
+            } else {
+                if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    record.setInviteScore(0);
+                }else {
+                    record.setOpponentScore(0);
+                }
             }
 
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
