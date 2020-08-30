@@ -191,6 +191,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     @ApiModelProperty(value = "knowledge知识点")
     private String knowledge;
 
+    private Integer score;
 
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
@@ -726,5 +727,13 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
     public void setQuestionId(Long questionId) {
         this.questionId = questionId;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }
