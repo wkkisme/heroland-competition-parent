@@ -150,7 +150,7 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
 
 
     public HerolandQuestionBankDP checkAndBuildBeforeCreate(){
-        if (StringUtils.isEmpty(year)) {
+        if (!StringUtils.isEmpty(year)) {
             Date yearD = DateUtils.string2Date(year + "-01-01", "");
             this.yearD = yearD;
         }

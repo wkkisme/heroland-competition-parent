@@ -213,6 +213,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         }
         dp.setSnapshotNo(bank.getSnapshotNo() + 1);
         dp.setQtId(dp.getQtId());
+        dp.setId(null);
         createQuestion(dp);
         return true;
     }
