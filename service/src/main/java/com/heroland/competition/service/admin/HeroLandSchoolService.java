@@ -33,5 +33,7 @@ public interface HeroLandSchoolService {
 
     Map<String, Integer> listCountByKeys(List<String> keys, String code);
 
+    List<HerolandSchoolSimpleDto> getByKeys(List<String> keys, String code);
+
 
 }

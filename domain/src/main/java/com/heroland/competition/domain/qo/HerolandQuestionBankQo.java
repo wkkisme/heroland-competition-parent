@@ -65,6 +65,11 @@ public class HerolandQuestionBankQo extends BaseQO implements Serializable {
      */
     private Integer paperType;
 
+    /**
+     * 题库类型
+     */
+    private Integer bankType;
+
     private Date beginTime;
 
     private Date endTime;

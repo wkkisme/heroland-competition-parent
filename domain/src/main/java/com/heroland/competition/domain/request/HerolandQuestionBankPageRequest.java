@@ -59,5 +59,10 @@ public class HerolandQuestionBankPageRequest extends BaseQO implements Serializa
      */
     private Integer paperType;
 
+    /**
+     * 题库类型
+     */
+    private Integer bankType;
+
 
 }

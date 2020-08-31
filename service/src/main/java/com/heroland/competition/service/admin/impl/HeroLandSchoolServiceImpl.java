@@ -201,27 +201,36 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         if (CollectionUtils.isEmpty(dataPage)){
             return  pageResult;
         }
+       result = convertToSimpleDto(dataPage.getResult(), true);
+        pageResult.setItems(result);
+        pageResult.setPageSize(dataPage.getPageSize());
+        pageResult.setPage(dataPage.getPageNum());
+        pageResult.setTotal((int) dataPage.getTotal());
+        return pageResult;
+    }
 
+    //这里的list是同一个code
+    private List<HerolandSchoolSimpleDto> convertToSimpleDto(List<HerolandSchool> list, boolean needAreaInfo){
+        List<HerolandSchoolSimpleDto> result = new ArrayList<>();
         List<String> allKeys = Lists.newArrayList();
-        dataPage.getResult().stream().forEach(e -> allKeys.add(e.getKey()));
+        list.stream().forEach(e -> allKeys.add(e.getKey()));
         List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(allKeys);
         if (CollectionUtils.isEmpty(dictInfoByKeys)){
             log.error("query DictInfoByKeys error", JSON.toJSONString(allKeys));
-            return pageResult;
+            return Lists.newArrayList();
         }
         //如果是学校列表则需要返回地区的key和name
         Map<String, HerolandBasicDataDP> areaMap = Maps.newHashMap();
-        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(dataPage.getResult().get(0).getCode())){
+        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(list.get(0).getCode()) && needAreaInfo){
             Set<String> parentKeys = Sets.newHashSet();
-            dataPage.getResult().stream().forEach(e -> parentKeys.add(e.getParentKey()));
+            list.stream().forEach(e -> parentKeys.add(e.getParentKey()));
             List<HerolandBasicDataDP> area = heroLandAdminService.getDictInfoByKeys(new ArrayList<>(parentKeys));
             if (!CollectionUtils.isEmpty(area)){
                 area.stream().forEach(e -> areaMap.put(e.getDictKey(),e));
             }
         }
-
         Map<String, List<HerolandBasicDataDP>> basic = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-        for (HerolandSchool dto : dataPage.getResult()){
+        for (HerolandSchool dto : list){
             HerolandSchoolSimpleDto simpleDto = new HerolandSchoolSimpleDto();
             simpleDto.setName(dto.getName());
             simpleDto.setCode(dto.getCode());
@@ -233,6 +242,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             simpleDto.setAxis(dto.getAxis());
             simpleDto.setDesc(dto.getDesc());
             simpleDto.setDefaultValue(dto.getDefaultValue());
+            simpleDto.setParentKey(dto.getParentKey());
 
             //如果当前是班级则需要查处当前班级的人数
             if (Objects.equals(dto.getCode(), AdminFieldEnum.CLASS.getCode())){
@@ -248,17 +258,14 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
                 simpleDto.setBizNo(basic.get(dto.getKey()).get(0).getBizNo());
                 simpleDto.setBizI18N(basic.get(dto.getKey()).get(0).getBizI18N());
             }
-            if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(dataPage.getResult().get(0).getCode()) && areaMap.containsKey(dto.getParentKey())){
+            if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(list.get(0).getCode()) && needAreaInfo && areaMap.containsKey(dto.getParentKey())){
                 simpleDto.setAreaName(areaMap.get(dto.getParentKey()).getDictValue());
                 simpleDto.setAreaKey(areaMap.get(dto.getParentKey()).getDictKey());
             }
             result.add(simpleDto);
         }
-        pageResult.setItems(result);
-        pageResult.setPageSize(dataPage.getPageSize());
-        pageResult.setPage(dataPage.getPageNum());
-        pageResult.setTotal((int) dataPage.getTotal());
-        return pageResult;
+        return result;
+
     }
 
     @Override
@@ -270,6 +277,17 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         List<HerolandSchool> byKeysAndCode = herolandSchoolMapper.getByKeysAndCode(keys, code);
         byKeysAndCode.stream().forEach(e -> countMap.put(e.getKey(), e.getDefaultValue()));
         return countMap;
+    }
+
+    @Override
+    public List<HerolandSchoolSimpleDto> getByKeys(List<String> keys, String code) {
+        List<HerolandSchoolSimpleDto> list = Lists.newArrayList();
+        if (CollectionUtils.isEmpty(keys)){
+            return list;
+        }
+        List<HerolandSchool> byKeysAndCode = herolandSchoolMapper.getByKeysAndCode(keys, code);
+        list = convertToSimpleDto(byKeysAndCode, false);
+        return list;
     }
 
     private void getChildren(String parent, List<HerolandSchool> children){

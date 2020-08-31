@@ -92,4 +92,9 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
      */
     private List<Long> chapterIds;
 
+    /**
+     * 题库类型
+     */
+    private Integer bankType;
+
 }

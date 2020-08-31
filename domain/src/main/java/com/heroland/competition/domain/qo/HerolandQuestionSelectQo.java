@@ -57,4 +57,9 @@ public class HerolandQuestionSelectQo extends BaseQO implements Serializable {
 
     private List<Long> bankIds;
 
+    /**
+     * 题库类型
+     */
+    private Integer bankType;
+
 }

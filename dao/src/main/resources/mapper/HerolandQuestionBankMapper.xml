@@ -332,7 +332,7 @@
         select
         <include refid="Base_Column_List"/>
         from heroland_question_bank
-        where is_deleted = 0 and (bank_type = 1 or bank_type = 2)
+        where is_deleted = 0
         <if test="item.grade != null">
             and grade_code = #{item.grade,jdbcType=VARCHAR}
         </if>
@@ -366,6 +366,9 @@
         <if test="item.paperType != null">
             and paper_type = #{item.paperType,jdbcType=INTEGER}
         </if>
+        <if test="item.bankType != null">
+            and bank_type = #{item.bankType,jdbcType=INTEGER}
+        </if>
         <if test="item.title != null">
             and title like concat('%',#{item.title},'%')
         </if>
@@ -382,7 +385,7 @@
         select
         <include refid="Base_Column_List"/>
         from heroland_question_bank
-        where is_deleted = 0 and (bank_type = 1 or bank_type = 2)
+        where is_deleted = 0
         <if test="item.grade != null">
             and grade_code = #{item.grade,jdbcType=VARCHAR}
         </if>
@@ -434,6 +437,13 @@
                 #{paperType,jdbcType=INTEGER}
             </foreach>
             )
+        </if>
+
+        <if test="item.bankType != null">
+            and bank_type = #{item.bankType,jdbcType=INTEGER}
+        </if>
+        <if test="item.bankType == null">
+            and (bank_type = 1 or bank_type = 2)
         </if>
 
         <if test="item.bankIds != null and item.bankIds.size > 0">

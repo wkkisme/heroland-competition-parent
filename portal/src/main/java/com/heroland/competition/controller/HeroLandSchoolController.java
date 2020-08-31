@@ -15,10 +15,12 @@ import com.heroland.competition.service.admin.HeroLandSchoolService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 学校管理
@@ -169,28 +171,14 @@ public class HeroLandSchoolController {
      * 获取固定的地区信息
      * @return
      */
-    @RequestMapping(value = "/schoolsByGrades", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "/schoolsByGrade", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades() {
+    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades(@RequestParam("gradeCode") String gradeCode) {
         ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
-        List<HerolandSchoolSimpleDto> list = Lists.newArrayList();
-        HerolandDataPageRequest request = new HerolandDataPageRequest();
-        request.setCode(AdminFieldEnum.AREA.getCode());
-        request.setNeedPage(false);
-        PageResponse<HerolandBasicDataDP> area = heroLandAdminService.pageDataByCode(request);
-        if (!CollectionUtils.isEmpty(area.getItems())){
-            area.getItems().stream().forEach(e -> {
-                HerolandSchoolSimpleDto simpleDto = new HerolandSchoolSimpleDto();
-                simpleDto.setId(e.getId());
-                simpleDto.setCode(AdminFieldEnum.AREA.getCode());
-                simpleDto.setKey(e.getDictKey());
-                simpleDto.setName(e.getDictValue());
-                simpleDto.setBizNo(e.getBizNo());
-                simpleDto.setBizI18N(e.getBizI18N());
-                list.add(simpleDto);
-            });
-        }
-        result.setData(list);
+        List<HerolandSchoolSimpleDto> gradeDtos = heroLandSchoolService.getByKeys(Lists.newArrayList(gradeCode), AdminFieldEnum.GRADE.getCode());
+        List<String> schoolKeys = gradeDtos.stream().map(HerolandSchoolSimpleDto::getParentKey).distinct().collect(Collectors.toList());
+        List<HerolandSchoolSimpleDto> schoolDtos = heroLandSchoolService.getByKeys(schoolKeys, AdminFieldEnum.SCHOOL.getCode());
+        result.setData(schoolDtos);
         return result;
     }
 
