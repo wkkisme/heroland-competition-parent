@@ -158,8 +158,6 @@ public class HeroLandSyncCalculatorServiceImpl implements HeroLandCalculatorServ
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
 
             }
-            heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
-            heroLandCompetitionRecordService.updateCompetitionRecord(record);
 
             //  后一个答题者
         } else {
@@ -192,9 +190,9 @@ public class HeroLandSyncCalculatorServiceImpl implements HeroLandCalculatorServ
 
             }
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
-            heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
-            heroLandCompetitionRecordService.updateCompetitionRecord(record);
         }
+        heroLandQuestionRecordDetailService.addQuestionRecords(record.getDetails());
+        heroLandCompetitionRecordService.updateCompetitionRecord(record);
         return record;
     }
 }
