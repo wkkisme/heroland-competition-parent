@@ -158,6 +158,7 @@ public class HerolandPayServiceImpl implements HerolandPayService {
             request.setCurrencyAmt(payById.getSettleAmt());
             request.setBizId(payById.getId()+"");
             request.setBizType("competition");
+            request.setReturnUrl(prePayQO.getReturnUrl());
             PrePayResponse prePayResponse = prePayRemoteService.prePay(request);
             //todo 如果是0元则不用拉出收银台
             prePayDto.setPayId(prePayQO.getPayId());
