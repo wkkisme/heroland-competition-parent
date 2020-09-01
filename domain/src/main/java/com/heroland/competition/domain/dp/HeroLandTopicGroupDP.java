@@ -79,7 +79,7 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
 
 
     public HeroLandTopicGroupDP addCheckAndInit() {
-        if (StringUtils.isAnyBlank(this.getOrgCode(), this.getTopicName())) {
+        if (StringUtils.isBlank(this.getTopicName())) {
             ResponseBodyWrapper.failParamException();
         }
 
