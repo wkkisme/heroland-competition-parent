@@ -112,7 +112,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     private void checkBeforeUpdateEditTopic(HeroLandTopicGroupDP dp){
         dp.updateCheck();
         HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(dp.getId());
-        if (Objects.equals(heroLandTopicGroup.getType(), dp.getType())){
+        if (!Objects.equals(heroLandTopicGroup.getType(), dp.getType())){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_TYPE.getErrorMessage());
         }
         Date now = new Date();
