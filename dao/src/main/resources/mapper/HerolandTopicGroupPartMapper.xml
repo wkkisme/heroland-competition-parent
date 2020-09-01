@@ -78,7 +78,7 @@
   </sql>
 
   <sql id="Insert_Column_List">
-        topic_id, org_code,`grade_code`,class_code, course_code
+        topic_id, org_code,grade_code,class_code, course_code
     </sql>
 
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample" resultMap="BaseResultMap">

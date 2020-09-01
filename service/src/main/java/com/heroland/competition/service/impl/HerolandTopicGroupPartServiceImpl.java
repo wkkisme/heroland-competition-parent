@@ -56,6 +56,7 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
             if (StringUtils.isEmpty(part.getCourseCode())){
                 part.setCourseCode("");
             }
+            list.add(part);
         });
         return herolandTopicGroupPartMapper.batchInsert(list) > 0;
     }
