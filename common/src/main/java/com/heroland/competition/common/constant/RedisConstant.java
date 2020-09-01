@@ -10,6 +10,9 @@ public class RedisConstant {
 
     public static final String ORDER_DIAMOND_KEY ="ORDER_DIAMOND:%s";
 
+    public static final String ORDER_PREPAY_KEY ="ORDER_PREPAY:%s";
+    public static final String ORDER_CREATE_KEY ="ORDER_CREATE:BUYID:%s:SKU:%s";
+
 
     public static final Integer EXPIRE_SECONDS = 86400;
 }

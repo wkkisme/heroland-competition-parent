@@ -138,28 +138,41 @@ public class HerolandPayServiceImpl implements HerolandPayService {
 
     @Override
     public PrePayDto prePay(PrePayQO prePayQO) {
-        PrePayDto prePayDto = new PrePayDto();
-        HerolandPayDP payById = getPayById(prePayQO.getPayId());
-        if (!OrderStateEnum.CREATED.getCode().equalsIgnoreCase(payById.getState())){
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
+        String key = String.format(RedisConstant.ORDER_PREPAY_KEY, prePayQO.getPayId());
+        boolean lock = redisService.setNx(key, prePayQO.getPayId(), "PT15S");
+        if (!lock){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.DUPLICATE.getErrorMessage());
         }
-        //调用预支付
-        PrePayRequest request = new PrePayRequest();
-        request.setPayEnv(PayEnvEnum.PC.getEnv());
-        request.setPayChannel(prePayQO.getPayTool());
-        request.setCurrencyType(payById.getCurrencyType());
-        request.setCurrencyAmt(payById.getSettleAmt());
-        request.setBizId(payById.getId()+"");
-        request.setBizType("competition");
-        PrePayResponse prePayResponse = prePayRemoteService.prePay(request);
-        //todo 如果是0元则不用拉出收银台
-        prePayDto.setPayId(prePayQO.getPayId());
-        if (NumberUtils.nullOrZeroLong(payById.getSettleAmt())){
-            prePayDto.setNeedRedirect(false);
-        }else {
-            prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
+        try {
+
+            PrePayDto prePayDto = new PrePayDto();
+            HerolandPayDP payById = getPayById(prePayQO.getPayId());
+            if (!OrderStateEnum.CREATED.getCode().equalsIgnoreCase(payById.getState())){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PAY_STATE.getErrorMessage());
+            }
+            //调用预支付
+            PrePayRequest request = new PrePayRequest();
+            request.setPayEnv(PayEnvEnum.PC.getEnv());
+            request.setPayChannel(prePayQO.getPayTool());
+            request.setCurrencyType(payById.getCurrencyType());
+            request.setCurrencyAmt(payById.getSettleAmt());
+            request.setBizId(payById.getId()+"");
+            request.setBizType("competition");
+            PrePayResponse prePayResponse = prePayRemoteService.prePay(request);
+            //todo 如果是0元则不用拉出收银台
+            prePayDto.setPayId(prePayQO.getPayId());
+            if (NumberUtils.nullOrZeroLong(payById.getSettleAmt())){
+                prePayDto.setNeedRedirect(false);
+            }else {
+                prePayDto.setRedirectUrl(prePayResponse.getRedirectUrl());
+            }
+            return prePayDto;
+
+        }finally {
+            redisService.del(key);
         }
-        return prePayDto;
+
+
     }
 
     @Override

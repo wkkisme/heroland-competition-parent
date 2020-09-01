@@ -168,7 +168,7 @@ public class HeroLandSchoolController {
     }
 
     /**
-     * 获取固定的地区信息
+     * 根据年级获取学校信息
      * @return
      */
     @RequestMapping(value = "/schoolsByGrade", produces = "application/json;charset=UTF-8")

@@ -36,6 +36,10 @@ public enum HerolandErrMsgEnum {
 
     ERROR_UPDATE_PARAM_END("70108", "比赛已经结束，不支持修改"),
 
+    DUPLICATE("70109", "请稍后提交"),
+
+    DUPLICATE_ORDER("70110", "下单过于频繁，请稍后重试"),
+
 
    ;
 

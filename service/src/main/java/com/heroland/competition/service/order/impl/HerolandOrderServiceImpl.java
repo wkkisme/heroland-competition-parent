@@ -5,6 +5,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constant.RedisConstant;
 import com.heroland.competition.common.constants.DiamBizGroupEnum;
 import com.heroland.competition.common.constants.DiamBizTypeEnum;
 import com.heroland.competition.common.constants.OrderStateEnum;
@@ -83,13 +84,23 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
     @Override
     @Transactional
     public Long createPayOrder(HerolandOrderDP herolandOrder) {
-        HerolandOrderDP order = createOrder(herolandOrder);
-        HerolandPayDP herolandPayDP = new HerolandPayDP();
-        herolandPayDP.setBizNo(order.getBizNo());
-        herolandPayDP.setBuyId(order.getBuyerId());
-        herolandPayDP.setCurrencyType(order.getCurrencyType());
-        herolandPayDP.setSettleAmt(order.getCurrencyAmt());
-        return herolandPayService.createPay(herolandPayDP);
+        String key = String.format(RedisConstant.ORDER_CREATE_KEY, herolandOrder.getBuyerId(), herolandOrder.getSkuId());
+        boolean lock = redisService.setNx(key, herolandOrder, "PT10S");
+        if (!lock){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.DUPLICATE_ORDER.getErrorMessage());
+        }
+        try {
+            HerolandOrderDP order = createOrder(herolandOrder);
+            HerolandPayDP herolandPayDP = new HerolandPayDP();
+            herolandPayDP.setBizNo(order.getBizNo());
+            herolandPayDP.setBuyId(order.getBuyerId());
+            herolandPayDP.setCurrencyType(order.getCurrencyType());
+            herolandPayDP.setSettleAmt(order.getCurrencyAmt());
+            return herolandPayService.createPay(herolandPayDP);
+        }finally {
+            redisService.del(key);
+        }
+
     }
 
     @Override
