@@ -52,5 +52,5 @@ public interface HeroLandQuestionBankService {
     PageResponse<HeroLandQuestionBankListForTopicDto> getQuestionList(HerolandQuestionBankListForChapterRequest request);
 
 
-    ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request) throws Exception;
+    ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request,Integer bankType) throws Exception;
 }

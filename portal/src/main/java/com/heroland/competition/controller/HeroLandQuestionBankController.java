@@ -159,10 +159,10 @@ public class HeroLandQuestionBankController {
      * @return
      */
     @RequestMapping(value = "/importQuestionBank")
-    public ResponseBody<Boolean> importQuestionBank(MultipartHttpServletRequest request) throws Exception {
+    public ResponseBody<Boolean> importQuestionBank(MultipartHttpServletRequest request,@RequestParam("bankType") Integer bankType) throws Exception {
 
 
-        return heroLandQuestionBankService.importQuestions(request);
+        return heroLandQuestionBankService.importQuestions(request,bankType);
 
     }
 
