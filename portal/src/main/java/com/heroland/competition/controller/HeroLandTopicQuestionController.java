@@ -8,10 +8,7 @@ import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.dto.HeroLandTopicDto;
-import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
-import com.heroland.competition.domain.dto.TopicQuestionsForSDto;
+import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -73,15 +70,20 @@ public class HeroLandTopicQuestionController {
 
     /**
      * 校际赛的赛事列表
-     * todo biz逻辑未完善，需要具体页面具体对待
      * @param request
      * @return
      */
     @RequestMapping("/queryTopicsForS")
-    public ResponseBody<HerolandTopicCanSeeDto> getTopicsForS(@RequestBody HerolandTopicCanSeeQO request){
-        ResponseBody<HerolandTopicCanSeeDto> result = new ResponseBody<>();
-        HerolandTopicCanSeeDto herolandTopicCanSeeDto = herolandTopicJoinUserService.canOperableTopics(request);
-        result.setData(herolandTopicCanSeeDto);
+    public ResponseBody<List<HeroLandTopicForSDto>> getTopicsForS(@RequestBody HerolandTopicCanSeeQO request){
+        ResponseBody<List<HeroLandTopicForSDto>> result = new ResponseBody<>();
+        PageResponse<HeroLandTopicForSDto> pageResponse = herolandTopicJoinUserService.canOperableTopics(request);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
         return result;
     }
 
@@ -93,7 +95,7 @@ public class HeroLandTopicQuestionController {
     @RequestMapping("/queryTopicQuestionsForS")
     public ResponseBody<List<HeroLandQuestionListForTopicDto>> getTopicQuestionsForS(@RequestBody HerolandTopicCanSeeQO request){
         ResponseBody<List<HeroLandQuestionListForTopicDto>> result = new ResponseBody<>();
-        HerolandTopicCanSeeDto herolandTopicCanSeeDto = herolandTopicJoinUserService.canOperableTopics(request);
+//        HerolandTopicCanSeeDto herolandTopicCanSeeDto = herolandTopicJoinUserService.canOperableTopics(request);
         result.setData(null);
         return result;
     }

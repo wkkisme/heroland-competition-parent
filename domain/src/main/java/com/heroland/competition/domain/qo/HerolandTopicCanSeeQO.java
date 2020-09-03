@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,18 +11,13 @@ import java.util.List;
  * @date 2020/8/19
  */
 @Data
-public class HerolandTopicCanSeeQO implements Serializable {
+public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
 
     /**
      *  用户id
      */
     private String userId;
 
-    /**
-     * 该用户id可以的操作类型
-     *
-     */
-    private List<String> actionType;
 
     /**
      * 赛事类型

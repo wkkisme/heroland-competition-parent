@@ -34,6 +34,20 @@ public class HeroLandTopicForSDto implements Serializable {
     private Date endTime;
 
     /**
+     * 简介
+     */
+    private String desc;
+
+    /**
+     * 状态 已结束 进行中 未开始
+     * FINISHED
+     * DOING
+     * NOTSTART
+     */
+    private String state;
+
+
+    /**
      * 学生角色参与的状态
      * 参与 和 未参与
      */

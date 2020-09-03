@@ -1,6 +1,8 @@
 package com.heroland.competition.service;
 
+import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandTopicJoinUserDP;
+import com.heroland.competition.domain.dto.HeroLandTopicForSDto;
 import com.heroland.competition.domain.dto.HerolandTopicCanJoinDto;
 import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
 import com.heroland.competition.domain.dto.HerolandTopicJoinStatisticsDto;
@@ -18,5 +20,5 @@ public interface HerolandTopicJoinUserService {
 
     HerolandTopicJoinStatisticsDto statistics(HerolandTopicJoinUserDP dp);
 
-    HerolandTopicCanSeeDto canOperableTopics(HerolandTopicCanSeeQO qo);
+    PageResponse<HeroLandTopicForSDto> canOperableTopics(HerolandTopicCanSeeQO qo);
 }

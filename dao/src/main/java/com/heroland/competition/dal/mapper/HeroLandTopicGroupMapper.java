@@ -35,4 +35,6 @@ public interface HeroLandTopicGroupMapper {
     List<HeroLandTopicGroup> selectByQuery(@Param("item") HeroLandTopicGroupQO qo);
 
     List<HeroLandTopicGroup> selectByTypeAndState(@Param("type") Integer type,@Param("state") String state);
+
+    List<HeroLandTopicGroup> selectByTypeAndStateAndPart(@Param("type") Integer type,@Param("state") String state,@Param("orgCode") String orgCode);
 }

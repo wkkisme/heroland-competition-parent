@@ -476,7 +476,39 @@
         </otherwise>
       </choose>
     </if>
-    order by end_time
+    order by end_time desc
+  </select>
+
+
+  <select id="selectByTypeAndStateAndPart"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_topic_group g left join heroland_topic_group_part p on g.id = p.topic_id
+    where g.is_deleted = 0 and p.is_deleted = 0
+    and g.type = #{type,jdbcType=INTEGER}
+    <if test="state != null">
+      <choose>
+        <when test="state == 'DOING' ">
+          <![CDATA[
+         and  g.start_time <= now() and g.end_time >= now()
+        ]]>
+        </when>
+        <when test="state == 'NOTSTART' ">
+          <![CDATA[
+         and  g.start_time >= now()
+        ]]>
+        </when>
+        <otherwise>
+          <![CDATA[
+         and  g.end_time <= now()
+        ]]>
+        </otherwise>
+      </choose>
+    </if>
+    <if test="orgCode != null">
+      and p.org_code = #{orgCode,jdbcType=VARCHAR}
+    </if>
+    order by g.end_time desc
   </select>
 
 </mapper>
