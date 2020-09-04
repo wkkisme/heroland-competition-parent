@@ -3,6 +3,7 @@ package com.heroland.competition.domain.qo;
 import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
     /**
      *  用户id
      */
+    @NotNull
     private String userId;
 
 
@@ -26,9 +28,9 @@ public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
 
     /**
      * 赛事的时间状态
-     * 正在进行的
-     * 已经过期的
-     * 还未开始的
+     * 正在进行的 DOING
+     * 已经过期的 OVERDUE
+     * 还未开始的 NOTSTART
      */
     private String topicState;
 }

@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HerolandTopicJoinUser")
 public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
@@ -21,7 +22,7 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
      * 用户id
      */
     @ApiModelProperty(value="joinUser用户id")
-    private String joinUser;
+    private List<String> joinUsers;
 
     /**
      * 报名userid
@@ -68,21 +69,7 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
         this.topicId = topicId;
     }
 
-    /**
-     * 用户id
-     * @return join_user 用户id
-     */
-    public String getJoinUser() {
-        return joinUser;
-    }
 
-    /**
-     * 用户id
-     * @param joinUser 用户id
-     */
-    public void setJoinUser(String joinUser) {
-        this.joinUser = joinUser == null ? null : joinUser.trim();
-    }
 
     /**
      * 报名userid
@@ -98,6 +85,14 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
      */
     public void setRegisterUser(String registerUser) {
         this.registerUser = registerUser == null ? null : registerUser.trim();
+    }
+
+    public List<String> getJoinUsers() {
+        return joinUsers;
+    }
+
+    public void setJoinUsers(List<String> joinUsers) {
+        this.joinUsers = joinUsers;
     }
 
     /**
@@ -151,17 +146,17 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
 
     public HerolandTopicJoinUserDP checkAndBuildBefore(){
         AssertUtils.notBlank(state);
-        AssertUtils.notBlank(joinUser);
+        AssertUtils.notEmpty(joinUsers);
         AssertUtils.notNull(topicId);
         if (TopicJoinConstant.JOIND.equalsIgnoreCase(state)){
             if (StringUtils.isBlank(registerUser)){
-                this.setRegisterUser(joinUser);
+                this.setRegisterUser(joinUsers.get(0));
             }
         }
         if (TopicJoinConstant.CANCELED.equalsIgnoreCase(state)){
             AssertUtils.notNull(getId());
             if (StringUtils.isBlank(cancelUser)){
-                this.setCancelUser(joinUser);
+                this.setCancelUser(joinUsers.get(0));
             }
         }
         return this;

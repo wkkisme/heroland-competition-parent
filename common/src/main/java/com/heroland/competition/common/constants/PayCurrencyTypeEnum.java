@@ -7,9 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PayCurrencyTypeEnum {
-    CNY("CNY",""),
+    CNY("CN",""),
 
-    HKD("HKD",""),
+    HKD("HK",""),
 
 
     ;

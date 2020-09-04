@@ -15,6 +15,12 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
   </resultMap>
+
+  <sql id="Insert_Column_List">
+        topic_id, join_user,register_user, state
+    </sql>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -318,4 +324,18 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into heroland_topic_join_user
+    (<include refid="Insert_Column_List"/>)
+    values
+    <foreach collection="items" item="item" index="index" separator=",">
+      (#{item.topicId,jdbcType=BIGINT},
+      #{item.joinUser,jdbcType=VARCHAR},
+      #{item.registerUser,jdbcType=VARCHAR},
+      #{item.state,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
 </mapper>

@@ -1,9 +1,11 @@
 package com.heroland.competition.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.constant.TopicJoinConstant;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
@@ -20,8 +22,12 @@ import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicJoinUserService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -51,36 +57,50 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
     @Resource
     private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
 
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
 
     @Override
     public Boolean addJoin(HerolandTopicJoinUserDP dp) {
         HerolandTopicJoinUserDP herolandTopicJoinUserDP = dp.checkAndBuildBefore();
-
-
-
         HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
-        example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserEqualTo(dp.getJoinUser()).andStateEqualTo(dp.getState());
+        example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserIn(dp.getJoinUsers()).andStateEqualTo(dp.getState());
         List<HerolandTopicJoinUser> herolandTopicJoinUsers =
                 herolandTopicJoinUserMapper.selectByExample(example);
         if(!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
-            throw new AppSystemException(HerolandErrMsgEnum.HAS_JOINED.getErrorMessage());
+            List<String> hasJoined = herolandTopicJoinUsers.stream().map(HerolandTopicJoinUser::getJoinUser).distinct().collect(Collectors.toList());
+            PlatformSysUserQO qo = new PlatformSysUserQO();
+            qo.setUserIds(hasJoined);
+            RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(qo);
+            if (listRpcResult.isSuccess() && !CollectionUtils.isEmpty(listRpcResult.getData())){
+                List<String> hasJoinedName = listRpcResult.getData().stream().filter(e -> !StringUtils.isEmpty(e.getUserName())).map(PlatformSysUserDP::getUserName).collect(Collectors.toList());
+                String userName = JSON.toJSONString(hasJoinedName);
+                throw new AppSystemException(userName + HerolandErrMsgEnum.HAS_JOINED.getErrorMessage());
+            }
         }
-        HerolandTopicJoinUser herolandTopicJoinUser = BeanCopyUtils.copyByJSON(herolandTopicJoinUserDP, HerolandTopicJoinUser.class);
-        return herolandTopicJoinUserMapper.insertSelective(herolandTopicJoinUser) > 0;
+        List<HerolandTopicJoinUser> list = Lists.newArrayList();
+        dp.getJoinUsers().stream().forEach(e -> {
+            HerolandTopicJoinUser herolandTopicJoinUser = BeanCopyUtils.copyByJSON(herolandTopicJoinUserDP, HerolandTopicJoinUser.class);
+            herolandTopicJoinUser.setJoinUser(e);
+            list.add(herolandTopicJoinUser);
+        });
+        return herolandTopicJoinUserMapper.batchInsert(list) > 0;
     }
 
     @Override
     public Boolean cancel(HerolandTopicJoinUserDP dp) {
-        HerolandTopicJoinUserDP herolandTopicJoinUserDP = dp.checkAndBuildBefore();
-        HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
-        example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserEqualTo(dp.getJoinUser()).andStateEqualTo(TopicJoinConstant.JOIND);
-        List<HerolandTopicJoinUser> herolandTopicJoinUsers =
-                herolandTopicJoinUserMapper.selectByExample(example);
-        if(CollectionUtils.isEmpty(herolandTopicJoinUsers)){
-            throw new AppSystemException(HerolandErrMsgEnum.NOT_JOINED.getErrorMessage());
-        }
-        HerolandTopicJoinUser herolandTopicJoinUser = BeanCopyUtils.copyByJSON(herolandTopicJoinUserDP, HerolandTopicJoinUser.class);
-        return herolandTopicJoinUserMapper.updateByPrimaryKeySelective(herolandTopicJoinUser) > 0;
+//        HerolandTopicJoinUserDP herolandTopicJoinUserDP = dp.checkAndBuildBefore();
+//        HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
+//        example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserEqualTo(dp.getJoinUser()).andStateEqualTo(TopicJoinConstant.JOIND);
+//        List<HerolandTopicJoinUser> herolandTopicJoinUsers =
+//                herolandTopicJoinUserMapper.selectByExample(example);
+//        if(CollectionUtils.isEmpty(herolandTopicJoinUsers)){
+//            throw new AppSystemException(HerolandErrMsgEnum.NOT_JOINED.getErrorMessage());
+//        }
+//        HerolandTopicJoinUser herolandTopicJoinUser = BeanCopyUtils.copyByJSON(herolandTopicJoinUserDP, HerolandTopicJoinUser.class);
+//        return herolandTopicJoinUserMapper.updateByPrimaryKeySelective(herolandTopicJoinUser) > 0;
+        return false;
     }
 
     @Override
