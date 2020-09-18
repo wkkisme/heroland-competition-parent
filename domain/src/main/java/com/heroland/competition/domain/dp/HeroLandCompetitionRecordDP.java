@@ -193,6 +193,8 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
     private Integer score;
 
+    private Integer answerType;
+
     public String getPrimaryRedisKey() {
         if (primaryRedisKey == null) {
             primaryRedisKey = topicId + questionId + inviteId + opponentId;
@@ -340,6 +342,14 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
         return details;
 
+    }
+
+    public Integer getAnswerType() {
+        return answerType;
+    }
+
+    public void setAnswerType(Integer answerType) {
+        this.answerType = answerType;
     }
 
     public Integer getUserStatus() {

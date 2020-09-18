@@ -669,4 +669,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         return dto;
     }
 
+    @Override
+    public List<HeroLandQuestionRecordDetailDP> judgeQuestionResult(List<HeroLandQuestionRecordDetailDP> questions) {
+        List<HerolandQuestionBankDetail> questionBanks = herolandQuestionBankDetailMapper.getByQtId(questions.parallelStream().map(HeroLandQuestionRecordDetailDP::getQuestionId).collect(Collectors.toList()));
+        if (!CollectionUtils.isEmpty(questionBanks)) {
+            questionBanks.forEach(v->{
+                questions.forEach(q->{
+                    if (v.getId().equals(q.getQuestionId())){
+                        q.setCorrectAnswer(q.getYourAnswer().equalsIgnoreCase(v.getOptionAnswer()));
+                    }
+                });
+            });
+        }
+        return questions;
+    }
+
 }

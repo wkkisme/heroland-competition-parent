@@ -1,15 +1,14 @@
 package com.heroland.competition.service;
 
 import com.heroland.competition.common.pageable.PageResponse;
-import com.heroland.competition.domain.dp.HeroLandQuestionDP;
-import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
-import com.heroland.competition.domain.dp.QuestionTopicDP;
+import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  试卷题目服务
@@ -81,4 +80,11 @@ public interface HeroLandQuestionService{
      * @return
      */
     TopicQuestionsForSDto questionsAvailableForS(TopicQuestionsForSRequest request);
+
+    /**
+     *  判断题目是否正确
+     * @param questions
+     * @return
+     */
+    List<HeroLandQuestionRecordDetailDP> judgeQuestionResult(List<HeroLandQuestionRecordDetailDP> questions);
 }
