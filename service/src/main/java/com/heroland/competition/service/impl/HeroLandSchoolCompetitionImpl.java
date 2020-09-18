@@ -10,13 +10,10 @@ import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
-import com.heroland.competition.domain.dp.HeroLandQuestionResultDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.*;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.docx4j.wml.P;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
