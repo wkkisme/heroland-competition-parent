@@ -214,31 +214,43 @@ public class HeroLandTopicQuestionController {
         return result;
     }
 
-    /**
-     * 教师能看到的当前的校际赛事
-     * 教师选择
-     * @param
-     * @return
-     */
-    @RequestMapping("/qualifiedStudent")
-    public ResponseBody<Boolean> qualifiedTopic(QualifiedTopicForSchoolRequest request){
-        ResponseBody<Boolean> result = new ResponseBody<>();
-
-        result.setData(true);
-        return result;
-    }
+//    /**
+//     * 教师能看到的当前的校际赛事
+//     * 教师选择
+//     * @param
+//     * @return
+//     */
+//    @RequestMapping("/qualifiedStudent")
+//    public ResponseBody<Boolean> qualifiedTopic(QualifiedTopicForSchoolRequest request){
+//        ResponseBody<Boolean> result = new ResponseBody<>();
+//
+//        result.setData(true);
+//        return result;
+//    }
 
     /**
      * 学生能看到的校际赛的题目
-     * 教师选择
      * @param
      * @return
      */
     @RequestMapping("/questionsAvailableForS")
-    public ResponseBody<TopicQuestionsForSDto> questionsAvailableForS(TopicQuestionsForSRequest request){
+    public ResponseBody<TopicQuestionsForSDto> questionsAvailableForS(@RequestBody TopicQuestionsForSRequest request){
         ResponseBody<TopicQuestionsForSDto> result = new ResponseBody<>();
         TopicQuestionsForSDto topicQuestionsForSDto = heroLandQuestionService.questionsAvailableForS(request);
         result.setData(topicQuestionsForSDto);
+        return result;
+    }
+
+    /**
+     * 获取某校际赛的科目
+     * @param
+     * @return
+     */
+    @RequestMapping("/courseAvailableForS")
+    public ResponseBody<List<HerolandCourseSimpleDto>> courseAvailableForS(@RequestBody TopicSCourseForSRequest request){
+        ResponseBody<List<HerolandCourseSimpleDto>> result = new ResponseBody<>();
+        List<HerolandCourseSimpleDto> herolandCourseSimpleDtos = heroLandQuestionService.courseAvailableForS(request);
+        result.setData(herolandCourseSimpleDtos);
         return result;
     }
 

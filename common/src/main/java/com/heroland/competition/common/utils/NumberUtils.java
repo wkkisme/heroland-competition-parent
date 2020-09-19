@@ -2,6 +2,8 @@ package com.heroland.competition.common.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Random;
+
 /**
  * Number 工具类
  */
@@ -46,6 +48,16 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
                 return null;
             }
         }
+    }
+
+
+    public static long nextLong(Random rng, long n) {
+        long bits, val;
+        do {
+            bits = (rng.nextLong() << 1) >>> 1;
+            val = bits % n;
+        } while (bits-val+(n-1) < 0L);
+        return val;
     }
 
 

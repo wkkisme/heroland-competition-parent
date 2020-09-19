@@ -81,4 +81,6 @@ public interface HeroLandQuestionService{
      * @return
      */
     TopicQuestionsForSDto questionsAvailableForS(TopicQuestionsForSRequest request);
+
+    List<HerolandCourseSimpleDto> courseAvailableForS(TopicSCourseForSRequest request);
 }

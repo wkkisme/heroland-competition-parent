@@ -1,6 +1,7 @@
 package com.heroland.competition.service.impl;
 
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.dal.mapper.HerolandTopicGroupPartMapper;
 import com.heroland.competition.dal.pojo.HerolandTopicGroupPart;
 import com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample;
@@ -82,7 +83,7 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
     public List<HeroLandTopicForSDto> listDepartmentByGrades(HerolandTopicGroupGradeQO qo) {
         List<HeroLandTopicForSDto> result = Lists.newArrayList();
         HerolandTopicGroupPartExample example = new HerolandTopicGroupPartExample();
-        example.createCriteria().andOrgCodeEqualTo(qo.getOrgCode()).andCourseCodeIn(qo.getGradeCodes());
+        example.createCriteria().andOrgCodeEqualTo(qo.getOrgCode()).andGradeCodeIn(qo.getGradeCodes());
         List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(topicGroupParts)){
             return Lists.newArrayList();
@@ -105,6 +106,18 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
 
     @Override
     public List<HerolandTopicGroupPartDP> listPartByTopicIds(HerolandTopicForSQO qo) {
-        return null;
+
+        List<HerolandTopicGroupPartDP> result = Lists.newArrayList();
+        HerolandTopicGroupPartExample example = new HerolandTopicGroupPartExample();
+        example.createCriteria().andOrgCodeEqualTo(qo.getOrgCode()).andGradeCodeEqualTo(qo.getGradeCode()).andTopicIdIn(qo.getTopicIds());
+        List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(topicGroupParts)){
+            return Lists.newArrayList();
+        }
+        result = topicGroupParts.stream().map(e ->{
+            HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
+            return partDP;
+        }).collect(Collectors.toList());
+        return result;
     }
 }

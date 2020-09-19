@@ -24,6 +24,7 @@ public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
     /**
      * 赛事类型
      */
+    @NotNull
     private Integer topicType;
 
     /**

@@ -33,10 +33,10 @@ public class TopicQuestionsForSDto implements Serializable {
      */
     private List<HeroLandQuestionBankSimpleDto>  questions = Lists.newArrayList();
 
-    /**
-     * 根据科目分类的题目
-     * 默认是每一个科目12题，但是如果数据库中不够12题，则有多少返回多少
-     */
-    private Map<String, List<HeroLandQuestionBankSimpleDto>> questionsMap = Maps.newHashMap();
+//    /**
+//     * 根据科目分类的题目
+//     * 默认是每一个科目12题，但是如果数据库中不够12题，则有多少返回多少
+//     */
+//    private Map<String, List<HeroLandQuestionBankSimpleDto>> questionsMap = Maps.newHashMap();
 
 }

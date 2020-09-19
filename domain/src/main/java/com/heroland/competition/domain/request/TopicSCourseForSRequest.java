@@ -4,14 +4,13 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author smjyouzan
  * @date 2020/8/17
  */
 @Data
-public class TopicQuestionsForSRequest implements Serializable {
+public class TopicSCourseForSRequest implements Serializable {
 
     /**
      * 赛事id
@@ -25,8 +24,5 @@ public class TopicQuestionsForSRequest implements Serializable {
     @NotNull
     private String userId;
 
-    /**
-     * 科目code
-     */
-    private String courseCode;
+
 }
