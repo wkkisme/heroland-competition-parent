@@ -650,7 +650,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 simpleDto.setOptionAnswer(detail.getOptionAnswer());
                 simpleDto.setParse(detail.getParse());
                 simpleDto.setStormAnswer(detail.getStormAnswer());
-                simpleDto.setOptions(JSON.parseArray(detail.getAnswer(), QuestionOptionDto.class));
+                simpleDto.setOptions(JSON.parseArray(detail.getOption(), QuestionOptionDto.class));
+                simpleDto.setAnalysis(detail.getAnalysis());
             }
         });
         return dto;
