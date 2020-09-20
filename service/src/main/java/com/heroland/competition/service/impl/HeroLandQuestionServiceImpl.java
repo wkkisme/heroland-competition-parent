@@ -637,9 +637,22 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             //去重，已重写hashCode和equals
             availQues = availQues.stream().distinct().collect(Collectors.toList());
         }
-        List<HeroLandQuestionBankSimpleDto> simpleDtos = BeanCopyUtils.copyArrayByJSON(availQues, HeroLandQuestionBankSimpleDto.class);
-        dto.getQuestions().addAll(simpleDtos);
 
+        List<Long> qbIds = availQues.stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
+        List<HerolandQuestionBankDetail> bankDetails = herolandQuestionBankDetailMapper.getByQtId(qbIds);
+        Map<Long, List<HerolandQuestionBankDetail>> bankDetailsMap = bankDetails.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
+
+        availQues.stream().forEach(e -> {
+            HeroLandQuestionBankSimpleDto simpleDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionBankSimpleDto.class);
+            dto.getQuestions().add(simpleDto);
+            if (bankDetailsMap.containsKey(e.getId())){
+                HerolandQuestionBankDetail detail = bankDetailsMap.get(e.getId()).get(0);
+                simpleDto.setOptionAnswer(detail.getOptionAnswer());
+                simpleDto.setParse(detail.getParse());
+                simpleDto.setStormAnswer(detail.getStormAnswer());
+                simpleDto.setOptions(JSON.parseArray(detail.getAnswer(), QuestionOptionDto.class));
+            }
+        });
         return dto;
     }
 

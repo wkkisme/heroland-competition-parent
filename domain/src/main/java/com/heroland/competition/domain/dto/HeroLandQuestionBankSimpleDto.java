@@ -110,6 +110,39 @@ public class HeroLandQuestionBankSimpleDto implements Serializable {
     private Integer bankType;
 
     /**
+     * 选项内容
+     */
+    private List<QuestionOptionDto> options = Lists.newArrayList();
+
+    /**
+     * 选项答案|填空题答案
+     */
+    private String optionAnswer;
+
+    /**
+     * 胡乱答案
+     */
+    private String stormAnswer;
+
+    /**
+     * 答案解析
+     */
+    private String analysis;
+
+
+    /**
+     * 解答题答案
+     */
+    private String answer;
+
+    /**
+     * 解析（特殊场景）
+     */
+    private String parse;
+
+
+
+    /**
      * 关联的知识点列表
      */
     private List<HerolandKnowledgeSimpleDto> knowledges = Lists.newArrayList();
