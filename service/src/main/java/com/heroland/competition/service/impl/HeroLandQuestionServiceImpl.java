@@ -629,6 +629,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         List<HerolandQuestionBank> availQues = Lists.newArrayList();
         List<HerolandQuestionBank> bankList = herolandQuestionBankMapper.selectQuestionsByGradeAndCoursesForS(grade, request.getCourseCode(), BankTypeEnum.INTERSCHOOL.getLevel(), lastId, 12);
         //如果查出的是少于12题，则从头继续轮询
+        availQues.addAll(bankList);
         if (bankList.size() < 12){
             Integer count = 12 - bankList.size();
             List<HerolandQuestionBank> bankListAppend = herolandQuestionBankMapper.selectQuestionsByGradeAndCoursesForS(grade, request.getCourseCode(), BankTypeEnum.INTERSCHOOL.getLevel(), null, count);
