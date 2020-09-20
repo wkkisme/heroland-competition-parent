@@ -32,6 +32,7 @@ import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandCourseService;
+import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
@@ -91,6 +92,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Resource
     private HerolandCourseMapper herolandCourseMapper;
+    @Resource
+    private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
 
     private Random random = new Random();
 
@@ -712,6 +715,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 HerolandCourseSimpleDto simpleDto = new HerolandCourseSimpleDto();
                 simpleDto.setCourse(e.getCourse());
                 simpleDto.setCourseName(courseDataMap.containsKey(e.getCourse()) ? courseDataMap.get(e.getCourse()).getDictValue() : "");
+                HeroLandTopicQuestionsPageRequest request1 = new HeroLandTopicQuestionsPageRequest();
+                request1.setTopicIds(Lists.newArrayList(request.getTopicId()));
+                request1.setUserId(request.getUserId());
+                request1.setCourseCode(simpleDto.getCourse());
+                ResponseBody<List<AnswerQuestionRecordStatisticDP>> answerQuestionRecordStatistic = heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(request1);
+//                if ()
+
                 return simpleDto;
             }).collect(Collectors.toList());
         }

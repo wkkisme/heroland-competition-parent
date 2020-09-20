@@ -22,6 +22,11 @@ public class HerolandCourseSimpleDto implements Serializable {
      */
     private String courseName;
 
+    /**
+     * 该科目下比赛是否已完成
+     */
+    private Boolean hasFinished;
+
 
 
 }
