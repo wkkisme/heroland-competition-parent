@@ -2,14 +2,12 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.pageable.PageResponse;
-import com.heroland.competition.domain.dp.AnswerCompetitionResultDP;
-import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
-import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
+import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +28,9 @@ import java.util.List;
 public class HeroLandCompetitionStatisticsController {
     @Resource
     private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+
+    @Resource
+    private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
 
 
     /**
@@ -89,6 +90,17 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
+     * 查询比赛记录（不需要根据topic往下查）
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/queryCompetitionRecords")
+    ResponseBody<List<HeroLandQuestionRecordDetailDP>> queryCompetitionRecords(@RequestBody HeroLandQuestionQO qo) {
+        return heroLandQuestionRecordDetailService.getQuestionRecord(qo);
+    }
+
+    /**
      * 获取比赛结果
      *
      * @param qo
@@ -98,4 +110,6 @@ public class HeroLandCompetitionStatisticsController {
     ResponseBody<AnswerCompetitionResultDP> getAnswerResult(@RequestBody AnswerResultQO qo) {
         return heroLandCompetitionStatisticsService.getAnswerResult(qo);
     }
+
+
 }
