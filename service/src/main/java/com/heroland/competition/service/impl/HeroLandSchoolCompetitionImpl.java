@@ -77,7 +77,7 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         if (competitionRecordByRecordId.getData().getStatus().equals(CompetitionStatusEnum.FINISH.getStatus())) {
             return ResponseBodyWrapper.fail("比赛已经结束", "40001");
         }
-        boolean lock = redisService.setNx("competition_school_answer_key:" + record.getOpponentId() + record.getInviteId() + record.getTopicId(), record, "P1H");
+        boolean lock = redisService.setNx("competition_school_answer_key:" + record.getOpponentId() + record.getInviteId() + record.getTopicId(), record, "PT1H");
         if (record.getAnswerType() == 0) {
             if (lock) {
                 if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
