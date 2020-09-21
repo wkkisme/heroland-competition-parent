@@ -68,7 +68,9 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP record) {
         //  判断当前人连续答题次数 连续答对4题
-        ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByRecordId = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(new HeroLandCompetitionRecordQO());
+        HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
+        heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
+        ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByRecordId = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(heroLandCompetitionRecordQO);
         if (competitionRecordByRecordId.getData() == null) {
             return ResponseBodyWrapper.fail("比赛不存在", "40000");
         }
