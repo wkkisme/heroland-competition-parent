@@ -348,9 +348,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
 
         // 真正要返回的题目
-        if (qo.getTopicIds() == null) {
-            return ResponseBodyWrapper.fail("题目参数为空", "40002");
-        }
+//        if (qo.getTopicIds() == null) {
+//            return ResponseBodyWrapper.fail("题目参数为空", "40002");
+//        }
         List<HeroLandTopicDto> topics = Lists.newArrayList();
         PageResponse<HeroLandQuestionListForTopicDto> topicQuestions = new PageResponse<>();
         if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
