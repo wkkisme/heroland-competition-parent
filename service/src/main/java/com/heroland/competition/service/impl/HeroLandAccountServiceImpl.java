@@ -34,6 +34,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author mac
@@ -67,11 +68,11 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 // 如果为空去查下是否有这个人
                 if (user != null) {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
-                    List<String> dps = (List<String>) redisService.get("recent_user:" + dp.getTopicId() + userId);
+                    Set<Object> dps = redisService.sMembers("recent_user:" + dp.getTopicId() + userId);
                     if (dps != null && dps.contains(onlineUser.getSenderId())) {
 
                         PlatformSysUserQO qo = new PlatformSysUserQO();
-                        qo.setUserIds(dps);
+                        qo.setUserIds(dps.stream().map(String::valueOf).collect(Collectors.toList()));
                         RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(qo);
                         List<OnlineDP> onlines = new ArrayList<>();
                         if (userList != null && !CollectionUtils.isEmpty(userList.getData())) {
