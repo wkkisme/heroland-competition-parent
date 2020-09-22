@@ -68,7 +68,11 @@ public class HeroLandTopicForWDto implements Serializable {
 
     /**
      * 学生角色参与的状态
-     * 参与 和 未参与
+     * 已参与 --JOINED
+     * 未参与 -- NONJOINED
+     * 推荐参赛时是 NONJOINED
+     * 弹出即将的比赛时是 JOINED
+     *
      */
     private String studentJoinState;
 

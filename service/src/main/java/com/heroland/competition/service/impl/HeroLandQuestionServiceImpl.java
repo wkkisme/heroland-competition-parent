@@ -849,6 +849,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 if (CollectionUtils.isEmpty(herolandTopicJoinUsers) && !CollectionUtils.isEmpty(partTopicIds)){
                     HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(partTopicIds.get(0));
                     HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                    heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.NONJOINED);
                     return heroLandTopicForWDto;
                 }
             }
@@ -864,6 +865,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 HerolandTopicForSQO sqo = new HerolandTopicForSQO();
                 sqo.setTopicIds(topicIds);
                 sqo.setGradeCode(grade);
+                if (StringUtils.isNotBlank(request.getCourseCode())){
+                    sqo.setCourseCodes(Lists.newArrayList(request.getCourseCode()));
+                }
                 List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
                 List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
                 HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
@@ -874,6 +878,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 if (!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
                     HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
                     HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                    heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
                     return heroLandTopicForWDto;
                 }
             }

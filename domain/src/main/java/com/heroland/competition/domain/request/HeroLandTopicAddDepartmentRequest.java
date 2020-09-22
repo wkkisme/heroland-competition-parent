@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.request;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -82,4 +83,10 @@ public class HeroLandTopicAddDepartmentRequest implements Serializable {
      * 创建世界赛时需要的年级和科目
      */
     private List<HerolandTopicAddSchoolCourseForWorldRequest> gradeCoursesForWorld;
+
+    /**
+     * 创建世界赛时选择的题目
+     */
+    private List<Long> questionIds = Lists.newArrayList();
+
 }

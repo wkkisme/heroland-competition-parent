@@ -22,5 +22,7 @@ public class HerolandTopicForSQO extends BaseDO implements Serializable {
 
     private String classCode;
 
+    private List<String> courseCodes;
+
 
 }

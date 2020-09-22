@@ -212,6 +212,10 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         heroLandTopicForSDto.setStartTime(topicGroup.getStartTime());
         heroLandTopicForSDto.setEndTime(topicGroup.getEndTime());
         heroLandTopicForSDto.setDesc(topicGroup.getDescription());
+        heroLandTopicForSDto.setRegisterbeginTime(topicGroup.getRegisterBeginTime());
+        heroLandTopicForSDto.setRegisterEndTime(topicGroup.getRegisterEndTime());
+        heroLandTopicForSDto.setRegisterCount(topicGroup.getRegisterCount());
+        heroLandTopicForSDto.setCountLimit(topicGroup.getCountLimit());
         if (now.before(heroLandTopicForSDto.getStartTime())){
             heroLandTopicForSDto.setState(TopicJoinConstant.NOTSTART);
         }else if(now.after(heroLandTopicForSDto.getEndTime())){

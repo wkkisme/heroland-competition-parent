@@ -69,7 +69,7 @@ public class HeroLandTopicQuestionController {
     }
 
     /**
-     * 校际赛的赛事列表
+     * 校际赛|世界赛的赛事列表
      * @param request
      * @return
      */

@@ -109,7 +109,19 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
 
         List<HerolandTopicGroupPartDP> result = Lists.newArrayList();
         HerolandTopicGroupPartExample example = new HerolandTopicGroupPartExample();
-        example.createCriteria().andOrgCodeEqualTo(qo.getOrgCode()).andGradeCodeEqualTo(qo.getGradeCode()).andTopicIdIn(qo.getTopicIds());
+        HerolandTopicGroupPartExample.Criteria criteria = example.createCriteria();
+        if (!CollectionUtils.isEmpty(qo.getTopicIds())){
+            criteria.andTopicIdIn(qo.getTopicIds());
+        }
+        if (!StringUtils.isEmpty(qo.getOrgCode())){
+            criteria.andOrgCodeEqualTo(qo.getOrgCode());
+        }
+        if (!StringUtils.isEmpty(qo.getGradeCode())){
+            criteria.andGradeCodeEqualTo(qo.getGradeCode()).andTopicIdIn(qo.getTopicIds());
+        }
+        if (!CollectionUtils.isEmpty(qo.getCourseCodes())){
+            criteria.andCourseCodeIn(qo.getCourseCodes());
+        }
         List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(topicGroupParts)){
             return Lists.newArrayList();
