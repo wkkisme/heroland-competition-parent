@@ -362,17 +362,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
                 return ResponseBodyWrapper.success();
             }
-        } else if (CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
-            HerolandTopicGroupGradeQO herolandTopicGroupGradeQO = new HerolandTopicGroupGradeQO();
-            BeanUtil.copyProperties(qo, herolandTopicGroupGradeQO);
-            List<HeroLandTopicForSDto> heroLandTopicForSDtos = herolandTopicGroupPartService.listDepartmentByGrades(herolandTopicGroupGradeQO);
-            HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
-            if (!CollectionUtils.isEmpty(heroLandTopicForSDtos)) {
-                heroLandTopicQuestionsPageRequest.setTopicIds(heroLandTopicForSDtos.parallelStream().map(HeroLandTopicForSDto::getTopicId).collect(Collectors.toList()));
-                qo = heroLandTopicQuestionsPageRequest;
-            }
-
-        } else {
+        }  else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())){
             topics = heroLandQuestionService.getTopics(qo);
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
@@ -381,6 +371,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         // 根据topicId 加questionId查出 题目的对战情况
         HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
+        BeanUtil.copyProperties(qo,heroLandQuestionQO);
         heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
         heroLandQuestionQO.setNeedPage(false);
         heroLandQuestionQO.setUserId(qo.getUserId());
