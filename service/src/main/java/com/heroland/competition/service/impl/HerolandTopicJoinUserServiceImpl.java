@@ -3,10 +3,13 @@ package com.heroland.competition.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constant.TopicJoinConstant;
+import com.heroland.competition.common.constants.TopicTypeConstants;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -17,10 +20,14 @@ import com.heroland.competition.dal.pojo.HerolandTopicJoinUser;
 import com.heroland.competition.dal.pojo.HerolandTopicJoinUserExample;
 import com.heroland.competition.domain.dp.HerolandTopicJoinUserDP;
 import com.heroland.competition.domain.dto.*;
+import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
+import com.heroland.competition.domain.request.HerolandDiamRequest;
+import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicJoinUserService;
+import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
@@ -60,10 +67,20 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
+    @Resource
+    private HeroLandAccountService heroLandAccountService;
+
+    @Resource
+    private HerolandDiamondService herolandDiamondService;
+
 
     @Override
     public Boolean addJoin(HerolandTopicJoinUserDP dp) {
         HerolandTopicJoinUserDP herolandTopicJoinUserDP = dp.checkAndBuildBefore();
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(dp.getTopicId());
+        if(heroLandTopicGroup == null){
+            throw new AppSystemException(HerolandErrMsgEnum.ERROR_QUERY_PARAM.getErrorMessage());
+        }
         HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
         example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserIn(dp.getJoinUsers()).andStateEqualTo(dp.getState());
         List<HerolandTopicJoinUser> herolandTopicJoinUsers =
@@ -85,6 +102,25 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             herolandTopicJoinUser.setJoinUser(e);
             list.add(herolandTopicJoinUser);
         });
+
+        //世界赛需要扣除钻石
+        if (Objects.equals(heroLandTopicGroup.getType(), TopicTypeConstants.WORLD_COMPETITION)){
+            HeroLandAccountManageQO qo = new HeroLandAccountManageQO();
+            qo.setCompetitionType(CompetitionEnum.WORLD);
+            qo.setUserId(dp.getJoinUsers().get(0));
+            qo.setRemark("报名世界赛:"+ dp.getTopicId());
+            qo.setNum(1);
+            heroLandAccountService.decrUserDiamond(qo);
+
+            HerolandDiamRequest herolandDiamRequest = new HerolandDiamRequest();
+            herolandDiamRequest.setUserId(dp.getJoinUsers().get(0));
+            herolandDiamRequest.setBizGroup(CompetitionEnum.WORLD.getType().toString());
+            herolandDiamRequest.setBizName(CompetitionEnum.WORLD.getName());
+            herolandDiamRequest.setNum(1);
+            herolandDiamRequest.setChangeStockType(2);
+            herolandDiamondService.createDiamondRecord(herolandDiamRequest);
+        }
+
         return herolandTopicJoinUserMapper.batchInsert(list) > 0;
     }
 

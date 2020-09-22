@@ -11,7 +11,6 @@ public enum DiamBizGroupEnum {
     COMPETITON("GAME","对赛策略"),
     TRAIN("TRAIN","应试训练"),
     BUY("BUY","充值"),
-
     ;
 
 

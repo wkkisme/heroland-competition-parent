@@ -130,7 +130,6 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
             }
             heroLandAccountService.incrUserDiamond(heroLandAccountManageQO);
         }
-
         return herolandDiamondStockLogMapper.insertSelective(stockLog) > 0;
     }
 

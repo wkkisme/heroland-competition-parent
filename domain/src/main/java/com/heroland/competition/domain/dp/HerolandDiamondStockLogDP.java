@@ -34,19 +34,19 @@ public class HerolandDiamondStockLogDP extends BaseDO {
         if (stockEnum == null){
             ResponseBodyWrapper.failException("宝石使用类型错误");
         }
-        DiamBizGroupEnum diamBizGroupEnum = DiamBizGroupEnum.valueOfLevel(bizGroup);
-        if (diamBizGroupEnum == null){
-            ResponseBodyWrapper.failException("宝石使用分组不存在，请先注册");
-        }
-        DiamBizTypeEnum diamBizTypeEnum = DiamBizTypeEnum.valueOfV(bizType);
-        if (diamBizTypeEnum == null){
-            ResponseBodyWrapper.failException("宝石使用场景不存在，请先注册");
-        }
-        List<DiamBizTypeEnum> list = DiamBizTypeEnum.valueOfGroup(bizGroup);
-        boolean contains = list.stream().map(DiamBizTypeEnum::getValue).collect(Collectors.toList()).contains(bizType);
-        if (!contains){
-            ResponseBodyWrapper.failException("宝石使用场景不存在，请先注册");
-        }
+//        DiamBizGroupEnum diamBizGroupEnum = DiamBizGroupEnum.valueOfLevel(bizGroup);
+//        if (diamBizGroupEnum == null){
+//            ResponseBodyWrapper.failException("宝石使用分组不存在，请先注册");
+//        }
+//        DiamBizTypeEnum diamBizTypeEnum = DiamBizTypeEnum.valueOfV(bizType);
+//        if (diamBizTypeEnum == null){
+//            ResponseBodyWrapper.failException("宝石使用场景不存在，请先注册");
+//        }
+//        List<DiamBizTypeEnum> list = DiamBizTypeEnum.valueOfGroup(bizGroup);
+//        boolean contains = list.stream().map(DiamBizTypeEnum::getValue).collect(Collectors.toList()).contains(bizType);
+//        if (!contains){
+//            ResponseBodyWrapper.failException("宝石使用场景不存在，请先注册");
+//        }
         return this;
     }
 

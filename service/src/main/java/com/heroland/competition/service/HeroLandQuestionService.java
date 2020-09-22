@@ -89,4 +89,6 @@ public interface HeroLandQuestionService{
      * @return
      */
     List<HeroLandQuestionRecordDetailDP> judgeQuestionResult(List<HeroLandQuestionRecordDetailDP> questions);
+
+    HeroLandTopicForWDto topicWForStudent(TopicWForStudentRequest request);
 }

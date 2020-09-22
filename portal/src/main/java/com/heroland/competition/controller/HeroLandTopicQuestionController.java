@@ -254,6 +254,21 @@ public class HeroLandTopicQuestionController {
         return result;
     }
 
+    /**
+     * 根据当前时间是推荐报名世界赛还是弹报过名且即将要比赛的世界赛
+     * action = REGISTER 表示推荐报名的比赛
+     * action = BATTLE 表示弹出已经报过名的比赛
+     * @param
+     * @return
+     */
+    @RequestMapping("/topicWForStudent")
+    public ResponseBody<HeroLandTopicForWDto> topicWForStudent(@RequestBody TopicWForStudentRequest request){
+        ResponseBody<HeroLandTopicForWDto> result = new ResponseBody<>();
+        HeroLandTopicForWDto heroLandTopicForWDto = heroLandQuestionService.topicWForStudent(request);
+        result.setData(heroLandTopicForWDto);
+        return result;
+    }
+
 
 
 

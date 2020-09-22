@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.heroland.competition.common.constant.TopicJoinConstant;
 import com.heroland.competition.common.constants.*;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
@@ -87,6 +88,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     @Resource
     private HerolandSchoolCourseMapper herolandSchoolCourseMapper;
+    @Resource
+    private HerolandTopicJoinUserMapper herolandTopicJoinUserMapper;
 
     @Resource
     private HerolandCourseMapper herolandCourseMapper;
@@ -137,6 +140,21 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     @Transactional
     public Boolean deleteTopic(Long id) {
+
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(id);
+        if(heroLandTopicGroup == null){
+            return false;
+        }
+        Date now = new Date();
+        if (Objects.equals(heroLandTopicGroup.getType(), TopicTypeConstants.WORLD_COMPETITION)){
+            if (heroLandTopicGroup.getRegisterBeginTime().before(now)){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_DELETE_PARAM_REGISTER.getErrorMessage());
+            }
+
+            if (heroLandTopicGroup.getRegisterBeginTime().getTime() - now.getTime() < 5*60*1000){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_DELETE_PARAM_REGISTER2.getErrorMessage());
+            }
+        }
         heroLandTopicGroupMapper.deleteByPrimaryKey(id);
         herolandTopicQuestionMapper.deleteByTopicIds(Lists.newArrayList(id));
         return true;
@@ -795,6 +813,72 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             });
         }
         return questions;
+    }
+
+    @Override
+    public HeroLandTopicForWDto topicWForStudent(TopicWForStudentRequest request) {
+        Date now = new Date();
+        PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
+        qo.setUserId(request.getUserId());
+        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
+            return null;
+        }
+        String grade = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).findFirst().orElse(null);
+        HeroLandTopicGroupExample heroLandTopicGroupExample = new HeroLandTopicGroupExample();
+        HeroLandTopicGroupExample.Criteria criteria = heroLandTopicGroupExample.createCriteria();
+        if (Objects.equals(request.getAction(), "REGISTER")){
+            criteria.andRegisterBeginTimeLessThanOrEqualTo(now).andRegisterEndTimeGreaterThanOrEqualTo(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION);
+            List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
+            if (!CollectionUtils.isEmpty(heroLandTopicGroups)){
+                heroLandTopicGroups = heroLandTopicGroups.stream().filter(e -> e.getRegisterCount() == null || e.getCountLimit() == null || e.getRegisterCount() < e.getCountLimit())
+                        .sorted(Comparator.comparing(HeroLandTopicGroup::getRegisterBeginTime))
+                        .collect(Collectors.toList());
+                Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
+                List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+                HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+                sqo.setTopicIds(topicIds);
+                sqo.setGradeCode(grade);
+                List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+                List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
+                HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
+                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND);
+                List<HerolandTopicJoinUser> herolandTopicJoinUsers =
+                        herolandTopicJoinUserMapper.selectByExample(example);
+               //如果有未报名的可以去报名，有一个了就不推荐报名了
+                if (CollectionUtils.isEmpty(herolandTopicJoinUsers) && !CollectionUtils.isEmpty(partTopicIds)){
+                    HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(partTopicIds.get(0));
+                    HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                    return heroLandTopicForWDto;
+                }
+            }
+        }else if(Objects.equals(request.getAction(), "BATTLE")){
+            criteria.andStartTimeGreaterThan(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION);
+            List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
+            if (!CollectionUtils.isEmpty(heroLandTopicGroups)){
+                heroLandTopicGroups = heroLandTopicGroups.stream().filter(e -> (e.getStartTime().getTime() - now.getTime()) < 10 * 60 *1000)
+                        .sorted(Comparator.comparing(HeroLandTopicGroup::getStartTime))
+                        .collect(Collectors.toList());
+                Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
+                List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+                HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+                sqo.setTopicIds(topicIds);
+                sqo.setGradeCode(grade);
+                List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+                List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
+                HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
+                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND);
+                List<HerolandTopicJoinUser> herolandTopicJoinUsers =
+                        herolandTopicJoinUserMapper.selectByExample(example);
+                //如果有报名的，弹出最近的
+                if (!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
+                    HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
+                    HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                    return heroLandTopicForWDto;
+                }
+            }
+        }
+        return null;
     }
 
 }

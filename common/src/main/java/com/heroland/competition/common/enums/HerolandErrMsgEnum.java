@@ -38,6 +38,11 @@ public enum HerolandErrMsgEnum {
 
     ERROR_UPDATE_PARAM_REGISTER("70111", "报名已经开始，不支持修改"),
 
+    ERROR_DELETE_PARAM_REGISTER("70112", "报名或比赛已经开始，不支持删除"),
+
+    ERROR_DELETE_PARAM_REGISTER2("70113", "距报名开始不足5分钟，不支持删除"),
+    ERROR_QUERY_PARAM("70114", "比赛不存在"),
+
     DUPLICATE("70109", "请稍后提交"),
 
     DUPLICATE_ORDER("70110", "下单过于频繁，请稍后重试"),

@@ -42,7 +42,7 @@ public class HeroLandAccountManageQO {
 
     public HeroLandAccountManageQO queryDecrCheck(){
 
-        AssertUtils.notBlank(userId,accountId);
+        AssertUtils.notBlank(userId);
         AssertUtils.assertThat(competitionType != null);
         AssertUtils.assertThat(num != null);
         return this;
