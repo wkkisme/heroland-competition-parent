@@ -68,7 +68,12 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 // 如果为空去查下是否有这个人
                 if (user != null) {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
-                    Set<Object> dps = redisService.sMembers("recent_user:" + dp.getTopicId() + userId);
+                    Set<Object> dps = null;
+                    try {
+                        dps = redisService.sMembers("recent_user:" + dp.getTopicId() + onlineUser.getSenderId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     if (dps != null && dps.contains(onlineUser.getSenderId())) {
 
                         PlatformSysUserQO qo = new PlatformSysUserQO();
