@@ -29,6 +29,7 @@ import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
@@ -86,6 +87,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
+    @Resource
+    private HerolandTopicGroupPartService herolandTopicGroupPartService;
 
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
@@ -358,6 +362,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
                 return ResponseBodyWrapper.success();
             }
+        } else if (CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
+            HerolandTopicGroupGradeQO herolandTopicGroupGradeQO = new HerolandTopicGroupGradeQO();
+            BeanUtil.copyProperties(qo, herolandTopicGroupGradeQO);
+            List<HeroLandTopicForSDto> heroLandTopicForSDtos = herolandTopicGroupPartService.listDepartmentByGrades(herolandTopicGroupGradeQO);
+            HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
+            if (!CollectionUtils.isEmpty(heroLandTopicForSDtos)) {
+                heroLandTopicQuestionsPageRequest.setTopicIds(heroLandTopicForSDtos.parallelStream().map(HeroLandTopicForSDto::getTopicId).collect(Collectors.toList()));
+                qo = heroLandTopicQuestionsPageRequest;
+            }
+
         } else {
             topics = heroLandQuestionService.getTopics(qo);
             if (CollectionUtils.isEmpty(topics)) {
@@ -385,6 +399,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionStatisticsServiceImpl::fetchGroupKey));
 
+            HeroLandTopicQuestionsPageRequest finalQo = qo;
             topicQuestionsItems.forEach(v -> {
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString() + v.getId());
@@ -398,7 +413,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     if (!CollectionUtils.isEmpty(details)) {
                         details.forEach(detail -> {
                             if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(recordDP.getQuestionId())) {
-                                if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                                if (finalQo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
                                     if (recordDP.getResult() != null) {
                                         // 如果当前人是邀请者 0负1胜2平局
                                         if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
@@ -431,7 +446,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                                 platformSysUserQO.setUserId(recordDP.getOpponentId());
 
-                                if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
+                                if (finalQo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                                     v.setScore(recordDP.getOpponentScore());
                                 } else {
                                     v.setScore(recordDP.getInviteScore());
@@ -447,6 +462,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
 
+            HeroLandTopicQuestionsPageRequest finalQo1 = qo;
             topics.forEach(v -> {
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getId().toString());
@@ -454,7 +470,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
-                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                    if (finalQo1.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
 
                         if (recordDP.getResult() != null) {
                             // 如果当前人是邀请者 0负1胜2平局
@@ -486,7 +502,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
 
-                    if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
+                    if (finalQo1.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
                         v.setScore(recordDP.getInviteScore());
