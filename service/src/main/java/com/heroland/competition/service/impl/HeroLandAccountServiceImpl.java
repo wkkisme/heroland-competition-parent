@@ -92,7 +92,11 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                         }
                     } else if (dps != null) {
                         dps.remove(onlineUser.getSenderId());
-                        redisService.sRemove("recent_user:" + dp.getTopicId() + onlineUser.getSenderId());
+                        try {
+                            redisService.sRemove("recent_user:" + dp.getTopicId() + onlineUser.getSenderId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     users.add(onlineUser);
                 }
