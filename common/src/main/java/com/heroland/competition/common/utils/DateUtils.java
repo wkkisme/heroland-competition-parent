@@ -378,6 +378,8 @@ public class DateUtils {
                 break;
             case YEAR:
                 calendar.add(Calendar.YEAR, interval);
+            case MINUTE:
+                calendar.add(Calendar.MINUTE, interval);
                 break;
             default:
                 calendar.add(Calendar.DATE, interval);

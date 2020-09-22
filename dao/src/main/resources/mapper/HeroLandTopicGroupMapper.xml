@@ -16,6 +16,10 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="register_begin_time" jdbcType="TIMESTAMP" property="registerBeginTime" />
+    <result column="register_end_time" jdbcType="TIMESTAMP" property="registerEndTime" />
+    <result column="count_limit" jdbcType="BIGINT" property="countLimit" />
+    <result column="register_count" jdbcType="BIGINT" property="registerCount" />
     <result column="level_code" jdbcType="VARCHAR" property="levelCode" />
     <result column="diff" jdbcType="INTEGER" property="diff" />
     <result column="description" jdbcType="VARCHAR" property="description" />
@@ -80,7 +84,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, org_code, topic_name, grade_code, class_code, course_code, type, creator, modifier, 
-    gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,description
+    gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,description, register_begin_time, register_end_time, register_count, count_limit
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
     select
@@ -134,13 +138,15 @@
       class_code, course_code, type, 
       creator, modifier, gmt_create, 
       gmt_modified, is_deleted, start_time, 
-      end_time, level_code, diff,description
+      end_time, level_code, diff,description,register_begin_time, register_end_time, register_count, count_limit
       )
     values (#{orgCode,jdbcType=VARCHAR}, #{topicName,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{courseCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{levelCode,jdbcType=VARCHAR}, #{diff,jdbcType=INTEGER},#{description,jdbcType=VARCHAR}
+      #{endTime,jdbcType=TIMESTAMP}, #{levelCode,jdbcType=VARCHAR}, #{diff,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},
+    #{registerBeginTime,jdbcType=TIMESTAMP},#{registerEndTime,jdbcType=TIMESTAMP},
+    #{registerCount,jdbcType=BIGINT}, #{countLimit,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroup">
@@ -197,6 +203,18 @@
       <if test="description != null">
         description,
       </if>
+      <if test="registerBeginTime != null">
+        register_begin_time,
+      </if>
+      <if test="registerEndTime != null">
+        register_end_time,
+      </if>
+      <if test="countLimit != null">
+        count_limit,
+      </if>
+      <if test="registerCount != null">
+        register_count,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="orgCode != null">
@@ -246,6 +264,18 @@
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="registerBeginTime != null">
+        #{registerBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerEndTime != null">
+        #{registerEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="countLimit != null">
+        #{countLimit,jdbcType=BIGINT},
+      </if>
+      <if test="registerCount != null">
+        #{registerCount,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -309,6 +339,18 @@
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
       </if>
+      <if test="registerBeginTime != null">
+        register_begin_time = #{registerBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerEndTime != null">
+        register_end_time = #{registerEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="countLimit != null">
+        count_limit = #{countLimit,jdbcType=BIGINT},
+      </if>
+      <if test="registerCount != null">
+        register_count = #{registerCount,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -332,10 +374,11 @@
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       level_code = #{record.levelCode,jdbcType=VARCHAR},
       diff = #{record.diff,jdbcType=INTEGER},
-    description = #{record.description,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
+    description = #{record.description,jdbcType=VARCHAR},
+      register_begin_time = #{registerBeginTime,jdbcType=TIMESTAMP},
+      register_end_time = #{registerEndTime,jdbcType=TIMESTAMP},
+      count_limit = #{countLimit,jdbcType=BIGINT},
+      register_count = #{registerCount,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroup">
     update heroland_topic_group
@@ -388,6 +431,18 @@
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
+      <if test="registerBeginTime != null">
+        register_begin_time = #{registerBeginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="registerEndTime != null">
+        register_end_time = #{registerEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="countLimit != null">
+        count_limit = #{countLimit,jdbcType=BIGINT},
+      </if>
+      <if test="registerCount != null">
+        register_count = #{registerCount,jdbcType=BIGINT},
+      </if>
 
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -409,7 +464,11 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       level_code = #{levelCode,jdbcType=VARCHAR},
       diff = #{diff,jdbcType=INTEGER},
-       description = #{description,jdbcType=VARCHAR}
+       description = #{description,jdbcType=VARCHAR},
+       register_begin_time = #{registerBeginTime,jdbcType=TIMESTAMP},
+      register_end_time = #{registerEndTime,jdbcType=TIMESTAMP},
+      count_limit = #{countLimit,jdbcType=BIGINT},
+      register_count = #{registerCount,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

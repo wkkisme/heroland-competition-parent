@@ -1227,6 +1227,245 @@ public class HeroLandTopicGroupExample {
             addCriterion("description not between", value1, value2, "description");
             return (Criteria) this;
         }
+        public Criteria andRegisterBeginTimeIsNull() {
+            addCriterion("register_begin_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeIsNotNull() {
+            addCriterion("register_begin_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeEqualTo(Date value) {
+            addCriterion("register_begin_time =", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeNotEqualTo(Date value) {
+            addCriterion("register_begin_time <>", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeGreaterThan(Date value) {
+            addCriterion("register_begin_time >", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("register_begin_time >=", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeLessThan(Date value) {
+            addCriterion("register_begin_time <", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeLessThanOrEqualTo(Date value) {
+            addCriterion("register_begin_time <=", value, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeIn(List<Date> values) {
+            addCriterion("register_begin_time in", values, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeNotIn(List<Date> values) {
+            addCriterion("register_begin_time not in", values, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeBetween(Date value1, Date value2) {
+            addCriterion("register_begin_time between", value1, value2, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterBeginTimeNotBetween(Date value1, Date value2) {
+            addCriterion("register_begin_time not between", value1, value2, "registerBeginTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeIsNull() {
+            addCriterion("register_end_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeIsNotNull() {
+            addCriterion("register_end_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeEqualTo(Date value) {
+            addCriterion("register_end_time =", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeNotEqualTo(Date value) {
+            addCriterion("register_end_time <>", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeGreaterThan(Date value) {
+            addCriterion("register_end_time >", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("register_end_time >=", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeLessThan(Date value) {
+            addCriterion("register_end_time <", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeLessThanOrEqualTo(Date value) {
+            addCriterion("register_end_time <=", value, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeIn(List<Date> values) {
+            addCriterion("register_end_time in", values, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeNotIn(List<Date> values) {
+            addCriterion("register_end_time not in", values, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeBetween(Date value1, Date value2) {
+            addCriterion("register_end_time between", value1, value2, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterEndTimeNotBetween(Date value1, Date value2) {
+            addCriterion("register_end_time not between", value1, value2, "registerEndTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountIsNull() {
+            addCriterion("register_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountIsNotNull() {
+            addCriterion("register_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountEqualTo(Long value) {
+            addCriterion("register_count =", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountNotEqualTo(Long value) {
+            addCriterion("register_count <>", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountGreaterThan(Long value) {
+            addCriterion("register_count >", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountGreaterThanOrEqualTo(Long value) {
+            addCriterion("register_count >=", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountLessThan(Long value) {
+            addCriterion("register_count <", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountLessThanOrEqualTo(Long value) {
+            addCriterion("register_count <=", value, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountIn(List<Long> values) {
+            addCriterion("register_count in", values, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountNotIn(List<Long> values) {
+            addCriterion("register_count not in", values, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountBetween(Long value1, Long value2) {
+            addCriterion("register_count between", value1, value2, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterCountNotBetween(Long value1, Long value2) {
+            addCriterion("register_count not between", value1, value2, "registerCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitIsNull() {
+            addCriterion("count_limit is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitIsNotNull() {
+            addCriterion("count_limit is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitEqualTo(Long value) {
+            addCriterion("count_limit =", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitNotEqualTo(Long value) {
+            addCriterion("count_limit <>", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitGreaterThan(Long value) {
+            addCriterion("count_limit >", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitGreaterThanOrEqualTo(Long value) {
+            addCriterion("count_limit >=", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitLessThan(Long value) {
+            addCriterion("count_limit <", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitLessThanOrEqualTo(Long value) {
+            addCriterion("count_limit <=", value, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitIn(List<Long> values) {
+            addCriterion("count_limit in", values, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitNotIn(List<Long> values) {
+            addCriterion("count_limit not in", values, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitBetween(Long value1, Long value2) {
+            addCriterion("count_limit between", value1, value2, "countLimit");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountLimitNotBetween(Long value1, Long value2) {
+            addCriterion("count_limit not between", value1, value2, "countLimit");
+            return (Criteria) this;
+        }
     }
 
     /**

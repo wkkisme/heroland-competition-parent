@@ -23,17 +23,18 @@ public class HeroLandTopicGroupRequest implements Serializable {
     private String topicName;
 
     /**
-     * 年级code
+     * 应试赛|作业赛年级code
+     *
      */
     private String gradeCode;
 
     /**
-     * 班级code
+     *  应试赛|作业赛班级code
      */
     private String classCode;
 
     /**
-     * 科目code
+     *  应试赛|作业赛科目code
      */
     private String courseCode;
 
@@ -43,12 +44,14 @@ public class HeroLandTopicGroupRequest implements Serializable {
     private Integer type;
 
     /**
-     * 开始时间
+     * 比赛开始时间
      */
     private Date startTime;
 
     /**
-     * 结束时间
+     * 比赛结束时间
      */
     private Date endTime;
+
+
 }

@@ -47,6 +47,27 @@ public class HeroLandTopicAddDepartmentRequest implements Serializable {
     private Date endTime;
 
     /**
+     * 报名开始时间
+     * 针对世界赛
+     */
+    @NotNull
+    private Date registerBeginTime;
+
+    /**
+     * 报名结束时间
+     * 针对世界赛
+     */
+    @NotNull
+    private Date registerEndTime;
+
+    /**
+     * 比赛的限制人数
+     * 针对世界赛
+     */
+    @NotNull
+    private Long countLimit;
+
+    /**
      * 简介
      */
     private String desc;
@@ -56,4 +77,9 @@ public class HeroLandTopicAddDepartmentRequest implements Serializable {
      * 如果是世界赛则不需要分配，该字段不需要
      */
     private List<HerolandTopicAddSchoolCourseRequest> schoolCourses;
+
+    /**
+     * 创建世界赛时需要的年级和科目
+     */
+    private List<HerolandTopicAddSchoolCourseForWorldRequest> gradeCoursesForWorld;
 }

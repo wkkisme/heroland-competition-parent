@@ -9,12 +9,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.heroland.competition.common.constants.BankTypeEnum;
-import com.heroland.competition.common.constants.ChapterEnum;
-import com.heroland.competition.common.constants.KnowledgeReferEnum;
-import com.heroland.competition.common.constants.TopicTypeConstants;
+import com.heroland.competition.common.constants.*;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -121,12 +119,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_TYPE.getErrorMessage());
         }
         Date now = new Date();
-        if (heroLandTopicGroup.getStartTime().after(now)){
+        if (heroLandTopicGroup.getStartTime().before(now)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_BEGIN.getErrorMessage());
         }
         if (heroLandTopicGroup.getEndTime().before(now)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_END.getErrorMessage());
         }
+        //世界赛在开始报名前不能修改，因为有可能会改变人数限制
+        if (Objects.equals(heroLandTopicGroup.getType(), TopicTypeConstants.WORLD_COMPETITION)){
+            if (heroLandTopicGroup.getRegisterBeginTime().before(now)){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_UPDATE_PARAM_REGISTER.getErrorMessage());
+            }
+        }
+
     }
 
     @Override
@@ -152,6 +157,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     @Transactional
     public Long addTopicForS(HeroLandTopicAddDepartmentRequest request) {
+        AssertUtils.notNull(request.getType());
+       if (request.getType().equals(TopicTypeConstants.WORLD_COMPETITION)){
+           return addTopicForWorld(request);
+       }else {
+           return addTopicForSchool(request);
+       }
+    }
+
+
+    private Long addTopicForSchool(HeroLandTopicAddDepartmentRequest request){
         Long id = null;
         HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
         dp.setDescription(request.getDesc());
@@ -171,6 +186,45 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         Long topicId = id;
         if (!CollectionUtils.isEmpty(request.getSchoolCourses())){
+            List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
+            request.getSchoolCourses().stream().forEach(e -> {
+                HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
+                partDP.setTopicId(topicId);
+                list.add(partDP);
+            });
+            herolandTopicGroupPartService.addBatchDepartment(list);
+        }
+        return topicId;
+    }
+    private Long addTopicForWorld(HeroLandTopicAddDepartmentRequest request){
+
+        Long id = null;
+        HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
+        dp.setDescription(request.getDesc());
+
+        if (dp.getRegisterBeginTime() == null || dp.getRegisterBeginTime().after(dp.getStartTime())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (dp.getRegisterEndTime() == null || dp.getRegisterEndTime().after(dp.getStartTime()) || (dp.getStartTime().getTime() - dp.getRegisterEndTime().getTime()) < 5 * 60 * 1000){
+            //设置报名结束时间为开始时间的前5分钟
+            dp.setRegisterEndTime(DateUtils.plusDate(dp.getStartTime(), -5, TimeIntervalUnit.MINUTE));
+        }
+        if (NumberUtils.nullOrZeroLong(request.getId())){
+            //新增
+            dp = dp.addCheckAndInit();
+            HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
+            heroLandTopicGroupMapper.insertSelective(heroLandTopicGroup);
+            id = heroLandTopicGroup.getId();
+        }else {
+            //编辑
+            checkBeforeUpdateEditTopic(dp);
+            HeroLandTopicGroup heroLandTopicGroup = BeanCopyUtils.copyByJSON(dp, HeroLandTopicGroup.class);
+            heroLandTopicGroupMapper.updateByPrimaryKeySelective(heroLandTopicGroup);
+            id = request.getId();
+            herolandTopicGroupPartService.deleteDepartmentBytopicIds(Lists.newArrayList(id));
+        }
+        Long topicId = id;
+        if (!CollectionUtils.isEmpty(request.getGradeCoursesForWorld())){
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
             request.getSchoolCourses().stream().forEach(e -> {
                 HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);

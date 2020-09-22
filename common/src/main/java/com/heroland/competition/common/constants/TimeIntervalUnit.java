@@ -11,5 +11,5 @@ public enum TimeIntervalUnit {
      * QUARTER: 季度
      * YEAR: 年
      */
-    DAY, MONTH, QUARTER, YEAR
+    MINUTE,DAY, MONTH, QUARTER, YEAR
 }

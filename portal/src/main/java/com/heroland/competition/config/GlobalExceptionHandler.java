@@ -41,10 +41,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 //            locale = Locale.SIMPLIFIED_CHINESE;
 //        }
         locale = Locale.TRADITIONAL_CHINESE;
-        LocaleContextHolder.setLocale(locale);
+//        LocaleContextHolder.setLocale(locale);
         if (e instanceof AppSystemException){
-            String i18nStr = StringUtils.isBlank(Resources.getMessage(e.getMessage())) ? e.getMessage() : Resources.getMessage(e.getMessage());
-            return  ResponseBodyWrapper.fail(i18nStr,"50000");
+//            String i18nStr = StringUtils.isBlank(Resources.getMessage(e.getMessage())) ? e.getMessage() : Resources.getMessage(e.getMessage());
+//            return  ResponseBodyWrapper.fail(i18nStr,"50000");
+            return  ResponseBodyWrapper.fail(e.getMessage(),"50000");
         }
         return ResponseBodyWrapper.fail(ErrMsgEnum.SERVER_ERROR);
     }

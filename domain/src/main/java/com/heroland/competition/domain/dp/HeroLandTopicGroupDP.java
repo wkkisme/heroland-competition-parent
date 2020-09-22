@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +77,31 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
      * 简介
      */
     private String description;
+
+    /**
+     * 报名开始时间
+     * 针对世界赛
+     */
+    private Date registerBeginTime;
+
+    /**
+     * 报名结束时间
+     * 针对世界赛
+     */
+    private Date registerEndTime;
+
+    /**
+     * 比赛的限制人数
+     * 针对世界赛
+     */
+    private Long countLimit;
+
+    /**
+     * 比赛的报名人数
+     * 针对世界赛
+     */
+    private Long registerCount;
+
 
 
     public HeroLandTopicGroupDP addCheckAndInit() {

@@ -75,6 +75,30 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
     private String description;
 
     /**
+     * 报名开始时间
+     * 针对世界赛
+     */
+    private Date registerBeginTime;
+
+    /**
+     * 报名结束时间
+     * 针对世界赛
+     */
+    private Date registerEndTime;
+
+    /**
+     * 比赛的限制人数
+     * 针对世界赛
+     */
+    private Long countLimit;
+
+    /**
+     * 比赛的报名人数
+     * 针对世界赛
+     */
+    private Long registerCount;
+
+    /**
      * heroland_topic_group
      */
     private static final long serialVersionUID = 1L;
@@ -246,5 +270,37 @@ public class HeroLandTopicGroup extends BaseDO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Date getRegisterBeginTime() {
+        return registerBeginTime;
+    }
+
+    public void setRegisterBeginTime(Date registerBeginTime) {
+        this.registerBeginTime = registerBeginTime;
+    }
+
+    public Date getRegisterEndTime() {
+        return registerEndTime;
+    }
+
+    public void setRegisterEndTime(Date registerEndTime) {
+        this.registerEndTime = registerEndTime;
+    }
+
+    public Long getCountLimit() {
+        return countLimit;
+    }
+
+    public void setCountLimit(Long countLimit) {
+        this.countLimit = countLimit;
+    }
+
+    public Long getRegisterCount() {
+        return registerCount;
+    }
+
+    public void setRegisterCount(Long registerCount) {
+        this.registerCount = registerCount;
     }
 }
