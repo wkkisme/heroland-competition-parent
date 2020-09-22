@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.nio.charset.Charset;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.heroland.competition.common.constant.RedisConstant.OFFLINE_TAGS;
@@ -50,11 +51,6 @@ public class NettyUserConsumer implements RocketMQListener<MessageExt> {
 
         if (tags.equalsIgnoreCase(ONLINE_TAGS)) {
             log.info("用户online{}",JSON.toJSONString(onlineMsg));
-            Set<String> recent = onlineMsg.getRecent();
-            if (recent == null) {
-                recent = new HashSet<>();
-            }
-            recent.add(onlineMsg.getAddresseeId());
             onlineMsg.setUserStatus(UserStatusEnum.ONLINE.getStatus());
             onlineMsg.setType(CommandResType.ONLINE_SUCCESS_REFRESH.getCode());
             redisService.sAdd(RedisConstant.ONLINE_KEY+onlineMsg.getTopicId(), onlineMsg.getSenderId(),1000*60*60*2L);
