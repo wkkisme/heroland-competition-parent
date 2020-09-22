@@ -75,12 +75,24 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
 
     private String subjectCode;
 
+    private String courseCode;
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+        this.subjectCode = courseCode;
+    }
+
     public String getSubjectCode() {
         return subjectCode;
     }
 
     public void setSubjectCode(String subjectCode) {
         this.subjectCode = subjectCode;
+        this.courseCode = subjectCode;
     }
 
     private static final String INVITE_KEY = "invite_competition:";

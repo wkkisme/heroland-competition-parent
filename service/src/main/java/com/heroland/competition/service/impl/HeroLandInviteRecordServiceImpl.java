@@ -203,7 +203,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
             heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
             heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
-            redisService.set("competition-record:" + heroLandCompetitionRecordDP.getInviteRecordId(),heroLandCompetitionRecordDP,180000);
+            redisService.set("competition-record:" + heroLandCompetitionRecordDP.getInviteRecordId(), heroLandCompetitionRecordDP, 180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
             // 广播所有人和发给对手
@@ -223,6 +223,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             try {
 
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+                // 最近游戏的人
+                redisService.sAdd("recent_user:" +dp.getTopicId()+ dp.getInviteUserId(), dp.getBeInviteUserId());
+                redisService.sAdd("recent_user:" + dp.getTopicId()+ dp.getBeInviteUserId(), dp.getInviteUserId());
+
+                if (redisService.sIsMember("recent_user:" + dp.getInviteUserId(), dp.getBeInviteUserId())) {
+
+                }
             } catch (Exception ignored) {
             }
             return ResponseBodyWrapper.successWrapper(dp.getRecordId());

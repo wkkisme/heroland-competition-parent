@@ -2,14 +2,12 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.pageable.PageResponse;
-import com.heroland.competition.domain.dp.AnswerCompetitionResultDP;
-import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
-import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
-import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
+import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
+import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +28,9 @@ import java.util.List;
 public class HeroLandCompetitionStatisticsController {
     @Resource
     private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+
+    @Resource
+    private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
 
 
     /**
@@ -55,25 +56,6 @@ public class HeroLandCompetitionStatisticsController {
      */
     @PostMapping("/getCourseFinishStatistic")
     ResponseBody<List<CompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(@RequestBody CourseFinishStatisticQO qo) {
-//        List<CompetitionCourseFinishStatisticDP> list = new ArrayList<>();
-//        AtomicInteger i = new AtomicInteger();
-//        ListUtil.toList("中文", "數學", "英文", "常識", "歷史", "電腦", "STEM", "視藝").forEach(s -> {
-//            CompetitionCourseFinishStatisticDP dp = new CompetitionCourseFinishStatisticDP();
-//            dp.setCourseCode(String.valueOf(i.incrementAndGet()));
-//            dp.setCourseName(s);
-//            dp.setChapterCount(i.get() + 10);
-//            dp.setClassCode("test");
-//            dp.setFinishQuestion(i.get());
-//            dp.setGradeCode("5");
-//            dp.setGradeName("5年級");
-//            dp.setOrgCode("1");
-//            dp.setQuestionNum(i.get() + 10);
-//            dp.setSectionCount(i.get() + 2);
-//            dp.setFinishSection(i.get());
-//            dp.setWinRate(new BigDecimal(20));
-//            list.add(dp);
-//        });
-//        return ResponseBodyWrapper.successWrapper(list);
         return heroLandCompetitionStatisticsService.getCourseFinishStatistic(qo);
     }
 
@@ -89,6 +71,17 @@ public class HeroLandCompetitionStatisticsController {
     }
 
     /**
+     * 查询比赛记录（不需要根据topic往下查）
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/queryCompetitionRecords")
+    ResponseBody<List<HeroLandQuestionRecordDetailDP>> queryCompetitionRecords(@RequestBody HeroLandQuestionQO qo) {
+        return heroLandQuestionRecordDetailService.getQuestionRecord(qo);
+    }
+
+    /**
      * 获取比赛结果
      *
      * @param qo
@@ -98,4 +91,6 @@ public class HeroLandCompetitionStatisticsController {
     ResponseBody<AnswerCompetitionResultDP> getAnswerResult(@RequestBody AnswerResultQO qo) {
         return heroLandCompetitionStatisticsService.getAnswerResult(qo);
     }
+
+
 }
