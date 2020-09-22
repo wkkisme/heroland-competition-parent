@@ -193,7 +193,7 @@ public class HeroLandTopicQuestionController {
     public ResponseBody<Boolean> addSchoolTopic(@RequestBody HeroLandTopicAddDepartmentRequest request){
         ResponseBody<Boolean> result = new ResponseBody<>();
         heroLandQuestionService.addTopicForS(request);
-        result.setData(false);
+        result.setData(true);
         return result;
     }
 

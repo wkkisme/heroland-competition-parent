@@ -240,6 +240,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             heroLandTopicGroupMapper.updateByPrimaryKeySelective(heroLandTopicGroup);
             id = request.getId();
             herolandTopicGroupPartService.deleteDepartmentBytopicIds(Lists.newArrayList(id));
+            herolandTopicQuestionMapper.deleteByTopicIds(Lists.newArrayList(id));
         }
         Long topicId = id;
         if (!CollectionUtils.isEmpty(request.getGradeCoursesForWorld())){
@@ -250,6 +251,17 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 list.add(partDP);
             });
             herolandTopicGroupPartService.addBatchDepartment(list);
+        }
+        if (!CollectionUtils.isEmpty(request.getQuestionIds())){
+            List<HerolandTopicQuestion> list = new ArrayList<>();
+            request.getQuestionIds().stream().distinct().forEach(e -> {
+                HerolandTopicQuestion topicQuestion = new HerolandTopicQuestion();
+                topicQuestion.setQuestionId(e);
+                topicQuestion.setTopicId(topicId);
+                topicQuestion.setChapterId(0L);
+                list.add(topicQuestion);
+            });
+            herolandTopicQuestionMapper.saveBatch(list);
         }
         return topicId;
     }
