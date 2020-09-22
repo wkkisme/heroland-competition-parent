@@ -70,7 +70,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
                     Set<Object> dps = null;
                     try {
-                        dps = redisService.sMembers("recent_user:" + dp.getTopicId() + onlineUser.getSenderId());
+                        dps = redisService.sMembers("recent_user:" + dp.getTopicId() + userId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -84,7 +84,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                             userList.getData().forEach(v -> {
                                 OnlineDP online = new OnlineDP();
                                 online.setSenderId(v.getUserId());
-                                online.setSenderName(v.getChildUserName());
+                                online.setSenderName(v.getUserName());
                                 onlines.add(online);
                             });
 
