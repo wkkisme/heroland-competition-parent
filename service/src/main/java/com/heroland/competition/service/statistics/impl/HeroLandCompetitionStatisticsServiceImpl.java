@@ -452,8 +452,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         } else if (!CollectionUtils.isEmpty(questionRecord.getData())) {
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
-
-            HeroLandTopicQuestionsPageRequest finalQo1 = qo;
+            if (CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
+                HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
+                heroLandTopicQuestionsPageRequest.setTopicIds(items.parallelStream().map(HeroLandCompetitionRecordDP::getTopicId).map(Long::valueOf).collect(Collectors.toList()));
+                topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
+            }
             topics.forEach(v -> {
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getId().toString());
@@ -461,7 +464,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
                     HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
-                    if (finalQo1.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
 
                         if (recordDP.getResult() != null) {
                             // 如果当前人是邀请者 0负1胜2平局
@@ -493,7 +496,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                     platformSysUserQO.setUserId(recordDP.getOpponentId());
 
-                    if (finalQo1.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
                         v.setScore(recordDP.getOpponentScore());
                     } else {
                         v.setScore(recordDP.getInviteScore());
