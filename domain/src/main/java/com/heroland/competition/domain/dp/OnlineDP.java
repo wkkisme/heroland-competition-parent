@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -78,7 +79,7 @@ public class OnlineDP implements Serializable {
     /**
      * 最近一起玩的人
      */
-    private Set<String> recent;
+    private List<OnlineDP> recent;
 
 
     /**

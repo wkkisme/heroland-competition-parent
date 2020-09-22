@@ -56,25 +56,6 @@ public class HeroLandCompetitionStatisticsController {
      */
     @PostMapping("/getCourseFinishStatistic")
     ResponseBody<List<CompetitionCourseFinishStatisticDP>> getCourseFinishStatistic(@RequestBody CourseFinishStatisticQO qo) {
-//        List<CompetitionCourseFinishStatisticDP> list = new ArrayList<>();
-//        AtomicInteger i = new AtomicInteger();
-//        ListUtil.toList("中文", "數學", "英文", "常識", "歷史", "電腦", "STEM", "視藝").forEach(s -> {
-//            CompetitionCourseFinishStatisticDP dp = new CompetitionCourseFinishStatisticDP();
-//            dp.setCourseCode(String.valueOf(i.incrementAndGet()));
-//            dp.setCourseName(s);
-//            dp.setChapterCount(i.get() + 10);
-//            dp.setClassCode("test");
-//            dp.setFinishQuestion(i.get());
-//            dp.setGradeCode("5");
-//            dp.setGradeName("5年級");
-//            dp.setOrgCode("1");
-//            dp.setQuestionNum(i.get() + 10);
-//            dp.setSectionCount(i.get() + 2);
-//            dp.setFinishSection(i.get());
-//            dp.setWinRate(new BigDecimal(20));
-//            list.add(dp);
-//        });
-//        return ResponseBodyWrapper.successWrapper(list);
         return heroLandCompetitionStatisticsService.getCourseFinishStatistic(qo);
     }
 
