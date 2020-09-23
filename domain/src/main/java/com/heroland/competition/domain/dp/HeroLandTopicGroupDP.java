@@ -105,6 +105,7 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
 
 
     public HeroLandTopicGroupDP addCheckAndInit() {
+        Date now = new Date();
         if (StringUtils.isBlank(this.getTopicName())) {
             ResponseBodyWrapper.failParamException();
         }
@@ -114,6 +115,9 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         }
         if (startTime == null || endTime == null){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (startTime.before(now)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_1.getErrorMessage());
         }
         if (startTime.after(endTime)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
@@ -148,6 +152,9 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         }
         if (startTime.after(endTime)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
+        }
+        if (startTime.before(new Date())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_1.getErrorMessage());
         }
         if (StringUtils.isBlank(topicName)) {
             ResponseBodyWrapper.failParamException();
