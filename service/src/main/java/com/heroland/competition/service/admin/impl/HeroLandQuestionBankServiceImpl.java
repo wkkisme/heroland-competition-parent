@@ -445,6 +445,14 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             return pageResult;
         }
         HerolandQuestionSelectQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionSelectQo.class);
+        //兼容
+        if (!StringUtils.isEmpty(qo.getCourse())){
+            if (CollectionUtils.isEmpty(qo.getCourseList())){
+                qo.setCourseList(Lists.newArrayList());
+            }
+            qo.getCourseList().add(qo.getCourse());
+            qo.setCourseList(qo.getCourseList().stream().distinct().collect(Collectors.toList()));
+        }
         resolveYearRange(request.getYearRange(), qo);
         if (!StringUtils.isEmpty(request.getYear())) {
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);
@@ -484,6 +492,14 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     private PageResponse<HeroLandQuestionBankListForTopicDto> questionListForCourse(HerolandQuestionBankListForChapterRequest request) {
         HerolandQuestionSelectQo qo = BeanCopyUtils.copyByJSON(request, HerolandQuestionSelectQo.class);
+        //兼容
+        if (!StringUtils.isEmpty(qo.getCourse())){
+            if (CollectionUtils.isEmpty(qo.getCourseList())){
+                qo.setCourseList(Lists.newArrayList());
+            }
+            qo.getCourseList().add(qo.getCourse());
+            qo.setCourseList(qo.getCourseList().stream().distinct().collect(Collectors.toList()));
+        }
         resolveYearRange(request.getYearRange(), qo);
         if (!StringUtils.isEmpty(request.getYear())) {
             Date beginTime = DateUtils.string2Date(request.getYear() + "-01-01 00:00:00", DateUtils.PATTERN_STANDARD);

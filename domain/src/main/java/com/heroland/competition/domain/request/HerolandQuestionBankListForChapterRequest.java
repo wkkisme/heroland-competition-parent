@@ -20,6 +20,12 @@ public class HerolandQuestionBankListForChapterRequest extends BaseQO implements
     private String course;
 
     /**
+     * 科目列表
+     * 兼容course字段，如果都有默认course和courseList都作为参数
+     */
+    private List<String> courseList;
+
+    /**
      * 题目类型
      *      OPTION(1,"选择题"),
      *

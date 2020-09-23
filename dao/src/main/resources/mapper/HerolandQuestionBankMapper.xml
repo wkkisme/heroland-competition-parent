@@ -389,8 +389,13 @@
         <if test="item.grade != null">
             and grade_code = #{item.grade,jdbcType=VARCHAR}
         </if>
-        <if test="item.course != null">
-            and course = #{item.course,jdbcType=VARCHAR}
+
+        <if test="item.courseList != null and item.courseList.size > 0">
+            and course IN (
+            <foreach collection="item.courseList" item="course" index="index" separator=",">
+                #{course,jdbcType=VARCHAR}
+            </foreach>
+            )
         </if>
         <if test="item.types != null and item.types.size > 0">
             and type IN (

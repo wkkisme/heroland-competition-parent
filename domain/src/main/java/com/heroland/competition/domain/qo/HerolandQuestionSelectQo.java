@@ -24,6 +24,11 @@ public class HerolandQuestionSelectQo extends BaseQO implements Serializable {
      */
     private String course;
 
+    /**
+     * 科目列表
+     */
+    private List<String> courseList;
+
 
     /**
      * 题目类型

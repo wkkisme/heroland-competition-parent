@@ -134,7 +134,7 @@ public class HeroLandQuestionBankController {
     }
 
     /**
-     * 前台获取题目进行分配
+     * 获取题目进行分配
      * @param request
      * @return
      */
