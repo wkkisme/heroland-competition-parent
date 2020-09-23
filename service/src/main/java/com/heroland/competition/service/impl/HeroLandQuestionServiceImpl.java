@@ -227,6 +227,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             //设置报名结束时间为开始时间的前5分钟
             dp.setRegisterEndTime(DateUtils.plusDate(dp.getStartTime(), -5, TimeIntervalUnit.MINUTE));
         }
+        checkMultiWorldComIn10Min(request);
         if (NumberUtils.nullOrZeroLong(request.getId())){
             //新增
             dp = dp.addCheckAndInit();
@@ -264,6 +265,32 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             herolandTopicQuestionMapper.saveBatch(list);
         }
         return topicId;
+    }
+
+    private void checkMultiWorldComIn10Min(HeroLandTopicAddDepartmentRequest request){
+        Date now = new Date();
+        Date beginTime = request.getStartTime();
+        AssertUtils.notEmpty(request.getGradeCoursesForWorld());
+        String grade = request.getGradeCoursesForWorld().get(0).getGradeCode();
+        HeroLandTopicGroupExample heroLandTopicGroupExample = new HeroLandTopicGroupExample();
+        HeroLandTopicGroupExample.Criteria criteria = heroLandTopicGroupExample.createCriteria();
+        criteria.andEndTimeLessThan(beginTime).andStartTimeGreaterThan(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION);
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
+        if(CollectionUtils.isEmpty(heroLandTopicGroups)){
+          return;
+        }
+        List<Long> topicIds = heroLandTopicGroups.stream().filter(e -> beginTime.getTime() - e.getEndTime().getTime() < 10 * 60 * 1000).map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(topicIds)){
+            HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+            sqo.setTopicIds(topicIds);
+            List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+            if (!CollectionUtils.isEmpty(herolandTopicGroupPartDPS)){
+                long count = herolandTopicGroupPartDPS.stream().filter(part -> Objects.equals(part.getGradeCode(), grade)).count();
+                if (count > 0L){
+                    ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_PARAM.getErrorMessage());
+                }
+            }
+        }
     }
 
     @Override
