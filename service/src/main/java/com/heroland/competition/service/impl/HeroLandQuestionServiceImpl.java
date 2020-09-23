@@ -245,7 +245,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         Long topicId = id;
         if (!CollectionUtils.isEmpty(request.getGradeCoursesForWorld())){
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
-            request.getSchoolCourses().stream().forEach(e -> {
+            request.getGradeCoursesForWorld().stream().forEach(e -> {
                 HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
                 partDP.setTopicId(topicId);
                 list.add(partDP);
