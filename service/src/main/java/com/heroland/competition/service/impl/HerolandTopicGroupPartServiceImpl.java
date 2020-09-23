@@ -117,7 +117,7 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
             criteria.andOrgCodeEqualTo(qo.getOrgCode());
         }
         if (!StringUtils.isEmpty(qo.getGradeCode())){
-            criteria.andGradeCodeEqualTo(qo.getGradeCode()).andTopicIdIn(qo.getTopicIds());
+            criteria.andGradeCodeEqualTo(qo.getGradeCode());
         }
         if (!CollectionUtils.isEmpty(qo.getCourseCodes())){
             criteria.andCourseCodeIn(qo.getCourseCodes());
