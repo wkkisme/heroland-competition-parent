@@ -79,6 +79,31 @@ public class HeroLandTopicDto implements Serializable {
     private Date endTime;
 
     /**
+     * 报名开始时间
+     */
+    private Date registerbeginTime;
+
+    /**
+     * 报名结束时间
+     */
+    private Date registerEndTime;
+
+    /**
+     * 已经报名的人数
+     */
+    private Long registerCount;
+
+    /**
+     * 报名限制人数
+     */
+    private Long countLimit;
+
+    /**
+     * 简介
+     */
+    private String desc;
+
+    /**
      * 题目组
      */
     private List<HeroLandQuestionListForTopicDto> questions;
