@@ -448,7 +448,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         if(Objects.equals(heroLandTopicDto.getType(),TopicTypeConstants.WORLD_COMPETITION)){
             getCourseForWorldDtoList(request.getTopicId(), heroLandTopicDto);
-            getQuestions(request.getTopicId(), false);
+            List<HeroLandQuestionListForTopicDto> questions = getQuestions(request.getTopicId(), false);
+            heroLandTopicDto.setQuestions(questions);
         }
 
         return heroLandTopicDto;
