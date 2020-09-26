@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.dto;
 
+import com.heroland.competition.domain.request.HerolandTopicAddSchoolCourseForWorldRequest;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -107,6 +108,11 @@ public class HeroLandTopicDto implements Serializable {
      * 题目组
      */
     private List<HeroLandQuestionListForTopicDto> questions;
+
+    /**
+     * 世界赛时需要的年级和科目
+     */
+    private List<HerolandTopicAddSchoolCourseForWorldDto> gradeCoursesForWorld;
 
     /**
      * 题组难度
