@@ -93,7 +93,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
-        AssertUtils.assertThat(CollectionUtils.isEmpty(dp));
+        AssertUtils.assertThat(!CollectionUtils.isEmpty(dp));
 
         for (HeroLandStatisticsTotalDP heroLandStatisticsTotalDP : dp) {
             heroLandStatisticsTotalDP.addCheck();
