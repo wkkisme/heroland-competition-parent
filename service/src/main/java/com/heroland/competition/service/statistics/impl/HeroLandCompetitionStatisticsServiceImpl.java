@@ -367,7 +367,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
             }
-            qo.setTopicIds(topics.stream().map(HeroLandTopicDto :: getTopicId).collect(Collectors.toList()));
         }
 
         // 根据topicId 加questionId查出 题目的对战情况
@@ -391,7 +390,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionStatisticsServiceImpl::fetchGroupKey));
 
-            HeroLandTopicQuestionsPageRequest finalQo = qo;
             topicQuestionsItems.forEach(v -> {
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString() + v.getId());
@@ -399,49 +397,49 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (heroLandCompetitionRecordDPS != null) {
                     // 因为一个人下的topicId会有多场比赛 取最新的展示
                     List<HeroLandCompetitionRecordDP> sorted = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList());
-                    HeroLandCompetitionRecordDP recordDP = sorted.get(0);
+                    HeroLandCompetitionRecordDP record = sorted.get(0);
                     // 如果questionid相等  同步作业赛
-                    List<HeroLandQuestionRecordDetailDP> details = recordDP.getDetails();
+                    List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
                     if (!CollectionUtils.isEmpty(details)) {
                         details.forEach(detail -> {
-                            if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(recordDP.getQuestionId())) {
-                                if (finalQo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
-                                    if (recordDP.getResult() != null) {
+                            if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(record.getQuestionId())) {
+                                if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                                    if (record.getResult() != null) {
                                         // 如果当前人是邀请者 0负1胜2平局
-                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                        if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                                             // 如果是被邀请者胜
-                                        } else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                        } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                                         } else {
-                                            v.setResult(recordDP.getResult());
+                                            v.setResult(record.getResult());
                                         }
                                     }
-                                    v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(record.getInviteLevel(), record.getOpponentLevel()));
                                 } else {
-                                    if (recordDP.getResult() != null) {
+                                    if (record.getResult() != null) {
                                         // 如果当前人是被邀请者 0负1胜2平局
-                                        if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                        if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                                             // 如果是被邀请者胜
-                                        } else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                        } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
                                             v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                                         } else {
-                                            v.setResult(recordDP.getResult());
+                                            v.setResult(record.getResult());
                                         }
                                     }
-                                    v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(record.getOpponentLevel(), record.getInviteLevel()));
                                 }
                                 v.setCorrectAnswer(detail.getCorrectAnswer());
 
 
                                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                                platformSysUserQO.setUserId(recordDP.getOpponentId());
+                                platformSysUserQO.setUserId(record.getOpponentId());
 
-                                if (finalQo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
-                                    v.setScore(recordDP.getOpponentScore());
+                                if (qo.getUserId().equalsIgnoreCase(record.getOpponentId())) {
+                                    v.setScore(record.getOpponentScore());
                                 } else {
-                                    v.setScore(recordDP.getInviteScore());
+                                    v.setScore(record.getInviteScore());
                                 }
                             }
                         });
