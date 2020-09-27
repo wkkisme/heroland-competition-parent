@@ -1,6 +1,8 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.constant.ErrMsgEnum;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
@@ -9,12 +11,16 @@ import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseReq
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
+import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -32,6 +38,9 @@ public class HeroLandCompetitionStatisticsController {
     @Resource
     private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
 
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
+
 
     /**
      * 查询比赛列表统计列表,根据传不同的type来区分，切type不能为空 需要什么类型的数据传什么字段
@@ -43,7 +52,12 @@ public class HeroLandCompetitionStatisticsController {
      * @return HeroLandStatisticsTotalDPs
      */
     @PostMapping("/getStatisticsCompetitions")
-    ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitions(@RequestBody HeroLandStatisticsTotalQO qo) {
+    ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitions(HttpServletRequest request, @RequestBody HeroLandStatisticsTotalQO qo) {
+        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData();
+        if (data == null){
+            return ResponseBodyWrapper.fail(ErrMsgEnum.PLEASE_LOGIN);
+        }
+        qo.setUserId(data.getUserId());
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
 

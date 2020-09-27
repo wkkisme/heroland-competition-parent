@@ -23,6 +23,10 @@
             and user_id = #{userId}
         </if>
 
+        <if test="history != null">
+            and history = #{history}
+        </if>
+
         <if test="userName != null">
             and user_name like concat ( #{userName},'%')
         </if>
@@ -91,7 +95,9 @@
         <if test="userId != null">
             and user_id = #{userId}
         </if>
-
+        <if test="history != null">
+            and history = #{history}
+        </if>
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>

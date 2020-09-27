@@ -172,7 +172,7 @@ public class HeroLandStatisticsTotalDP extends BaseDO implements Serializable {
             e.printStackTrace();
             this.totalId = IDGenerateUtils.getIdByRandom(DEFAULT)+"";
         }
-        AssertUtils.assertThat(CollectionUtils.isEmpty(details));
+        AssertUtils.assertThat(!CollectionUtils.isEmpty(details));
         for (HeroLandStatisticsDetailDP detail : details) {
             try {
                 detail.beforeInsert();
