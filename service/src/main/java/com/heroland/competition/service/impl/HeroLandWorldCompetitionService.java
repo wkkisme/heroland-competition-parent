@@ -3,6 +3,7 @@ package com.heroland.competition.service.impl;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.enums.CompetitionEnum;
+import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.service.HeroLandCompetitionService;
@@ -39,6 +40,7 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
             } else {
                 v.setScore(0);
             }
+            v.setRecordId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.DEFAULT) + "");
         });
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         return ResponseBodyWrapper.successWrapper(record);
