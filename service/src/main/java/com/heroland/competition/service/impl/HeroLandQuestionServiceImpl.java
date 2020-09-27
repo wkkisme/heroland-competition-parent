@@ -1036,6 +1036,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             List<HerolandTopicJoinUser> sort = list.stream().filter(e -> Objects.nonNull(e.getRegisterTime())).sorted(Comparator.comparing(HerolandTopicJoinUser::getRegisterTime).reversed()).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(sort)){
                 HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(sort.get(0).getTopicId());
+                if (heroLandTopicGroup == null){
+                    return null;
+                }
                 HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
                 heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
                 heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
