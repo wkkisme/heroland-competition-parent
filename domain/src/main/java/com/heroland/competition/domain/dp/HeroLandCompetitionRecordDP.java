@@ -271,6 +271,19 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     }
 
 
+    public void worldCheck() {
+
+        if (CollectionUtils.isEmpty(details)) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+        if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
+            ResponseBodyWrapper.failParamException();
+        }
+
+    }
+
+
     public HeroLandCompetitionRecordDP updateCheck() {
         if (StringUtils.isAnyBlank(this.topicId, this.topicName, this.recordId)) {
             ResponseBodyWrapper.failParamException();
