@@ -688,7 +688,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public PageResponse<CourseResultForUserDto> getAllCourseResultForUser(CourseResultForUserQO qo) {
         PageResponse<CourseResultForUserDto> pageResult = new PageResponse<>();
-        List<CourseResultForWDto> result = Lists.newArrayList();
+        List<CourseResultForUserDto> list = Lists.newArrayList();
         HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
         HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
         criteria.andSubjectCodeEqualTo(qo.getCourseCode());
@@ -698,14 +698,12 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (Objects.nonNull(qo.getEndTime())){
             criteria.andEndTimeGreaterThanOrEqualTo(qo.getEndTime());
         }
-        Page<HerolandStatisticsWord> words = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
-                () -> herolandStatisticsWordMapper.selectByExample(example));
-        if (!CollectionUtils.isEmpty(words.getResult())){
-
-            Map<String, List<HerolandStatisticsWord>> userMap = words.getResult().stream().collect(Collectors.groupingBy(HerolandStatisticsWord::getUserId));
+        List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(words)){
+            Map<String, List<HerolandStatisticsWord>> userMap = words.stream().collect(Collectors.groupingBy(HerolandStatisticsWord::getUserId));
             for (Map.Entry<String, List<HerolandStatisticsWord>> entry : userMap.entrySet()){
                 CourseResultForUserDto dto = new CourseResultForUserDto();
-                dto.setCourseCode(entry.getKey());
+                dto.setCourseCode(qo.getCourseCode());
                 dto.setCourseName(entry.getValue().get(0).getSubjectName());
                 dto.setTotalScore(entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
                 dto.setTotalTopics(entry.getValue().stream().map(HerolandStatisticsWord::getTopicId).collect(Collectors.toSet()).size());
@@ -718,26 +716,21 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dto.setRightRate(rightRate);
                 dto.setWinRate(winRate);
                 dto.setAverageScore(dto.getTotalScore() / dto.getTotalTopics());
-//                list.add(dto);
+                dto.setUserId(entry.getKey());
+                dto.setUserId(entry.getValue().get(0).getUserName());
+                list.add(dto);
             }
-
-
-            result = words.getResult().stream().map(e -> {
-                CourseResultForWDto dto = new CourseResultForWDto();
-                dto.setEndTime(e.getEndTime());
-                dto.setStartTime(e.getStartTime());
-                dto.setRank(e.getTotalRank());
-                dto.setTotalScore(e.getTotalScore());
-                dto.setTotalUseTime(e.getTotalTime());
-                dto.setCourseCode(e.getSubjectCode());
-                dto.setCourseName(e.getSubjectName());
-                return dto;
-            }).collect(Collectors.toList());
         }
-//        pageResult.setItems(result);
-        pageResult.setPageSize(words.getPageSize());
-        pageResult.setPage(words.getPageNum());
-        pageResult.setTotal((int) words.getTotal());
+        if (qo.getStartRow() >= list.size()){
+            pageResult.setItems(Lists.newArrayList());
+        }else if ((qo.getStartRow() + qo.getPageSize() - 1) >= list.size()){
+            pageResult.setItems(list.subList(qo.getStartRow(),(list.size() - 1)));
+        }else {
+            pageResult.setItems(list.subList(qo.getStartRow(),(qo.getStartRow() + qo.getPageSize() - 1)));
+        }
+        pageResult.setTotal(list.size());
+        pageResult.setPageSize(qo.getPageSize());
+        pageResult.setPage(qo.getPageIndex());
         return pageResult;
     }
 }

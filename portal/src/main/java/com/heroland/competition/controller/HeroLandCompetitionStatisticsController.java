@@ -152,7 +152,7 @@ public class HeroLandCompetitionStatisticsController {
     @PostMapping("/getCourseResultForUser")
     ResponseBody<List<CourseResultForUserDto>> getAllCourseResultForUser(@RequestBody CourseResultForUserQO qo) {
         ResponseBody<List<CourseResultForUserDto>> result = new ResponseBody<>();
-//        List<CourseResultForUserDto> dtos = heroLandCompetitionStatisticsService.getAllCourseResultForUser(qo);
+        heroLandCompetitionStatisticsService.getAllCourseResultForUser(qo);
 //        result.setData(dtos);
         return result;
 
