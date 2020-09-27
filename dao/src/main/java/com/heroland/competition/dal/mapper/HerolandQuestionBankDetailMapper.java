@@ -21,4 +21,6 @@ public interface HerolandQuestionBankDetailMapper {
     int deleteByQtId( @Param("qtIds") List<Long> qtIds);
 
     List<HerolandQuestionBankDetail> getByQtId( @Param("qtIds") List<Long> qtIds);
+
+    List<HerolandQuestionBankDetail> getById( @Param("ids") List<Long> ids);
 }
