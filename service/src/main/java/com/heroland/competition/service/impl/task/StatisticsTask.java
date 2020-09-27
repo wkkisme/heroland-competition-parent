@@ -1,5 +1,6 @@
 package com.heroland.competition.service.impl.task;
 
+import com.anycommon.cache.service.RedisService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
@@ -47,6 +48,8 @@ public class StatisticsTask {
     @Resource
     private HeroLandAdminService heroLandAdminService;
 
+    @Resource
+    private RedisService redisService;
     /**
      * 统计所有人的比赛记录
      * 1 总表统计所有人的总记录，
@@ -69,7 +72,11 @@ public class StatisticsTask {
     @Scheduled(cron = "0 27 23 ? * *")
     public void statistics() {
 
+        if (!redisService.setNx("statistics_redis_key",true,"PT1H")){
+            return;
+        }
         // 1 先清除历史版本
+
 
         HeroLandStatisticsTotalQO qo = new HeroLandStatisticsTotalQO();
         qo.setHistory(false);
@@ -182,7 +189,10 @@ public class StatisticsTask {
             heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
         } catch (Exception e) {
             log.error("", e);
+        }finally {
+            redisService.del("statistics_redis_key");
         }
+
 
 
     }
