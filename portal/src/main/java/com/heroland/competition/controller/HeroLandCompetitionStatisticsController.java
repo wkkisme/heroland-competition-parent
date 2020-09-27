@@ -152,8 +152,14 @@ public class HeroLandCompetitionStatisticsController {
     @PostMapping("/getCourseResultForUser")
     ResponseBody<List<CourseResultForUserDto>> getAllCourseResultForUser(@RequestBody CourseResultForUserQO qo) {
         ResponseBody<List<CourseResultForUserDto>> result = new ResponseBody<>();
-        heroLandCompetitionStatisticsService.getAllCourseResultForUser(qo);
-//        result.setData(dtos);
+        PageResponse<CourseResultForUserDto> pageResponse = heroLandCompetitionStatisticsService.getAllCourseResultForUser(qo);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
         return result;
 
     }
