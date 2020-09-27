@@ -269,6 +269,20 @@ public class HeroLandTopicQuestionController {
         return result;
     }
 
+    /**
+     * 用户id最近一次报名的赛事
+     * 有可能是过期的，还未开始的或者已经结束的
+     * @param
+     * @return
+     */
+    @RequestMapping("/topicWForStudentLastJoined")
+    public ResponseBody<HeroLandTopicForWDto> topicWForStudentJoined(@RequestBody TopicWForStudentJoinedRequest request){
+        ResponseBody<HeroLandTopicForWDto> result = new ResponseBody<>();
+        HeroLandTopicForWDto heroLandTopicForWDto = heroLandQuestionService.topicWForStudentLastJoined(request);
+        result.setData(heroLandTopicForWDto);
+        return result;
+    }
+
 
 
 

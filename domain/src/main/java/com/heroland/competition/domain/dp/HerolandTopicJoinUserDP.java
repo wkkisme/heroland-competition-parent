@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HerolandTopicJoinUser")
@@ -60,6 +61,19 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
     public Long getTopicId() {
         return topicId;
     }
+
+    /**
+     * 赛事类型
+     */
+    @ApiModelProperty(value="topicType赛事类型")
+    private Integer topicType;
+
+    /**
+     * 报名时间
+     */
+    @ApiModelProperty(value="registerTime报名时间")
+    private Date registerTime;
+
 
     /**
      * heroland_topic_group表的id
@@ -160,5 +174,21 @@ public class HerolandTopicJoinUserDP extends BaseDO implements Serializable {
             }
         }
         return this;
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
+    }
+
+    public Date getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
     }
 }

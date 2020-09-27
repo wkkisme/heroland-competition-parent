@@ -4,8 +4,10 @@
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandTopicJoinUser">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="topic_id" jdbcType="BIGINT" property="topicId" />
+    <result column="topic_type" jdbcType="INTEGER" property="topicType" />
     <result column="join_user" jdbcType="VARCHAR" property="joinUser" />
     <result column="register_user" jdbcType="VARCHAR" property="registerUser" />
+    <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
     <result column="state" jdbcType="VARCHAR" property="state" />
     <result column="cancel_user" jdbcType="VARCHAR" property="cancelUser" />
     <result column="cancel_reason" jdbcType="VARCHAR" property="cancelReason" />
@@ -16,10 +18,10 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
   </resultMap>
 
-  <sql id="Insert_Column_List">
-        topic_id, join_user,register_user, state
-    </sql>
 
+  <sql id="Insert_Column_List">
+        topic_id, topic_type, join_user,register_user,register_time, state
+    </sql>
 
   <sql id="Example_Where_Clause">
     <where>
@@ -80,8 +82,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, topic_id, join_user, register_user, state, cancel_user, cancel_reason, creator, 
-    modifier, gmt_create, gmt_modified, is_deleted
+    id, topic_id, topic_type, join_user, register_user, register_time, state, cancel_user, 
+    cancel_reason, creator, modifier, gmt_create, gmt_modified, is_deleted
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HerolandTopicJoinUserExample" resultMap="BaseResultMap">
     select
@@ -117,14 +119,16 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_topic_join_user (topic_id, join_user, register_user, 
-      state, cancel_user, cancel_reason, 
-      creator, modifier, gmt_create, 
-      gmt_modified, is_deleted)
-    values (#{topicId,jdbcType=BIGINT}, #{joinUser,jdbcType=VARCHAR}, #{registerUser,jdbcType=VARCHAR}, 
-      #{state,jdbcType=VARCHAR}, #{cancelUser,jdbcType=VARCHAR}, #{cancelReason,jdbcType=VARCHAR}, 
-      #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
+    insert into heroland_topic_join_user (topic_id, topic_type, join_user, 
+      register_user, register_time, state, 
+      cancel_user, cancel_reason, creator, 
+      modifier, gmt_create, gmt_modified, 
+      is_deleted)
+    values (#{topicId,jdbcType=BIGINT}, #{topicType,jdbcType=INTEGER}, #{joinUser,jdbcType=VARCHAR}, 
+      #{registerUser,jdbcType=VARCHAR}, #{registerTime,jdbcType=TIMESTAMP}, #{state,jdbcType=VARCHAR}, 
+      #{cancelUser,jdbcType=VARCHAR}, #{cancelReason,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{isDeleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandTopicJoinUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -135,11 +139,17 @@
       <if test="topicId != null">
         topic_id,
       </if>
+      <if test="topicType != null">
+        topic_type,
+      </if>
       <if test="joinUser != null">
         join_user,
       </if>
       <if test="registerUser != null">
         register_user,
+      </if>
+      <if test="registerTime != null">
+        register_time,
       </if>
       <if test="state != null">
         state,
@@ -170,11 +180,17 @@
       <if test="topicId != null">
         #{topicId,jdbcType=BIGINT},
       </if>
+      <if test="topicType != null">
+        #{topicType,jdbcType=INTEGER},
+      </if>
       <if test="joinUser != null">
         #{joinUser,jdbcType=VARCHAR},
       </if>
       <if test="registerUser != null">
         #{registerUser,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        #{registerTime,jdbcType=TIMESTAMP},
       </if>
       <if test="state != null">
         #{state,jdbcType=VARCHAR},
@@ -217,11 +233,17 @@
       <if test="record.topicId != null">
         topic_id = #{record.topicId,jdbcType=BIGINT},
       </if>
+      <if test="record.topicType != null">
+        topic_type = #{record.topicType,jdbcType=INTEGER},
+      </if>
       <if test="record.joinUser != null">
         join_user = #{record.joinUser,jdbcType=VARCHAR},
       </if>
       <if test="record.registerUser != null">
         register_user = #{record.registerUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registerTime != null">
+        register_time = #{record.registerTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.state != null">
         state = #{record.state,jdbcType=VARCHAR},
@@ -256,8 +278,10 @@
     update heroland_topic_join_user
     set id = #{record.id,jdbcType=BIGINT},
       topic_id = #{record.topicId,jdbcType=BIGINT},
+      topic_type = #{record.topicType,jdbcType=INTEGER},
       join_user = #{record.joinUser,jdbcType=VARCHAR},
       register_user = #{record.registerUser,jdbcType=VARCHAR},
+      register_time = #{record.registerTime,jdbcType=TIMESTAMP},
       state = #{record.state,jdbcType=VARCHAR},
       cancel_user = #{record.cancelUser,jdbcType=VARCHAR},
       cancel_reason = #{record.cancelReason,jdbcType=VARCHAR},
@@ -276,11 +300,17 @@
       <if test="topicId != null">
         topic_id = #{topicId,jdbcType=BIGINT},
       </if>
+      <if test="topicType != null">
+        topic_type = #{topicType,jdbcType=INTEGER},
+      </if>
       <if test="joinUser != null">
         join_user = #{joinUser,jdbcType=VARCHAR},
       </if>
       <if test="registerUser != null">
         register_user = #{registerUser,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null">
+        register_time = #{registerTime,jdbcType=TIMESTAMP},
       </if>
       <if test="state != null">
         state = #{state,jdbcType=VARCHAR},
@@ -312,8 +342,10 @@
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandTopicJoinUser">
     update heroland_topic_join_user
     set topic_id = #{topicId,jdbcType=BIGINT},
+      topic_type = #{topicType,jdbcType=INTEGER},
       join_user = #{joinUser,jdbcType=VARCHAR},
       register_user = #{registerUser,jdbcType=VARCHAR},
+      register_time = #{registerTime,jdbcType=TIMESTAMP},
       state = #{state,jdbcType=VARCHAR},
       cancel_user = #{cancelUser,jdbcType=VARCHAR},
       cancel_reason = #{cancelReason,jdbcType=VARCHAR},
@@ -325,14 +357,20 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+
+
+
+
   <insert id="batchInsert" parameterType="java.util.List">
     insert into heroland_topic_join_user
     (<include refid="Insert_Column_List"/>)
     values
     <foreach collection="items" item="item" index="index" separator=",">
       (#{item.topicId,jdbcType=BIGINT},
+      (#{item.topicType,jdbcType=INTEGER},
       #{item.joinUser,jdbcType=VARCHAR},
       #{item.registerUser,jdbcType=VARCHAR},
+      #{item.registerTime,jdbcType=TIMESTAMP},
       #{item.state,jdbcType=VARCHAR}
       )
     </foreach>

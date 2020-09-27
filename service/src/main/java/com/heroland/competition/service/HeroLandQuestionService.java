@@ -91,4 +91,6 @@ public interface HeroLandQuestionService{
     List<HeroLandQuestionRecordDetailDP> judgeQuestionResult(List<HeroLandQuestionRecordDetailDP> questions);
 
     HeroLandTopicForWDto topicWForStudent(TopicWForStudentRequest request);
+
+    HeroLandTopicForWDto topicWForStudentLastJoined(TopicWForStudentJoinedRequest request);
 }

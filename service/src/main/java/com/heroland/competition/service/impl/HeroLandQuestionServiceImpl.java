@@ -1023,4 +1023,41 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         return null;
     }
 
+    @Override
+    public HeroLandTopicForWDto topicWForStudentLastJoined(TopicWForStudentJoinedRequest request) {
+        if (!Objects.equals(request.getTopicType(), TopicTypeConstants.WORLD_COMPETITION) && !Objects.equals(request.getTopicType(), TopicTypeConstants.IntegerER_SCHOOL_COMPETITION)){
+            return null;
+        }
+        HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
+        HerolandTopicJoinUserExample.Criteria criteria = example.createCriteria();
+        criteria.andJoinUserEqualTo(request.getUserId()).andTopicTypeEqualTo(request.getTopicType()).andStateEqualTo(TopicJoinConstant.JOIND);
+        List<HerolandTopicJoinUser> list = herolandTopicJoinUserMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)){
+            List<HerolandTopicJoinUser> sort = list.stream().filter(e -> Objects.nonNull(e.getRegisterTime())).sorted(Comparator.comparing(HerolandTopicJoinUser::getRegisterTime).reversed()).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(sort)){
+                HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(sort.get(0).getTopicId());
+                HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+                heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+                heroLandTopicForWDto.setState(getTopicState(heroLandTopicGroup));
+                return heroLandTopicForWDto;
+            }
+
+        }
+        return null;
+    }
+
+    private String getTopicState(HeroLandTopicGroup heroLandTopicGroup) {
+        String topicState = "";
+        Date now = new Date();
+        if (now.before(heroLandTopicGroup.getStartTime())){
+            topicState = TopicJoinConstant.NOTSTART;
+        }else if (now.after(heroLandTopicGroup.getEndTime())){
+            topicState = TopicJoinConstant.OVERDUE;
+        }else {
+            topicState = TopicJoinConstant.DOING;
+        }
+        return topicState;
+    }
+
 }

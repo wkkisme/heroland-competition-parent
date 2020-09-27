@@ -4,6 +4,7 @@ import com.anycommon.response.common.BaseDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Date;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HerolandTopicJoinUser")
 public class HerolandTopicJoinUser extends BaseDO implements Serializable {
@@ -12,6 +13,12 @@ public class HerolandTopicJoinUser extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="topicIdheroland_topic_group表的id")
     private Long topicId;
+
+    /**
+     * 赛事类型
+     */
+    @ApiModelProperty(value="topicType赛事类型")
+    private Integer topicType;
 
     /**
      * 用户id
@@ -24,6 +31,12 @@ public class HerolandTopicJoinUser extends BaseDO implements Serializable {
      */
     @ApiModelProperty(value="registerUser报名userid")
     private String registerUser;
+
+    /**
+     * 报名时间
+     */
+    @ApiModelProperty(value="registerTime报名时间")
+    private Date registerTime;
 
     /**
      * 状态，参与，取消参与
@@ -65,6 +78,22 @@ public class HerolandTopicJoinUser extends BaseDO implements Serializable {
     }
 
     /**
+     * 赛事类型
+     * @return topic_type 赛事类型
+     */
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    /**
+     * 赛事类型
+     * @param topicType 赛事类型
+     */
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
+    }
+
+    /**
      * 用户id
      * @return join_user 用户id
      */
@@ -94,6 +123,22 @@ public class HerolandTopicJoinUser extends BaseDO implements Serializable {
      */
     public void setRegisterUser(String registerUser) {
         this.registerUser = registerUser == null ? null : registerUser.trim();
+    }
+
+    /**
+     * 报名时间
+     * @return register_time 报名时间
+     */
+    public Date getRegisterTime() {
+        return registerTime;
+    }
+
+    /**
+     * 报名时间
+     * @param registerTime 报名时间
+     */
+    public void setRegisterTime(Date registerTime) {
+        this.registerTime = registerTime;
     }
 
     /**

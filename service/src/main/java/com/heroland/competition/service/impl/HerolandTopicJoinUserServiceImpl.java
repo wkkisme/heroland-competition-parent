@@ -105,6 +105,8 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         List<HerolandTopicJoinUser> list = Lists.newArrayList();
         dp.getJoinUsers().stream().forEach(e -> {
             HerolandTopicJoinUser herolandTopicJoinUser = BeanCopyUtils.copyByJSON(herolandTopicJoinUserDP, HerolandTopicJoinUser.class);
+            herolandTopicJoinUser.setTopicType(heroLandTopicGroup.getType());
+            herolandTopicJoinUser.setRegisterTime(new Date());
             herolandTopicJoinUser.setJoinUser(e);
             list.add(herolandTopicJoinUser);
         });

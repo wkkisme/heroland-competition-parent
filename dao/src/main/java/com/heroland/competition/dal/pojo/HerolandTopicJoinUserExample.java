@@ -74,7 +74,7 @@ public class HerolandTopicJoinUserExample {
     }
 
     /**
-     * heroland_topic_join_user 2020-08-17
+     * heroland_topic_join_user 2020-09-27
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -237,6 +237,66 @@ public class HerolandTopicJoinUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andTopicTypeIsNull() {
+            addCriterion("topic_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeIsNotNull() {
+            addCriterion("topic_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeEqualTo(Integer value) {
+            addCriterion("topic_type =", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotEqualTo(Integer value) {
+            addCriterion("topic_type <>", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeGreaterThan(Integer value) {
+            addCriterion("topic_type >", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("topic_type >=", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeLessThan(Integer value) {
+            addCriterion("topic_type <", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("topic_type <=", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeIn(List<Integer> values) {
+            addCriterion("topic_type in", values, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotIn(List<Integer> values) {
+            addCriterion("topic_type not in", values, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeBetween(Integer value1, Integer value2) {
+            addCriterion("topic_type between", value1, value2, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("topic_type not between", value1, value2, "topicType");
+            return (Criteria) this;
+        }
+
         public Criteria andJoinUserIsNull() {
             addCriterion("join_user is null");
             return (Criteria) this;
@@ -374,6 +434,66 @@ public class HerolandTopicJoinUserExample {
 
         public Criteria andRegisterUserNotBetween(String value1, String value2) {
             addCriterion("register_user not between", value1, value2, "registerUser");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeIsNull() {
+            addCriterion("register_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeIsNotNull() {
+            addCriterion("register_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeEqualTo(Date value) {
+            addCriterion("register_time =", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeNotEqualTo(Date value) {
+            addCriterion("register_time <>", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeGreaterThan(Date value) {
+            addCriterion("register_time >", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("register_time >=", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeLessThan(Date value) {
+            addCriterion("register_time <", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeLessThanOrEqualTo(Date value) {
+            addCriterion("register_time <=", value, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeIn(List<Date> values) {
+            addCriterion("register_time in", values, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeNotIn(List<Date> values) {
+            addCriterion("register_time not in", values, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeBetween(Date value1, Date value2) {
+            addCriterion("register_time between", value1, value2, "registerTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterTimeNotBetween(Date value1, Date value2) {
+            addCriterion("register_time not between", value1, value2, "registerTime");
             return (Criteria) this;
         }
 
@@ -919,7 +1039,7 @@ public class HerolandTopicJoinUserExample {
     }
 
     /**
-     * heroland_topic_join_user 2020-08-17
+     * heroland_topic_join_user 2020-09-27
      */
     public static class Criterion {
         private String condition;

@@ -96,7 +96,7 @@
 
 
 
-        <table tableName="heroland_topic_group_part" domainObjectName="HerolandTopicGroupPart" mapperName="HerolandTopicGroupPartMapper">
+        <table tableName="heroland_topic_join_user" domainObjectName="HerolandTopicJoinUser" mapperName="HerolandTopicJoinUserMapper">
             <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
