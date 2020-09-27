@@ -984,6 +984,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                     HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(partTopicIds.get(0));
                     HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
                     heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.NONJOINED);
+                    heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
                     return heroLandTopicForWDto;
                 }
             }
@@ -1013,6 +1014,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                     HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
                     HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
                     heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+                    heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
                     return heroLandTopicForWDto;
                 }
             }
