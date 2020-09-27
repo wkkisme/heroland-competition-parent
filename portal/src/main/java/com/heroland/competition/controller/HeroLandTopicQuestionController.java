@@ -2,10 +2,14 @@ package com.heroland.competition.controller;
 
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.page.Pagination;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.*;
@@ -14,6 +18,9 @@ import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.HerolandTopicJoinUserService;
+import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +28,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -47,6 +56,9 @@ public class HeroLandTopicQuestionController {
 
     @Resource
     private HerolandTopicJoinUserService herolandTopicJoinUserService;
+
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
 
     /**
@@ -168,8 +180,9 @@ public class HeroLandTopicQuestionController {
      * @module 題目組
      */
     @RequestMapping("/addDepartment")
-    public ResponseBody<Boolean> addDepartmentForTopic(@RequestBody HeroLandTopicAddDepartmentRequest request){
+    public ResponseBody<Boolean> addDepartmentForTopic(HttpServletRequest servletRequest,@RequestBody HeroLandTopicAddDepartmentRequest request){
         ResponseBody<Boolean> result = new ResponseBody<>();
+        roleCheck(servletRequest, 4);
         if (CollectionUtils.isEmpty(request.getSchoolCourses())){
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
             request.getSchoolCourses().stream().forEach(e -> {
@@ -190,8 +203,9 @@ public class HeroLandTopicQuestionController {
      * @module 題目組
      */
     @RequestMapping("/schoolTopic")
-    public ResponseBody<Boolean> addSchoolTopic(@RequestBody HeroLandTopicAddDepartmentRequest request){
+    public ResponseBody<Boolean> addSchoolTopic(HttpServletRequest servletRequest, @RequestBody HeroLandTopicAddDepartmentRequest request){
         ResponseBody<Boolean> result = new ResponseBody<>();
+        roleCheck(servletRequest, 4);
         heroLandQuestionService.addTopicForS(request);
         result.setData(true);
         return result;
@@ -283,7 +297,15 @@ public class HeroLandTopicQuestionController {
         return result;
     }
 
-
-
+    private void roleCheck(HttpServletRequest servletRequest, int roleType){
+        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(servletRequest)).getData();
+        if (data == null){
+            ResponseBodyWrapper.failException(ErrMsgEnum.PLEASE_LOGIN.getErrorMessage());
+        }
+        //4 代表超管
+        if (!Objects.equals(data.getType(), roleType)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ROLE_LIMIT.getErrorMessage());
+        }
+    }
 
 }

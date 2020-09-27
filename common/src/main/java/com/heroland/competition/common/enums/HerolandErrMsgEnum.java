@@ -45,6 +45,7 @@ public enum HerolandErrMsgEnum {
     ERROR_QUERY_PARAM("70114", "比赛不存在"),
     ERROR_TIME_PARAM("70115", "创建同一年级的世界赛相差必须大于10分钟"),
     JOINED_LIMIT("70116", "报名人数已满"),
+    ROLE_LIMIT("70117", "该行为此用户权限不足"),
 
     DUPLICATE("70109", "请稍后提交"),
 
