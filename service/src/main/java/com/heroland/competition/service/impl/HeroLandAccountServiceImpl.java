@@ -197,7 +197,6 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     }
                     HeroLandAccountExample heroLandAccountExample = new HeroLandAccountExample();
                     HeroLandAccountExample.Criteria criteria = heroLandAccountExample.createCriteria();
-                    criteria.andAccountIdEqualTo(dp.getAccountId());
                     criteria.andUserIdEqualTo(userId);
                     heroLandAccount.setBalance(data.get(0).getBalance() - dp.getNum());
                     heroLandAccountExtMapper.updateByExampleSelective(heroLandAccount, heroLandAccountExample);
