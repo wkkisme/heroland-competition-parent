@@ -22,11 +22,9 @@ import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
-import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
-import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
-import com.heroland.competition.domain.qo.HerolandTopicForSQO;
-import com.heroland.competition.domain.qo.HerolandTopicQuestionQo;
+import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.*;
+import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
@@ -94,7 +92,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Resource
     private HerolandCourseMapper herolandCourseMapper;
     @Resource
-    private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+    private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
 
     private Random random = new Random();
 
@@ -903,7 +901,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     private Long getLastId(){
         Long maxId = herolandQuestionBankMapper.maxId(null, null, BankTypeEnum.INTERSCHOOL.getLevel());
-        //todo lastId
+        // lastId
         //通过随机一个数
         Long lastId = NumberUtils.nextLong(random, maxId);
         return lastId;
@@ -921,13 +919,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 HerolandCourseSimpleDto simpleDto = new HerolandCourseSimpleDto();
                 simpleDto.setCourse(e.getCourse());
                 simpleDto.setCourseName(courseDataMap.containsKey(e.getCourse()) ? courseDataMap.get(e.getCourse()).getDictValue() : "");
-                HeroLandTopicQuestionsPageRequest request1 = new HeroLandTopicQuestionsPageRequest();
-                request1.setTopicIds(Lists.newArrayList(request.getTopicId()));
+                HeroLandCompetitionRecordQO request1 = new HeroLandCompetitionRecordQO();
+                request1.setTopicId(request.getTopicId()+"");
                 request1.setUserId(request.getUserId());
-                request1.setCourseCode(simpleDto.getCourse());
-                ResponseBody<List<AnswerQuestionRecordStatisticDP>> answerQuestionRecordStatistic = heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(request1);
-//                if ()
-
+                request1.setSubjectCode(simpleDto.getCourse());
+                ResponseBody<List<HeroLandCompetitionRecordDP>> competitionRecords = heroLandCompetitionRecordService.getCompetitionRecords(request1);
+                if (competitionRecords.isSuccess() && !CollectionUtils.isEmpty(competitionRecords.getData())){
+                    simpleDto.setHasFinished(true);
+                }else {
+                    simpleDto.setHasFinished(false);
+                }
                 return simpleDto;
             }).collect(Collectors.toList());
         }
