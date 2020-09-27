@@ -44,6 +44,7 @@ public enum HerolandErrMsgEnum {
     ERROR_DELETE_PARAM_REGISTER2("70113", "距报名开始不足5分钟，不支持删除"),
     ERROR_QUERY_PARAM("70114", "比赛不存在"),
     ERROR_TIME_PARAM("70115", "创建同一年级的世界赛相差必须大于10分钟"),
+    JOINED_LIMIT("70116", "报名人数已满"),
 
     DUPLICATE("70109", "请稍后提交"),
 

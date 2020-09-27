@@ -570,4 +570,10 @@
     order by g.end_time desc
   </select>
 
+  <update id="incrRegisterCount" >
+    update heroland_topic_group
+    set register_count = #{registerCount,jdbcType=BIGINT}
+    where id = #{topicId,jdbcType=BIGINT} and register_count = #{preCount,jdbcType=BIGINT}
+  </update>
+
 </mapper>

@@ -81,6 +81,12 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         if(heroLandTopicGroup == null){
             throw new AppSystemException(HerolandErrMsgEnum.ERROR_QUERY_PARAM.getErrorMessage());
         }
+        if (Objects.equals(heroLandTopicGroup.getType(), TopicTypeConstants.WORLD_COMPETITION)){
+            if (!(heroLandTopicGroup.getRegisterCount() == null || heroLandTopicGroup.getRegisterCount() < heroLandTopicGroup.getCountLimit())){
+                throw new AppSystemException(HerolandErrMsgEnum.JOINED_LIMIT.getErrorMessage());
+            }
+        }
+
         HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
         example.createCriteria().andTopicIdEqualTo(dp.getTopicId()).andJoinUserIn(dp.getJoinUsers()).andStateEqualTo(dp.getState());
         List<HerolandTopicJoinUser> herolandTopicJoinUsers =
@@ -119,6 +125,10 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             herolandDiamRequest.setNum(1);
             herolandDiamRequest.setChangeStockType(2);
             herolandDiamondService.createDiamondRecord(herolandDiamRequest);
+
+            //对报名人数+1
+            heroLandTopicGroupMapper.incrRegisterCount(dp.getTopicId(), heroLandTopicGroup.getRegisterCount() + 1, heroLandTopicGroup.getRegisterCount());
+
         }
 
         return herolandTopicJoinUserMapper.batchInsert(list) > 0;
