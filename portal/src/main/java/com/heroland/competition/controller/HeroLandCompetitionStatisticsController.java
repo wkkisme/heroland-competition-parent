@@ -2,10 +2,11 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.ErrMsgEnum;
+import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.*;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -104,6 +105,57 @@ public class HeroLandCompetitionStatisticsController {
     @PostMapping("/getAnswerResult")
     ResponseBody<AnswerCompetitionResultDP> getAnswerResult(@RequestBody AnswerResultQO qo) {
         return heroLandCompetitionStatisticsService.getAnswerResult(qo);
+    }
+
+    /**
+     * 指定某一科的统计结果
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getCourseResultForW")
+    ResponseBody<List<CourseResultForWDto>> getCourseResultForW(@RequestBody CourseResultForWQO qo) {
+        ResponseBody<List<CourseResultForWDto>> result = new ResponseBody<>();
+        PageResponse<CourseResultForWDto> pageResponse = heroLandCompetitionStatisticsService.courseResultForWQO(qo);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
+        return result;
+
+    }
+
+    /**
+     * 所有科的统计结果
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getAllCourseResultForW")
+    ResponseBody<List<AllCourseResultForWDto>> getAllCourseResultForW(@RequestBody AllCourseResultForWQO qo) {
+        ResponseBody<List<AllCourseResultForWDto>> result = new ResponseBody<>();
+        List<AllCourseResultForWDto> dtos = heroLandCompetitionStatisticsService.allCourseResultForWQO(qo);
+        result.setData(dtos);
+        return result;
+
+    }
+
+    /**
+     * 指定某一科的不同用户统计结果
+     *
+     * @param qo
+     * @return
+     */
+    @PostMapping("/getCourseResultForUser")
+    ResponseBody<List<CourseResultForUserDto>> getAllCourseResultForUser(@RequestBody CourseResultForUserQO qo) {
+        ResponseBody<List<CourseResultForUserDto>> result = new ResponseBody<>();
+//        List<CourseResultForUserDto> dtos = heroLandCompetitionStatisticsService.getAllCourseResultForUser(qo);
+//        result.setData(dtos);
+        return result;
+
     }
 
 
