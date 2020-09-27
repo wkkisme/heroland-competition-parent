@@ -367,6 +367,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
             }
+            qo.setTopicIds(topics.stream().map(HeroLandTopicDto :: getTopicId).collect(Collectors.toList()));
         }
 
         // 根据topicId 加questionId查出 题目的对战情况
