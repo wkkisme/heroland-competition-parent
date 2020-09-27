@@ -150,7 +150,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     heroLandStatisticsDetailExtMapper.insert(BeanUtil.insertConversion(detail, new HeroLandStatisticsDetail()));
                 } catch (Exception e) {
                     log.error("", e);
-                    ResponseBodyWrapper.failSysException();
                 }
             }
         }
