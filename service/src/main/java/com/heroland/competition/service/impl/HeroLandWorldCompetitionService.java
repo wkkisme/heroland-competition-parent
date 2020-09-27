@@ -23,7 +23,7 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
 
     @Override
     public Integer getType() {
-      return   CompetitionEnum.WORLD.getType();
+        return CompetitionEnum.WORLD.getType();
     }
 
     @Override
@@ -34,9 +34,9 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
         int score = dps.size();
 
         dps.forEach(v -> {
-            if (v.getCorrectAnswer()){
+            if (v.getCorrectAnswer() != null && v.getCorrectAnswer()) {
                 v.setScore(score);
-            }else {
+            } else {
                 v.setScore(0);
             }
         });
