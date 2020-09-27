@@ -367,7 +367,7 @@
     values
     <foreach collection="items" item="item" index="index" separator=",">
       (#{item.topicId,jdbcType=BIGINT},
-      (#{item.topicType,jdbcType=INTEGER},
+      #{item.topicType,jdbcType=INTEGER},
       #{item.joinUser,jdbcType=VARCHAR},
       #{item.registerUser,jdbcType=VARCHAR},
       #{item.registerTime,jdbcType=TIMESTAMP},
