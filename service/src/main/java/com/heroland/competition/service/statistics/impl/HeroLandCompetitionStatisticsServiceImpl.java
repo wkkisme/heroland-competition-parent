@@ -10,16 +10,16 @@ import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.*;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.HeroLevelUtils;
-import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandStatisticsDetailExtMapper;
-import com.heroland.competition.dal.mapper.HeroLandStatisticsTotalExtMapper;
+import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
@@ -90,6 +90,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Resource
     private HerolandTopicGroupPartService herolandTopicGroupPartService;
+
+    @Resource
+    private HerolandStatisticsWordMapper herolandStatisticsWordMapper;
 
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
@@ -607,5 +610,134 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         });
         dp.setAnswerDetails(answerDetails);
         return ResponseBodyWrapper.successWrapper(dp);
+    }
+
+    @Override
+    public PageResponse<CourseResultForWDto> courseResultForWQO(CourseResultForWQO qo) {
+        PageResponse<CourseResultForWDto> pageResult = new PageResponse<>();
+        List<CourseResultForWDto> result = Lists.newArrayList();
+        HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+        HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(qo.getUserId()).andSubjectCodeEqualTo(qo.getCourseCode());
+        if (Objects.nonNull(qo.getBeginTime())){
+            criteria.andStartTimeLessThanOrEqualTo(qo.getBeginTime());
+        }
+        if (Objects.nonNull(qo.getEndTime())){
+            criteria.andEndTimeGreaterThanOrEqualTo(qo.getEndTime());
+        }
+        Page<HerolandStatisticsWord> words = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
+                () -> herolandStatisticsWordMapper.selectByExample(example));
+        if (!CollectionUtils.isEmpty(words.getResult())){
+            result = words.getResult().stream().map(e -> {
+                CourseResultForWDto dto = new CourseResultForWDto();
+                dto.setEndTime(e.getEndTime());
+                dto.setStartTime(e.getStartTime());
+                dto.setRank(e.getTotalRank());
+                dto.setTotalScore(e.getTotalScore());
+                dto.setTotalUseTime(e.getTotalTime());
+                dto.setCourseCode(e.getSubjectCode());
+                dto.setCourseName(e.getSubjectName());
+                return dto;
+            }).collect(Collectors.toList());
+        }
+        pageResult.setItems(result);
+        pageResult.setPageSize(words.getPageSize());
+        pageResult.setPage(words.getPageNum());
+        pageResult.setTotal((int) words.getTotal());
+        return pageResult;
+    }
+
+    @Override
+    public List<AllCourseResultForWDto> allCourseResultForWQO(AllCourseResultForWQO qo) {
+        List<String> courseList = herolandStatisticsWordMapper.distinctCourseInTime(qo.getUserId(), qo.getBeginTime(), qo.getEndTime());
+        HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+        HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+        if (CollectionUtils.isEmpty(courseList)){
+            return Lists.newArrayList();
+        }
+        List<AllCourseResultForWDto> list = Lists.newArrayList();
+        criteria.andUserIdEqualTo(qo.getUserId()).andSubjectCodeIn(courseList);
+        if (Objects.nonNull(qo.getBeginTime())){
+            criteria.andStartTimeLessThanOrEqualTo(qo.getBeginTime());
+        }
+        if (Objects.nonNull(qo.getEndTime())){
+            criteria.andEndTimeGreaterThanOrEqualTo(qo.getEndTime());
+        }
+        List<HerolandStatisticsWord> herolandStatisticsWords = herolandStatisticsWordMapper.selectByExample(example);
+        Map<String, List<HerolandStatisticsWord>> courseMap = herolandStatisticsWords.stream().collect(Collectors.groupingBy(HerolandStatisticsWord::getSubjectCode));
+        for (Map.Entry<String, List<HerolandStatisticsWord>> entry : courseMap.entrySet()){
+            AllCourseResultForWDto dto = new AllCourseResultForWDto();
+            dto.setCourseCode(entry.getKey());
+            dto.setCourseName(entry.getValue().get(0).getSubjectName());
+            dto.setTotalScore(entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
+            dto.setTotalTopics(entry.getValue().stream().map(HerolandStatisticsWord::getTopicId).collect(Collectors.toSet()).size());
+            int rank = entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalRank).sum() / dto.getTotalTopics();
+            int time = entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum() / dto.getTotalTopics();
+            double rightRate = entry.getValue().stream().mapToDouble(HerolandStatisticsWord::getAnswerRightRate).sum() / dto.getTotalTopics();
+            double winRate = entry.getValue().stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / dto.getTotalTopics();
+            dto.setRank(rank);
+            dto.setAverageTime(time);
+            dto.setRightRate(rightRate);
+            dto.setWinRate(winRate);
+            dto.setAverageScore(dto.getTotalScore() / dto.getTotalTopics());
+            list.add(dto);
+        }
+        return list;
+    }
+
+    @Override
+    public PageResponse<CourseResultForUserDto> getAllCourseResultForUser(CourseResultForUserQO qo) {
+        PageResponse<CourseResultForUserDto> pageResult = new PageResponse<>();
+        List<CourseResultForWDto> result = Lists.newArrayList();
+        HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+        HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+        criteria.andSubjectCodeEqualTo(qo.getCourseCode());
+        if (Objects.nonNull(qo.getBeginTime())){
+            criteria.andStartTimeLessThanOrEqualTo(qo.getBeginTime());
+        }
+        if (Objects.nonNull(qo.getEndTime())){
+            criteria.andEndTimeGreaterThanOrEqualTo(qo.getEndTime());
+        }
+        Page<HerolandStatisticsWord> words = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
+                () -> herolandStatisticsWordMapper.selectByExample(example));
+        if (!CollectionUtils.isEmpty(words.getResult())){
+
+            Map<String, List<HerolandStatisticsWord>> userMap = words.getResult().stream().collect(Collectors.groupingBy(HerolandStatisticsWord::getUserId));
+            for (Map.Entry<String, List<HerolandStatisticsWord>> entry : userMap.entrySet()){
+                CourseResultForUserDto dto = new CourseResultForUserDto();
+                dto.setCourseCode(entry.getKey());
+                dto.setCourseName(entry.getValue().get(0).getSubjectName());
+                dto.setTotalScore(entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
+                dto.setTotalTopics(entry.getValue().stream().map(HerolandStatisticsWord::getTopicId).collect(Collectors.toSet()).size());
+                int rank = entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalRank).sum() / dto.getTotalTopics();
+                int time = entry.getValue().stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum() / dto.getTotalTopics();
+                double rightRate = entry.getValue().stream().mapToDouble(HerolandStatisticsWord::getAnswerRightRate).sum() / dto.getTotalTopics();
+                double winRate = entry.getValue().stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / dto.getTotalTopics();
+                dto.setRank(rank);
+                dto.setAverageTime(time);
+                dto.setRightRate(rightRate);
+                dto.setWinRate(winRate);
+                dto.setAverageScore(dto.getTotalScore() / dto.getTotalTopics());
+//                list.add(dto);
+            }
+
+
+            result = words.getResult().stream().map(e -> {
+                CourseResultForWDto dto = new CourseResultForWDto();
+                dto.setEndTime(e.getEndTime());
+                dto.setStartTime(e.getStartTime());
+                dto.setRank(e.getTotalRank());
+                dto.setTotalScore(e.getTotalScore());
+                dto.setTotalUseTime(e.getTotalTime());
+                dto.setCourseCode(e.getSubjectCode());
+                dto.setCourseName(e.getSubjectName());
+                return dto;
+            }).collect(Collectors.toList());
+        }
+//        pageResult.setItems(result);
+        pageResult.setPageSize(words.getPageSize());
+        pageResult.setPage(words.getPageNum());
+        pageResult.setTotal((int) words.getTotal());
+        return pageResult;
     }
 }
