@@ -966,7 +966,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         HeroLandTopicGroupExample heroLandTopicGroupExample = new HeroLandTopicGroupExample();
         HeroLandTopicGroupExample.Criteria criteria = heroLandTopicGroupExample.createCriteria();
         if (Objects.equals(request.getAction(), "REGISTER")){
-            criteria.andRegisterBeginTimeLessThanOrEqualTo(now).andRegisterEndTimeGreaterThanOrEqualTo(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION);
+            criteria.andRegisterBeginTimeLessThanOrEqualTo(now).andRegisterEndTimeGreaterThanOrEqualTo(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION).andIsDeletedEqualTo(false);
             List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
             if (!CollectionUtils.isEmpty(heroLandTopicGroups)){
                 heroLandTopicGroups = heroLandTopicGroups.stream().filter(e -> e.getRegisterCount() == null || e.getCountLimit() == null || e.getRegisterCount() < e.getCountLimit())
@@ -980,7 +980,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
                 List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
                 HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
-                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND);
+                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
                 List<HerolandTopicJoinUser> herolandTopicJoinUsers =
                         herolandTopicJoinUserMapper.selectByExample(example);
                //如果有未报名的可以去报名，有一个了就不推荐报名了
@@ -993,7 +993,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 }
             }
         }else if(Objects.equals(request.getAction(), "BATTLE")){
-            criteria.andStartTimeGreaterThan(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION);
+            criteria.andStartTimeGreaterThan(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION).andIsDeletedEqualTo(false);
             List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
             if (!CollectionUtils.isEmpty(heroLandTopicGroups)){
                 heroLandTopicGroups = heroLandTopicGroups.stream().filter(e -> (e.getStartTime().getTime() - now.getTime()) < 10 * 60 *1000)
@@ -1010,7 +1010,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
                 List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
                 HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
-                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND);
+                example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
                 List<HerolandTopicJoinUser> herolandTopicJoinUsers =
                         herolandTopicJoinUserMapper.selectByExample(example);
                 //如果有报名的，弹出最近的
@@ -1033,7 +1033,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
         HerolandTopicJoinUserExample.Criteria criteria = example.createCriteria();
-        criteria.andJoinUserEqualTo(request.getUserId()).andTopicTypeEqualTo(request.getTopicType()).andStateEqualTo(TopicJoinConstant.JOIND);
+        criteria.andJoinUserEqualTo(request.getUserId()).andTopicTypeEqualTo(request.getTopicType()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
         List<HerolandTopicJoinUser> list = herolandTopicJoinUserMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(list)){
             List<HerolandTopicJoinUser> sort = list.stream().filter(e -> Objects.nonNull(e.getRegisterTime())).sorted(Comparator.comparing(HerolandTopicJoinUser::getRegisterTime).reversed()).collect(Collectors.toList());
