@@ -500,14 +500,17 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=VARCHAR}
       </if>
+      <if test="beginTime != null">
       <![CDATA[
-        <if test="beginTime != null">
           and start_time <= #{beginTime,jdbcType=TIMESTAMP}
+          ]]>
         </if>
         <if test="endTime != null">
-         and end_time >= #{endTime,jdbcType=TIMESTAMP}
+          <![CDATA[
+          and end_time >= #{endTime,jdbcType=TIMESTAMP}
+          ]]>
         </if>
-        ]]>
+
     </where>
 
   </select>
