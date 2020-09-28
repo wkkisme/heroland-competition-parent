@@ -40,8 +40,8 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
             } else {
                 v.setScore(0);
             }
-            v.setRecordId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.DEFAULT) + "");
         });
+        record.setRecordId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.DEFAULT) + "");
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         return ResponseBodyWrapper.successWrapper(record);
     }
