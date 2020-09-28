@@ -29,4 +29,6 @@ public interface HerolandTopicJoinUserMapper {
     int updateByPrimaryKey(HerolandTopicJoinUser record);
 
     int batchInsert(@Param("items") List<HerolandTopicJoinUser> list);
+
+    List<String> selectJoinUsersByTopicId(@Param("topicId") Long topicId);
 }

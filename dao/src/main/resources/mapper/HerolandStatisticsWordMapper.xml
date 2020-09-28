@@ -498,14 +498,14 @@
     select distinct(subject_code) from heroland_statistics_word
     <where>
       <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
+        user_id = #{userId,jdbcType=VARCHAR}
       </if>
       <![CDATA[
         <if test="beginTime != null">
-          start_time <= #{startTime,jdbcType=TIMESTAMP},
+          and start_time <= #{beginTime,jdbcType=TIMESTAMP}
         </if>
         <if test="endTime != null">
-          end_time >= #{endTime,jdbcType=TIMESTAMP},
+         and end_time >= #{endTime,jdbcType=TIMESTAMP}
         </if>
         ]]>
     </where>
