@@ -72,7 +72,7 @@ public class StatisticsTask {
     @Scheduled(cron = "0 27 23 ? * *")
     public void statistics() {
 
-        if (!redisService.setNx("statistics_redis_key",true,"PT1H")){
+        if (!redisService.setNx("statistics_redis_key",true,"PT1h")){
             return;
         }
         // 1 先清除历史版本
