@@ -1,25 +1,21 @@
 package com.heroland.competition.service.impl.task;
 
+import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.TimeIntervalUnit;
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.BatchUtils;
+import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
-import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandStatisticsWordDP;
 import com.heroland.competition.domain.dto.WorldStatisticDto;
-import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
-import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
-import com.heroland.competition.domain.qo.HerolandTopicQuestionQo;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
-import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
-import com.heroland.competition.service.admin.HeroLandQuestionBankService;
-import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
@@ -40,11 +36,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class WorldStatisticsTask {
-    @Resource
-    private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
 
-    @Resource
-    private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
 
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
@@ -76,6 +68,8 @@ public class WorldStatisticsTask {
 
     @Resource
     private HerolandQuestionBankMapper herolandQuestionBankMapper;
+    @Resource
+    private HerolandStatisticsLogMapper herolandStatisticsLogMapper;
 
 
     /**
@@ -97,135 +91,144 @@ public class WorldStatisticsTask {
      * 7 总场数
      * 0 15 10 * * ? *
      */
-    @Scheduled(cron = "0 0 1 ? * *")
+//    @Scheduled(cron = "0 0 1 ? * *")
+    @Scheduled(fixedRate = 30000)
     public void statistics() {
         Date now = new Date();
 
         String key = "world_statistics_redis_key" + DateUtils.date2String(now, DateUtils.PATTERN_DATE);
+        //todo todo
+//        if (!redisService.setNx(key,true,"PT3H")){
+//            return;
+//        }
+        List<Long> ignoreTopicIds = Lists.newArrayList();
+        List<Long> needTopicIds = Lists.newArrayList();
+        try {
 
-        if (!redisService.setNx(key,true,"PT3H")){
-            return;
-        }
-        Date endDate = DateUtils.formatDate(now, DateUtils.PATTERN_DATE);
-        Date startDate = DateUtils.plusDate(endDate, -10, TimeIntervalUnit.DAY);
-        //1 获取零点前结束的所有世界赛
-        Map<String, String> basicData = initBasicData();
+            Date endDate = DateUtils.formatDate(now, DateUtils.PATTERN_DATE);
+            Date startDate = DateUtils.plusDate(endDate, -10, TimeIntervalUnit.DAY);
+            // 初始化年级和科目信息
+            Map<String, String> basicData = initBasicData();
+            //1 获取零点前结束的所有世界赛
 
-        HeroLandTopicGroupExample example = new HeroLandTopicGroupExample();
-        HeroLandTopicGroupExample.Criteria criteria = example.createCriteria();
-        criteria.andEndTimeLessThan(endDate).andStartTimeGreaterThan(startDate).andTypeEqualTo(5).andIsDeletedEqualTo(false);
-        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(example);
-        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
-            return;
-        }
-        Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
-
-        // 2 根据报名人员名单去结果里一个一个查询世界赛每道题的结果
-        List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
-
-        for (Long topicId : topicIds) {
-            //step1 查询报名人数 获取报名人员名单
-            List<String> userIds = herolandTopicJoinUserMapper.selectJoinUsersByTopicId(topicId);
-            if (CollectionUtils.isEmpty(userIds)){
-                continue;
+            HeroLandTopicGroupExample example = new HeroLandTopicGroupExample();
+            HeroLandTopicGroupExample.Criteria criteria = example.createCriteria();
+            criteria.andEndTimeLessThan(endDate).andStartTimeGreaterThan(startDate).andTypeEqualTo(5).andIsDeletedEqualTo(false);
+            List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(example);
+            if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+                return;
             }
-            //step2 查询年级与科目信息 获取科目信息
-            HerolandTopicGroupPartExample partExample = new HerolandTopicGroupPartExample();
-            HerolandTopicGroupPartExample.Criteria partExampleCriteria = partExample.createCriteria();
-            partExampleCriteria.andTopicIdEqualTo(topicId);
-            List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(partExample);
-            if (CollectionUtils.isEmpty(topicGroupParts)){
-                continue;
-            }
-            String gradeCode = topicGroupParts.get(0).getGradeCode();
-            //step3 查询题目信息 获取每科的题目数
-            List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(topicId), null);
-            if (CollectionUtils.isEmpty(questions)){
-                continue;
-            }
-            List<Long> questionIds = questions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
-            List<HerolandQuestionBank> questionBanks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
-            Map<String, List<HerolandQuestionBank>> courseQuestionMap = questionBanks.stream().collect(Collectors.groupingBy(HerolandQuestionBank::getCourse));
-            Map<String, Integer> subjectQuestionCountMap = Maps.newHashMap();
-            topicGroupParts.stream().forEach(e -> {
-                if (!subjectQuestionCountMap.containsKey(e.getCourseCode())){
-                    //只有题目数大于0才会统计写进统计表中
-                    if (courseQuestionMap.get(e.getCourseCode()).size() > 0){
-                        subjectQuestionCountMap.put(e.getCourseCode(), courseQuestionMap.get(e.getCourseCode()).size());
-                    }
-                }
-            });
-            //根据科目分类后进行的统计组装信息 针对的是一个用户id
-            List<WorldStatisticDto> allWordDPS = Lists.newArrayList();
-            for (String userId : userIds){
-                HerolandStatisticsWordExample wordExample = new HerolandStatisticsWordExample();
-                HerolandStatisticsWordExample.Criteria wordExampleCriteria = wordExample.createCriteria();
-                wordExampleCriteria.andUserIdEqualTo(userId).andTopicIdEqualTo(topicId);
-                List<HerolandStatisticsWord> wordsByUserId = herolandStatisticsWordMapper.selectByExample(wordExample);
-                if (!CollectionUtils.isEmpty(wordsByUserId)){
+            Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
+
+            // 2 根据报名人员名单去结果里一个一个查询世界赛每道题的结果
+            List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+
+            HerolandStatisticsLogExample logExample = new HerolandStatisticsLogExample();
+            HerolandStatisticsLogExample.Criteria logExampleCriteria = logExample.createCriteria();
+            logExampleCriteria.andTopicIdIn(topicIds).andIsFinishedEqualTo(true).andIsDeletedEqualTo(false);
+            List<HerolandStatisticsLog> herolandStatisticsLogs = herolandStatisticsLogMapper.selectByExample(logExample);
+            List<Long> hasFinished = herolandStatisticsLogs.stream().map(HerolandStatisticsLog::getTopicId).distinct().collect(Collectors.toList());
+
+            for (Long topicId : topicIds) {
+                if (hasFinished.contains(topicId)){
                     continue;
                 }
-                HeroLandQuestionRecordDetailExample recordDetailExample = new HeroLandQuestionRecordDetailExample();
-                HeroLandQuestionRecordDetailExample.Criteria recordDetailExampleCriteria = recordDetailExample.createCriteria();
-                recordDetailExampleCriteria.andUserIdEqualTo(userId).andTopicIdEqualTo(topicId+"");
-                List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(recordDetailExample);
-
-                WorldStatisticDto dto = computeWorldStatistic(heroLandQuestionRecordDetails, userId, gradeCode, topicGroupMap.get(topicId), subjectQuestionCountMap, basicData);
-                allWordDPS.add(dto);
-            }
-            //剩余信息组装 - 排名，胜率，用户名称
-            buildExtInfo(allWordDPS, subjectQuestionCountMap, userIds.size());
-        }
-
-        // 3 统计
-
-
-        try {
-            Collection<HeroLandStatisticsDetailDP> values = null;
-
-            // 查询字典
-            List<String> departmentCode = Lists.newArrayList();
-            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getClassCode).collect(Collectors.toList()));
-            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getGradeCode).collect(Collectors.toList()));
-            departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getSubjectCode).collect(Collectors.toList()));
-            List<HerolandBasicDataDP> adminDataList = heroLandAdminService.getDictInfoByKeys(departmentCode);
-            Map<String, HerolandBasicDataDP> adminDataMap = adminDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
-
-
-            // 查询人信息
-            PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-            platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList()));
-            RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-            values.forEach(v -> {
-                v.setHistory(false);
-                if (!CollectionUtils.isEmpty(userList.getData())) {
-                    userList.getData().forEach(u -> {
-                        if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
-                            v.setUserName(u.getUserName());
+                //step1 查询报名人数 获取报名人员名单
+                List<String> userIds = herolandTopicJoinUserMapper.selectJoinUsersByTopicId(topicId);
+                if (CollectionUtils.isEmpty(userIds)){
+                    ignoreTopicIds.add(topicId);
+                    continue;
+                }
+                //step2 查询年级与科目信息 获取科目信息
+                HerolandTopicGroupPartExample partExample = new HerolandTopicGroupPartExample();
+                HerolandTopicGroupPartExample.Criteria partExampleCriteria = partExample.createCriteria();
+                partExampleCriteria.andTopicIdEqualTo(topicId);
+                List<HerolandTopicGroupPart> topicGroupParts = herolandTopicGroupPartMapper.selectByExample(partExample);
+                if (CollectionUtils.isEmpty(topicGroupParts)){
+                    ignoreTopicIds.add(topicId);
+                    continue;
+                }
+                String gradeCode = topicGroupParts.get(0).getGradeCode();
+                //step3 查询题目信息 获取每科的题目数
+                List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(topicId), null);
+                if (CollectionUtils.isEmpty(questions)){
+                    ignoreTopicIds.add(topicId);
+                    continue;
+                }
+                List<Long> questionIds = questions.stream().map(HerolandTopicQuestion::getQuestionId).collect(Collectors.toList());
+                List<HerolandQuestionBank> questionBanks = herolandQuestionBankMapper.getByIdsWithDelete(questionIds);
+                Map<String, List<HerolandQuestionBank>> courseQuestionMap = questionBanks.stream().collect(Collectors.groupingBy(HerolandQuestionBank::getCourse));
+                Map<String, Integer> subjectQuestionCountMap = Maps.newHashMap();
+                topicGroupParts.stream().forEach(e -> {
+                    if (!subjectQuestionCountMap.containsKey(e.getCourseCode())){
+                        //只有题目数大于0才会统计写进统计表中
+                        if (courseQuestionMap.get(e.getCourseCode()).size() > 0){
+                            subjectQuestionCountMap.put(e.getCourseCode(), courseQuestionMap.get(e.getCourseCode()).size());
                         }
-                    });
+                    }
+                });
+                //根据科目分类后进行的统计组装信息 针对的是一个用户id
+                List<WorldStatisticDto> allWordDPS = Lists.newArrayList();
+                for (String userId : userIds){
+                    HeroLandQuestionRecordDetailExample recordDetailExample = new HeroLandQuestionRecordDetailExample();
+                    HeroLandQuestionRecordDetailExample.Criteria recordDetailExampleCriteria = recordDetailExample.createCriteria();
+                    recordDetailExampleCriteria.andUserIdEqualTo(userId).andTopicIdEqualTo(topicId+"").andIsDeletedEqualTo(false);
+                    List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(recordDetailExample);
+                    if (CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+                        //如果没有答题记录
+                        continue;
+                    }
+                    WorldStatisticDto dto = computeWorldStatistic(heroLandQuestionRecordDetails, userId, gradeCode, topicGroupMap.get(topicId), subjectQuestionCountMap, basicData);
+                    allWordDPS.add(dto);
                 }
-                if (!CollectionUtils.isEmpty(adminDataMap)) {
-                    v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
-                    v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
-                    v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
+                if (CollectionUtils.isEmpty(allWordDPS)){
+                    //如果所有的都没有记录
+                    ignoreTopicIds.add(topicId);
+                    continue;
                 }
-            });
-            heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
-        } catch (Exception e) {
-            log.error("", e);
+                needTopicIds.add(topicId);
+                //剩余信息组装 - 排名，胜率，用户名称
+                buildExtInfo(allWordDPS, subjectQuestionCountMap, userIds.size());
+                batchSearchUser(allWordDPS);
+                allWordDPS.stream().forEach(userWorldDP -> {
+                    //对一个学生进行批量保存
+                    HerolandStatisticsWordExample wordExample = new HerolandStatisticsWordExample();
+                    HerolandStatisticsWordExample.Criteria wordExampleCriteria = wordExample.createCriteria();
+                    wordExampleCriteria.andUserIdEqualTo(userWorldDP.getUserId()).andTopicIdEqualTo(topicId);
+                    List<HerolandStatisticsWord> wordsByUserId = herolandStatisticsWordMapper.selectByExample(wordExample);
+                    if (!CollectionUtils.isEmpty(wordsByUserId)){
+                        return;
+                    }
+                    List<HerolandStatisticsWord> herolandStatisticsWords = BeanCopyUtils.copyArrayByJSON(JSON.toJSONString(userWorldDP.getWordDPS()), HerolandStatisticsWord.class);
+                    herolandStatisticsWordMapper.batchInsert(herolandStatisticsWords);
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                    }
+                });
+                saveLog(Lists.newArrayList(topicId), 0, true);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                }
+            }
+        }catch (Exception e){
+            log.error("statistics for world error", e);
         }finally {
-            redisService.del("statistics_redis_key");
+            //对可以忽略的topicId保存到日志表中 1 可以忽略 0 正常
+            saveLog(ignoreTopicIds, 1, true);
+            redisService.del(key);
         }
-
-
 
     }
 
     private WorldStatisticDto computeWorldStatistic(List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails, String userId, String gradeCode, HeroLandTopicGroup topicGroup, Map<String, Integer> subjectQuestionCountMap, Map<String, String> basicData){
         WorldStatisticDto dto = new WorldStatisticDto();
+        dto.setUserId(userId);
+        dto.setTopicId(topicGroup.getId());
         List<HerolandStatisticsWordDP> wordDPS = Lists.newArrayList();
         Map<String, List<HeroLandQuestionRecordDetail>> subjectMap = heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetail::getSubjectCode));
+
         for (Map.Entry<String, List<HeroLandQuestionRecordDetail>> entry : subjectMap.entrySet()){
             Integer questionCount = subjectQuestionCountMap.get(entry.getKey());
             HerolandStatisticsWordDP wordDP = new HerolandStatisticsWordDP();
@@ -258,8 +261,6 @@ public class WorldStatisticsTask {
                 wordDP.setTotalTime((int)sum);
             }
             wordDPS.add(wordDP);
-            dto.setUserId(userId);
-            dto.setTopicId(topicGroup.getId());
             dto.getSubjectScoreMap().put(entry.getKey(), wordDP.getTotalScore());
 
         }
@@ -278,7 +279,7 @@ public class WorldStatisticsTask {
             List<Integer> sorted = allScore.stream().sorted((o1, o2) -> {
                 return (o2 - o1);
             }).collect(Collectors.toList());
-            //如果分数个数小于报名人数，则后面补0
+            //如果分数个数小于报名人数，则后面补0,说明有很多人没有参与答题
             if (sorted.size() < userCount){
                 for (int i = 0; i < (userCount-sorted.size()); i++){
                     sorted.add(0);
@@ -318,13 +319,45 @@ public class WorldStatisticsTask {
         return basicMap;
     }
 
-    public static void main(String[] args) {
-        List<Integer> integers = Lists.newArrayList(3, 5, 2, 78, 34);
-        integers = integers.stream().sorted((o1, o2) -> {
-            return (o2 - o1);
-        }).collect(Collectors.toList());
-        System.out.println(integers);
+    /**
+     * 分批保存userName
+     * 避免一次上万数据量的查询
+     * @return
+     */
+    private void batchSearchUser(List<WorldStatisticDto> allWordDPS){
+       //一次500数据量查询
+        List<List<WorldStatisticDto>> split500 = BatchUtils.split(allWordDPS, 500);
+        split500.stream().forEach(e -> {
+            // 查询人信息
+            PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+            platformSysUserQO.setUserIds(e.stream().map(WorldStatisticDto::getUserId).collect(Collectors.toList()));
+            RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+            if (userList.isSuccess() && !CollectionUtils.isEmpty(userList.getData())){
+                Map<String, List<PlatformSysUserDP>> userIdMap = userList.getData().stream().collect(Collectors.groupingBy(PlatformSysUserDP::getUserId));
+                e.stream().forEach(worldStatisticDto -> {
+                    worldStatisticDto.getWordDPS().stream().forEach(herolandStatisticsWordDP -> {
+                        boolean hasUser = userIdMap.containsKey(herolandStatisticsWordDP.getUserId());
+                        herolandStatisticsWordDP.setUserName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
+                    });
+                });
+
+            }
+        });
+
     }
 
+    private void saveLog(List<Long> topicIds, Integer type, Boolean isFinished){
+        if (CollectionUtils.isEmpty(topicIds)){
+            return;
+        }
+        List<HerolandStatisticsLog> logList = topicIds.stream().map(e -> {
+            HerolandStatisticsLog log = new HerolandStatisticsLog();
+            log.setTopicId(e);
+            log.setType(type);
+            log.setIsFinished(isFinished);
+            return log;
+        }).collect(Collectors.toList());
+        herolandStatisticsLogMapper.batchInsert(logList);
+    }
 
 }

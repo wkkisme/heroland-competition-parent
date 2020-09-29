@@ -26,6 +26,12 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
   </resultMap>
+
+  <sql id="Insert_Column_List">
+        user_id, user_name, topic_id, type, subject_code,subject_name,total_score, total_rank,complete_rate,answer_right_rate,win_rate,
+        total_time,average_score,grade_code,grade_name,start_time,end_time
+    </sql>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -514,5 +520,32 @@
     </where>
 
   </select>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into heroland_statistics_word
+    (<include refid="Insert_Column_List"/>)
+    values
+    <foreach collection="items" item="item" index="index" separator=",">
+      (
+      #{item.userId,jdbcType=VARCHAR},
+      #{item.userName,jdbcType=VARCHAR},
+      #{item.topicId,jdbcType=BIGINT},
+      #{item.type,jdbcType=INTEGER},
+      #{item.subjectCode,jdbcType=VARCHAR},
+      #{item.subjectName,jdbcType=VARCHAR},
+      #{item.totalScore,jdbcType=INTEGER},
+      #{item.totalRank,jdbcType=INTEGER},
+      #{item.completeRate,jdbcType=DOUBLE},
+      #{item.answerRightRate,jdbcType=DOUBLE},
+      #{item.winRate,jdbcType=DOUBLE},
+      #{item.totalTime,jdbcType=INTEGER},
+      #{item.averageScore,jdbcType=DOUBLE},
+      #{item.gradeCode,jdbcType=VARCHAR},
+      #{item.gradeName,jdbcType=VARCHAR},
+      #{item.startTime,jdbcType=TIMESTAMP},
+      #{item.endTime,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
 
 </mapper>
