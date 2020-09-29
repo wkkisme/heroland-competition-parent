@@ -28,6 +28,14 @@ public interface HeroLandCompetitionStatisticsService {
      */
     ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp);
 
+    /**
+     *
+     *
+     * @param dp dp
+     * @return Boolean
+     */
+    Boolean saveWorldStatistics(Long topicId);
+
 //    /**
 //     * 查找比赛总记录
 //     *
