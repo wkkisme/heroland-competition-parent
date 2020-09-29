@@ -237,33 +237,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
-
-        ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
-                .successListWrapper(heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo),
-                        heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
-        if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
+        if (!qo.getType().equals(CompetitionEnum.SYNC.getType()) && qo.getOrderByField() == null) {
             // 同步作业赛时不需要班级排名
-            return result;
+            qo.setRankField(GroupByEnum.class_code.getFiled());
         }
         try {
-
-//            AssertUtils.notBlank(qo.getClassCode());
-            List<String> userIds = result.getData().stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList());
-            qo.setUserIds(userIds);
-            qo.setRankField(GroupByEnum.class_code.getFiled());
-            List<HeroLandStatisticsDetailAll> classRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
-
-
-            result.getData().forEach(v -> {
-                classRank.forEach(s -> {
-                    if (v.getUserId().equals(s.getUserId())) {
-                        v.setClassRank(s.getRank());
-                    }
-
-                });
-            });
-
-            return result;
+            return ResponseBodyWrapper
+                    .successListWrapper(heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo),
+                            heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
         } catch (Exception e) {
             log.error("", e);
             ResponseBodyWrapper.failSysException();
