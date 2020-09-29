@@ -94,6 +94,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Resource
     private HerolandStatisticsWordMapper herolandStatisticsWordMapper;
 
+    @Resource
+    private HerolandStatisticsLogMapper herolandStatisticsLogMapper;
+
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
         AssertUtils.assertThat(!CollectionUtils.isEmpty(dp));
@@ -731,5 +734,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         pageResult.setPageSize(qo.getPageSize());
         pageResult.setPage(qo.getPageIndex());
         return pageResult;
+    }
+
+    @Override
+    public PageResponse<WorldStatisticResultDto> worldStatisticResult(WorldStatisticQO qo) {
+        HerolandStatisticsLogExample logExample = new HerolandStatisticsLogExample();
+        HerolandStatisticsLogExample.Criteria logExampleCriteria = logExample.createCriteria();
+        logExampleCriteria.andTopicIdEqualTo(qo.getTopicId()).andIsFinishedEqualTo(true).andIsDeletedEqualTo(false);
+        List<HerolandStatisticsLog> herolandStatisticsLogs = herolandStatisticsLogMapper.selectByExample(logExample);
+        //如果标记为已完成，则直接从统计库理捞数据;
+        if (!CollectionUtils.isEmpty(herolandStatisticsLogs)){}
+        return null;
     }
 }

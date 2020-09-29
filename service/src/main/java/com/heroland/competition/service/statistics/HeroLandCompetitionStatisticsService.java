@@ -3,10 +3,7 @@ package com.heroland.competition.service.statistics;
 import com.anycommon.response.common.ResponseBody;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.*;
-import com.heroland.competition.domain.dto.AllCourseResultForWDto;
-import com.heroland.competition.domain.dto.CourseResultForUserDto;
-import com.heroland.competition.domain.dto.CourseResultForWDto;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
+import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionForCourseRequest;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
@@ -100,4 +97,6 @@ public interface HeroLandCompetitionStatisticsService {
     List<AllCourseResultForWDto> allCourseResultForWQO(AllCourseResultForWQO qo);
 
     PageResponse<CourseResultForUserDto> getAllCourseResultForUser(CourseResultForUserQO qo);
+
+    PageResponse<WorldStatisticResultDto> worldStatisticResult(WorldStatisticQO qo);
 }

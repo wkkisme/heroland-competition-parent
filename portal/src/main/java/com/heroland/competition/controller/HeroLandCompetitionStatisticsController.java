@@ -164,5 +164,25 @@ public class HeroLandCompetitionStatisticsController {
 
     }
 
+    /**
+     * 指定某一项比赛的参赛结果
+     * @param qo
+     * @return
+     */
+    @PostMapping("/worldStatisticResult")
+    ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(@RequestBody WorldStatisticQO qo) {
+        ResponseBody<List<WorldStatisticResultDto>> result = new ResponseBody<>();
+        PageResponse<WorldStatisticResultDto> pageResponse = heroLandCompetitionStatisticsService.worldStatisticResult(qo);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
+        return result;
+
+    }
+
 
 }

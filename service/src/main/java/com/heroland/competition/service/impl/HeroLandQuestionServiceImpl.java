@@ -981,6 +981,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 sqo.setGradeCode(grade);
                 List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
                 List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
+                if (CollectionUtils.isEmpty(partTopicIds)){
+                    return null;
+                }
                 HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
                 example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
                 List<HerolandTopicJoinUser> herolandTopicJoinUsers =
@@ -1011,6 +1014,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 }
                 List<HerolandTopicGroupPartDP> herolandTopicGroupPartDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
                 List<Long> partTopicIds = herolandTopicGroupPartDPS.stream().map(HerolandTopicGroupPartDP::getTopicId).collect(Collectors.toList());
+                if (CollectionUtils.isEmpty(partTopicIds)){
+                    return null;
+                }
                 HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
                 example.createCriteria().andTopicIdIn(partTopicIds).andJoinUserEqualTo(request.getUserId()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
                 List<HerolandTopicJoinUser> herolandTopicJoinUsers =
