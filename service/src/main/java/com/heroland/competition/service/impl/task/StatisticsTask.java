@@ -69,7 +69,7 @@ public class StatisticsTask {
      * 7 总场数
      * 0 15 10 * * ? *
      */
-    @Scheduled(cron = "0 27 23 ? * *")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void statistics() {
 
         if (!redisService.setNx("statistics_redis_key",true,"PT1h")){
@@ -164,7 +164,7 @@ public class StatisticsTask {
             departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getGradeCode).collect(Collectors.toList()));
             departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getSubjectCode).collect(Collectors.toList()));
             List<HerolandBasicDataDP> adminDataList = heroLandAdminService.getDictInfoByKeys(departmentCode);
-            Map<String, HerolandBasicDataDP> adminDataMap = adminDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
+            Map<String, HerolandBasicDataDP> adminDataMap = adminDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity(),(o,n)->o));
 
 
             // 查询人信息

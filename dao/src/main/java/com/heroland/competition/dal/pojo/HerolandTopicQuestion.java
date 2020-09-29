@@ -14,6 +14,9 @@ public class HerolandTopicQuestion extends BaseDO {
 
     private Long chapterId;
 
+    private String orgCode;
+
+    private Long totalCount;
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

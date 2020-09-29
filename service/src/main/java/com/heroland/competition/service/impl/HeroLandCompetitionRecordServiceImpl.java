@@ -12,10 +12,7 @@ import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
 import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
-import com.heroland.competition.dal.pojo.HeroLandCompetitionRecord;
-import com.heroland.competition.dal.pojo.HeroLandCompetitionRecordExample;
-import com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll;
-import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
+import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
@@ -33,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -274,19 +272,34 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        Long totalCount = herolandTopicQuestionExtMapper.countAll();
-
+        List<HerolandTopicQuestion> totalCount = herolandTopicQuestionExtMapper.countAll();
+        Map<String, HerolandTopicQuestion> collect = totalCount.stream().collect(Collectors.toMap(HerolandTopicQuestion::getOrgCode, Function.identity()));
              /*
-                计算完成率
+                计算正确率和完成率
              */
-        if (!CollectionUtils.isEmpty(dps) && totalCount > 0) {
+        if (!CollectionUtils.isEmpty(dps) && !CollectionUtils.isEmpty(totalCount) ) {
             dps.forEach(v -> {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                v.setAnswerRightRate((double) (v.getRightCount() / totalCount));
+                HerolandTopicQuestion herolandTopicQuestion = collect.get(v.getOrgCode());
+                if (herolandTopicQuestion != null) {
+                    if (herolandTopicQuestion.getTotalCount() != 0){
+                        double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
+                        v.setAnswerRightRate(rate);
+                        v.setCompleteRate(rate);
+                    }else {
+                        v.setAnswerRightRate(0D);
+                        v.setCompleteRate(0D);
+                    }
+
+                }else {
+                    v.setAnswerRightRate(0D);
+                    v.setCompleteRate(0D);
+                }
             });
         }
+
         return dps;
     }
 

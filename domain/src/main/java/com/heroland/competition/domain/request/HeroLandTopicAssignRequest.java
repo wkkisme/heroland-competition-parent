@@ -24,4 +24,7 @@ public class HeroLandTopicAssignRequest implements Serializable {
      */
     private List<Long> questionIds = Lists.newArrayList();
 
+
+    private String orgCode;
+
 }
