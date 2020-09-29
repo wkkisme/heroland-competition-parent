@@ -12,7 +12,8 @@
         <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
 
         (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField} )+1 AS rank
-
+        FROM heroland_statistics_detail
+        as a
 
 
         where is_deleted =0
@@ -72,8 +73,7 @@
         </if>
 
         <!--        group by user_id-->
-        FROM heroland_statistics_detail
-        as a ORDER BY rank
+        ORDER BY rank
 
 
         <if test="startRow != null and startRow != -1 and pageSize != null">
