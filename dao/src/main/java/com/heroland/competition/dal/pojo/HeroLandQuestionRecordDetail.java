@@ -105,6 +105,12 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     private String opponentName;
 
     /**
+     * 
+     */
+    @ApiModelProperty(value="orgCode")
+    private String orgCode;
+
+    /**
      * heroland_question_record_detail
      */
     private static final long serialVersionUID = 1L;
@@ -363,5 +369,21 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setOpponentName(String opponentName) {
         this.opponentName = opponentName == null ? null : opponentName.trim();
+    }
+
+    /**
+     * 
+     * @return org_code 
+     */
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    /**
+     * 
+     * @param orgCode 
+     */
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode == null ? null : orgCode.trim();
     }
 }

@@ -119,6 +119,15 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String grade;
 
     private Integer diff;
+    private String orgCode;
+
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
 
     public String getCourse() {
         return course;
