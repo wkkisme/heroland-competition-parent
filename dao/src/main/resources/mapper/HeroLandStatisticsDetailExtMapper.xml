@@ -14,7 +14,7 @@
 
         (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField}
 
-
+        and
         a.is_deleted =0 and b.is_deleted =0
 
         <if test="userId != null">
