@@ -31,4 +31,8 @@ public interface HerolandStatisticsWordMapper {
     int updateByPrimaryKey(HerolandStatisticsWord record);
 
     List<String> distinctCourseInTime(@Param("userId") String userId,@Param("beginTime") Date beginTime,@Param("endTime") Date endTime);
+
+    int batchInsert(@Param("items") List<HerolandStatisticsWord> herolandStatisticsWords);
+
+
 }

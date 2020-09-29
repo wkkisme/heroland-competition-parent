@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.dto;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.domain.dp.HerolandStatisticsWordDP;
 import lombok.Data;
@@ -21,5 +22,5 @@ public class WorldStatisticDto implements Serializable {
 
     private Long topicId;
 
-    private List<HerolandStatisticsWordDP> wordDPS;
+    private List<HerolandStatisticsWordDP> wordDPS = Lists.newArrayList();
 }
