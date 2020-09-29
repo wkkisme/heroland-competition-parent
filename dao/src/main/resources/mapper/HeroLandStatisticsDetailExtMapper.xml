@@ -119,7 +119,7 @@
 
         </if>
 
-        <if test="userName != null">
+        <if test="userName != null and userName.length > 0">
             and user_name like concat ( #{userName},'%')
         </if>
 
