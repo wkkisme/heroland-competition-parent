@@ -71,8 +71,9 @@ public class StatisticsTask {
      */
     @Scheduled(cron = "0 0/10 * * * ?")
     public void statistics() {
-
+        log.info("start  statistics =================");
         if (!redisService.setNx("statistics_redis_key",true,"PT1h")){
+            log.info("start statistics is lock");
             return;
         }
         // 1 先清除历史版本
@@ -192,7 +193,7 @@ public class StatisticsTask {
         }finally {
             redisService.del("statistics_redis_key");
         }
-
+        log.info("end statistics =================");
 
 
     }
