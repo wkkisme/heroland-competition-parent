@@ -229,19 +229,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
-        ResponseBody<List<HeroLandStatisticsDetailDP>> detailRank = getDetailRank(qo);
-
-        if (detailRank != null && !CollectionUtils.isEmpty(detailRank.getData())){
-            qo.setUserId(null);
-            ResponseBody<List<HeroLandStatisticsDetailDP>> rank = getDetailRank(qo);
-            if (rank != null) {
-                detailRank.getData().addAll(rank.getData());
-            }
-        }
-        return detailRank;
-    }
-
-    private ResponseBody<List<HeroLandStatisticsDetailDP>> getDetailRank(HeroLandStatisticsTotalQO qo) {
         qo.checkType();
         if (qo.getOrderByField() != null) {
             qo.setOrderField(qo.getOrderByField().getOrderByFiled());
