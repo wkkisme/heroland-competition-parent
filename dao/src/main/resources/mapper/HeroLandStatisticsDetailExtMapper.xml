@@ -7,15 +7,13 @@
 
     </resultMap>
     <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
-        SELECT
-        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
-        ,
-        CASE
-        WHEN @prevRank = ${rankField} THEN @curRank
-        WHEN @prevRank := ${rankField} THEN @curRank := @curRank + 1
-        END AS rank
-        FROM heroland_statistics_detail p,
-        (SELECT @curRank :=0, @prevRank := NULL) r
+
+         SELECT
+        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
+
+        (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField} )+1 AS rank
+
+
 
         where is_deleted =0
 
@@ -74,8 +72,8 @@
         </if>
 
         <!--        group by user_id-->
-
-        ORDER BY ${orderField}
+        FROM heroland_statistics_detail
+        as a ORDER BY rank
 
 
         <if test="startRow != null and startRow != -1 and pageSize != null">
