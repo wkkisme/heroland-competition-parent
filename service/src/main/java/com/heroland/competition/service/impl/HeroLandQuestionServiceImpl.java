@@ -261,6 +261,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 topicQuestion.setQuestionId(e);
                 topicQuestion.setTopicId(topicId);
                 topicQuestion.setChapterId(0L);
+                topicQuestion.setOrgCode(request.getOrgCode());
                 list.add(topicQuestion);
             });
             herolandTopicQuestionMapper.saveBatch(list);
@@ -406,6 +407,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 topicQuestion.setQuestionId(ques);
                 topicQuestion.setTopicId(request.getTopicId());
                 topicQuestion.setChapterId(e.getChapterId());
+                topicQuestion.setOrgCode(request.getOrgCode());
                 list.add(topicQuestion);
             });
         });

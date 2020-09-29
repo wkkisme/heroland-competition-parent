@@ -3,11 +3,11 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper">
 
 
-  <select id="countAll" resultType="java.lang.Long">
-    select count(*) from heroland_topic_question
+  <select id="countAll" resultMap="com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper.BaseResultMap">
+    select count(*) total_count ,orgCode from heroland_topic_question
 
     where is_deleted = 0
-
+    group by org_code
 
   </select>
 </mapper>

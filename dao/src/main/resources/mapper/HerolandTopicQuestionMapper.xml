@@ -11,9 +11,11 @@
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="org_code" jdbcType="BIT" property="orgCode" />
+    <result column="total_count"  property="totalCount" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, question_id, topic_id,chapter_id, creator, modifier, gmt_create, gmt_modified, is_deleted
+    id, question_id, topic_id,chapter_id, creator, modifier, gmt_create, gmt_modified, is_deleted,org_code
   </sql>
 
   <sql id="Insert_Column_List">
@@ -35,10 +37,10 @@
     </selectKey>
     insert into heroland_topic_question (question_id, topic_id,chapter_id, creator,
       modifier, gmt_create, gmt_modified,
-      is_deleted)
+      is_deleted,org_code)
     values (#{questionId,jdbcType=BIGINT}, #{topicId,jdbcType=BIGINT}, #{creator,jdbcType=VARCHAR},
       #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
-      #{isDeleted,jdbcType=BIT})
+      #{isDeleted,jdbcType=BIT},#{orgCode})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandTopicQuestion">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -70,6 +72,9 @@
       <if test="isDeleted != null">
         is_deleted,
       </if>
+      <if test="orgCode != null">
+        org_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="questionId != null">
@@ -95,6 +100,9 @@
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
+      </if>
+      <if test="orgCode != null">
+        #{orgCode},
       </if>
     </trim>
   </insert>
@@ -125,6 +133,9 @@
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},
       </if>
+      <if test="orgCode != null">
+       org_code= #{orgCode}
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -136,7 +147,8 @@
       modifier = #{modifier,jdbcType=VARCHAR},
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT}
+      is_deleted = #{isDeleted,jdbcType=BIT},
+      org_code= #{orgCode}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -181,7 +193,8 @@
     <foreach collection="records" item="item" index="index" separator=",">
       (#{item.questionId,jdbcType=BIGINT},
       #{item.topicId,jdbcType=BIGINT},
-      #{item.chapterId,jdbcType=BIGINT}
+      #{item.chapterId,jdbcType=BIGINT},
+      #{item.orgCode}
       )
     </foreach>
   </insert>

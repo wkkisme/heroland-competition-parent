@@ -229,7 +229,7 @@
     <select id="getTotalTime" resultMap="StatisticsMap">
 
 
-        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time from
+        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time,org_code ,user_id from
         heroland_question_record_detail
 
         where is_deleted = 0
