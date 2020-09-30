@@ -28,5 +28,5 @@ public interface HerolandStatisticsLogMapper {
 
     int updateByPrimaryKey(HerolandStatisticsLog record);
 
-    int batchInsert(List<HerolandStatisticsLog> logList);
+    int batchInsert(@Param("items") List<HerolandStatisticsLog> logList);
 }
