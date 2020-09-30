@@ -380,7 +380,7 @@
     select
     join_user
     from heroland_topic_join_user
-    where topic_id = #{topicId,jdbcType=BIGINT} and is_delete = 0 and state = "JOINED"
+    where topic_id = #{topicId,jdbcType=BIGINT} and is_deleted = 0 and state = "JOINED"
   </select>
 
 </mapper>
