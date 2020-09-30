@@ -2,8 +2,10 @@ package com.heroland.competition.service.admin;
 
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandCourseDP;
+import com.heroland.competition.domain.dto.CourseForTeacherDto;
 import com.heroland.competition.domain.dto.HerolandCourseDto;
 import com.heroland.competition.domain.request.HerolandCourseForSchoolRequest;
+import com.heroland.competition.domain.request.HerolandCourseForTeacherRequest;
 import com.heroland.competition.domain.request.HerolandCoursePageRequest;
 
 import java.util.List;
@@ -32,4 +34,6 @@ public interface HeroLandCourseService {
 
 
     List<HerolandCourseDto> courseForSchool(HerolandCourseForSchoolRequest request);
+
+    CourseForTeacherDto courseForTeacher(HerolandCourseForTeacherRequest request);
 }

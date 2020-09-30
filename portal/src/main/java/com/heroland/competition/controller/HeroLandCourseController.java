@@ -9,12 +9,10 @@ import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandCourseDP;
 import com.heroland.competition.domain.dp.HerolandSchoolCourseDP;
+import com.heroland.competition.domain.dto.CourseForTeacherDto;
 import com.heroland.competition.domain.dto.HerolandAdminDataDto;
 import com.heroland.competition.domain.dto.HerolandCourseDto;
-import com.heroland.competition.domain.request.HerolandCourseAddRequest;
-import com.heroland.competition.domain.request.HerolandCourseForSchoolRequest;
-import com.heroland.competition.domain.request.HerolandCoursePageRequest;
-import com.heroland.competition.domain.request.HerolandDataPageRequest;
+import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandCourseService;
 import org.springframework.util.CollectionUtils;
@@ -119,6 +117,18 @@ public class HeroLandCourseController {
     public ResponseBody<List<HerolandCourseDto>> courseForSchool(@RequestBody HerolandCourseForSchoolRequest request) {
         ResponseBody<List<HerolandCourseDto>> result = new ResponseBody<>();
         result.setData(heroLandCourseService.courseForSchool(request));
+        return result;
+    }
+
+    /**
+     * 获取教师的的科目信息
+     * @return
+     */
+    @RequestMapping(value = "/courseForTeacher", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<CourseForTeacherDto> courseForTeacher(@RequestBody HerolandCourseForTeacherRequest request) {
+        ResponseBody<CourseForTeacherDto> result = new ResponseBody<>();
+        result.setData(heroLandCourseService.courseForTeacher(request));
         return result;
     }
 

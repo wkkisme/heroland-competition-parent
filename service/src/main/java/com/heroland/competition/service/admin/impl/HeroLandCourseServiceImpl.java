@@ -1,9 +1,11 @@
 package com.heroland.competition.service.admin.impl;
 
+import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -15,12 +17,18 @@ import com.heroland.competition.dal.pojo.HerolandSchoolCourse;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandCourseDP;
 import com.heroland.competition.domain.dp.HerolandSchoolCourseDP;
+import com.heroland.competition.domain.dto.CourseForTeacherDto;
 import com.heroland.competition.domain.dto.HerolandCourseDto;
 import com.heroland.competition.domain.dto.HerolandSchoolDto;
+import com.heroland.competition.domain.dto.SchoolCourseForTeacherDto;
 import com.heroland.competition.domain.request.HerolandCourseForSchoolRequest;
+import com.heroland.competition.domain.request.HerolandCourseForTeacherRequest;
 import com.heroland.competition.domain.request.HerolandCoursePageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandCourseService;
+import com.platform.sso.domain.dp.PlatformSysUserClassDP;
+import com.platform.sso.domain.qo.PlatformSysUserClassQO;
+import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +53,9 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
 
     @Resource
     private HeroLandAdminService heroLandAdminService;
+
+    @Resource
+    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
 
 
     @Override
@@ -251,5 +262,74 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
                 .filter(e -> CollectionUtils.isEmpty(request.getGradeCodeList()) || request.getGradeCodeList().contains(e.getGrade()))
                 .map(this::getAdminData).collect(Collectors.toList());
         return result;
+    }
+
+    @Override
+    public CourseForTeacherDto courseForTeacher(HerolandCourseForTeacherRequest request) {
+
+        CourseForTeacherDto teacherDto = new CourseForTeacherDto();
+        PlatformSysUserClassQO platformSysUserQO = new PlatformSysUserClassQO();
+        platformSysUserQO.setUserId(request.getUserId());
+        //参数为空
+        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(platformSysUserQO);
+        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
+            return teacherDto;
+        }
+        List<SchoolCourseForTeacherDto> teacherDtos = listResponseBody.getData().
+                stream()
+                .filter(e -> {
+                    if (CollectionUtils.isEmpty(request.getClassCodeList()) && CollectionUtils.isEmpty(request.getGradeCodeList())) {
+                        return true;
+                    }
+                    if (!CollectionUtils.isEmpty(request.getClassCodeList()) && !CollectionUtils.isEmpty(request.getGradeCodeList())) {
+                        return request.getClassCodeList().contains(e.getClassCode()) && request.getGradeCodeList().contains(e.getGradeCode());
+                    }
+                    if (!CollectionUtils.isEmpty(request.getClassCodeList())) {
+                        return request.getClassCodeList().contains(e.getClassCode());
+                    }
+                    if (!CollectionUtils.isEmpty(request.getGradeCodeList())) {
+                        return request.getGradeCodeList().contains(e.getClassCode());
+                    }
+                    return false;
+                }).map(e -> {
+                    SchoolCourseForTeacherDto course = new SchoolCourseForTeacherDto();
+                    course.setClassCode(e.getClassCode());
+                    course.setCourseCode(e.getSubjectCode());
+                    course.setSchoolCode(e.getOrgCode());
+                    course.setGradeCode(e.getGradeCode());
+                    return course;
+                }).collect(Collectors.toList());
+        getAdminDataForTeacher(teacherDtos);
+        teacherDto.setCourse(teacherDtos);
+        return teacherDto;
+    }
+
+    private void getAdminDataForTeacher(List<SchoolCourseForTeacherDto> teacherDtos){
+        List<String> keys = Lists.newArrayList();
+        teacherDtos.stream().forEach(teacherDto -> {
+            keys.add(teacherDto.getClassCode());
+            keys.add(teacherDto.getCourseCode());
+            keys.add(teacherDto.getGradeCode());
+            keys.add(teacherDto.getCourseCode());
+        });
+        List<String> data = keys.stream().distinct().collect(Collectors.toList());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(data);
+        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+
+        teacherDtos.stream().forEach(herolandCourse -> {
+            if (keyMap.containsKey(herolandCourse.getCourseCode())){
+                herolandCourse.setCourseName(keyMap.get(herolandCourse.getCourseCode()).get(0).getDictValue());
+            }
+            if (keyMap.containsKey(herolandCourse.getClassCode())){
+                herolandCourse.setClassName(keyMap.get(herolandCourse.getClassCode()).get(0).getDictValue());
+            }
+            if (keyMap.containsKey(herolandCourse.getGradeCode())){
+                herolandCourse.setGradeName(keyMap.get(herolandCourse.getGradeCode()).get(0).getDictValue());
+            }
+            if (keyMap.containsKey(herolandCourse.getSchoolCode())){
+                herolandCourse.setSchoolName(keyMap.get(herolandCourse.getSchoolCode()).get(0).getDictValue());
+            }
+        });
+
     }
 }
