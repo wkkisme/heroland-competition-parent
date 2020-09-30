@@ -98,5 +98,5 @@ public interface HeroLandCompetitionStatisticsService {
 
     PageResponse<CourseResultForUserDto> getAllCourseResultForUser(CourseResultForUserQO qo);
 
-    PageResponse<WorldStatisticResultDto> worldStatisticResult(WorldStatisticQO qo);
+    ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(WorldStatisticQO qo);
 }

@@ -74,7 +74,7 @@ public class HerolandStatisticsWordExample {
     }
 
     /**
-     * heroland_statistics_word 2020-09-27
+     * heroland_statistics_word 2020-09-30
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1576,6 +1576,66 @@ public class HerolandStatisticsWordExample {
             addCriterion("end_time not between", value1, value2, "endTime");
             return (Criteria) this;
         }
+
+        public Criteria andStatisticTypeIsNull() {
+            addCriterion("statistic_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeIsNotNull() {
+            addCriterion("statistic_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeEqualTo(Integer value) {
+            addCriterion("statistic_type =", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeNotEqualTo(Integer value) {
+            addCriterion("statistic_type <>", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeGreaterThan(Integer value) {
+            addCriterion("statistic_type >", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("statistic_type >=", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeLessThan(Integer value) {
+            addCriterion("statistic_type <", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("statistic_type <=", value, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeIn(List<Integer> values) {
+            addCriterion("statistic_type in", values, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeNotIn(List<Integer> values) {
+            addCriterion("statistic_type not in", values, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeBetween(Integer value1, Integer value2) {
+            addCriterion("statistic_type between", value1, value2, "statisticType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatisticTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("statistic_type not between", value1, value2, "statisticType");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1589,7 +1649,7 @@ public class HerolandStatisticsWordExample {
     }
 
     /**
-     * heroland_statistics_word 2020-09-27
+     * heroland_statistics_word 2020-09-30
      */
     public static class Criterion {
         private String condition;

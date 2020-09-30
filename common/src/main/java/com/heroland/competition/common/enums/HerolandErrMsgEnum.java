@@ -47,6 +47,9 @@ public enum HerolandErrMsgEnum {
     JOINED_LIMIT("70116", "报名人数已满"),
     ROLE_LIMIT("70117", "该行为此用户权限不足"),
 
+    STATISTIC_DOING("70118", "比赛数据正在统计，请稍后查看"),
+    STATISTIC_NOT("70119", "比赛还未结束, 不支持查看结果"),
+
     DUPLICATE("70109", "请稍后提交"),
 
     DUPLICATE_ORDER("70110", "下单过于频繁，请稍后重试"),

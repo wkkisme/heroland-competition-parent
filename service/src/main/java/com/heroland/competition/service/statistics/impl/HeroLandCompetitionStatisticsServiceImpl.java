@@ -97,6 +97,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Resource
     private HerolandStatisticsLogMapper herolandStatisticsLogMapper;
 
+    @Resource
+    private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
+
     @Override
     public ResponseBody<Boolean> saveStatisticsTotal(List<HeroLandStatisticsTotalDP> dp) {
         AssertUtils.assertThat(!CollectionUtils.isEmpty(dp));
@@ -736,13 +739,49 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     @Override
-    public PageResponse<WorldStatisticResultDto> worldStatisticResult(WorldStatisticQO qo) {
+    public ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(WorldStatisticQO qo) {
+        HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(qo.getTopicId());
+        if (heroLandTopicGroup == null){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_QUERY_PARAM.getErrorMessage());
+        }
+        if (heroLandTopicGroup.getEndTime().after(new Date())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.STATISTIC_NOT.getErrorMessage());
+        }
+
         HerolandStatisticsLogExample logExample = new HerolandStatisticsLogExample();
         HerolandStatisticsLogExample.Criteria logExampleCriteria = logExample.createCriteria();
         logExampleCriteria.andTopicIdEqualTo(qo.getTopicId()).andIsFinishedEqualTo(true).andIsDeletedEqualTo(false);
         List<HerolandStatisticsLog> herolandStatisticsLogs = herolandStatisticsLogMapper.selectByExample(logExample);
         //如果标记为已完成，则直接从统计库理捞数据;
-        if (!CollectionUtils.isEmpty(herolandStatisticsLogs)){}
-        return null;
+        long count = 0L;
+        List<HerolandStatisticsWord> herolandStatisticsWords = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(herolandStatisticsLogs)){
+            HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+            HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+            criteria.andTopicIdEqualTo(qo.getTopicId()).andIsDeletedEqualTo(true).andStatisticTypeEqualTo(2);
+            if(qo.getNeedPage()) {
+                example.setOrderByClause("total_score desc limit " +qo.getStartRow() +","+qo.getPageSize() );
+            }else {
+                example.setOrderByClause("total_score desc");
+            }
+            herolandStatisticsWords = herolandStatisticsWordMapper.selectByExample(example);
+            count = herolandStatisticsWordMapper.countByExample(example);
+            ResponseBody<List<WorldStatisticResultDto>> listResponseBody = ResponseBodyWrapper.successListWrapper(herolandStatisticsWords, count, qo, WorldStatisticResultDto.class);
+            if (listResponseBody.isSuccess() && !CollectionUtils.isEmpty(listResponseBody.getData())){
+                listResponseBody.getData().forEach(e -> {
+                    e.setRegisterbeginTime(heroLandTopicGroup.getRegisterBeginTime());
+                    e.setRegisterEndTime(heroLandTopicGroup.getRegisterEndTime());
+                    e.setCountLimit(heroLandTopicGroup.getCountLimit());
+                    e.setRegisterCount(heroLandTopicGroup.getRegisterCount());
+                    e.setTopicName(heroLandTopicGroup.getTopicName());
+                    //构造按总分的排名
+                    e.setTotalRank(qo.getStartRow() + listResponseBody.getData().indexOf(e) + 1);
+                });
+            }
+        }else {
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.STATISTIC_DOING.getErrorMessage());
+
+        }
+        return ResponseBodyWrapper.successListWrapper(herolandStatisticsWords, count, qo, WorldStatisticResultDto.class);
     }
 }

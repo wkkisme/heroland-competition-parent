@@ -1,15 +1,12 @@
 package com.heroland.competition.domain.dto;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.heroland.competition.domain.dp.HerolandStatisticsWordDP;
+
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
+
 
 /**
  * @author smjyouzan
@@ -102,6 +99,26 @@ public class WorldStatisticResultDto implements Serializable {
     @ApiModelProperty(value="endTimetopic的结束时间")
     private Date endTime;
 
+    private String topicName;
 
 
+    /**
+     * 报名开始时间
+     */
+    private Date registerbeginTime;
+
+    /**
+     * 报名结束时间
+     */
+    private Date registerEndTime;
+
+    /**
+     * 已经报名的人数
+     */
+    private Long registerCount;
+
+    /**
+     * 报名限制人数
+     */
+    private Long countLimit;
 }

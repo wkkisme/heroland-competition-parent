@@ -73,8 +73,4 @@ public class HeroLandTopicForSDto implements Serializable {
      */
     private String studentJoinState;
 
-
-
-
-
 }
