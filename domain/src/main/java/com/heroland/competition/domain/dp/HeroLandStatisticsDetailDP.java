@@ -147,6 +147,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="className班级名称")
     private String className;
 
+    private HeroLandStatisticsDetailDP myselfRank;
 
     public HeroLandStatisticsDetailDP addDetailCheck(){
         AssertUtils.notBlank(userId);
@@ -162,6 +163,14 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
             }
 
         return this;
+    }
+
+    public HeroLandStatisticsDetailDP getMyselfRank() {
+        return myselfRank;
+    }
+
+    public void setMyselfRank(HeroLandStatisticsDetailDP myselfRank) {
+        this.myselfRank = myselfRank;
     }
 
     public String getGradeName() {

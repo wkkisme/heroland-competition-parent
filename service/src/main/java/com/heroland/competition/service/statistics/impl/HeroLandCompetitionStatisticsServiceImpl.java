@@ -247,7 +247,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         try {
 
-//            AssertUtils.notBlank(qo.getClassCode());
             List<String> userIds = result.getData().stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList());
             qo.setUserIds(userIds);
             qo.setRankField(GroupByEnum.class_code.getFiled());

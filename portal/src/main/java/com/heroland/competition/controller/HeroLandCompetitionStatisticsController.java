@@ -54,11 +54,6 @@ public class HeroLandCompetitionStatisticsController {
      */
     @PostMapping("/getStatisticsCompetitions")
     ResponseBody<List<HeroLandStatisticsDetailDP>> getSyncCompetitions(HttpServletRequest request, @RequestBody HeroLandStatisticsTotalQO qo) {
-        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData();
-        if (data == null){
-            return ResponseBodyWrapper.fail(ErrMsgEnum.PLEASE_LOGIN);
-        }
-        qo.setUserId(data.getUserId());
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
 

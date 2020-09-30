@@ -4,80 +4,86 @@
     <resultMap id="DetailRankBaseMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll"
                extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
         <result column="rank" property="rank"/>
+        <result column="class_rank" property="classRank"/>
 
     </resultMap>
     <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
-        SELECT
-        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>
-        ,
-        CASE
-        WHEN @prevRank = ${rankField} THEN @curRank
-        WHEN @prevRank := ${rankField} THEN @curRank := @curRank + 1
-        END AS rank
-        FROM heroland_statistics_detail p,
-        (SELECT @curRank :=0, @prevRank := NULL) r
 
-        where is_deleted =0
+         SELECT
+        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
+
+        (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField}
+
+        and
+        a.is_deleted =0 and b.is_deleted =0
 
         <if test="userId != null">
-            and user_id = #{userId}
+            and a.user_id = #{userId} and b.user_id = #{userId}
         </if>
 
         <if test="history != null">
-            and history = #{history}
+            and a.history = #{history}  and b.history = #{history}
         </if>
 
-        <if test="userName != null">
-            and user_name like concat ( #{userName},'%')
+        <if test="userName != null and userName.length > 0">
+            and b.user_name like concat ( #{userName},'%')  and a.user_name like concat ( #{userName},'%')
         </if>
 
         <if test="subjectCode != null">
-            and subject_code = #{subjectCode,jdbcType=VARCHAR}
+            and a.subject_code = #{subjectCode,jdbcType=VARCHAR} and b.subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>
         <if test="gradeCode != null">
-            and grade_code = #{gradeCode,jdbcType=VARCHAR}
+            and a.grade_code = #{gradeCode,jdbcType=VARCHAR} and b.grade_code = #{gradeCode,jdbcType=VARCHAR}
         </if>
 
 
         <if test="classCodes != null and classCodes.size()>0">
-            and class_code  in
+            and a.class_code  in
+            <foreach collection="classCodes" item="classCode" separator="," close=")" open="(">
+                #{classCode}
+            </foreach>
+
+            and
+            b.class_code  in
             <foreach collection="classCodes" item="classCode" separator="," close=")" open="(">
                 #{classCode}
             </foreach>
         </if>
         <if test="classCode != null">
-            and class_code = #{classCode,jdbcType=VARCHAR}
+            and a.class_code = #{classCode,jdbcType=VARCHAR}  and b.class_code = #{classCode,jdbcType=VARCHAR}
         </if>
 
         <if test="orgCode != null">
-            and org_code = #{orgCode,jdbcType=VARCHAR}
+            and a.org_code = #{orgCode,jdbcType=VARCHAR} and b.org_code = #{orgCode,jdbcType=VARCHAR}
         </if>
 
         <if test="type != null">
-            and type = #{type}
+            and a.type = #{type}   and b.type = #{type}
         </if>
 
         <if test="startTime != null">
-            and gmt_create >= #{startTime}
+            and a.gmt_create >= #{startTime} and and b.gmt_create >= #{startTime}
         </if>
 
         <if test="endTime != null">
-            and gmt_create <![CDATA[ <= ]]> #{endTime}
+            and a.gmt_create <![CDATA[ <= ]]> #{endTime} and b.gmt_create <![CDATA[ <= ]]> #{endTime}
 
         </if>
         <if test="userIds != null and userIds.size() > 0">
-            and user_id in
+            and a.user_id in
+            <foreach collection="userIds" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+            and b.user_id in
             <foreach collection="userIds" open="(" close=")" separator="," item="item">
                 #{item}
             </foreach>
 
         </if>
-
-        <!--        group by user_id-->
-
-        ORDER BY ${orderField}
-
-
+        )+1 AS rank
+        FROM heroland_statistics_detail
+        as a
+        ORDER BY rank
         <if test="startRow != null and startRow != -1 and pageSize != null">
             limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
@@ -121,7 +127,7 @@
 
         </if>
 
-        <if test="userName != null">
+        <if test="userName != null and userName.length > 0">
             and user_name like concat ( #{userName},'%')
         </if>
 
