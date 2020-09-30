@@ -9,7 +9,7 @@
         answer, your_answer, user_id,
         record_id, record_detail_id, begin_date,
         end_date, score, correct_answer,
-        topic_id, subject_code, opponent_name,org_code
+        topic_id, subject_code, opponent_name,org_code,type
         )
         values
 
@@ -20,7 +20,7 @@
             #{do.answer,jdbcType=VARCHAR}, #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR},
             #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
             #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.correctAnswer,jdbcType=BIT},
-            #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{orgCode}
+            #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{orgCode},#{type}
 
             )
         </foreach>
@@ -124,6 +124,9 @@
             </if>
              <if test="orgCode != null">
                     org_code = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type},
             </if>
         </set>
         where record_detail_id = #{recordDetailId,jdbcType=VARCHAR}
