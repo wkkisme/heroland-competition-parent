@@ -121,6 +121,16 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private Integer diff;
     private String orgCode;
 
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getOrgCode() {
         return orgCode;
     }

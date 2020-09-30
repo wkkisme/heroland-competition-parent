@@ -90,7 +90,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     public ResponseBody<Boolean> addCompetitionAndDetail(HeroLandCompetitionRecordDP dp) {
         try {
             addCompetitionRecord(dp);
-            return heroLandQuestionRecordDetailService.addQuestionRecords(dp.getDetails());
+            return heroLandQuestionRecordDetailService.addQuestionRecords(dp.record2Detail());
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
