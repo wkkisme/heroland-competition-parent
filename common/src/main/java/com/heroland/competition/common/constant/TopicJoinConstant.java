@@ -29,5 +29,20 @@ public class TopicJoinConstant {
      */
     public static final String OVERDUE = "OVERDUE";
 
+    /**
+     * 统计的类型--整个比赛统计
+     *
+     */
+    public static final int statisic_type_total = 2;
+
+    /**
+     * 统计的类型--整个比赛按科目统计
+     *
+     */
+    public static final int statisic_type_course = 1;
+
+
+
+
 
 }

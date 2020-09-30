@@ -112,6 +112,12 @@ public class HerolandStatisticsWordDP extends BaseDO implements Serializable {
     private Date endTime;
 
     /**
+     * 统计类型
+     */
+    @ApiModelProperty(value="statisticType统计类型")
+    private Integer statisticType;
+
+    /**
      * heroland_statistics_word
      */
     private static final long serialVersionUID = 1L;
@@ -386,5 +392,13 @@ public class HerolandStatisticsWordDP extends BaseDO implements Serializable {
      */
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getStatisticType() {
+        return statisticType;
+    }
+
+    public void setStatisticType(Integer statisticType) {
+        this.statisticType = statisticType;
     }
 }

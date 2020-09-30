@@ -24,5 +24,8 @@ public class WorldStatisticDto implements Serializable {
 
     private List<HerolandStatisticsWordDP> wordDPS = Lists.newArrayList();
 
+    /**
+     * 这场比赛的总统计，不根据科目
+     */
     private HerolandStatisticsWordDP wordDPForSingle;
 }

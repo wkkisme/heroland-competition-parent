@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.heroland.competition.common.constant.TopicJoinConstant;
 import com.heroland.competition.common.constants.TimeIntervalUnit;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BatchUtils;
@@ -206,11 +207,15 @@ public class WorldStatisticsTask {
                 if (!CollectionUtils.isEmpty(wordsByUserId)){
                     return;
                 }
-                List<HerolandStatisticsWord> herolandStatisticsWords = BeanCopyUtils.copyArrayByJSON(JSON.toJSONString(userWorldDP.getWordDPS()), HerolandStatisticsWord.class);
+                List<HerolandStatisticsWord> herolandStatisticsWords = BeanCopyUtils.copyArrayByJSON(userWorldDP.getWordDPS(), HerolandStatisticsWord.class);
                 herolandStatisticsWordMapper.batchInsert(herolandStatisticsWords);
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
+                }
+                if (userWorldDP.getWordDPForSingle() != null){
+                    HerolandStatisticsWord herolandStatisticsWord = BeanCopyUtils.copyByJSON(userWorldDP.getWordDPForSingle(), HerolandStatisticsWord.class);
+                    herolandStatisticsWordMapper.insertSelective(herolandStatisticsWord);
                 }
             });
             saveLog(Lists.newArrayList(topicId), 0, true);
@@ -241,6 +246,7 @@ public class WorldStatisticsTask {
             wordDP.setGradeCode(gradeCode);
             wordDP.setGradeName(basicData.containsKey(gradeCode) ? basicData.get(gradeCode) : "");
             wordDP.setType(5);
+            wordDP.setStatisticType(TopicJoinConstant.statisic_type_course);
             //总得分
             wordDP.setTotalScore(entry.getValue().stream().mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
             //平均分
@@ -265,6 +271,32 @@ public class WorldStatisticsTask {
 
         }
         dto.setWordDPS(wordDPS);
+        //计算整个比赛的信息
+        int totalQtNum = subjectQuestionCountMap.values().stream().mapToInt(Integer::intValue).sum();
+        HerolandStatisticsWordDP totalWorld = new HerolandStatisticsWordDP();
+        totalWorld.setUserId(userId);
+        totalWorld.setTopicId(topicGroup.getId());
+        totalWorld.setStartTime(topicGroup.getStartTime());
+        totalWorld.setEndTime(topicGroup.getEndTime());
+        totalWorld.setGradeCode(gradeCode);
+        totalWorld.setGradeName(basicData.containsKey(gradeCode) ? basicData.get(gradeCode) : "");
+        totalWorld.setType(5);
+        totalWorld.setStatisticType(TopicJoinConstant.statisic_type_course);
+        //总得分
+        totalWorld.setTotalScore(dto.getWordDPS().stream().mapToInt(HerolandStatisticsWordDP::getTotalScore).sum());
+        //平均分
+        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0/totalQtNum));
+        //排名,不提供，有可能需要根据分数，正确率啥的排
+        //得分率
+        totalWorld.setCompleteRate((totalWorld.getTotalScore() * 1.0 / (totalQtNum * topicGroup.getCountLimit())));
+        //正确率 按照科目进行平均
+        double totalCorrectRate = dto.getWordDPS().stream().mapToDouble(HerolandStatisticsWordDP::getAnswerRightRate).sum();
+        int subjectCount = (int)subjectQuestionCountMap.keySet().stream().map(String::toString).count();
+        totalWorld.setAnswerRightRate(totalCorrectRate * 1.0 / subjectCount);
+        //胜率，等所有的人员计算出来后才能排名,所以也不提供
+        //总时长
+        totalWorld.setTotalTime(dto.getWordDPS().stream().mapToInt(HerolandStatisticsWordDP::getTotalTime).sum());
+        dto.setWordDPForSingle(totalWorld);
         return dto;
     }
 
@@ -335,13 +367,17 @@ public class WorldStatisticsTask {
             if (userList.isSuccess() && !CollectionUtils.isEmpty(userList.getData())){
                 Map<String, List<PlatformSysUserDP>> userIdMap = userList.getData().stream().collect(Collectors.groupingBy(PlatformSysUserDP::getUserId));
                 e.stream().forEach(worldStatisticDto -> {
+                    boolean hasUser = userIdMap.containsKey(worldStatisticDto.getUserId());
                     worldStatisticDto.getWordDPS().stream().forEach(herolandStatisticsWordDP -> {
-                        boolean hasUser = userIdMap.containsKey(herolandStatisticsWordDP.getUserId());
                         herolandStatisticsWordDP.setUserName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
                     });
+                    if (worldStatisticDto.getWordDPForSingle() != null){
+                        worldStatisticDto.getWordDPForSingle().setUserName(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getUserName() : "");
+                    }
                 });
-
             }
+
+
         });
 
     }

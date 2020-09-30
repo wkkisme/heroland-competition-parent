@@ -13,6 +13,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constant.TopicJoinConstant;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.*;
@@ -758,7 +759,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (!CollectionUtils.isEmpty(herolandStatisticsLogs)){
             HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
             HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
-            criteria.andTopicIdEqualTo(qo.getTopicId()).andIsDeletedEqualTo(true).andStatisticTypeEqualTo(2);
+            criteria.andTopicIdEqualTo(qo.getTopicId()).andIsDeletedEqualTo(true).andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
             if(qo.getNeedPage()) {
                 example.setOrderByClause("total_score desc limit " +qo.getStartRow() +","+qo.getPageSize() );
             }else {
