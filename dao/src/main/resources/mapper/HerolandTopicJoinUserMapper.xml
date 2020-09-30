@@ -376,7 +376,7 @@
     </foreach>
   </insert>
 
-  <select id="selectJoinUsersByTopicId" parameterType="java.lang.Long">
+  <select id="selectJoinUsersByTopicId" parameterType="java.lang.String">
     select
     join_user
     from heroland_topic_join_user
