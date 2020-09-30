@@ -27,4 +27,5 @@ public interface HerolandSchoolCourseMapper {
     List<HerolandSchoolCourse> getBySchoolListAndCourse(@Param("schoolCodes") List<String> schoolCodes, @Param("courseId") Long courseId);
 
     List<HerolandSchoolCourse> getByCourses(@Param("courseIds") List<Long> courseIds);
+
 }

@@ -17,6 +17,7 @@ import com.heroland.competition.domain.dp.HerolandCourseDP;
 import com.heroland.competition.domain.dp.HerolandSchoolCourseDP;
 import com.heroland.competition.domain.dto.HerolandCourseDto;
 import com.heroland.competition.domain.dto.HerolandSchoolDto;
+import com.heroland.competition.domain.request.HerolandCourseForSchoolRequest;
 import com.heroland.competition.domain.request.HerolandCoursePageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandCourseService;
@@ -236,5 +237,19 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         pageResult.setPage(data.getPageNum());
         pageResult.setTotal((int) data.getTotal());
         return pageResult;
+    }
+
+    @Override
+    public List<HerolandCourseDto> courseForSchool(HerolandCourseForSchoolRequest request) {
+        List<HerolandSchoolCourse> courses = herolandSchoolCourseMapper.getBySchoolListAndCourse(Lists.newArrayList(request.getSchoolCode()), null);
+        if (CollectionUtils.isEmpty(courses)){
+            return Lists.newArrayList();
+        }
+        List<Long> courseIds = courses.stream().map(HerolandSchoolCourse::getCourseId).distinct().collect(Collectors.toList());
+        List<HerolandCourse> courseList = herolandCourseMapper.selectByPrimaryKeys(courseIds);
+        List<HerolandCourseDto> result = courseList.stream()
+                .filter(e -> CollectionUtils.isEmpty(request.getGradeCodeList()) || request.getGradeCodeList().contains(e.getGrade()))
+                .map(this::getAdminData).collect(Collectors.toList());
+        return result;
     }
 }

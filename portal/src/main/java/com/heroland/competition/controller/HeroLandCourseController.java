@@ -12,6 +12,7 @@ import com.heroland.competition.domain.dp.HerolandSchoolCourseDP;
 import com.heroland.competition.domain.dto.HerolandAdminDataDto;
 import com.heroland.competition.domain.dto.HerolandCourseDto;
 import com.heroland.competition.domain.request.HerolandCourseAddRequest;
+import com.heroland.competition.domain.request.HerolandCourseForSchoolRequest;
 import com.heroland.competition.domain.request.HerolandCoursePageRequest;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
@@ -106,6 +107,18 @@ public class HeroLandCourseController {
     public ResponseBody<HerolandCourseDto> get(@RequestParam("id")Long id) {
         ResponseBody<HerolandCourseDto> result = new ResponseBody<>();
         result.setData(heroLandCourseService.getById(id));
+        return result;
+    }
+
+    /**
+     * 获取学校下的科目信息
+     * @return
+     */
+    @RequestMapping(value = "/courseForSchool", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<List<HerolandCourseDto>> courseForSchool(@RequestBody HerolandCourseForSchoolRequest request) {
+        ResponseBody<List<HerolandCourseDto>> result = new ResponseBody<>();
+        result.setData(heroLandCourseService.courseForSchool(request));
         return result;
     }
 
