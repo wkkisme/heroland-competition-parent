@@ -741,7 +741,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(WorldStatisticQO qo) {
         HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(qo.getTopicId());
-        if (heroLandTopicGroup == null){
+        if (heroLandTopicGroup == null || heroLandTopicGroup.getIsDeleted()){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_QUERY_PARAM.getErrorMessage());
         }
         if (heroLandTopicGroup.getEndTime().after(new Date())){
