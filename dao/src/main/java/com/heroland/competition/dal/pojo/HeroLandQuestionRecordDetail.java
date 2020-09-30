@@ -114,7 +114,7 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      * 
      */
     @ApiModelProperty(value="type")
-    private String type;
+    private Integer type;
 
     /**
      * heroland_question_record_detail
@@ -397,7 +397,7 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      * 
      * @return type 
      */
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -405,7 +405,7 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      * 
      * @param type 
      */
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

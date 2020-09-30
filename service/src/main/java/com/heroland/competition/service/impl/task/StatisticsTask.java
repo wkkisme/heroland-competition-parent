@@ -83,15 +83,12 @@ public class StatisticsTask {
         // 1 先清除历史版本
 
         try {
+            HeroLandStatisticsTotalQO qo = new HeroLandStatisticsTotalQO();
+            qo.setHistory(false);
+            heroLandCompetitionStatisticsService.updateHistoryStatisticsTotalAndDetailByQO(qo);
 
             for (CompetitionEnum value : CompetitionEnum.values()) {
                 Integer type = value.getType();
-                HeroLandStatisticsTotalQO qo = new HeroLandStatisticsTotalQO();
-                qo.setType(type);
-                qo.setHistory(false);
-                heroLandCompetitionStatisticsService.updateHistoryStatisticsTotalAndDetailByQO(qo);
-
-
                 HeroLandStatisticsAllQO totalQo = new HeroLandStatisticsAllQO();
                 totalQo.setHistory(false);
 

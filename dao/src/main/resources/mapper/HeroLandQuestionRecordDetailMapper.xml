@@ -25,7 +25,7 @@
     <result column="subject_code" jdbcType="VARCHAR" property="subjectCode" />
     <result column="opponent_name" jdbcType="VARCHAR" property="opponentName" />
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
-    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -140,7 +140,7 @@
       #{recordId,jdbcType=VARCHAR}, #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
       #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{correctAnswer,jdbcType=BIT}, 
       #{topicId,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{opponentName,jdbcType=VARCHAR}, 
-      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
+      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -286,7 +286,7 @@
         #{orgCode,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
-        #{type,jdbcType=VARCHAR},
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -369,7 +369,7 @@
         org_code = #{record.orgCode,jdbcType=VARCHAR},
       </if>
       <if test="record.type != null">
-        type = #{record.type,jdbcType=VARCHAR},
+        type = #{record.type,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -401,7 +401,7 @@
       subject_code = #{record.subjectCode,jdbcType=VARCHAR},
       opponent_name = #{record.opponentName,jdbcType=VARCHAR},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=VARCHAR}
+      type = #{record.type,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -476,7 +476,7 @@
         org_code = #{orgCode,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
-        type = #{type,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -505,8 +505,7 @@
       subject_code = #{subjectCode,jdbcType=VARCHAR},
       opponent_name = #{opponentName,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR}
+      type = #{type,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
 </mapper>
