@@ -70,8 +70,10 @@ public class StatisticsTask {
      * *      6 总时长
      * 7 总场数
      * 0 15 10 * * ? *
+     * 0 0/10 * * * ?
+     *
      */
-    @Scheduled(cron = "0 15 23 ? * *")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void statistics() {
         log.info("start  statistics =================");
         if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
