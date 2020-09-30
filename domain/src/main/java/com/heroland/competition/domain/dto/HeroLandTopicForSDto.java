@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.dto;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -72,5 +73,17 @@ public class HeroLandTopicForSDto implements Serializable {
      * 参与 和 未参与
      */
     private String studentJoinState;
+
+    /**
+     * 年级名称
+     */
+    private String gradeName;
+
+    /**
+     * 科目名称列表
+     */
+    private List<String> courseNameList = Lists.newArrayList();
+
+
 
 }

@@ -18,15 +18,20 @@ import com.heroland.competition.dal.mapper.HerolandTopicJoinUserMapper;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.dal.pojo.HerolandTopicJoinUser;
 import com.heroland.competition.dal.pojo.HerolandTopicJoinUserExample;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
+import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dp.HerolandTopicJoinUserDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
+import com.heroland.competition.domain.qo.HerolandTopicForSQO;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.HerolandTopicJoinUserService;
+import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -42,6 +47,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -65,6 +71,9 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
     private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
 
     @Resource
+    private HerolandTopicGroupPartService herolandTopicGroupPartService;
+
+    @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
     @Resource
@@ -72,6 +81,9 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
 
     @Resource
     private HerolandDiamondService herolandDiamondService;
+
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
 
 
     @Override
@@ -206,8 +218,20 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         if (dataPage == null || CollectionUtils.isEmpty(dataPage.getResult())){
             return pageResult;
         }
-
-        list = dataPage.getResult().stream().map(this::convertToTopicForSDto).collect(Collectors.toList());
+        List<Long> topicIds = dataPage.getResult().stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+        HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+        sqo.setTopicIds(topicIds);
+        List<HerolandTopicGroupPartDP> partDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+        List<String> dataKeys = Lists.newArrayList();
+        partDPS.stream().forEach(e -> {
+            dataKeys.add(e.getGradeCode());
+            dataKeys.add(e.getCourseCode());
+        });
+        List<String> keys = dataKeys.stream().distinct().collect(Collectors.toList());
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, HerolandBasicDataDP> dataMap = dictInfoByKeys.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
+        Map<Long, List<HerolandTopicGroupPartDP>> partMap = partDPS.stream().collect(Collectors.groupingBy(HerolandTopicGroupPartDP::getTopicId));
+        list = dataPage.getResult().stream().map(e ->convertToTopicForSDto(e, partMap, dataMap)).collect(Collectors.toList());
         pageResult.setItems(list);
         pageResult.setPageSize(dataPage.getPageSize());
         pageResult.setPage(dataPage.getPageNum());
@@ -216,7 +240,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
 
     }
 
-    private HeroLandTopicForSDto convertToTopicForSDto(HeroLandTopicGroup topicGroup){
+    private HeroLandTopicForSDto convertToTopicForSDto(HeroLandTopicGroup topicGroup,Map<Long, List<HerolandTopicGroupPartDP>> partMap, Map<String, HerolandBasicDataDP> dataMap ){
         Date now = new Date();
         HeroLandTopicForSDto heroLandTopicForSDto = new HeroLandTopicForSDto();
         heroLandTopicForSDto.setTopicName(topicGroup.getTopicName());
@@ -234,6 +258,18 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             heroLandTopicForSDto.setState(TopicJoinConstant.OVERDUE);
         }else {
             heroLandTopicForSDto.setState(TopicJoinConstant.DOING);
+        }
+        if (partMap.containsKey(topicGroup.getId())){
+            String gradeCode = partMap.get(topicGroup.getId()).get(0).getGradeCode();
+            if (dataMap.containsKey(gradeCode)){
+                heroLandTopicForSDto.setGradeName(dataMap.get(gradeCode).getDictValue());
+            }
+            partMap.get(topicGroup).stream().forEach(e -> {
+                if (dataMap.containsKey(e.getCourseCode())){
+                    heroLandTopicForSDto.getCourseNameList().add(dataMap.get(e.getCourseCode()).getDictValue());
+                }
+            });
+
         }
         return heroLandTopicForSDto;
 
