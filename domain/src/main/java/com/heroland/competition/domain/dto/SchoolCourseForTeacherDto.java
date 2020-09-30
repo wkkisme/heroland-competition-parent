@@ -11,20 +11,13 @@ import java.io.Serializable;
 @Data
 public class SchoolCourseForTeacherDto implements Serializable {
 
-    private String schoolCode;
+    /**
+     * key
+     */
+    private String key;
 
-
-    private String schoolName;
-
-    private String gradeCode;
-
-    private String gradeName;
-
-    private String classCode;
-
-    private String className;
-
-    private String courseCode;
-
-    private String courseName;
+    /**
+     * 名称
+     */
+    private String name;
 }

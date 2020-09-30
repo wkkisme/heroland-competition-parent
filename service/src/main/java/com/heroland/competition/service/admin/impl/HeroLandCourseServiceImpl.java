@@ -275,7 +275,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
             return teacherDto;
         }
-        List<SchoolCourseForTeacherDto> teacherDtos = listResponseBody.getData().
+        List<PlatformSysUserClassDP> userInfo = listResponseBody.getData().
                 stream()
                 .filter(e -> {
                     if (CollectionUtils.isEmpty(request.getClassCodeList()) && CollectionUtils.isEmpty(request.getGradeCodeList())) {
@@ -291,45 +291,37 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
                         return request.getGradeCodeList().contains(e.getClassCode());
                     }
                     return false;
-                }).map(e -> {
-                    SchoolCourseForTeacherDto course = new SchoolCourseForTeacherDto();
-                    course.setClassCode(e.getClassCode());
-                    course.setCourseCode(e.getSubjectCode());
-                    course.setSchoolCode(e.getOrgCode());
-                    course.setGradeCode(e.getGradeCode());
-                    return course;
                 }).collect(Collectors.toList());
-        getAdminDataForTeacher(teacherDtos);
-        teacherDto.setCourse(teacherDtos);
+        if (!CollectionUtils.isEmpty(userInfo)){
+            List<String> grade = userInfo.stream().map(PlatformSysUserClassDP::getGradeCode).distinct().collect(Collectors.toList());
+            List<String> clazz = userInfo.stream().map(PlatformSysUserClassDP::getClassCode).distinct().collect(Collectors.toList());
+            List<String> course = userInfo.stream().map(PlatformSysUserClassDP::getSubjectCode).distinct().collect(Collectors.toList());
+            List<String> keys = Lists.newArrayList();
+            keys.addAll(grade);
+            keys.addAll(clazz);
+            keys.addAll(course);
+            List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+            Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+            teacherDto.setGrade(getAdminDataForTeacher(grade, keyMap));
+            teacherDto.setClazz(getAdminDataForTeacher(clazz, keyMap));
+            teacherDto.setCourse(getAdminDataForTeacher(course, keyMap));
+        }
+
         return teacherDto;
     }
 
-    private void getAdminDataForTeacher(List<SchoolCourseForTeacherDto> teacherDtos){
-        List<String> keys = Lists.newArrayList();
-        teacherDtos.stream().forEach(teacherDto -> {
-            keys.add(teacherDto.getClassCode());
-            keys.add(teacherDto.getCourseCode());
-            keys.add(teacherDto.getGradeCode());
-            keys.add(teacherDto.getCourseCode());
-        });
-        List<String> data = keys.stream().distinct().collect(Collectors.toList());
-        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(data);
-        Map<String, List<HerolandBasicDataDP>> keyMap = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
-
-        teacherDtos.stream().forEach(herolandCourse -> {
-            if (keyMap.containsKey(herolandCourse.getCourseCode())){
-                herolandCourse.setCourseName(keyMap.get(herolandCourse.getCourseCode()).get(0).getDictValue());
+    private List<SchoolCourseForTeacherDto> getAdminDataForTeacher(List<String> keys, Map<String, List<HerolandBasicDataDP>> keyMap){
+        if (CollectionUtils.isEmpty(keys)){
+            return Lists.newArrayList();
+        }
+        List<SchoolCourseForTeacherDto> teacherDtos = keys.stream().map(e -> {
+            SchoolCourseForTeacherDto course = new SchoolCourseForTeacherDto();
+            course.setKey(e);
+            if (keyMap.containsKey(e)) {
+                course.setName(keyMap.get(e).get(0).getDictValue());
             }
-            if (keyMap.containsKey(herolandCourse.getClassCode())){
-                herolandCourse.setClassName(keyMap.get(herolandCourse.getClassCode()).get(0).getDictValue());
-            }
-            if (keyMap.containsKey(herolandCourse.getGradeCode())){
-                herolandCourse.setGradeName(keyMap.get(herolandCourse.getGradeCode()).get(0).getDictValue());
-            }
-            if (keyMap.containsKey(herolandCourse.getSchoolCode())){
-                herolandCourse.setSchoolName(keyMap.get(herolandCourse.getSchoolCode()).get(0).getDictValue());
-            }
-        });
-
+            return course;
+        }).collect(Collectors.toList());
+        return teacherDtos;
     }
 }
