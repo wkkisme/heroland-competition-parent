@@ -23,4 +23,6 @@ public class WorldStatisticDto implements Serializable {
     private Long topicId;
 
     private List<HerolandStatisticsWordDP> wordDPS = Lists.newArrayList();
+
+    private HerolandStatisticsWordDP wordDPForSingle;
 }

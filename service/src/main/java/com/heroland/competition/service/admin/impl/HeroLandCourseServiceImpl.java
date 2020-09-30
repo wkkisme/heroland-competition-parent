@@ -288,7 +288,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
                         return request.getClassCodeList().contains(e.getClassCode());
                     }
                     if (!CollectionUtils.isEmpty(request.getGradeCodeList())) {
-                        return request.getGradeCodeList().contains(e.getClassCode());
+                        return request.getGradeCodeList().contains(e.getGradeCode());
                     }
                     return false;
                 }).collect(Collectors.toList());
