@@ -194,11 +194,12 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         if (CollectionUtils.isEmpty(keys)){
             return list;
         }
-        List<String> redisKeys = keys.stream().map(key -> String.format(RedisConstant.ADMIN_KEY, key)).collect(Collectors.toList());
+        List<String> newKeys = new ArrayList<>(keys);
+        List<String> redisKeys = newKeys.stream().map(key -> String.format(RedisConstant.ADMIN_KEY, key)).collect(Collectors.toList());
         List<Object> redisValue = redisService.getKeys(redisKeys);
         redisValue = redisValue.stream().filter(Objects::nonNull).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(redisValue)){
-            herolandBasicData = herolandBasicDataMapper.selectByDictKeys(keys);
+            herolandBasicData = herolandBasicDataMapper.selectByDictKeys(newKeys);
             batchSetRedis(herolandBasicData);
             list = BeanCopyUtils.copyArrayByJSON(herolandBasicData,HerolandBasicDataDP.class);
         }else {
@@ -209,8 +210,8 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
                 HerolandBasicDataDP dataDP = convertToDP(data);
                 return dataDP;
             }).collect(Collectors.toList());
-            keys.removeAll(exist);
-            List<String> notExist = keys;
+            newKeys.removeAll(exist);
+            List<String> notExist = newKeys;
             if (!CollectionUtils.isEmpty(notExist)){
                 herolandBasicData = herolandBasicDataMapper.selectByDictKeys(notExist);
                 batchSetRedis(herolandBasicData);
