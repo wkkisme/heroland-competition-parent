@@ -264,7 +264,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             if (dataMap.containsKey(gradeCode)){
                 heroLandTopicForSDto.setGradeName(dataMap.get(gradeCode).getDictValue());
             }
-            partMap.get(topicGroup).stream().forEach(e -> {
+            partMap.get(topicGroup.getId()).stream().forEach(e -> {
                 if (dataMap.containsKey(e.getCourseCode())){
                     heroLandTopicForSDto.getCourseNameList().add(dataMap.get(e.getCourseCode()).getDictValue());
                 }
