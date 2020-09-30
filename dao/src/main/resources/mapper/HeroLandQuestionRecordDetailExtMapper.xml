@@ -20,7 +20,7 @@
             #{do.answer,jdbcType=VARCHAR}, #{do.yourAnswer,jdbcType=VARCHAR}, #{do.userId,jdbcType=VARCHAR},
             #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
             #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.correctAnswer,jdbcType=BIT},
-            #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{orgCode},#{type}
+            #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{do.orgCode},#{do.type}
 
             )
         </foreach>
