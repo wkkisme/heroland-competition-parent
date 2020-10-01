@@ -28,6 +28,16 @@ public class WorldStatisticResultDto implements Serializable {
     private String userName;
 
     /**
+     * 学校code
+     */
+    private String schoolCode;
+
+    /**
+     * 学校name
+     */
+    private String schoolName;
+
+    /**
      * topicId
      */
     @ApiModelProperty(value="topicIdtopicId")

@@ -370,9 +370,13 @@ public class WorldStatisticsTask {
                     boolean hasUser = userIdMap.containsKey(worldStatisticDto.getUserId());
                     worldStatisticDto.getWordDPS().stream().forEach(herolandStatisticsWordDP -> {
                         herolandStatisticsWordDP.setUserName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
+                        herolandStatisticsWordDP.setSchoolCode(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
+                        herolandStatisticsWordDP.setSchoolName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
                     });
                     if (worldStatisticDto.getWordDPForSingle() != null){
                         worldStatisticDto.getWordDPForSingle().setUserName(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getUserName() : "");
+                        worldStatisticDto.getWordDPForSingle().setSchoolCode(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getOrgCode() : "");
+                        worldStatisticDto.getWordDPForSingle().setSchoolName(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getSchoolName() : "");
                     }
                 });
             }

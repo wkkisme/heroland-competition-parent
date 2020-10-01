@@ -22,6 +22,16 @@ public class HerolandStatisticsWordDP extends BaseDO implements Serializable {
     private String userName;
 
     /**
+     * 学校code
+     */
+    private String schoolCode;
+
+    /**
+     * 学校name
+     */
+    private String schoolName;
+
+    /**
      * topicId
      */
     @ApiModelProperty(value="topicIdtopicId")
@@ -400,5 +410,21 @@ public class HerolandStatisticsWordDP extends BaseDO implements Serializable {
 
     public void setStatisticType(Integer statisticType) {
         this.statisticType = statisticType;
+    }
+
+    public String getSchoolCode() {
+        return schoolCode;
+    }
+
+    public void setSchoolCode(String schoolCode) {
+        this.schoolCode = schoolCode;
+    }
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
     }
 }

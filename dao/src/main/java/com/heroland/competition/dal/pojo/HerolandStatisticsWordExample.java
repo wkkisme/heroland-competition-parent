@@ -74,7 +74,7 @@ public class HerolandStatisticsWordExample {
     }
 
     /**
-     * heroland_statistics_word 2020-09-30
+     * heroland_statistics_word 2020-10-01
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1636,6 +1636,146 @@ public class HerolandStatisticsWordExample {
             addCriterion("statistic_type not between", value1, value2, "statisticType");
             return (Criteria) this;
         }
+
+        public Criteria andSchoolCodeIsNull() {
+            addCriterion("school_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeIsNotNull() {
+            addCriterion("school_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeEqualTo(String value) {
+            addCriterion("school_code =", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeNotEqualTo(String value) {
+            addCriterion("school_code <>", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeGreaterThan(String value) {
+            addCriterion("school_code >", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("school_code >=", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeLessThan(String value) {
+            addCriterion("school_code <", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeLessThanOrEqualTo(String value) {
+            addCriterion("school_code <=", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeLike(String value) {
+            addCriterion("school_code like", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeNotLike(String value) {
+            addCriterion("school_code not like", value, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeIn(List<String> values) {
+            addCriterion("school_code in", values, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeNotIn(List<String> values) {
+            addCriterion("school_code not in", values, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeBetween(String value1, String value2) {
+            addCriterion("school_code between", value1, value2, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolCodeNotBetween(String value1, String value2) {
+            addCriterion("school_code not between", value1, value2, "schoolCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameIsNull() {
+            addCriterion("school_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameIsNotNull() {
+            addCriterion("school_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameEqualTo(String value) {
+            addCriterion("school_name =", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotEqualTo(String value) {
+            addCriterion("school_name <>", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameGreaterThan(String value) {
+            addCriterion("school_name >", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameGreaterThanOrEqualTo(String value) {
+            addCriterion("school_name >=", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLessThan(String value) {
+            addCriterion("school_name <", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLessThanOrEqualTo(String value) {
+            addCriterion("school_name <=", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameLike(String value) {
+            addCriterion("school_name like", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotLike(String value) {
+            addCriterion("school_name not like", value, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameIn(List<String> values) {
+            addCriterion("school_name in", values, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotIn(List<String> values) {
+            addCriterion("school_name not in", values, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameBetween(String value1, String value2) {
+            addCriterion("school_name between", value1, value2, "schoolName");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchoolNameNotBetween(String value1, String value2) {
+            addCriterion("school_name not between", value1, value2, "schoolName");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1649,7 +1789,7 @@ public class HerolandStatisticsWordExample {
     }
 
     /**
-     * heroland_statistics_word 2020-09-30
+     * heroland_statistics_word 2020-10-01
      */
     public static class Criterion {
         private String condition;

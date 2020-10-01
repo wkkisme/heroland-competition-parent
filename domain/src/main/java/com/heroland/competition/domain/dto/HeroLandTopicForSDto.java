@@ -80,9 +80,29 @@ public class HeroLandTopicForSDto implements Serializable {
     private String gradeName;
 
     /**
-     * 科目名称列表
+     * 年级code
+     */
+    private String gradeCode;
+
+    /**
+     * 世界赛科目名称列表
+     * 只是单纯的名称字段
      */
     private List<String> courseNameList = Lists.newArrayList();
+
+    /**
+     * 校际赛的学校信息
+     */
+    private List<HerolandSchoolDto> schoolDtos = Lists.newArrayList();
+
+    /**
+     * 世界赛的科目信息
+     * 带有code字段
+     */
+    private List<HerolandSchoolDto> worldCourseDtos = Lists.newArrayList();
+
+
+
 
 
 

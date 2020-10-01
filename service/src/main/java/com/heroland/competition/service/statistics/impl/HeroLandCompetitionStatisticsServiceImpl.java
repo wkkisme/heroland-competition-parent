@@ -723,6 +723,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 dto.setAverageScore(dto.getTotalScore() / dto.getTotalTopics());
                 dto.setUserId(entry.getKey());
                 dto.setUserId(entry.getValue().get(0).getUserName());
+                dto.setSchoolCode(entry.getValue().get(0).getSchoolCode());
+                dto.setSchoolName(entry.getValue().get(0).getSchoolName());
                 list.add(dto);
             }
         }

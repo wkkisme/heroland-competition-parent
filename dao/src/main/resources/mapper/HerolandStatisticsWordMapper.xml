@@ -26,6 +26,8 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="statistic_type" jdbcType="INTEGER" property="statisticType" />
+    <result column="school_code" jdbcType="VARCHAR" property="schoolCode" />
+    <result column="school_name" jdbcType="VARCHAR" property="schoolName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -86,10 +88,10 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_id, user_name,
-    topic_id, type, subject_code, subject_name, total_score, total_rank, complete_rate,
-    answer_right_rate, win_rate, total_time, average_score, grade_code, grade_name, start_time,
-    end_time, statistic_type
+    id, creator, modifier, gmt_create, gmt_modified, is_deleted, user_id, user_name, 
+    topic_id, type, subject_code, subject_name, total_score, total_rank, complete_rate, 
+    answer_right_rate, win_rate, total_time, average_score, grade_code, grade_name, start_time, 
+    end_time, statistic_type, school_code, school_name
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HerolandStatisticsWordExample" resultMap="BaseResultMap">
     select
@@ -106,7 +108,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from heroland_statistics_word
     where id = #{id,jdbcType=BIGINT}
@@ -125,22 +127,24 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_statistics_word (creator, modifier, gmt_create,
-      gmt_modified, is_deleted, user_id,
-      user_name, topic_id, type,
-      subject_code, subject_name, total_score,
-      total_rank, complete_rate, answer_right_rate,
-      win_rate, total_time, average_score,
-      grade_code, grade_name, start_time,
-      end_time, statistic_type)
-    values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP},
-      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userId,jdbcType=VARCHAR},
-      #{userName,jdbcType=VARCHAR}, #{topicId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER},
-      #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{totalScore,jdbcType=INTEGER},
-      #{totalRank,jdbcType=INTEGER}, #{completeRate,jdbcType=DOUBLE}, #{answerRightRate,jdbcType=DOUBLE},
-      #{winRate,jdbcType=DOUBLE}, #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE},
-      #{gradeCode,jdbcType=VARCHAR}, #{gradeName,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP},
-      #{endTime,jdbcType=TIMESTAMP}, #{statisticType,jdbcType=INTEGER})
+    insert into heroland_statistics_word (creator, modifier, gmt_create, 
+      gmt_modified, is_deleted, user_id, 
+      user_name, topic_id, type, 
+      subject_code, subject_name, total_score, 
+      total_rank, complete_rate, answer_right_rate, 
+      win_rate, total_time, average_score, 
+      grade_code, grade_name, start_time, 
+      end_time, statistic_type, school_code, 
+      school_name)
+    values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{userId,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{topicId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{subjectCode,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, #{totalScore,jdbcType=INTEGER}, 
+      #{totalRank,jdbcType=INTEGER}, #{completeRate,jdbcType=DOUBLE}, #{answerRightRate,jdbcType=DOUBLE}, 
+      #{winRate,jdbcType=DOUBLE}, #{totalTime,jdbcType=INTEGER}, #{averageScore,jdbcType=DOUBLE}, 
+      #{gradeCode,jdbcType=VARCHAR}, #{gradeName,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{statisticType,jdbcType=INTEGER}, #{schoolCode,jdbcType=VARCHAR}, 
+      #{schoolName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandStatisticsWord">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -217,6 +221,12 @@
       <if test="statisticType != null">
         statistic_type,
       </if>
+      <if test="schoolCode != null">
+        school_code,
+      </if>
+      <if test="schoolName != null">
+        school_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -287,6 +297,12 @@
       </if>
       <if test="statisticType != null">
         #{statisticType,jdbcType=INTEGER},
+      </if>
+      <if test="schoolCode != null">
+        #{schoolCode,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolName != null">
+        #{schoolName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -371,6 +387,12 @@
       <if test="record.statisticType != null">
         statistic_type = #{record.statisticType,jdbcType=INTEGER},
       </if>
+      <if test="record.schoolCode != null">
+        school_code = #{record.schoolCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.schoolName != null">
+        school_name = #{record.schoolName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -401,7 +423,9 @@
       grade_name = #{record.gradeName,jdbcType=VARCHAR},
       start_time = #{record.startTime,jdbcType=TIMESTAMP},
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      statistic_type = #{record.statisticType,jdbcType=INTEGER}
+      statistic_type = #{record.statisticType,jdbcType=INTEGER},
+      school_code = #{record.schoolCode,jdbcType=VARCHAR},
+      school_name = #{record.schoolName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -478,6 +502,12 @@
       <if test="statisticType != null">
         statistic_type = #{statisticType,jdbcType=INTEGER},
       </if>
+      <if test="schoolCode != null">
+        school_code = #{schoolCode,jdbcType=VARCHAR},
+      </if>
+      <if test="schoolName != null">
+        school_name = #{schoolName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -505,13 +535,16 @@
       grade_name = #{gradeName,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
-      statistic_type = #{statisticType,jdbcType=INTEGER}
+      statistic_type = #{statisticType,jdbcType=INTEGER},
+      school_code = #{schoolCode,jdbcType=VARCHAR},
+      school_name = #{schoolName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+
   <sql id="Insert_Column_List">
         user_id, user_name, topic_id, type, subject_code,subject_name,total_score, total_rank,complete_rate,answer_right_rate,win_rate,
-        total_time,average_score,grade_code,grade_name,start_time,end_time, statistic_type
+        total_time,average_score,grade_code,grade_name,start_time,end_time, statistic_type, school_code, school_name
     </sql>
 
   <select id="distinctCourseInTime" resultType="java.lang.String">
@@ -558,7 +591,9 @@
       #{item.gradeName,jdbcType=VARCHAR},
       #{item.startTime,jdbcType=TIMESTAMP},
       #{item.endTime,jdbcType=TIMESTAMP},
-      #{item.statisticType,jdbcType=INTEGER}
+      #{item.statisticType,jdbcType=INTEGER},
+    #{item.schoolCode,jdbcType=INTEGER},
+    #{item.schoolName,jdbcType=INTEGER}
       )
     </foreach>
   </insert>

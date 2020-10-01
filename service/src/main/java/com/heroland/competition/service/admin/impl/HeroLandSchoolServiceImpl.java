@@ -142,18 +142,19 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     @Transactional
     public Boolean deleteNode(String key) {
         if (StringUtils.isBlank(key)){
-            return true;
+            return false;
         }
         HerolandSchool herolandSchool = herolandSchoolMapper.getByKey(key);
         if (Objects.isNull(herolandSchool)){
-            return true;
+            return false;
         }
         //如果是非叶子节点，则下面的所有子节点都需要删除
         List<HerolandSchool> list = herolandSchoolMapper.getByParent(herolandSchool.getKey());
         herolandSchoolMapper.deleteByPrimaryKey(herolandSchool.getId());
+        //todo 确认下是否需要修改数据字典中的信息
         heroLandAdminService.deleteDict(Lists.newArrayList(herolandSchool.getKey()));
         if (CollectionUtils.isEmpty(list)){
-           return true;
+           return false;
         }
         List<HerolandSchool> children = Lists.newArrayList();
         getChildren(herolandSchool.getKey(), children);

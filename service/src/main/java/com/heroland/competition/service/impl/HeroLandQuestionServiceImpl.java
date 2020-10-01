@@ -1024,10 +1024,12 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 //如果有报名的，弹出最近的
                 if (!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
                     HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
-                    HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
-                    heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
-                    heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
-                    return heroLandTopicForWDto;
+                    if (heroLandTopicGroup != null){
+                        HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                        heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+                        heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+                        return heroLandTopicForWDto;
+                    }
                 }
             }
         }

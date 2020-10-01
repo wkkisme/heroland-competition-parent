@@ -223,10 +223,18 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         sqo.setTopicIds(topicIds);
         List<HerolandTopicGroupPartDP> partDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
         List<String> dataKeys = Lists.newArrayList();
-        partDPS.stream().forEach(e -> {
-            dataKeys.add(e.getGradeCode());
-            dataKeys.add(e.getCourseCode());
-        });
+        //世界赛
+        if (Objects.equals(TopicTypeConstants.WORLD_COMPETITION, qo.getTopicType())){
+            partDPS.stream().forEach(e -> {
+                dataKeys.add(e.getGradeCode());
+                dataKeys.add(e.getCourseCode());
+            });
+        }else {
+            partDPS.stream().forEach(e -> {
+                dataKeys.add(e.getGradeCode());
+                dataKeys.add(e.getOrgCode());
+            });
+        }
         List<String> keys = dataKeys.stream().distinct().collect(Collectors.toList());
         List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
         Map<String, HerolandBasicDataDP> dataMap = dictInfoByKeys.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
@@ -263,13 +271,33 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             String gradeCode = partMap.get(topicGroup.getId()).get(0).getGradeCode();
             if (dataMap.containsKey(gradeCode)){
                 heroLandTopicForSDto.setGradeName(dataMap.get(gradeCode).getDictValue());
+                heroLandTopicForSDto.setGradeCode(gradeCode);
             }
-            partMap.get(topicGroup.getId()).stream().forEach(e -> {
-                if (dataMap.containsKey(e.getCourseCode())){
-                    heroLandTopicForSDto.getCourseNameList().add(dataMap.get(e.getCourseCode()).getDictValue());
-                }
-            });
 
+            if (Objects.equals(TopicTypeConstants.WORLD_COMPETITION, topicGroup.getType())){
+                List<HerolandSchoolDto> courses = Lists.newArrayList();
+                partMap.get(topicGroup.getId()).stream().forEach(e -> {
+                    if (dataMap.containsKey(e.getCourseCode())){
+                        heroLandTopicForSDto.getCourseNameList().add(dataMap.get(e.getCourseCode()).getDictValue());
+                        HerolandSchoolDto dto = new HerolandSchoolDto();
+                        dto.setKey(e.getCourseCode());
+                        dto.setName(dataMap.get(e.getCourseCode()).getDictValue());
+                        courses.add(dto);
+                    }
+                });
+                heroLandTopicForSDto.setWorldCourseDtos(courses);
+            }else {
+                List<HerolandSchoolDto> schools = Lists.newArrayList();
+                partMap.get(topicGroup.getId()).stream().forEach(e -> {
+                    if (dataMap.containsKey(e.getOrgCode())){
+                        HerolandSchoolDto dto = new HerolandSchoolDto();
+                        dto.setKey(e.getOrgCode());
+                        dto.setName(dataMap.get(e.getOrgCode()).getDictValue());
+                        schools.add(dto);
+                    }
+                });
+                heroLandTopicForSDto.setSchoolDtos(schools);
+            }
         }
         return heroLandTopicForSDto;
 

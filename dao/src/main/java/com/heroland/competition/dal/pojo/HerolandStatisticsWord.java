@@ -117,6 +117,18 @@ public class HerolandStatisticsWord extends BaseDO implements Serializable {
     private Integer statisticType;
 
     /**
+     * 学校code
+     */
+    @ApiModelProperty(value="schoolCode学校code")
+    private String schoolCode;
+
+    /**
+     * 学校name
+     */
+    @ApiModelProperty(value="schoolName学校name")
+    private String schoolName;
+
+    /**
      * heroland_statistics_word
      */
     private static final long serialVersionUID = 1L;
@@ -407,5 +419,37 @@ public class HerolandStatisticsWord extends BaseDO implements Serializable {
      */
     public void setStatisticType(Integer statisticType) {
         this.statisticType = statisticType;
+    }
+
+    /**
+     * 学校code
+     * @return school_code 学校code
+     */
+    public String getSchoolCode() {
+        return schoolCode;
+    }
+
+    /**
+     * 学校code
+     * @param schoolCode 学校code
+     */
+    public void setSchoolCode(String schoolCode) {
+        this.schoolCode = schoolCode == null ? null : schoolCode.trim();
+    }
+
+    /**
+     * 学校name
+     * @return school_name 学校name
+     */
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    /**
+     * 学校name
+     * @param schoolName 学校name
+     */
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName == null ? null : schoolName.trim();
     }
 }
