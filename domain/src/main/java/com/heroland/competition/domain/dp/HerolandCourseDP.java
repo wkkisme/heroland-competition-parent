@@ -28,6 +28,11 @@ public class HerolandCourseDP extends BaseDO implements Serializable {
 
     private String subType;
 
+    /**
+     * 简介
+     */
+    private String description;
+
 
     private List<HerolandSchoolCourseDP> schoolCourseDPS = Lists.newArrayList();
 

@@ -16,4 +16,9 @@ public class HerolandCourse extends BaseDO {
     private String edition;
 
     private String subType;
+
+    /**
+     * 简介
+     */
+    private String description;
 }

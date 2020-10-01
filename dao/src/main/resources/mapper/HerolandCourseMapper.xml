@@ -8,6 +8,7 @@
     <result column="course" jdbcType="VARCHAR" property="course" />
     <result column="edition" jdbcType="VARCHAR" property="edition" />
     <result column="sub_type" jdbcType="VARCHAR" property="subType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="creator" jdbcType="VARCHAR" property="creator" />
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
@@ -15,7 +16,7 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, grade, grade_slice, course, edition,sub_type, is_deleted, creator, modifier, gmt_create, gmt_modified
+    id, grade, grade_slice, course, edition,sub_type,description, is_deleted, creator, modifier, gmt_create, gmt_modified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -49,6 +50,9 @@
       <if test="subType != null">
         sub_type,
       </if>
+      <if test="description != null">
+        description,
+      </if>
       <if test="isDeleted != null">
         is_deleted,
       </if>
@@ -80,6 +84,9 @@
       </if>
       <if test="subType != null">
         #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
         #{isDeleted,jdbcType=BIT},
@@ -115,6 +122,9 @@
       </if>
       <if test="subType != null">
         sub_type = #{subType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
       </if>
       <if test="isDeleted != null">
         is_deleted = #{isDeleted,jdbcType=BIT},

@@ -75,6 +75,7 @@ public class HeroLandCourseController {
         courseDP.setGradeSlice(request.getUnit());
         courseDP.setSubType(request.getEditionType());
         courseDP.setId(request.getId());
+        courseDP.setDescription(request.getDescription());
         courseDP.setSchoolCourseDPS(BeanCopyUtils.copyArrayByJSON(request.getSchoolList(), HerolandSchoolCourseDP.class));
         heroLandCourseService.addCourse(courseDP);
         result.setData(true);

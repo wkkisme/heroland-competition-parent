@@ -50,6 +50,11 @@ public class HerolandCourseAddRequest implements Serializable {
      */
     private String editionType;
 
+    /**
+     * 简介
+     */
+    private String description;
+
 
     private List<HerolandSchoolCourseRequest> schoolList = Lists.newArrayList();
 

@@ -73,6 +73,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
                 course.setGradeSlice(courseDP.getGradeSlice());
                 course.setSubType(courseDP.getSubType());
                 course.setGrade(courseDP.getGrade());
+                course.setDescription(courseDP.getDescription());
                 List<HerolandCourse> herolandCourses = herolandCourseMapper.get(courseDP.getGrade(), courseDP.getGradeSlice(), courseDP.getCourse(), courseDP.getEdition(), courseDP.getSubType());
                 if (CollectionUtils.isEmpty(herolandCourses)){
                     herolandCourseMapper.insertSelective(course);
@@ -113,6 +114,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         course.setGradeSlice(courseDP.getGradeSlice());
         course.setSubType(courseDP.getSubType());
         course.setGrade(courseDP.getGrade());
+        course.setDescription(courseDP.getDescription());
         List<HerolandCourse> herolandCourses = herolandCourseMapper.get(courseDP.getGrade(), courseDP.getGradeSlice(), courseDP.getCourse(), courseDP.getEdition(), courseDP.getSubType());
         if (!CollectionUtils.isEmpty(herolandCourses) && !Objects.equals(herolandCourses.get(0).getId(), course.getId())){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.PARAM_DUP.getErrorMessage());
