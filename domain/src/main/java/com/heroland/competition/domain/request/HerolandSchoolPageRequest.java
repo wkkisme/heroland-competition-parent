@@ -28,6 +28,16 @@ public class HerolandSchoolPageRequest extends BaseQO implements Serializable {
      */
     private List<String> parentKeys;
 
+    /**
+     * 用户信息
+     */
+    private Integer roleType;
+
+    /**
+     * 用户的机构信息
+     */
+    private String orgCode;
+
 
 
 }

@@ -1,9 +1,12 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.page.Pagination;
+import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.AdminFieldEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandSchoolDP;
@@ -12,6 +15,9 @@ import com.heroland.competition.domain.dto.HerolandSchoolSimpleDto;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandSchoolService;
+import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +43,9 @@ public class HeroLandSchoolController {
 
     @Resource
     private HeroLandAdminService heroLandAdminService;
+
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
     /**
      * 前台获取学校下拉框
@@ -58,8 +69,14 @@ public class HeroLandSchoolController {
      */
     @RequestMapping(value = "/pageQueryLocale", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandSchoolSimpleDto>> pageQueryLocale(@RequestBody HerolandSchoolPageRequest request) {
+    public ResponseBody<List<HerolandSchoolSimpleDto>> pageQueryLocale(HttpServletRequest servletRequest, @RequestBody HerolandSchoolPageRequest request) {
         ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
+        PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(servletRequest)).getData();
+        if (data == null){
+            ResponseBodyWrapper.failException(ErrMsgEnum.PLEASE_LOGIN.getErrorMessage());
+        }
+        request.setRoleType(data.getType());
+        request.setOrgCode(data.getOrgCode());
         PageResponse<HerolandSchoolSimpleDto> response = heroLandSchoolService.pageQuery(request);
         result.setData(response.getItems());
         Pagination pagination = new Pagination();

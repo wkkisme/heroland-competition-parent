@@ -199,14 +199,18 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         List<HerolandSchoolSimpleDto> result = new ArrayList<>();
         PageResponse<HerolandSchoolSimpleDto> pageResult = new PageResponse<>();
         Page<HerolandSchool> dataPage = null;
-        if (StringUtils.isBlank(request.getParentKey())){
-            dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                    () -> herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(),request.getName()));
+        //超管，或者非学校节点时统一走以下
+        if (request.getRoleType() == 4 || !StringUtils.isBlank(request.getParentKey())){
+            if (StringUtils.isBlank(request.getParentKey())){
+                dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                        () -> herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(),request.getName()));
+            }else {
+                dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+                        () -> herolandSchoolMapper.getByParentAndName(request.getParentKey(),request.getName()));
+            }
         }else {
-            dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                    () -> herolandSchoolMapper.getByParentAndName(request.getParentKey(),request.getName()));
+            return schoolForPrincipal(request);
         }
-
         if (CollectionUtils.isEmpty(dataPage)){
             return  pageResult;
         }
@@ -216,6 +220,25 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         pageResult.setPage(dataPage.getPageNum());
         pageResult.setTotal((int) dataPage.getTotal());
         return pageResult;
+    }
+
+
+    private PageResponse<HerolandSchoolSimpleDto> schoolForPrincipal(HerolandSchoolPageRequest request){
+        List<HerolandSchool> schools = new ArrayList<>();
+        PageResponse<HerolandSchoolSimpleDto> pageResult = new PageResponse<>();
+        if (StringUtils.isBlank(request.getParentKey())){
+            schools = herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(), request.getName());
+        }
+        List<HerolandSchool> filter = schools.stream().filter(e -> {
+                return e.getKey().equalsIgnoreCase(request.getOrgCode());
+        }).collect(Collectors.toList());
+        List<HerolandSchoolSimpleDto> result = convertToSimpleDto(filter, true);
+        pageResult.setItems(result);
+        pageResult.setPageSize(request.getPageSize());
+        pageResult.setPage(request.getPageIndex());
+        pageResult.setTotal(result.size());
+        return pageResult;
+
     }
 
     //这里的list是同一个code
