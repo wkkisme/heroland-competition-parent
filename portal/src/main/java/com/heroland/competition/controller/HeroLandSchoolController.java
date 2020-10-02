@@ -189,9 +189,9 @@ public class HeroLandSchoolController {
      */
     @RequestMapping(value = "/parentBySubNode", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades(@RequestParam("keys") List<String> keys, @RequestParam("code") String code) {
+    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades(@RequestBody ParentBySubNodeRequest request) {
         ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
-        List<HerolandSchoolSimpleDto> schoolDtos = heroLandSchoolService.getParentBySubNode(keys, code);
+        List<HerolandSchoolSimpleDto> schoolDtos = heroLandSchoolService.getParentBySubNode(request.getKeys(), request.getCode());
         result.setData(schoolDtos);
         return result;
     }
