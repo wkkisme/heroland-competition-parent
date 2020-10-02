@@ -58,7 +58,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     public Boolean addNode(HerolandSchoolDP schoolDP) {
         HerolandBasicDataDP dataDP = convertToHerolandBasicDataDP(schoolDP);
         String dataKey = "";
-        if (dataDP.getCode() != "GA"){
+        if (!schoolDP.getCode().equalsIgnoreCase(AdminFieldEnum.GRADE.getCode())){
             HerolandBasicData basicData = heroLandAdminService.addDict(dataDP);
             if (Objects.isNull(basicData) || NumberUtils.nullOrZeroLong(basicData.getId())){
                 ResponseBodyWrapper.failSysException();
@@ -66,7 +66,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             dataKey = basicData.getDictKey();
         }
         //todo
-        if (dataDP.getCode() != "GA"){
+        if (schoolDP.getCode().equalsIgnoreCase(AdminFieldEnum.GRADE.getCode())){
             dataKey = schoolDP.getGradeKey();
         }
         schoolDP = schoolDP.checkAndBuildBeforeCreate();
