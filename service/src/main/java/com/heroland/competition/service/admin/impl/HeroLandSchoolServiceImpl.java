@@ -57,14 +57,22 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
     @Transactional
     public Boolean addNode(HerolandSchoolDP schoolDP) {
         HerolandBasicDataDP dataDP = convertToHerolandBasicDataDP(schoolDP);
-        HerolandBasicData basicData = heroLandAdminService.addDict(dataDP);
-        if (Objects.isNull(basicData) || NumberUtils.nullOrZeroLong(basicData.getId())){
-            ResponseBodyWrapper.failSysException();
+        String dataKey = "";
+        if (dataDP.getCode() != "GA"){
+            HerolandBasicData basicData = heroLandAdminService.addDict(dataDP);
+            if (Objects.isNull(basicData) || NumberUtils.nullOrZeroLong(basicData.getId())){
+                ResponseBodyWrapper.failSysException();
+            }
+            dataKey = basicData.getDictKey();
+        }
+        //todo
+        if (dataDP.getCode() != "GA"){
+            dataKey = schoolDP.getGradeKey();
         }
         schoolDP = schoolDP.checkAndBuildBeforeCreate();
         HerolandSchool herolandSchool = new HerolandSchool();
         //如果节点已经添加过则可以修改名称
-        List<HerolandSchool> byParentAndKey = herolandSchoolMapper.getByParentAndKey(schoolDP.getParentKey(), basicData.getDictKey());
+        List<HerolandSchool> byParentAndKey = herolandSchoolMapper.getByParentAndKey(schoolDP.getParentKey(), dataKey);
         //说明已经添加过
         if (!CollectionUtils.isEmpty(byParentAndKey)){
             //更新 主要是更新名称 和字典数据保持一致
@@ -72,7 +80,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
             hasCreate.setName(schoolDP.getName());
             return herolandSchoolMapper.updateByPrimaryKeySelective(hasCreate) > 0;
         }
-        herolandSchool.setKey(basicData.getDictKey());
+        herolandSchool.setKey(dataKey);
         herolandSchool.setCode(schoolDP.getCode());
         herolandSchool.setName(schoolDP.getName());
         herolandSchool.setParentKey(schoolDP.getParentKey());
@@ -289,6 +297,37 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         List<HerolandSchool> byKeysAndCode = herolandSchoolMapper.getByKeysAndCode(keys, code);
         list = convertToSimpleDto(byKeysAndCode, false);
         return list;
+    }
+
+    @Override
+    public List<HerolandSchoolSimpleDto> getParentBySubNode(List<String> keys, String code) {
+        //地区是顶层节点，没有父节点了
+        if ("AE".equalsIgnoreCase(code)){
+            return Lists.newArrayList();
+        }
+
+        if (CollectionUtils.isEmpty(keys)){
+            keys = new ArrayList<>();
+        }
+        List<HerolandSchool> subNode = herolandSchoolMapper.getByKeysAndCode(keys, code);
+        if (CollectionUtils.isEmpty(subNode)){
+            return Lists.newArrayList();
+        }
+        List<String> parentKeys = subNode.stream().map(HerolandSchool::getParentKey).distinct().collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(parentKeys)){
+            return Lists.newArrayList();
+        }
+        List<HerolandSchool> parent = herolandSchoolMapper.getByKeysAndCode(parentKeys, null);
+        List<HerolandSchoolSimpleDto> subNodeSimpleDto = convertToSimpleDto(subNode, true);
+        Map<String, List<HerolandSchoolSimpleDto>> parentMap = subNodeSimpleDto.stream().collect(Collectors.groupingBy(HerolandSchoolSimpleDto::getParentKey));
+        List<HerolandSchoolSimpleDto> parentNodeSimpleDto = convertToSimpleDto(parent, true);
+        parentNodeSimpleDto.stream().forEach(e -> {
+            if (parentMap.containsKey(e.getKey())){
+                e.setSubNodeSchoolSimpleDto(parentMap.get(e.getKey()));
+            }
+        });
+        return parentNodeSimpleDto;
     }
 
     private void getChildren(String parent, List<HerolandSchool> children){

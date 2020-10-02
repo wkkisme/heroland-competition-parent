@@ -93,6 +93,7 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setAxis(request.getAxis());
         herolandSchoolDP.setDesc(request.getDesc());
         herolandSchoolDP.setDefaultValue(request.getDefaultValue());
+        herolandSchoolDP.setGradeKey(request.getGradeKey());
         heroLandSchoolService.addNode(herolandSchoolDP);
         result.setData(true);
         return result;
@@ -178,6 +179,19 @@ public class HeroLandSchoolController {
         List<HerolandSchoolSimpleDto> gradeDtos = heroLandSchoolService.getByKeys(Lists.newArrayList(gradeCode), AdminFieldEnum.GRADE.getCode());
         List<String> schoolKeys = gradeDtos.stream().map(HerolandSchoolSimpleDto::getParentKey).distinct().collect(Collectors.toList());
         List<HerolandSchoolSimpleDto> schoolDtos = heroLandSchoolService.getByKeys(schoolKeys, AdminFieldEnum.SCHOOL.getCode());
+        result.setData(schoolDtos);
+        return result;
+    }
+
+    /**
+     * 根据年级获取学校信息
+     * @return
+     */
+    @RequestMapping(value = "/parentBySubNode", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<List<HerolandSchoolSimpleDto>> getSchoolsByGrades(@RequestParam("keys") List<String> keys, @RequestParam("code") String code) {
+        ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
+        List<HerolandSchoolSimpleDto> schoolDtos = heroLandSchoolService.getParentBySubNode(keys, code);
         result.setData(schoolDtos);
         return result;
     }

@@ -62,6 +62,10 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
                     ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PARAM.getErrorMessage());
                 }
             }
+            List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodesAndValue(Lists.newArrayList(dp.getCode()), dp.getDictValue());
+            if (!CollectionUtils.isEmpty(herolandBasicData)){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_NAME.getErrorMessage());
+            }
             HerolandBasicData basicData = BeanUtil.insertConversion(dp, new HerolandBasicData());
             herolandBasicDataMapper.insertSelective(basicData);
             String key = String.format(RedisConstant.ADMIN_KEY, basicData.getDictKey());

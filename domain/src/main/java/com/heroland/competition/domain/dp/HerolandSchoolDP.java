@@ -26,6 +26,12 @@ public class HerolandSchoolDP extends BaseDO implements Serializable {
     private String key;
 
     /**
+     * 年级key
+     * 只有创建的是年级是需要传
+     */
+    private String gradeKey;
+
+    /**
      * 是否有父节点
      */
     private Boolean hasParent;

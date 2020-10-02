@@ -1,8 +1,10 @@
 package com.heroland.competition.domain.dto;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author smjyouzan
@@ -91,5 +93,10 @@ public class HerolandSchoolSimpleDto implements Serializable {
      * 班级的当前人数
      */
     private Integer hadCapacity;
+
+    /**
+     * 子节点数据
+     */
+    private List<HerolandSchoolSimpleDto> subNodeSchoolSimpleDto = Lists.newArrayList();
 
 }

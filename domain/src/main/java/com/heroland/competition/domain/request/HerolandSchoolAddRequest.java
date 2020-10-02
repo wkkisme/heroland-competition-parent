@@ -33,6 +33,12 @@ public class HerolandSchoolAddRequest implements Serializable {
     private String name;
 
     /**
+     * 年级key
+     * 只有创建的是年级是需要传
+     */
+    private String gradeKey;
+
+    /**
      * 某一节点的业务no，比如香港的学校有自己的编号
      */
     private String bizNo;
