@@ -18,6 +18,7 @@ import com.heroland.competition.service.admin.HeroLandSchoolService;
 import com.platform.sso.client.sso.util.CookieUtils;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -125,7 +126,7 @@ public class HeroLandSchoolController {
      */
     @RequestMapping(value = "/deleteNode", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> deleteNode(String key) {
+    public ResponseBody<Boolean> deleteNode(@RequestParam("key") Long key) {
         ResponseBody<Boolean> result = new ResponseBody<>();
         result.setData(heroLandSchoolService.deleteNode(key));
         return result;

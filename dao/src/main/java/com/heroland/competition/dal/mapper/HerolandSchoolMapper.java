@@ -21,7 +21,7 @@ public interface HerolandSchoolMapper {
 
 
 
-    HerolandSchool getByKey(@Param("key") String key);
+    List<HerolandSchool> getByKey(@Param("key") String key);
 
     List<HerolandSchool> getByKeyAndCode(@Param("key") String key, @Param("code") String code);
 

@@ -93,8 +93,8 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setDefaultValue(schoolDP.getDefaultValue());
         //如果父节点在school表中没有则也需要增加上
         if (Objects.equals(AdminFieldEnum.SCHOOL.getCode(),schoolDP.getCode())){
-            HerolandSchool area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
-            if (Objects.isNull(area)){
+            List<HerolandSchool> area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
+            if (!CollectionUtils.isEmpty(area)){
                 List<HerolandBasicDataDP> areaData = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(schoolDP.getParentKey()));
                 if (CollectionUtils.isEmpty(areaData)){
                     ResponseBodyWrapper.failException("无地区数据，请联系管理人员");
@@ -152,18 +152,18 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         if (StringUtils.isBlank(key)){
             return false;
         }
-        HerolandSchool herolandSchool = herolandSchoolMapper.getByKey(key);
-        if (Objects.isNull(herolandSchool)){
+        List<HerolandSchool> herolandSchools = herolandSchoolMapper.getByKey(key);
+        if (CollectionUtils.isEmpty(herolandSchools)){
             return false;
         }
-        herolandSchoolMapper.deleteByPrimaryKey(herolandSchool.getId());
-        if (!AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(herolandSchool.getCode())){
+        herolandSchoolMapper.batchDeleteByIds(herolandSchools.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList()));
+        if (!AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(herolandSchools.get(0).getCode())){
             //如果是年级key则数据字典中的不用删除
-            heroLandAdminService.deleteDict(Lists.newArrayList(herolandSchool.getKey()));
+            heroLandAdminService.deleteDict(Lists.newArrayList(key));
         }
         //如果是非叶子节点，则下面的所有子节点都需要删除
         List<HerolandSchool> children = Lists.newArrayList();
-        getChildren(herolandSchool.getKey(), children);
+        getChildren(key, children);
         List<Long> ids = children.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList());
         herolandSchoolMapper.batchDeleteByIds(ids);
         List<String> keys = children.stream().filter(e -> !AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(e.getCode())).map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
