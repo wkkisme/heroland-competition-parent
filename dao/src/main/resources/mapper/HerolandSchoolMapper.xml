@@ -281,8 +281,8 @@
   <select id="getByParent"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from heroland_school and is_deleted = 0
-    where `parent_key` = #{parent,jdbcType=VARCHAR}
+    from heroland_school
+    where `parent_key` = #{parent,jdbcType=VARCHAR}  and is_deleted = 0
   </select>
 
   <select id="getByParents"  resultMap="BaseResultMap">
