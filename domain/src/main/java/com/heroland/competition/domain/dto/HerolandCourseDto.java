@@ -62,6 +62,11 @@ public class HerolandCourseDto implements Serializable {
     private String editionTypeName;
 
     /**
+     * 简介
+     */
+    private String description;
+
+    /**
      * 所分配学校
      */
     private List<HerolandSchoolDto> schoolDtoList;

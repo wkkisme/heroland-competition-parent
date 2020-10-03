@@ -192,6 +192,7 @@ public class HeroLandCourseServiceImpl implements HeroLandCourseService {
         dto.setEditionType(herolandCourse.getSubType());
         dto.setGrade(herolandCourse.getGrade());
         dto.setUnit(herolandCourse.getGradeSlice());
+        dto.setDescription(herolandCourse.getDescription());
         dto.setId(herolandCourse.getId());
         List<String> keys = Lists.newArrayList();
         keys.add(herolandCourse.getCourse());
