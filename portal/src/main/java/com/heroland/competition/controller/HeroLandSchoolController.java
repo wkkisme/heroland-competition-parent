@@ -73,10 +73,10 @@ public class HeroLandSchoolController {
         ResponseBody<List<HerolandSchoolSimpleDto>> result = new ResponseBody<>();
         PlatformSysUserDP data = platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(servletRequest)).getData();
         if (data == null){
-//            ResponseBodyWrapper.failException(ErrMsgEnum.PLEASE_LOGIN.getErrorMessage());
+            ResponseBodyWrapper.failException(ErrMsgEnum.PLEASE_LOGIN.getErrorMessage());
         }
-//        request.setRoleType(data.getType());
-//        request.setOrgCode(data.getOrgCode());
+        request.setRoleType(data.getType());
+        request.setOrgCode(data.getOrgCode());
         PageResponse<HerolandSchoolSimpleDto> response = heroLandSchoolService.pageQuery(request);
         result.setData(response.getItems());
         Pagination pagination = new Pagination();
