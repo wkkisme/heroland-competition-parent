@@ -156,19 +156,17 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         if (Objects.isNull(herolandSchool)){
             return false;
         }
-        //如果是非叶子节点，则下面的所有子节点都需要删除
-        List<HerolandSchool> list = herolandSchoolMapper.getByParent(herolandSchool.getKey());
         herolandSchoolMapper.deleteByPrimaryKey(herolandSchool.getId());
-        //todo 确认下是否需要修改数据字典中的信息
-        heroLandAdminService.deleteDict(Lists.newArrayList(herolandSchool.getKey()));
-        if (CollectionUtils.isEmpty(list)){
-           return false;
+        if (!AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(herolandSchool.getCode())){
+            //如果是年级key则数据字典中的不用删除
+            heroLandAdminService.deleteDict(Lists.newArrayList(herolandSchool.getKey()));
         }
+        //如果是非叶子节点，则下面的所有子节点都需要删除
         List<HerolandSchool> children = Lists.newArrayList();
         getChildren(herolandSchool.getKey(), children);
         List<Long> ids = children.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList());
         herolandSchoolMapper.batchDeleteByIds(ids);
-        List<String> keys = children.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
+        List<String> keys = children.stream().filter(e -> !AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(e.getCode())).map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
         heroLandAdminService.deleteDict(keys);
         return true;
 
