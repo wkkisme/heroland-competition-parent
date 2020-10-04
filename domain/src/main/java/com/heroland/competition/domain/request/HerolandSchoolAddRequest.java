@@ -33,6 +33,11 @@ public class HerolandSchoolAddRequest implements Serializable {
     private String name;
 
     /**
+     * 在创建班级的时候需要加上
+     */
+    private String schoolKey;
+
+    /**
      * 年级key
      * 只有创建的是年级是需要传
      */

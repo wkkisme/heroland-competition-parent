@@ -18,6 +18,11 @@ public class HerolandSchool extends BaseDO {
     private String name;
 
     /**
+     * 在创建班级的时候需要加上
+     */
+    private String schoolKey;
+
+    /**
      * 联系人
      */
     private String linkedMan;

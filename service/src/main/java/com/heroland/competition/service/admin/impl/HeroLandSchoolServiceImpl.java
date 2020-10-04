@@ -91,6 +91,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setAxis(schoolDP.getAxis());
         herolandSchool.setDesc(schoolDP.getDesc());
         herolandSchool.setDefaultValue(schoolDP.getDefaultValue());
+        herolandSchool.setSchoolKey(schoolDP.getSchoolKey());
         //如果父节点在school表中没有则也需要增加上
         if (Objects.equals(AdminFieldEnum.SCHOOL.getCode(),schoolDP.getCode())){
             List<HerolandSchool> area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
@@ -124,6 +125,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         herolandSchool.setAxis(schoolDP.getAxis());
         herolandSchool.setDesc(schoolDP.getDesc());
         herolandSchool.setDefaultValue(schoolDP.getDefaultValue());
+        herolandSchool.setSchoolKey(schoolDP.getSchoolKey());
         herolandSchoolMapper.updateByPrimaryKeySelective(herolandSchool);
         HerolandSchool school = herolandSchoolMapper.selectByPrimaryKey(herolandSchool.getId());
         List<HerolandBasicDataDP> data = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(school.getKey()));
@@ -180,7 +182,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         if (StringUtils.isBlank(qo.getParentKey())){
             herolandSchool = herolandSchoolMapper.getByKeyAndCode(null,AdminFieldEnum.AREA.getCode());
         }else {
-            herolandSchool = herolandSchoolMapper.getByParentAndName(qo.getParentKey(),null);
+            herolandSchool = herolandSchoolMapper.getByParentAndSchool(qo.getParentKey(),qo.getSchoolKey());
         }
         if (CollectionUtils.isEmpty(herolandSchool)){
             return result;

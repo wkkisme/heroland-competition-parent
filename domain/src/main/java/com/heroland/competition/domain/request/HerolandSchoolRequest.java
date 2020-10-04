@@ -19,4 +19,10 @@ public class HerolandSchoolRequest implements Serializable {
      * 传入某一个地区的key会返回他自己的信息，以及孩子节点学校列表信息，以此类推
      */
     private String parentKey;
+
+    /**
+     * 学校key
+     * 在下拉班级时需要使用
+     */
+    private String schoolKey;
 }

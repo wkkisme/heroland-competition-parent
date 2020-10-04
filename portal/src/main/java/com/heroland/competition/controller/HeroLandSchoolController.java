@@ -110,6 +110,7 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setEmail(request.getEmail());
         herolandSchoolDP.setAxis(request.getAxis());
         herolandSchoolDP.setDesc(request.getDesc());
+        herolandSchoolDP.setSchoolKey(request.getSchoolKey());
         herolandSchoolDP.setDefaultValue(request.getDefaultValue());
         herolandSchoolDP.setGradeKey(request.getGradeKey());
         heroLandSchoolService.addNode(herolandSchoolDP);
@@ -152,6 +153,8 @@ public class HeroLandSchoolController {
         herolandSchoolDP.setEmail(request.getEmail());
         herolandSchoolDP.setAxis(request.getAxis());
         herolandSchoolDP.setDesc(request.getDesc());
+        herolandSchoolDP.setSchoolKey(request.getSchoolKey());
+        herolandSchoolDP.setGradeKey(request.getGradeKey());
         heroLandSchoolService.updateNode(herolandSchoolDP);
         result.setData(true);
         return result;

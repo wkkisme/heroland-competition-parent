@@ -35,6 +35,17 @@ public class HerolandSchoolEditRequest implements Serializable {
     private String bizI18N;
 
     /**
+     * 在创建班级的时候需要加上
+     */
+    private String schoolKey;
+
+    /**
+     * 年级key
+     * 只有创建的是年级是需要传
+     */
+    private String gradeKey;
+
+    /**
      * 联系人
      */
     private String linkedMan;
