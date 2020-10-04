@@ -27,7 +27,7 @@ public interface HerolandSchoolMapper {
 
     List<HerolandSchool> getByKeysAndCode(@Param("keys") List<String> keys, @Param("code") String code);
 
-    List<HerolandSchool> getByParentAndName(@Param("parentKey") String parentKey, @Param("name") String name);
+    List<HerolandSchool> getByParentAndName(@Param("parentKey") String parentKey, @Param("name") String name,  @Param("schoolKey") String schoolKey);
 
     List<HerolandSchool> getByParentAndSchool(@Param("parentKey") String parentKey, @Param("schoolKey") String schoolKey);
 

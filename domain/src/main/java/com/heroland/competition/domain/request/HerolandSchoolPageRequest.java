@@ -24,6 +24,13 @@ public class HerolandSchoolPageRequest extends BaseQO implements Serializable {
     private String parentKey;
 
     /**
+     * 学校key
+     * 只有是下拉班级时需要带上
+     * 否则拉出的是所有某个年级的班级，而非某一个学校下某个年级的班级
+     */
+    private String schoolKey;
+
+    /**
      * 批量key节点
      */
     private List<String> parentKeys;

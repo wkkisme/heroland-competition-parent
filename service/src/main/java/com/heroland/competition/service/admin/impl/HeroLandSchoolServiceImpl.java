@@ -206,7 +206,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
                         () -> herolandSchoolMapper.getByCodeAndName(AdminFieldEnum.SCHOOL.getCode(),request.getName()));
             }else {
                 dataPage= PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                        () -> herolandSchoolMapper.getByParentAndName(request.getParentKey(),request.getName()));
+                        () -> herolandSchoolMapper.getByParentAndName(request.getParentKey(),request.getName(), request.getSchoolKey()));
             }
         }else {
             return schoolForPrincipal(request);
