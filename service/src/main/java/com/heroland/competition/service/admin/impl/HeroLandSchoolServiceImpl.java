@@ -158,6 +158,12 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         if (CollectionUtils.isEmpty(herolandSchools)){
             return false;
         }
+        //如果删除的是某一个学校，则他的子节点都要删除掉，只删除该学校的
+        if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(herolandSchools.get(0).getCode())){
+            deleteSchoolKeyNode(herolandSchools, key);
+            return true;
+        }
+
         herolandSchoolMapper.batchDeleteByIds(herolandSchools.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList()));
         if (!AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(herolandSchools.get(0).getCode())){
             //如果是年级key则数据字典中的不用删除
@@ -172,6 +178,33 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         heroLandAdminService.deleteDict(keys);
         return true;
 
+    }
+
+    private void deleteSchoolKeyNode(List<HerolandSchool> herolandSchools, String key){
+        //如果删除的是某一个学校，则他的子节点都要删除掉，只删除该学校的
+        //1 删除学校
+        herolandSchoolMapper.batchDeleteByIds(herolandSchools.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList()));
+        heroLandAdminService.deleteDict(Lists.newArrayList(key));
+        //2 删除年级 不删除字典数据
+        List<HerolandSchool> gradeList = herolandSchoolMapper.getByParent(key);
+        //删除年级
+        if (!CollectionUtils.isEmpty(gradeList)){
+            herolandSchoolMapper.batchDeleteByIds(gradeList.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList()));
+            List<String> gradeKeys = gradeList.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
+            //3 删除班级
+            List<HerolandSchool> classList = herolandSchoolMapper.getByParents(gradeKeys);
+            if(!CollectionUtils.isEmpty(classList)){
+                List<HerolandSchool> classInSchool = classList.stream().filter(e -> StringUtils.isNotBlank(e.getSchoolKey()) && e.getSchoolKey().equalsIgnoreCase(key)).collect(Collectors.toList());
+                if (CollectionUtils.isEmpty(classInSchool)){
+                    return;
+                }
+                List<Long> ids = classInSchool.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList());
+                herolandSchoolMapper.batchDeleteByIds(ids);
+                List<String> classKeys = classInSchool.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
+                heroLandAdminService.deleteDict(classKeys);
+            }
+
+        }
     }
 
     @Override
