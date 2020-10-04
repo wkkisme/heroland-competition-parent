@@ -117,7 +117,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> databaseRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandCompetitionRecordQO);
         if (CollectionUtils.isEmpty(databaseRecord.getData())) {
-            ResponseBodyWrapper.fail("比赛不存在", "5000");
+            ResponseBodyWrapper.failException("比赛不存在");
             // 2分钟
         } else if (System.currentTimeMillis() - databaseRecord.getData().get(0).getInviteStartTime().getTime() > 120000L) {
             timeout = true;

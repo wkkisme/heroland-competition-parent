@@ -787,4 +787,22 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         return ResponseBodyWrapper.successListWrapper(herolandStatisticsWords, count, qo, WorldStatisticResultDto.class);
     }
+
+    @Override
+    public Boolean deleteHistoryStatisticsTotalAndDetailByQO(HeroLandStatisticsTotalQO qo) {
+        HeroLandStatisticsTotal heroLandStatisticsTotal = new HeroLandStatisticsTotal();
+        heroLandStatisticsTotal.setHistory(true);
+        HeroLandStatisticsTotalExample heroLandStatisticsTotalExample = new HeroLandStatisticsTotalExample();
+        HeroLandStatisticsTotalExample.Criteria criteria = heroLandStatisticsTotalExample.createCriteria();
+        criteria.andIdIsNotNull();
+        heroLandStatisticsTotalExtMapper.deleteByExample(heroLandStatisticsTotalExample);
+
+        HeroLandStatisticsDetail heroLandStatisticsDetail = new HeroLandStatisticsDetail();
+        heroLandStatisticsDetail.setHistory(true);
+        HeroLandStatisticsDetailExample heroLandStatisticsDetailExample = new HeroLandStatisticsDetailExample();
+        HeroLandStatisticsDetailExample.Criteria criteria1 = heroLandStatisticsDetailExample.createCriteria();
+        criteria1.andIdIsNotNull();
+        heroLandStatisticsDetailExtMapper.deleteByExample(heroLandStatisticsDetailExample);
+        return true;
+    }
 }
