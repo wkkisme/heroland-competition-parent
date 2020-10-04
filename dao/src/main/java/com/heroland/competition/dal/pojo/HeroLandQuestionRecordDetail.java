@@ -117,6 +117,18 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     private Integer type;
 
     /**
+     * 
+     */
+    @ApiModelProperty(value="qtType")
+    private Integer qtType;
+
+    /**
+     * 
+     */
+    @ApiModelProperty(value="diff")
+    private Integer diff;
+
+    /**
      * heroland_question_record_detail
      */
     private static final long serialVersionUID = 1L;
@@ -407,5 +419,37 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    /**
+     * 
+     * @return qt_type 
+     */
+    public Integer getQtType() {
+        return qtType;
+    }
+
+    /**
+     * 
+     * @param qtType 
+     */
+    public void setQtType(Integer qtType) {
+        this.qtType = qtType;
+    }
+
+    /**
+     * 
+     * @return diff 
+     */
+    public Integer getDiff() {
+        return diff;
+    }
+
+    /**
+     * 
+     * @param diff 
+     */
+    public void setDiff(Integer diff) {
+        this.diff = diff;
     }
 }

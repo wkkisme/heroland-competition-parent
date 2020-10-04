@@ -92,7 +92,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     /**
      * 是否回答正确
      */
-    @ApiModelProperty(value="correctAnswer是否回答正确")
+    @ApiModelProperty(value = "correctAnswer是否回答正确")
     private Boolean correctAnswer;
 
     /**
@@ -124,6 +124,59 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private Integer type;
 
     private Integer qtType;
+
+    private Integer topicType;
+
+    private String topicClassCode;
+    private String topicCourseCode;
+    private String topicGradeCode;
+    private String topicOrgCode;
+
+
+    public String getTopicClassCode() {
+        return topicClassCode;
+    }
+
+    public void setTopicClassCode(String topicClassCode) {
+        this.classCode = topicClassCode;
+        this.topicClassCode = topicClassCode;
+    }
+
+    public String getTopicCourseCode() {
+        return topicCourseCode;
+    }
+
+    public void setTopicCourseCode(String topicCourseCode) {
+        this.course = topicCourseCode;
+        this.subjectCode = topicCourseCode;
+        this.topicCourseCode = topicCourseCode;
+    }
+
+    public String getTopicGradeCode() {
+        return topicGradeCode;
+    }
+
+    public void setTopicGradeCode(String topicGradeCode) {
+        this.gradeCode = topicGradeCode;
+        this.topicGradeCode = topicGradeCode;
+    }
+
+    public String getTopicOrgCode() {
+        return topicOrgCode;
+    }
+
+    public void setTopicOrgCode(String topicOrgCode) {
+        this.orgCode = topicOrgCode;
+        this.topicOrgCode = topicOrgCode;
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
+    }
 
     public Integer getQtType() {
         return qtType;
@@ -189,7 +242,7 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     }
 
     public HeroLandQuestionRecordDetailDP addCheck() {
-        if (getId() != null){
+        if (getId() != null) {
             this.questionId = getId();
         }
         if (ObjectUtil.isNull(beginDate) || this.questionId == null || StringUtils.isAnyBlank(this.userId, this.yourAnswer, this.recordId)) {
