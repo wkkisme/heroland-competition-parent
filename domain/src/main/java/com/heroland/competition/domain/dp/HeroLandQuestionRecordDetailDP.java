@@ -123,6 +123,16 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     private Integer type;
 
+    private Integer qtType;
+
+    public Integer getQtType() {
+        return qtType;
+    }
+
+    public void setQtType(Integer qtType) {
+        this.qtType = qtType;
+    }
+
     public Integer getType() {
         return type;
     }
