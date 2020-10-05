@@ -16,6 +16,8 @@ public enum HerolandErrMsgEnum {
     ERROR_CURRENCY("70003", "暂不支持该汇率，请联系配置"),
     ERROR_DIMOND("70004", "暂不支持该类型宝石，请联系配置"),
     NO_DIMOND("70005", "无可用宝石充值"),
+    PAYTOOL("70006", "暂不支持该支付方式"),
+
 
 
     ERROR_PARAM("70100", "同一类型下不支持相同编号"),

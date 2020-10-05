@@ -155,6 +155,10 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     @Override
     public PrePayDto prePay(PrePayQO prePayQO) {
         String key = String.format(RedisConstant.ORDER_PREPAY_KEY, prePayQO.getPayId());
+        if (Objects.equals(prePayQO.getPayTool(), "PAYPAL")){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.PAYTOOL.getErrorMessage());
+        }
+
         boolean lock = redisService.setNx(key, prePayQO.getPayId(), "PT15S");
         if (!lock){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.DUPLICATE.getErrorMessage());
