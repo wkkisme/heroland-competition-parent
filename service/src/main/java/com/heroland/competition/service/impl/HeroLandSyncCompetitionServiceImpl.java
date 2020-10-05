@@ -119,7 +119,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         if (CollectionUtils.isEmpty(databaseRecord.getData())) {
             ResponseBodyWrapper.failException("比赛不存在");
             // 2分钟
-        } else if (System.currentTimeMillis() - databaseRecord.getData().get(0).getInviteStartTime().getTime() > 120000L) {
+        } else if (System.currentTimeMillis() - databaseRecord.getData().get(0).getInviteStartTime().getTime() > 180000L) {
             timeout = true;
         }
         HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = databaseRecord.getData().get(0);
@@ -134,7 +134,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setSubjectCode(question.getCourse());
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey + record.getId(), record.getUserId(), "PT2H");
-        redisService.set("question:" + redisKey + record.getUserId(), heroLandQuestionRecordDetailDP, 1200000L);
+        redisService.set("question:" + redisKey + record.getUserId(), heroLandQuestionRecordDetailDP, 1800000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
             record.setInviteEndTime(new Date());
@@ -204,10 +204,12 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             } else {
                 preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
             }
+            log.info("preAnswer :{},userId :{}",JSON.toJSONString(preAnswer),record.getUserId());
             // 如果正确 且未超时 则看前一个答题者答案正确与否
             if (isRight && !timeout) {
                 // 如果前一个人答案正确则直接不管，因为前面已经判赢了，如果前面答题错了则本人胜利
                 if (!preAnswer.getCorrectAnswer()) {
+                    log.info("没超时{}，但是前一个人已经是对的",JSON.toJSONString(preAnswer));
                     // 如果我是邀请人
                     if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
@@ -232,6 +234,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
 
                 // 如果都答错了 平局
             } else if (!isRight && !preAnswer.getCorrectAnswer() && !timeout) {
+                log.info("没超时{}，都答错",JSON.toJSONString(preAnswer));
                 heroLandQuestionRecordDetailDP.setScore(0);
                 record.setOpponentScore(0);
                 record.setInviteScore(0);
@@ -240,9 +243,11 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
 
                 // 如果第二个人超时 且第一个人答错 则更新为平局
             } else if (timeout && !preAnswer.getCorrectAnswer()) {
+                log.info("超时{}，都答错",JSON.toJSONString(preAnswer));
                 record.setResult(CompetitionResultEnum.DRAW.getResult());
                 // 如果是没有超时，对方答对了则得零分
             } else {
+                log.info("最后都没超时{}，且我答错",JSON.toJSONString(preAnswer));
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     record.setInviteScore(0);
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
