@@ -11,7 +11,7 @@
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="org_code" jdbcType="BIT" property="orgCode" />
+    <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="total_count"  property="totalCount" />
   </resultMap>
   <sql id="Base_Column_List">
