@@ -124,6 +124,8 @@ public class HerolandPayServiceImpl implements HerolandPayService {
                 }
                 heroLandAccountService.incrUserDiamond(accountManageQO);
             }catch (Exception e){
+                log.error("completePay error, [{}]", herolandPay.getBizNo(), e);
+            }finally {
                 redisService.del(key);
             }
 
