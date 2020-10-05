@@ -127,7 +127,10 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public ResponseBody<Boolean> saveAccount(HeroLandAccountDP dp) {
         try {
 
-            heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance), new HeroLandAccount()));
+            ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(dp.getUserId());
+            if (accountByUserId == null) {
+                heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance), new HeroLandAccount()));
+            }
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
