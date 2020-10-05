@@ -1,5 +1,6 @@
 package com.heroland.competition.controller;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.page.Pagination;
@@ -33,6 +34,9 @@ public class HeroLandAdminDataController {
 
     @Resource
     private HeroLandSchoolService heroLandSchoolService;
+
+    @Resource
+    private RedisService redisService;
 
     /**
      * 增加或编辑字典数据
@@ -107,6 +111,20 @@ public class HeroLandAdminDataController {
         List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(strings);
         responseBody.setData(dictInfoByKeys);
         return responseBody;
+
+    }
+
+
+    /**
+     * 删除redis缓存
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/delRedis", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> delRedis(@RequestParam("key") String key) {
+        redisService.del(key);
+        return null;
 
     }
 
