@@ -84,8 +84,7 @@ public class StatisticsTask {
 
         try {
             HeroLandStatisticsTotalQO qo = new HeroLandStatisticsTotalQO();
-            qo.setHistory(false);
-            heroLandCompetitionStatisticsService.updateHistoryStatisticsTotalAndDetailByQO(qo);
+            heroLandCompetitionStatisticsService.deleteHistoryStatisticsTotalAndDetailByQO(qo);
 
             for (CompetitionEnum value : CompetitionEnum.values()) {
                 Integer type = value.getType();
@@ -190,8 +189,8 @@ public class StatisticsTask {
                     }
                     if (!CollectionUtils.isEmpty(adminDataMap)) {
                         v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
-                        v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
-                        v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
+                        v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getClassCode()).getDictValue() : "");
+                        v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getSubjectCode()).getDictValue() : "");
 
                     }
                 });

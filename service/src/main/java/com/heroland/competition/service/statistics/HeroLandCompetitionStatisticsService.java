@@ -99,4 +99,6 @@ public interface HeroLandCompetitionStatisticsService {
     PageResponse<CourseResultForUserDto> getAllCourseResultForUser(CourseResultForUserQO qo);
 
     ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(WorldStatisticQO qo);
+
+    Boolean deleteHistoryStatisticsTotalAndDetailByQO(HeroLandStatisticsTotalQO qo);
 }

@@ -74,7 +74,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-09-30
+     * heroland_question_record_detail 2020-10-04
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1696,6 +1696,126 @@ public class HeroLandQuestionRecordDetailExample {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
+
+        public Criteria andQtTypeIsNull() {
+            addCriterion("qt_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeIsNotNull() {
+            addCriterion("qt_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeEqualTo(Integer value) {
+            addCriterion("qt_type =", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeNotEqualTo(Integer value) {
+            addCriterion("qt_type <>", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeGreaterThan(Integer value) {
+            addCriterion("qt_type >", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("qt_type >=", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeLessThan(Integer value) {
+            addCriterion("qt_type <", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("qt_type <=", value, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeIn(List<Integer> values) {
+            addCriterion("qt_type in", values, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeNotIn(List<Integer> values) {
+            addCriterion("qt_type not in", values, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeBetween(Integer value1, Integer value2) {
+            addCriterion("qt_type between", value1, value2, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andQtTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("qt_type not between", value1, value2, "qtType");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffIsNull() {
+            addCriterion("diff is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffIsNotNull() {
+            addCriterion("diff is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffEqualTo(Integer value) {
+            addCriterion("diff =", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffNotEqualTo(Integer value) {
+            addCriterion("diff <>", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffGreaterThan(Integer value) {
+            addCriterion("diff >", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffGreaterThanOrEqualTo(Integer value) {
+            addCriterion("diff >=", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffLessThan(Integer value) {
+            addCriterion("diff <", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffLessThanOrEqualTo(Integer value) {
+            addCriterion("diff <=", value, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffIn(List<Integer> values) {
+            addCriterion("diff in", values, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffNotIn(List<Integer> values) {
+            addCriterion("diff not in", values, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffBetween(Integer value1, Integer value2) {
+            addCriterion("diff between", value1, value2, "diff");
+            return (Criteria) this;
+        }
+
+        public Criteria andDiffNotBetween(Integer value1, Integer value2) {
+            addCriterion("diff not between", value1, value2, "diff");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1709,7 +1829,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-09-30
+     * heroland_question_record_detail 2020-10-04
      */
     public static class Criterion {
         private String condition;

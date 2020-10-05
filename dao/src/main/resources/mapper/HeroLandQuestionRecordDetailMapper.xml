@@ -26,6 +26,8 @@
     <result column="opponent_name" jdbcType="VARCHAR" property="opponentName" />
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="qt_type" jdbcType="INTEGER" property="qtType" />
+    <result column="diff" jdbcType="INTEGER" property="diff" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -89,7 +91,7 @@
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
     question_id, title, answer, your_answer, user_id, record_id, record_detail_id, begin_date, 
     end_date, score, correct_answer, topic_id, subject_code, opponent_name, org_code, 
-    type
+    type, qt_type, diff
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
@@ -132,7 +134,8 @@
       record_id, record_detail_id, begin_date, 
       end_date, score, correct_answer, 
       topic_id, subject_code, opponent_name, 
-      org_code, type)
+      org_code, type, qt_type, 
+      diff)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
@@ -140,7 +143,8 @@
       #{recordId,jdbcType=VARCHAR}, #{recordDetailId,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
       #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{correctAnswer,jdbcType=BIT}, 
       #{topicId,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{opponentName,jdbcType=VARCHAR}, 
-      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+      #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{qtType,jdbcType=INTEGER}, 
+      #{diff,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -217,6 +221,12 @@
       <if test="type != null">
         type,
       </if>
+      <if test="qtType != null">
+        qt_type,
+      </if>
+      <if test="diff != null">
+        diff,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -287,6 +297,12 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="qtType != null">
+        #{qtType,jdbcType=INTEGER},
+      </if>
+      <if test="diff != null">
+        #{diff,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -371,6 +387,12 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
+      <if test="record.qtType != null">
+        qt_type = #{record.qtType,jdbcType=INTEGER},
+      </if>
+      <if test="record.diff != null">
+        diff = #{record.diff,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -401,7 +423,9 @@
       subject_code = #{record.subjectCode,jdbcType=VARCHAR},
       opponent_name = #{record.opponentName,jdbcType=VARCHAR},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=INTEGER}
+      type = #{record.type,jdbcType=INTEGER},
+      qt_type = #{record.qtType,jdbcType=INTEGER},
+      diff = #{record.diff,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -478,6 +502,12 @@
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
+      <if test="qtType != null">
+        qt_type = #{qtType,jdbcType=INTEGER},
+      </if>
+      <if test="diff != null">
+        diff = #{diff,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -505,7 +535,9 @@
       subject_code = #{subjectCode,jdbcType=VARCHAR},
       opponent_name = #{opponentName,jdbcType=VARCHAR},
       org_code = #{orgCode,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER}
+      type = #{type,jdbcType=INTEGER},
+      qt_type = #{qtType,jdbcType=INTEGER},
+      diff = #{diff,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
