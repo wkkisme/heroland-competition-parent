@@ -17,8 +17,10 @@ import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.dal.pojo.order.HerolandPay;
 import com.heroland.competition.domain.dp.HerolandPayDP;
 import com.heroland.competition.domain.dto.PrePayDto;
+import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.PrePayQO;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
+import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
@@ -57,6 +59,9 @@ public class HerolandPayServiceImpl implements HerolandPayService {
 
     @Resource
     private HerolandDiamondService herolandDiamondService;
+
+    @Resource
+    private HeroLandAccountService heroLandAccountService;
 
     @Resource
     private RedisService redisService;
@@ -98,18 +103,29 @@ public class HerolandPayServiceImpl implements HerolandPayService {
                 herolandOrderService.updateStateByBiz(herolandPay.getBizNo(), herolandPay.getPayFinishTime());
 
                 //加库存日志
-                //加账户总额
                 List<HerolandOrder> byBizNos = herolandOrderMapper.getByBizNos(Lists.newArrayList(herolandPay.getBizNo()));
+                Integer diamNum = 0;
                 if (!CollectionUtils.isEmpty(byBizNos)){
                     HerolandDiamRequest request = new HerolandDiamRequest();
                     request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
                     request.setBizName(DiamBizTypeEnum.PAY.getValue());
                     request.setNum(byBizNos.get(0).getSkuNum());
+                    diamNum = request.getNum();
                     request.setUserId(byBizNos.get(0).getBuyerId());
                     request.setChangeStockType(StockEnum.INCREASE.getLevel());
                     herolandDiamondService.createDiamondRecord(request);
                 }
+//                //加账户总额
+//                HeroLandAccountManageQO accountManageQO = new HeroLandAccountManageQO();
+//                accountManageQO.setUserId(herolandPay.getBuyId());
+//                accountManageQO.setNum(diamNum);
+//                if (NumberUtils.nullOrZero(diamNum)){
+//                    return;
+//                }
+//                heroLandAccountService.incrUserDiamond(accountManageQO);
             }catch (Exception e){
+                log.error("completePay error, [{}]", herolandPay.getBizNo(), e);
+            }finally {
                 redisService.del(key);
             }
 

@@ -147,13 +147,16 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
         AssertUtils.notBlank(qo.getBuyerId());
         PageResponse<HerolandOrderListDto> pageResult = new PageResponse<>();
         List<HerolandOrderListDto> list = Lists.newArrayList();
-        pageResult.setItems(list);
         Page<HerolandOrder> data = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                 () -> herolandOrderMapper.listOrderByBuyer(qo.getBuyerId(), qo.getStatus()));
         if (!CollectionUtils.isEmpty(data.getResult())){
-            List<HerolandOrderListDto> collect = data.getResult().stream().map(this::convertToDto).collect(Collectors.toList());
-            pageResult.setItems(collect);
+            list = data.getResult().stream().map(this::convertToDto).collect(Collectors.toList());
         }
+
+        pageResult.setItems(list);
+        pageResult.setPageSize(data.getPageSize());
+        pageResult.setPage(data.getPageNum());
+        pageResult.setTotal((int) data.getTotal());
        return pageResult;
     }
 

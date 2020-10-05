@@ -13,6 +13,7 @@ import com.heroland.competition.domain.dto.PrePayDto;
 import com.heroland.competition.domain.qo.HerolandOrderQO;
 import com.heroland.competition.domain.qo.HerolandOrderQueryQO;
 import com.heroland.competition.domain.qo.PrePayQO;
+import com.heroland.competition.service.impl.task.QueryOrderTask;
 import com.heroland.competition.service.order.HerolandOrderService;
 import com.heroland.competition.service.order.HerolandPayService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,9 @@ public class HeroLandOrderController {
 
     @Resource
     private HerolandPayService herolandPayService;
+
+    @Resource
+    private QueryOrderTask queryOrderTask;
 
     /**
      * 创建订单
@@ -114,6 +118,16 @@ public class HeroLandOrderController {
         result.setData(BeanCopyUtils.copyByJSON(payById, HerolandPayDto.class));
         return result;
     }
+
+    @RequestMapping(value = "/trigger", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> query(){
+       queryOrderTask.queryOrder();
+       return null;
+    }
+
+
+
 
 
 
