@@ -21,7 +21,7 @@
             #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
             #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.correctAnswer,jdbcType=BIT},
             #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{do.orgCode},#{do.type}
-            #{qtType},#{diff}
+            #{do.qtType},#{do.diff}
             )
         </foreach>
 

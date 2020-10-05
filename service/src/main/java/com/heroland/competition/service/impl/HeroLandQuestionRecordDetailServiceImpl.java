@@ -62,7 +62,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
                     if (v.getQuestionId().equals(detail.getQuestionId())) {
                         v.setCorrectAnswer(detail.getCorrectAnswer());
                         v.setAnswer(detail.getAnswer());
-                        v.setType(detail.getQtType());
+                        v.setType(detail.getTopicType());
                     }
                 });
             });
