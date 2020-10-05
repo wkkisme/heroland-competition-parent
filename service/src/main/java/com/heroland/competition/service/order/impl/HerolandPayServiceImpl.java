@@ -115,14 +115,14 @@ public class HerolandPayServiceImpl implements HerolandPayService {
                     request.setChangeStockType(StockEnum.INCREASE.getLevel());
                     herolandDiamondService.createDiamondRecord(request);
                 }
-                //加账户总额
-                HeroLandAccountManageQO accountManageQO = new HeroLandAccountManageQO();
-                accountManageQO.setUserId(herolandPay.getBuyId());
-                accountManageQO.setNum(diamNum);
-                if (NumberUtils.nullOrZero(diamNum)){
-                    return;
-                }
-                heroLandAccountService.incrUserDiamond(accountManageQO);
+//                //加账户总额
+//                HeroLandAccountManageQO accountManageQO = new HeroLandAccountManageQO();
+//                accountManageQO.setUserId(herolandPay.getBuyId());
+//                accountManageQO.setNum(diamNum);
+//                if (NumberUtils.nullOrZero(diamNum)){
+//                    return;
+//                }
+//                heroLandAccountService.incrUserDiamond(accountManageQO);
             }catch (Exception e){
                 log.error("completePay error, [{}]", herolandPay.getBizNo(), e);
             }finally {
