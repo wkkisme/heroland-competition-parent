@@ -19,7 +19,7 @@
   </sql>
 
   <sql id="Insert_Column_List">
-    question_id,topic_id,chapter_id
+    question_id,topic_id,chapter_id,org_code
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
