@@ -184,7 +184,7 @@ public class StatisticsTask {
                             if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
                                 v.setUserName(u.getUserName());
                             }
-                            v.setOrgCode(u.getOrgCode());
+//                            v.setOrgCode(u.getOrgCode());
                         });
                     }
                     if (!CollectionUtils.isEmpty(adminDataMap)) {
