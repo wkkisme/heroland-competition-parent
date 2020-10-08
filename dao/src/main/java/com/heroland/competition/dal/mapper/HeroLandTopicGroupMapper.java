@@ -36,7 +36,7 @@ public interface HeroLandTopicGroupMapper {
 
     List<HeroLandTopicGroup> selectByTypeAndState(@Param("type") Integer type,@Param("state") String state);
 
-    List<HeroLandTopicGroup> selectByTypeAndStateAndPart(@Param("type") Integer type,@Param("state") String state,@Param("orgCode") String orgCode);
+    List<HeroLandTopicGroup> selectByTypeAndStateAndPart(@Param("type") Integer type,@Param("state") String state,@Param("orgCode") String orgCode, @Param("gradeCode") String gradeCode);
 
     int incrRegisterCount(@Param("topicId") Long topicId, @Param("registerCount") Long registerCount, @Param("preCount") Long preCount);
 }

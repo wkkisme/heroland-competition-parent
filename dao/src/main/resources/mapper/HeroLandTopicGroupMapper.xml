@@ -567,6 +567,9 @@
     <if test="orgCode != null">
       and p.org_code = #{orgCode,jdbcType=VARCHAR}
     </if>
+    <if test="gradeCode != null">
+      and p.grade_code = #{gradeCode,jdbcType=VARCHAR}
+    </if>
     order by g.end_time desc
   </select>
 

@@ -383,4 +383,6 @@
     where topic_id = #{topicId,jdbcType=BIGINT} and is_deleted = 0 and state = "JOINED"
   </select>
 
+
+
 </mapper>
