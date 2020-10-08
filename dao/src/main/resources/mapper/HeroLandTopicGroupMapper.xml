@@ -86,6 +86,11 @@
     id, org_code, topic_name, grade_code, class_code, course_code, type, creator, modifier, 
     gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,description, register_begin_time, register_end_time, register_count, count_limit
   </sql>
+
+  <sql id="Join_Column_List">
+    id, org_code, topic_name, grade_code, type, creator, modifier,
+    gmt_create, gmt_modified, is_deleted, start_time, end_time, level_code, diff,description, register_begin_time, register_end_time, register_count, count_limit
+  </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandTopicGroupExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -541,7 +546,7 @@
 
   <select id="selectByTypeAndStateAndPart"  resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+    g.id as id, topic_name, type, start_time, end_time, level_code, diff,description, register_begin_time, register_end_time, register_count, count_limit
     from heroland_topic_group g left join heroland_topic_group_part p on g.id = p.topic_id
     where g.is_deleted = 0 and p.is_deleted = 0
     and g.type = #{type,jdbcType=INTEGER}
