@@ -36,6 +36,8 @@ import com.platform.sso.domain.dp.PlatformSysUserClassDP;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserClassQO;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,8 +83,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Resource
     private HerolandQuestionBankDetailMapper herolandQuestionBankDetailMapper;
 
+
     @Resource
-    private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
     @Resource
     private HerolandTopicGroupPartService herolandTopicGroupPartService;
@@ -828,11 +831,11 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
         PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
         qo.setUserId(request.getUserId());
-        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
-        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
+        RpcResult<PlatformSysUserDP> platformSysUserDPRpcResult = platformSsoUserServiceFacade.queryCurrent(request.getUserId());
+        if (!platformSysUserDPRpcResult.isSuccess() || platformSysUserDPRpcResult.getData() == null) {
             return null;
         }
-        String grade = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).findFirst().orElse(null);
+        String grade = platformSysUserDPRpcResult.getData().getGradeCode();
         //如果为空则默认查所有的科目
         if (StringUtils.isEmpty(request.getCourseCode())) {
             return null;
@@ -872,14 +875,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     private List<HerolandCourse> getPartInfoForSchoolCompetitionTopic(String userId, Long topicId){
         List<HerolandCourse> courseList = Lists.newArrayList();
-        PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
-        qo.setUserId(userId);
-        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
-        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
-            return courseList;
+        RpcResult<PlatformSysUserDP> platformSysUserDPRpcResult = platformSsoUserServiceFacade.queryCurrent(userId);
+        if (!platformSysUserDPRpcResult.isSuccess() || platformSysUserDPRpcResult.getData() == null) {
+            return null;
         }
-        String school = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getOrgCode).findFirst().orElse(null);
-        String grade = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).findFirst().orElse(null);
+        String grade = platformSysUserDPRpcResult.getData().getGradeCode();
+        String school = platformSysUserDPRpcResult.getData().getOrgCode();
+
         if (StringUtils.isBlank(school) || StringUtils.isBlank(grade)) {
             logger.error("query error department");
             return courseList;
@@ -958,13 +960,12 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public HeroLandTopicForWDto topicWForStudent(TopicWForStudentRequest request) {
         Date now = new Date();
-        PlatformSysUserClassQO qo = new PlatformSysUserClassQO();
-        qo.setUserId(request.getUserId());
-        ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(qo);
-        if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
+        RpcResult<PlatformSysUserDP> platformSysUserDPRpcResult = platformSsoUserServiceFacade.queryCurrent(request.getUserId());
+        if (!platformSysUserDPRpcResult.isSuccess() || platformSysUserDPRpcResult.getData() == null) {
             return null;
         }
-        String grade = listResponseBody.getData().stream().map(PlatformSysUserClassDP::getGradeCode).findFirst().orElse(null);
+        String grade = platformSysUserDPRpcResult.getData().getGradeCode();
+
         HeroLandTopicGroupExample heroLandTopicGroupExample = new HeroLandTopicGroupExample();
         HeroLandTopicGroupExample.Criteria criteria = heroLandTopicGroupExample.createCriteria();
         if (Objects.equals(request.getAction(), "REGISTER")){
