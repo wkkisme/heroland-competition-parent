@@ -302,6 +302,16 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Override
     public PageResponse<HeroLandQuestionListForTopicDto> getTopicQuestions(HeroLandTopicQuestionsPageRequest request) {
         PageResponse<HeroLandQuestionListForTopicDto> pageResult = new PageResponse<>();
+        //校正参数,前端默认所有的接口都加了orgCode，导致在查询世界赛和校际赛时这个参数参与数据库查询，结果为空
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByPrimaryKeys(request.getTopicIds());
+        if(!CollectionUtils.isEmpty(heroLandTopicGroups) &&
+                (Objects.equals(heroLandTopicGroups.get(0).getType(), TopicTypeConstants.IntegerER_SCHOOL_COMPETITION) || Objects.equals(heroLandTopicGroups.get(0).getType(), TopicTypeConstants.WORLD_COMPETITION))){
+            request.setCourseCode(null);
+            request.setGradeCode(null);
+            request.setClassCode(null);
+            request.setOrgCode(null);
+        }
+
         HerolandTopicQuestionQo herolandTopicQuestionQo = BeanCopyUtils.copyByJSON(request, HerolandTopicQuestionQo.class);
         herolandTopicQuestionQo.setType(request.getTopicType());
         Page<QuestionTopicDP> questions = PageHelper.startPage(herolandTopicQuestionQo.getPageIndex(), herolandTopicQuestionQo.getPageSize(), true).doSelectPage(
