@@ -3,6 +3,7 @@ package com.heroland.competition.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.common.UserStatusDP;
 import com.anycommon.response.constant.ErrMsgEnum;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
+import static com.heroland.competition.domain.dp.HeroLandInviteRecordDP.INVITE_KEY;
 
 /**
  * 答题相关
@@ -50,6 +53,8 @@ public class HeroLandCompetitionController {
     @Value("${answer.examTime}")
     private Long examTime;
 
+    @Resource
+    private RedisService redisService;
     /**
      * 答题
      * @param dp
@@ -60,8 +65,10 @@ public class HeroLandCompetitionController {
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(@RequestBody HeroLandCompetitionRecordDP dp, HttpServletRequest request) {
         dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
         log.info("doanswer{}", JSON.toJSONString(dp));
-        ResponseBody<HeroLandCompetitionRecordDP> result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
+        ResponseBody<HeroLandCompetitionRecordDP> result = new ResponseBody<>();
         try {
+        result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
+
             // 通知所有人 可以被邀请了
             if (result.isSuccess()) {
                 UserStatusDP userStatusDP = new UserStatusDP();
@@ -74,6 +81,8 @@ public class HeroLandCompetitionController {
             }
         } catch (Exception ignored) {
         }
+        // 结束比赛，可被邀请
+        redisService.del(INVITE_KEY+ dp.getUserId());
         return result;
     }
 
