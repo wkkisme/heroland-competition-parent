@@ -186,8 +186,6 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         if (!platformSysUserDPRpcResult.isSuccess() || CollectionUtils.isEmpty(platformSysUserDPRpcResult.getData())) {
             return null;
         }
-        String grade = platformSysUserDPRpcResult.getData().stream().map(PlatformSysUserDP::getGradeCode).findFirst().orElse(null);
-        String school = platformSysUserDPRpcResult.getData().stream().map(PlatformSysUserDP::getOrgCode).findFirst().orElse(null);
         //只要不是学生可以看到所有的赛事，是学生只能看到当前学校的赛事，对于可看的暂时不去限制太死
 //        if (StringUtils.isEmpty(qo.getActionType())){
 //            qo.setActionType(TopicJoinConstant.CAN_SEE);
@@ -195,22 +193,25 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
 //        if (qo.getActionType().equalsIgnoreCase(TopicJoinConstant.CAN_SEE)){
 //
 //        }
-        return canSeeTopics(qo, platformSysUserDPRpcResult.getData().get(0).getType(), school, grade);
+        return canSeeTopics(qo, platformSysUserDPRpcResult.getData());
     }
 
 
-    private PageResponse<HeroLandTopicForSDto> canSeeTopics(HerolandTopicCanSeeQO qo, Integer userType, String orgCode, String gradeCode){
+    private PageResponse<HeroLandTopicForSDto> canSeeTopics(HerolandTopicCanSeeQO qo, List<PlatformSysUserDP> userDPS){
         PageResponse<HeroLandTopicForSDto> pageResult = new PageResponse<>();
         List<HeroLandTopicForSDto> list = new ArrayList<>();
         pageResult.setItems(list);
         //只要不是学生可以看到所有的赛事，是学生只能看到当前学校的赛事，对于可看的暂时不去限制太死
         Page<HeroLandTopicGroup> dataPage = null;
-        if (!Objects.equals(userType, 0) ){
+        if (!Objects.equals(userDPS.get(0).getType(), 0) ){
             dataPage = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                     () -> heroLandTopicGroupMapper.selectByTypeAndState(qo.getTopicType(), qo.getTopicState()));
 
         }else {
             //如果是世界赛，只需要看到年级，不需要学校
+            String gradeCode = userDPS.stream().map(PlatformSysUserDP::getGradeCode).findFirst().orElse(null);
+            String orgCode = userDPS.stream().map(PlatformSysUserDP::getOrgCode).findFirst().orElse(null);
+
             if (Objects.equals(TopicTypeConstants.WORLD_COMPETITION, qo.getTopicType())){
                 dataPage = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
                         () -> heroLandTopicGroupMapper.selectByTypeAndStateAndPart(qo.getTopicType(), qo.getTopicState(), null, gradeCode));
@@ -231,7 +232,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
 
         //查看学生的参与信息
         List<HerolandTopicJoinUser> joinUsers = Lists.newArrayList();
-        if (Objects.equals(userType, 0)){
+        if (Objects.equals(userDPS.get(0).getType(), 0)){
             HerolandTopicJoinUserExample example = new HerolandTopicJoinUserExample();
             HerolandTopicJoinUserExample.Criteria criteria = example.createCriteria();
             criteria.andTopicIdIn(topicIds).andJoinUserEqualTo(qo.getUserId()).andStateEqualTo("JOINED");
