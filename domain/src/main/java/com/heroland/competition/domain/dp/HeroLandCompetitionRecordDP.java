@@ -350,9 +350,10 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
                 }
                 detail.setUserId(userId);
                 detail.setRecordId(recordId);
-                detail.setQtType(type);
+                detail.setQtType(detail.getType());
                 detail.setTopicType(topicType);
                 detail.setOpponentName(opponentId);
+                detail.setOrgCode(orgCode);
                 if (detail.getEndDate() == null) {
                     detail.setEndDate(new Date());
                 }
