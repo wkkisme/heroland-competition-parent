@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+import static com.heroland.competition.domain.dp.HeroLandInviteRecordDP.INVITE_KEY;
+
 /**
  * 比赛延时处理
  *
@@ -56,6 +58,8 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
                 message.setResult(CompetitionResultEnum.DRAW.getResult());
                 heroLandCompetitionRecordService.updateCompetitionRecord(message);
                 redisService.del(redisKey);
+                redisService.del(INVITE_KEY+ data.getInviteId());
+                redisService.del(INVITE_KEY+ data.getOpponentId());
             }
             if (data.getInviteEndTime() == null) {
                 message.setSenderId(message.getInviteId());
