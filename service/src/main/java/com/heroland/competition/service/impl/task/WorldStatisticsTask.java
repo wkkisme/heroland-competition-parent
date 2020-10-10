@@ -331,7 +331,29 @@ public class WorldStatisticsTask {
 
         }
 
-        return;
+        List<Integer> scoreList = Lists.newArrayList();
+        allWordDPS.stream().forEach(e -> {
+            if (e.getWordDPForSingle() != null){
+                scoreList.add(e.getWordDPForSingle().getTotalScore());
+            }
+        });
+
+        List<Integer> sorted = scoreList.stream().sorted((o1, o2) -> {
+            return (o2 - o1);
+        }).collect(Collectors.toList());
+        //如果分数个数小于报名人数，则后面补0,说明有很多人没有参与答题
+        if (sorted.size() < userCount){
+            for (int i = 0; i < (userCount-sorted.size()); i++){
+                sorted.add(0);
+            }
+        }
+        allWordDPS.stream().forEach(e -> {
+                HerolandStatisticsWordDP wordDP = e.getWordDPForSingle();
+                if (wordDP != null){
+                    wordDP.setTotalRank(sorted.indexOf(wordDP.getTotalScore())+1);
+                    wordDP.setWinRate(1 - ((wordDP.getTotalRank()-1)*1.0/userCount));
+                }
+        });
     }
 
     /**
@@ -370,8 +392,8 @@ public class WorldStatisticsTask {
                     boolean hasUser = userIdMap.containsKey(worldStatisticDto.getUserId());
                     worldStatisticDto.getWordDPS().stream().forEach(herolandStatisticsWordDP -> {
                         herolandStatisticsWordDP.setUserName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
-                        herolandStatisticsWordDP.setSchoolCode(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
-                        herolandStatisticsWordDP.setSchoolName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
+                        herolandStatisticsWordDP.setSchoolCode(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getOrgCode() : "");
+                        herolandStatisticsWordDP.setSchoolName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getSchoolName() : "");
                     });
                     if (worldStatisticDto.getWordDPForSingle() != null){
                         worldStatisticDto.getWordDPForSingle().setUserName(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getUserName() : "");
