@@ -95,7 +95,7 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
         this.courseCode = subjectCode;
     }
 
-    private static final String INVITE_KEY = "invite_competition:";
+    public static final String INVITE_KEY = "invite_competition:";
 
     public HeroLandInviteRecordDP addCheck() {
         if (this.topicType == null || StringUtils.isAnyBlank(this.inviteUserId, this.beInviteUserId, this.topicName)) {
@@ -117,13 +117,13 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     }
 
     public HeroLandInviteRecordDP inviteCheck(RedisService redisTemplate){
-//        if (isInvited(redisTemplate)){
-//            // todo 国际化
-//            ResponseBodyWrapper.failException("同学你已经邀请人了,请不要重复邀请哟 ！！");
-//        }
-//        if (isBeInvited(redisTemplate)){
-//            ResponseBodyWrapper.failException("同学你邀请的人已经被人邀请了哟 ！！");
-//        }
+        if (isInvited(redisTemplate)){
+            // todo 国际化
+            ResponseBodyWrapper.failException("同学你已经邀请人了,请不要重复邀请哟 ！！");
+        }
+        if (isBeInvited(redisTemplate)){
+            ResponseBodyWrapper.failException("同学你邀请的人已经被人邀请了哟 ！！");
+        }
         return this;
     }
 
