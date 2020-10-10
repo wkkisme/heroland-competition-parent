@@ -29,6 +29,7 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
     private RedisService redisService;
 
     private static final String questionKey = "competition_question_world_key:";
+
     @Override
     public Integer getType() {
         return CompetitionEnum.WORLD.getType();
@@ -39,8 +40,8 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
         record.worldCheck(redisService);
         HeroLandTopicPageRequest heroLandTopicPageRequest = new HeroLandTopicPageRequest();
         HeroLandTopicDto topic = heroLandQuestionService.getTopic(heroLandTopicPageRequest);
-        if (topic == null || topic.getRegisterCount() == null){
-           return ResponseBodyWrapper.fail("比赛为空,或者报名人数为空！","5000");
+        if (topic == null || topic.getRegisterCount() == null) {
+            return ResponseBodyWrapper.fail("比赛为空,或者报名人数为空！", "5000");
         }
 
         List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
@@ -48,15 +49,10 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
         dps.forEach(v -> {
             // 答对才进入
             if (v.getCorrectAnswer() != null && v.getCorrectAnswer()) {
-                Long rank = (Long) redisService.get(questionKey + record.getTopicId() + record.getDetails().get(0).getId());
-                redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
+                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
+                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 60 * 60 * 24);
                 // 第一个进入答此题的人
-
-                if (rank == null){
-                    v.setScore(Math.toIntExact(topic.getRegisterCount()));
-                }else {
-                    v.setScore(Math.toIntExact(topic.getRegisterCount() - rank - 1 ));
-                }
+                v.setScore(Math.toIntExact(topic.getRegisterCount() - (rank - 1)));
 
             } else {
                 v.setScore(0);
