@@ -264,8 +264,8 @@ public class WorldStatisticsTask {
             long sum = entry.getValue().stream().mapToLong(e -> (e.getEndDate().getTime() - e.getBeginDate().getTime()) / 1000).sum();
             if (sum <= 0){
                 sum = 1L;
-                wordDP.setTotalTime((int)sum);
             }
+            wordDP.setTotalTime((int)sum);
             wordDPS.add(wordDP);
             dto.getSubjectScoreMap().put(entry.getKey(), wordDP.getTotalScore());
 
@@ -281,7 +281,7 @@ public class WorldStatisticsTask {
         totalWorld.setGradeCode(gradeCode);
         totalWorld.setGradeName(basicData.containsKey(gradeCode) ? basicData.get(gradeCode) : "");
         totalWorld.setType(5);
-        totalWorld.setStatisticType(TopicJoinConstant.statisic_type_course);
+        totalWorld.setStatisticType(TopicJoinConstant.statisic_type_total);
         //总得分
         totalWorld.setTotalScore(dto.getWordDPS().stream().mapToInt(HerolandStatisticsWordDP::getTotalScore).sum());
         //平均分
