@@ -171,7 +171,7 @@ public class WorldStatisticsTask {
             topicGroupParts.stream().forEach(e -> {
                 if (!subjectQuestionCountMap.containsKey(e.getCourseCode())){
                     //只有题目数大于0才会统计写进统计表中
-                    if (courseQuestionMap.get(e.getCourseCode()).size() > 0){
+                    if (courseQuestionMap.containsKey(e.getCourseCode()) && courseQuestionMap.get(e.getCourseCode()).size() > 0){
                         subjectQuestionCountMap.put(e.getCourseCode(), courseQuestionMap.get(e.getCourseCode()).size());
                     }
                 }
@@ -264,8 +264,8 @@ public class WorldStatisticsTask {
             long sum = entry.getValue().stream().mapToLong(e -> (e.getEndDate().getTime() - e.getBeginDate().getTime()) / 1000).sum();
             if (sum <= 0){
                 sum = 1L;
-                wordDP.setTotalTime((int)sum);
             }
+            wordDP.setTotalTime((int)sum);
             wordDPS.add(wordDP);
             dto.getSubjectScoreMap().put(entry.getKey(), wordDP.getTotalScore());
 
@@ -281,7 +281,7 @@ public class WorldStatisticsTask {
         totalWorld.setGradeCode(gradeCode);
         totalWorld.setGradeName(basicData.containsKey(gradeCode) ? basicData.get(gradeCode) : "");
         totalWorld.setType(5);
-        totalWorld.setStatisticType(TopicJoinConstant.statisic_type_course);
+        totalWorld.setStatisticType(TopicJoinConstant.statisic_type_total);
         //总得分
         totalWorld.setTotalScore(dto.getWordDPS().stream().mapToInt(HerolandStatisticsWordDP::getTotalScore).sum());
         //平均分
@@ -331,7 +331,29 @@ public class WorldStatisticsTask {
 
         }
 
-        return;
+        List<Integer> scoreList = Lists.newArrayList();
+        allWordDPS.stream().forEach(e -> {
+            if (e.getWordDPForSingle() != null){
+                scoreList.add(e.getWordDPForSingle().getTotalScore());
+            }
+        });
+
+        List<Integer> sorted = scoreList.stream().sorted((o1, o2) -> {
+            return (o2 - o1);
+        }).collect(Collectors.toList());
+        //如果分数个数小于报名人数，则后面补0,说明有很多人没有参与答题
+        if (sorted.size() < userCount){
+            for (int i = 0; i < (userCount-sorted.size()); i++){
+                sorted.add(0);
+            }
+        }
+        allWordDPS.stream().forEach(e -> {
+                HerolandStatisticsWordDP wordDP = e.getWordDPForSingle();
+                if (wordDP != null){
+                    wordDP.setTotalRank(sorted.indexOf(wordDP.getTotalScore())+1);
+                    wordDP.setWinRate(1 - ((wordDP.getTotalRank()-1)*1.0/userCount));
+                }
+        });
     }
 
     /**
@@ -370,8 +392,8 @@ public class WorldStatisticsTask {
                     boolean hasUser = userIdMap.containsKey(worldStatisticDto.getUserId());
                     worldStatisticDto.getWordDPS().stream().forEach(herolandStatisticsWordDP -> {
                         herolandStatisticsWordDP.setUserName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
-                        herolandStatisticsWordDP.setSchoolCode(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
-                        herolandStatisticsWordDP.setSchoolName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getUserName() : "");
+                        herolandStatisticsWordDP.setSchoolCode(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getOrgCode() : "");
+                        herolandStatisticsWordDP.setSchoolName(hasUser ? userIdMap.get(herolandStatisticsWordDP.getUserId()).get(0).getSchoolName() : "");
                     });
                     if (worldStatisticDto.getWordDPForSingle() != null){
                         worldStatisticDto.getWordDPForSingle().setUserName(hasUser ? userIdMap.get(worldStatisticDto.getUserId()).get(0).getUserName() : "");

@@ -12,6 +12,7 @@ import com.heroland.competition.domain.request.HerolandBasicDataPageRequest;
 import com.heroland.competition.domain.request.HerolandBasicDataRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandSchoolService;
+import com.heroland.competition.service.impl.task.WorldStatisticsTask;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,9 @@ public class HeroLandAdminDataController {
 
     @Resource
     private RedisService redisService;
+
+    @Resource
+    private WorldStatisticsTask worldStatisticsTask;
 
     /**
      * 增加或编辑字典数据
@@ -127,6 +131,16 @@ public class HeroLandAdminDataController {
         return null;
 
     }
+
+    @RequestMapping(value = "/trigger", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<Boolean> trigger() {
+        worldStatisticsTask.statistics();
+        return null;
+    }
+
+
+
 
 
 }
