@@ -51,6 +51,7 @@
         <!--<jetcache.version>2.6.0</jetcache.version>-->
         <curator.version>4.0.1</curator.version>
         <!--<ZHConverter.version>1.0.0</ZHConverter.version>-->
+        <jetcache.version>2.5.14</jetcache.version>
     </properties>
 
     <dependencies>
@@ -83,6 +84,17 @@
     <dependencyManagement>
 
         <dependencies>
+<!--            <dependency>-->
+<!--                <groupId>com.alicp.jetcache</groupId>-->
+<!--                <artifactId>jetcache-starter-redis</artifactId>-->
+<!--                <version>${jetcache.version}</version>-->
+<!--            </dependency>-->
+            <dependency>
+                <groupId>com.alicp.jetcache</groupId>
+                <artifactId>jetcache-starter-redis-lettuce</artifactId>
+                <version>${jetcache.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.crossoverjie.netty</groupId>
                 <artifactId>cim-rout-api</artifactId>

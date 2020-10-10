@@ -1,6 +1,7 @@
 package com.heroland.competition.domain.dp;
 
 import cn.hutool.core.util.IdcardUtil;
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.enums.CompetitionStatusEnum;
@@ -176,7 +177,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     /**
      * 是否回答正确
      */
-    @ApiModelProperty(value="correctAnswer是否回答正确")
+    @ApiModelProperty(value = "correctAnswer是否回答正确")
     private Boolean correctAnswer;
 
     /**
@@ -271,7 +272,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
     }
 
 
-    public void worldCheck() {
+    public void worldCheck(RedisService redisService) {
 
         if (CollectionUtils.isEmpty(details)) {
             ResponseBodyWrapper.failParamException();
@@ -280,7 +281,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
             ResponseBodyWrapper.failParamException();
         }
-
+        AssertUtils.assertThat(redisService.setNx(this.getUserId() + this.getTopicId() + this.getDetails().get(0).getId(), "防重复提交", "PT1D"), "请勿重复提交");
     }
 
 
