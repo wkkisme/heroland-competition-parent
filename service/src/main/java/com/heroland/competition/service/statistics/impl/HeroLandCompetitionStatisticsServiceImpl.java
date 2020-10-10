@@ -761,7 +761,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (!CollectionUtils.isEmpty(herolandStatisticsLogs)){
             HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
             HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
-            criteria.andTopicIdEqualTo(qo.getTopicId()).andIsDeletedEqualTo(true).andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
+            criteria.andTopicIdEqualTo(qo.getTopicId()).andIsDeletedEqualTo(false).andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
             if(qo.getNeedPage()) {
                 example.setOrderByClause("total_score desc limit " +qo.getStartRow() +","+qo.getPageSize() );
             }else {
