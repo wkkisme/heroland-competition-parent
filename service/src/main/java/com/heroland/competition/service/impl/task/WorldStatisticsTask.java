@@ -171,7 +171,7 @@ public class WorldStatisticsTask {
             topicGroupParts.stream().forEach(e -> {
                 if (!subjectQuestionCountMap.containsKey(e.getCourseCode())){
                     //只有题目数大于0才会统计写进统计表中
-                    if (courseQuestionMap.get(e.getCourseCode()).size() > 0){
+                    if (courseQuestionMap.containsKey(e.getCourseCode()) && courseQuestionMap.get(e.getCourseCode()).size() > 0){
                         subjectQuestionCountMap.put(e.getCourseCode(), courseQuestionMap.get(e.getCourseCode()).size());
                     }
                 }
