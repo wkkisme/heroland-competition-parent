@@ -575,6 +575,7 @@
     <if test="gradeCode != null">
       and p.grade_code = #{gradeCode,jdbcType=VARCHAR}
     </if>
+    group by g.id
     order by g.end_time desc
   </select>
 
