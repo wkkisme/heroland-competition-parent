@@ -1,6 +1,9 @@
 package com.heroland.competition.config;
 
 
+import com.alicp.jetcache.autoconfigure.LettuceFactory;
+import com.alicp.jetcache.autoconfigure.RedisLettuceAutoConfiguration;
+import io.lettuce.core.RedisClient;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.interceptor.*;
@@ -92,5 +96,10 @@ public class TransactionManagerConfig {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
         pointcut.setExpression(AOP_POINTCUT_EXPRESSION);
         return new DefaultPointcutAdvisor(pointcut, txAdvice());
+    }
+    @Bean(name = "defaultClient")
+    @DependsOn(RedisLettuceAutoConfiguration.AUTO_INIT_BEAN_NAME)
+    public LettuceFactory defaultClient() {
+        return new LettuceFactory("remote.default", RedisClient.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.heroland.competition.dal.mapper;
 
+import com.alicp.jetcache.anno.Cached;
 import com.heroland.competition.dal.pojo.HerolandQuestionBankDetail;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,5 +23,6 @@ public interface HerolandQuestionBankDetailMapper {
 
     List<HerolandQuestionBankDetail> getByQtId( @Param("qtIds") List<Long> qtIds);
 
+    @Cached(name="HerolandQuestionBankDetailMapper.getById", expire = 3600)
     List<HerolandQuestionBankDetail> getById( @Param("ids") List<Long> ids);
 }

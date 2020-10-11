@@ -1,11 +1,14 @@
 package com.heroland.competition.service.impl;
 
+import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -22,6 +25,11 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
     @Resource
     private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
 
+    @Resource
+    private RedisService redisService;
+
+    private static final String questionKey = "competition_question_world_key:";
+
     @Override
     public Integer getType() {
         return CompetitionEnum.WORLD.getType();
@@ -29,14 +37,23 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP record) {
-        record.worldCheck();
+        record.worldCheck(redisService);
+        HeroLandTopicPageRequest heroLandTopicPageRequest = new HeroLandTopicPageRequest();
+        HeroLandTopicDto topic = heroLandQuestionService.getTopic(heroLandTopicPageRequest);
+        if (topic == null || topic.getRegisterCount() == null) {
+            return ResponseBodyWrapper.fail("比赛为空,或者报名人数为空！", "5000");
+        }
 
         List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
-        int score = dps.size();
 
         dps.forEach(v -> {
+            // 答对才进入
             if (v.getCorrectAnswer() != null && v.getCorrectAnswer()) {
-                v.setScore(score);
+                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
+                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 60 * 60 * 24);
+                // 第一个进入答此题的人
+                v.setScore(Math.toIntExact(topic.getRegisterCount() - (rank - 1)));
+
             } else {
                 v.setScore(0);
             }
