@@ -1065,19 +1065,24 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         criteria.andJoinUserEqualTo(request.getUserId()).andTopicTypeEqualTo(request.getTopicType()).andStateEqualTo(TopicJoinConstant.JOIND).andIsDeletedEqualTo(false);
         List<HerolandTopicJoinUser> list = herolandTopicJoinUserMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(list)){
+            Date now = new Date();
             List<HerolandTopicJoinUser> sort = list.stream().filter(e -> Objects.nonNull(e.getRegisterTime())).sorted(Comparator.comparing(HerolandTopicJoinUser::getRegisterTime).reversed()).collect(Collectors.toList());
             if (!CollectionUtils.isEmpty(sort)){
-                HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(sort.get(0).getTopicId());
-                if (heroLandTopicGroup == null){
+                List<Long> topicIds = sort.stream().map(HerolandTopicJoinUser::getTopicId).distinct().collect(Collectors.toList());
+                HeroLandTopicGroupExample groupExample = new HeroLandTopicGroupExample();
+                HeroLandTopicGroupExample.Criteria criteria1 = groupExample.createCriteria();
+                criteria1.andIsDeletedEqualTo(false).andEndTimeGreaterThan(now).andIdIn(topicIds);
+                groupExample.setOrderByClause("end_time asc");
+                List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(groupExample);
+                if (CollectionUtils.isEmpty(heroLandTopicGroups)){
                     return null;
                 }
-                HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+                HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroups.get(0), HeroLandTopicForWDto.class);
                 heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
-                heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
-                heroLandTopicForWDto.setState(getTopicState(heroLandTopicGroup));
+                heroLandTopicForWDto.setTopicId(heroLandTopicGroups.get(0).getId());
+                heroLandTopicForWDto.setState(getTopicState(heroLandTopicGroups.get(0)));
                 return heroLandTopicForWDto;
             }
-
         }
         return null;
     }

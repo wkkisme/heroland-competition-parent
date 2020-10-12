@@ -286,6 +286,7 @@ public class HeroLandTopicQuestionController {
     /**
      * 用户id最近一次报名的赛事
      * 有可能是过期的，还未开始的或者已经结束的
+     * 注：已结束过滤掉
      * @param
      * @return
      */
