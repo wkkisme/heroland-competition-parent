@@ -104,6 +104,7 @@ public class OnlineDP implements Serializable {
      */
     private Boolean robot = false;
 
+    private String classCode;
     @Override
     public boolean equals(Object o) {
         if (this == o) {

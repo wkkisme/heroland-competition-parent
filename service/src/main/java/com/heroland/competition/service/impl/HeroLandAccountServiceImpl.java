@@ -59,7 +59,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 
     @Override
     public ResponseBody<Set<OnlineDP>> getOnLineUserByType(HeroLandAccountDP dp) {
-        Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopicId());
+        Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getClassCode());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users = new HashSet<>();
         members.forEach(userId -> {
@@ -70,7 +70,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
                     Set<Object> dps = null;
                     try {
-                        dps = redisService.sMembers("recent_user:" + dp.getTopicId() + userId);
+                        dps = redisService.sMembers("recent_user:" + dp.getClassCode() + userId);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -93,7 +93,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                     } else if (dps != null) {
                         dps.remove(onlineUser.getSenderId());
                         try {
-                            redisService.sRemove("recent_user:" + dp.getTopicId() + onlineUser.getSenderId());
+                            redisService.sRemove("recent_user:" + dp.getClassCode() + onlineUser.getSenderId());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
