@@ -225,12 +225,11 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         HeroLandTopicGroupDP dp = BeanCopyUtils.copyByJSON(request, HeroLandTopicGroupDP.class);
         dp.setDescription(request.getDesc());
 
-        if (dp.getRegisterBeginTime() == null || dp.getRegisterBeginTime().after(dp.getStartTime()) || dp.getRegisterEndTime().after(dp.getStartTime())){
+        if (dp.getRegisterBeginTime() == null || dp.getRegisterEndTime() == null || dp.getRegisterBeginTime().after(dp.getStartTime()) || dp.getRegisterEndTime().after(dp.getStartTime())){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
-        if (dp.getRegisterEndTime() == null || dp.getRegisterEndTime().after(dp.getStartTime()) || (dp.getStartTime().getTime() - dp.getRegisterEndTime().getTime()) < 5 * 60 * 1000){
-            //设置报名结束时间为开始时间的前5分钟
-            dp.setRegisterEndTime(DateUtils.plusDate(dp.getStartTime(), -5, TimeIntervalUnit.MINUTE));
+        if (dp.getRegisterEndTime().after(dp.getStartTime())){
+            dp.setRegisterEndTime(dp.getStartTime());
         }
         checkMultiWorldComIn10Min(request);
         if (NumberUtils.nullOrZeroLong(request.getId())){
