@@ -128,6 +128,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         try {
 
             ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(dp.getUserId());
+            logger.info("accountByUserId:{}",JSON.toJSONString(accountByUserId));
             if (accountByUserId == null) {
                 heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance), new HeroLandAccount()));
             }
