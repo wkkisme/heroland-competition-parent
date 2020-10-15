@@ -345,10 +345,10 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
 
             for (HeroLandQuestionRecordDetailDP detail : details) {
                 detail.setTopicId(topicId);
-                if (inviteStartTime != null) {
-
-                    detail.setBeginDate(inviteStartTime);
-                }
+//                if (inviteStartTime != null) {
+//
+//                    detail.setBeginDate(inviteStartTime);
+//                }
                 detail.setUserId(userId);
                 detail.setRecordId(recordId);
                 detail.setQtType(detail.getType());
