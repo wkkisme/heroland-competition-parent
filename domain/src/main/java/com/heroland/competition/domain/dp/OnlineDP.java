@@ -99,7 +99,10 @@ public class OnlineDP implements Serializable {
 
     private Integer userStatus;
 
-
+    /**
+     * 是否机器人
+     */
+    private Boolean robot = false;
 
     @Override
     public boolean equals(Object o) {
