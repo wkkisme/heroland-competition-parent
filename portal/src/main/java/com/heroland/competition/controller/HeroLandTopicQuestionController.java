@@ -89,6 +89,9 @@ public class HeroLandTopicQuestionController {
     public ResponseBody<List<HeroLandTopicForSDto>> getTopicsForS(@RequestBody HerolandTopicCanSeeQO request){
         ResponseBody<List<HeroLandTopicForSDto>> result = new ResponseBody<>();
         PageResponse<HeroLandTopicForSDto> pageResponse = herolandTopicJoinUserService.canOperableTopics(request);
+        if (Objects.isNull(pageResponse)){
+            return result;
+        }
         result.setData(pageResponse.getItems());
         Pagination pagination = new Pagination();
         pagination.setPageIndex(pageResponse.getPage());
