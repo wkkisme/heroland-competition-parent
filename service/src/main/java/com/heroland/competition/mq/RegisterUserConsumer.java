@@ -24,6 +24,7 @@ public class RegisterUserConsumer  implements RocketMQListener<String> {
     @Override
     public void onMessage(String s) {
         try {
+            log.info("RegisterUserConsumer,{}",s);
             heroLandAccountService.saveAccount(JSON.parseObject(s, HeroLandAccountDP.class));
         } catch (Exception e) {
             log.error("e",e);

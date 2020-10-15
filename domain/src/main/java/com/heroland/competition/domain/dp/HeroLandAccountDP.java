@@ -76,6 +76,9 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
      * 比赛topicId
      */
     private String topicId;
+
+    private String classCode;
+
     public HeroLandAccountDP queryCheck() {
         if (StringUtils.isBlank(this.userId)) {
             ResponseBodyWrapper.failParamException();
@@ -101,6 +104,14 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
         }
 
         return this;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 
     public String getTopicId() {
