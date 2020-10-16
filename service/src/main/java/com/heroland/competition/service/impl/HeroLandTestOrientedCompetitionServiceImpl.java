@@ -171,6 +171,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         } else {
             try {
                 // 后答题的人进入
+                log.info("后进入：{}",JSON.toJSONString(record));
                 HeroLandCompetitionResultDP otherResult = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
 
                 // 当前人是邀请人
