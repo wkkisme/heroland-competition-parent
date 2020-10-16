@@ -266,10 +266,10 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             record.setType(STOP_ANSWER_QUESTIONS.getCode());
 
             log.info("发送信息为{}", JSON.toJSONString(record));
-            try {
-                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
-            } catch (Exception ignored) {
-            }
+//            try {
+//                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
+//            } catch (Exception ignored) {
+//            }
         }
         if (heroLandQuestionRecordDetailDP.getScore() != null && heroLandQuestionRecordDetailDP.getScore() > 0) {
             heroLandAccountManageQO.setUserId(record.getUserId());
