@@ -187,7 +187,7 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
             List<HerolandDiamMonthRecordDto> list = new ArrayList<>();
             Map<String, List<HerolandDiamondStockLog>> bizMap = Maps.newHashMap();
             entry.getValue().stream().forEach(e -> {
-                String biz = e.getBizGroup()+ "_" +e.getBizType();
+                String biz = e.getBizGroup()+ "-" +e.getBizType();
                 if (bizMap.containsKey(biz)){
                     bizMap.get(biz).add(e);
                 }else {
