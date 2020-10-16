@@ -166,7 +166,6 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
         dto.setBuyerId(order.getBuyerId());
         dto.setSkuId(order.getSkuId());
         dto.setSkuName(order.getSkuName());
-        dto.setSkuNum(order.getSkuNum());
         dto.setCurrencyAmt(order.getCurrencyAmt());
         dto.setCurrencyType(order.getCurrencyType());
         dto.setPaidTime(order.getPaidTime());
@@ -175,6 +174,7 @@ public class HerolandOrderServiceImpl implements HerolandOrderService {
         dto.setOrderCreateTime(order.getGmtCreate());
         HerolandSku bySkuId = herolandSkuMapper.getBySkuIdWithDelete(order.getSkuId());
         dto.setSkuUnit(bySkuId.getUnit());
+        dto.setSkuNum(order.getSkuNum() * dto.getSkuUnit());
         //如果是创建的订单再去拉一下是否有付款
         if (order.getState().equalsIgnoreCase(OrderStateEnum.CREATED.getCode())){
             //todo
