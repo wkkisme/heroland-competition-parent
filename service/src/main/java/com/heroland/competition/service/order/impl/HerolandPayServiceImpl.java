@@ -12,7 +12,9 @@ import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandOrderMapper;
 import com.heroland.competition.dal.mapper.HerolandPayMapper;
+import com.heroland.competition.dal.mapper.HerolandSkuMapper;
 import com.heroland.competition.dal.pojo.HerolandDiamondStockLog;
+import com.heroland.competition.dal.pojo.HerolandSku;
 import com.heroland.competition.dal.pojo.order.HerolandOrder;
 import com.heroland.competition.dal.pojo.order.HerolandPay;
 import com.heroland.competition.domain.dp.HerolandPayDP;
@@ -64,6 +66,9 @@ public class HerolandPayServiceImpl implements HerolandPayService {
     private HeroLandAccountService heroLandAccountService;
 
     @Resource
+    private HerolandSkuMapper herolandSkuMapper;
+
+    @Resource
     private RedisService redisService;
 
     private final String CLOSE_REASON = "查詢失敗";
@@ -109,8 +114,12 @@ public class HerolandPayServiceImpl implements HerolandPayService {
                     HerolandDiamRequest request = new HerolandDiamRequest();
                     request.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
                     request.setBizName(DiamBizTypeEnum.PAY.getValue());
-                    request.setNum(byBizNos.get(0).getSkuNum());
-                    diamNum = request.getNum();
+
+                    HerolandSku sku = herolandSkuMapper.getBySkuId(byBizNos.get(0).getSkuId());
+                    if (sku == null){
+                        ResponseBodyWrapper.failException(HerolandErrMsgEnum.NO_DIMOND.getErrorMessage());
+                    }
+                    request.setNum(byBizNos.get(0).getSkuNum() * sku.getUnit());
                     request.setUserId(byBizNos.get(0).getBuyerId());
                     request.setChangeStockType(StockEnum.INCREASE.getLevel());
                     herolandDiamondService.createDiamondRecord(request);
