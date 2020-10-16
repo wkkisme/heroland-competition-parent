@@ -83,7 +83,8 @@ start(){
 	fi
 
 	# java mem opts
-	JAVA_MEM_OPTS="-server -Xmx$JVM_MEM -Xms$JVM_MEM -Xmn256m -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:ErrorFile=hs_err_pid<pid>.log "
+	JAVA_MEM_OPTS="-server -Xmx$JVM_MEM -Xms$JVM_MEM -Xmn256m -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:LargePageSizeInBytes=128m -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70
+	-XX:ErrorFile=hs_err_pid<pid>.log -Xloggc:gc.log -XX:PrintGCDetails -XX:MetaspaceSize:256m"
 
 
 

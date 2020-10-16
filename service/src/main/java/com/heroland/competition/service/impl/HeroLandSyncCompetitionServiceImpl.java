@@ -271,7 +271,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             } catch (Exception ignored) {
             }
         }
-        if (heroLandQuestionRecordDetailDP.getScore() > 0) {
+        if (heroLandQuestionRecordDetailDP.getScore() != null && heroLandQuestionRecordDetailDP.getScore() > 0) {
             heroLandAccountManageQO.setUserId(record.getUserId());
             heroLandAccountManageQO.setScore(heroLandQuestionRecordDetailDP.getScore());
             heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
