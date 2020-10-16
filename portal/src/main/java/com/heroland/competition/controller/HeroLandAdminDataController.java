@@ -132,6 +132,12 @@ public class HeroLandAdminDataController {
 
     }
 
+    @RequestMapping(value = "/getRedis", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public Object getRedis(@RequestParam("key") String key) {
+        return redisService.get(key);
+    }
+
     @RequestMapping(value = "/trigger", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> trigger() {
