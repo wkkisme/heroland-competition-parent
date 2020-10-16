@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.heroland.competition.common.enums.Constants.CommandReqType.STOP_ANSWER_QUESTIONS;
+import static com.heroland.competition.domain.dp.HeroLandInviteRecordDP.INVITE_KEY;
 
 /**
  * 同步比賽
@@ -116,13 +117,14 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         heroLandCompetitionRecordQO.setInviteRecordId(record.getInviteRecordId());
         heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
         ResponseBody<List<HeroLandCompetitionRecordDP>> databaseRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandCompetitionRecordQO);
-        if (CollectionUtils.isEmpty(databaseRecord.getData())) {
+        List<HeroLandCompetitionRecordDP> competitionRecordDPS = databaseRecord.getData();
+        if (CollectionUtils.isEmpty(competitionRecordDPS)) {
             ResponseBodyWrapper.failException("比赛不存在");
             // 2分钟
-        } else if (System.currentTimeMillis() - databaseRecord.getData().get(0).getInviteStartTime().getTime() > 180000L) {
+        } else if (System.currentTimeMillis() - competitionRecordDPS.get(0).getInviteStartTime().getTime() > 180000L) {
             timeout = true;
         }
-        HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = databaseRecord.getData().get(0);
+        HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = competitionRecordDPS.get(0);
         record.setInviteId(heroLandCompetitionRecordDP.getInviteId());
         record.setInviteStartTime(heroLandCompetitionRecordDP.getInviteStartTime());
         record.setOpponentId(heroLandCompetitionRecordDP.getOpponentId());
@@ -160,21 +162,18 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                     // 增加分数
                     record.setInviteScore(levelScore);
                     heroLandQuestionRecordDetailDP.setScore(levelScore);
-                    heroLandAccountManageQO.setUserId(record.getUserId());
-                    heroLandAccountManageQO.setScore(levelScore);
 
                 } else {
                     log.info("正确且我是被邀请人:{}", record.getUserId());
                     // 当前人是被邀请者
                     int levelScore = HeroLevelEnum.getLevelScore(record.getOpponentLevel(), record.getInviteLevel());
                     // 增加分数
-                    heroLandAccountManageQO.setUserId(record.getUserId());
-                    heroLandAccountManageQO.setScore(levelScore);
+
                     record.setOpponentScore(levelScore);
                     heroLandQuestionRecordDetailDP.setScore(levelScore);
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                 }
-                heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+
 
             } else if (timeout) {
                 log.info("超时");
@@ -206,57 +205,57 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                 log.info("我是邀请人:{}", record.getUserId());
                 preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
             }
-            log.info("preAnswer :{},userId :{}",JSON.toJSONString(preAnswer),record.getUserId());
+            log.info("preAnswer :{},userId :{}", JSON.toJSONString(preAnswer), record.getUserId());
             // 如果正确 且未超时 则看前一个答题者答案正确与否
-            if (isRight && !timeout) {
+            if (!timeout) {
                 // 如果前一个人答案正确则直接不管，因为前面已经判赢了，如果前面答题错了则本人胜利
-                if (!preAnswer.getCorrectAnswer()) {
-                    log.info("没超时{}，但是前一个人已经是对的",JSON.toJSONString(preAnswer));
-                    // 如果我是邀请人
-                    if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
-                        record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                        int levelScore = HeroLevelEnum.getLevelScore(record.getInviteLevel(), record.getOpponentLevel());
-                        // 增加分数
+                if (isRight) {
+                    if (!preAnswer.getCorrectAnswer()) {
+                        log.info("没超时{}，但是前一个人已经是对的", JSON.toJSONString(preAnswer));
+                        // 如果我是邀请人
+                        if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                            record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            int levelScore = HeroLevelEnum.getLevelScore(record.getInviteLevel(), record.getOpponentLevel());
+                            // 增加分数
 
-                        heroLandAccountManageQO.setUserId(record.getUserId());
-                        heroLandQuestionRecordDetailDP.setScore(levelScore);
-                        heroLandAccountManageQO.setScore(levelScore);
-                    } else {
-                        // 如果我是被邀请人
-                        record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                        int levelScore = HeroLevelEnum.getLevelScore(record.getOpponentLevel(), record.getInviteLevel());
-                        // 增加分数
-                        heroLandQuestionRecordDetailDP.setScore(levelScore);
-                        heroLandAccountManageQO.setUserId(record.getUserId());
-                        heroLandAccountManageQO.setScore(levelScore);
+                            heroLandAccountManageQO.setUserId(record.getUserId());
+                            heroLandQuestionRecordDetailDP.setScore(levelScore);
+                            heroLandAccountManageQO.setScore(levelScore);
+                        } else {
+                            // 如果我是被邀请人
+                            record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            int levelScore = HeroLevelEnum.getLevelScore(record.getOpponentLevel(), record.getInviteLevel());
+                            // 增加分数
+                            heroLandQuestionRecordDetailDP.setScore(levelScore);
+                            heroLandAccountManageQO.setUserId(record.getUserId());
+                            heroLandAccountManageQO.setScore(levelScore);
+                        }
                     }
-                    heroLandQuestionRecordDetailDP.setCorrectAnswer(true);
-                    // 如果两个人都后来者错 则不管
+
+                }else {
+                    // 如果都错
+                    if (!preAnswer.getCorrectAnswer()){
+                        record.setInviteScore(0);
+                        record.setOpponentScore(0);
+                        record.setResult(CompetitionResultEnum.DRAW.getResult());
+                        heroLandQuestionRecordDetailDP.setScore(0);
+                    }
                 }
 
-                // 如果都答错了 平局
-            } else if (!isRight && !preAnswer.getCorrectAnswer() && !timeout) {
-                log.info("没超时{}，都答错",JSON.toJSONString(preAnswer));
-                heroLandQuestionRecordDetailDP.setScore(0);
-                record.setOpponentScore(0);
-                record.setInviteScore(0);
-                // 若两人都超时 则也是平局
-                record.setResult(CompetitionResultEnum.DRAW.getResult());
-
-                // 如果第二个人超时 且第一个人答错 则更新为平局
-            } else if (timeout && !preAnswer.getCorrectAnswer()) {
-                log.info("超时{}，都答错",JSON.toJSONString(preAnswer));
-                record.setResult(CompetitionResultEnum.DRAW.getResult());
-                // 如果是没有超时，对方答对了则得零分
-            } else {
-                log.info("最后都没超时{}，且我答错",JSON.toJSONString(preAnswer));
+                // 如果后者超时
+            } else{
+                // 前一个结果为空，则说明前一个未超时
+                if (competitionRecordDPS.get(0).getResult() == null){
+                    // 如果我是邀请人
+                    record.setResult(CompetitionResultEnum.DRAW.getResult());
+                }
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     record.setInviteScore(0);
-                    record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                 }else {
                     record.setOpponentScore(0);
-                    record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                 }
+                heroLandQuestionRecordDetailDP.setScore(0);
+
             }
 
             // 如果是后面再答题者，不需要更新状态，前一个已经更新为平局
@@ -266,9 +265,15 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             redisService.del(redisKey + record.getId());
             record.setType(STOP_ANSWER_QUESTIONS.getCode());
 
-            log.info("发送信息为{}",JSON.toJSONString(record));
+            log.info("发送信息为{}", JSON.toJSONString(record));
             rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
         }
+        if (heroLandQuestionRecordDetailDP.getScore() > 0) {
+            heroLandAccountManageQO.setUserId(record.getUserId());
+            heroLandAccountManageQO.setScore(heroLandQuestionRecordDetailDP.getScore());
+            heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+        }
+        redisService.del(INVITE_KEY + record.getUserId());
         return ResponseBodyWrapper.successWrapper(record);
     }
 }
