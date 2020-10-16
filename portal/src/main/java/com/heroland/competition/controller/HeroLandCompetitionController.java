@@ -66,9 +66,8 @@ public class HeroLandCompetitionController {
         dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
         log.info("doanswer{}", JSON.toJSONString(dp));
         ResponseBody<HeroLandCompetitionRecordDP> result = new ResponseBody<>();
-        try {
         result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
-
+        try {
             // 通知所有人 可以被邀请了
             if (result.isSuccess()) {
                 UserStatusDP userStatusDP = new UserStatusDP();
