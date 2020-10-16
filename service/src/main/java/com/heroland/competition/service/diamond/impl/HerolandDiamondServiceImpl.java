@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.DiamBizGroupEnum;
 import com.heroland.competition.common.constants.StockEnum;
+import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -21,6 +22,7 @@ import com.heroland.competition.domain.dp.HerolandSkuDP;
 import com.heroland.competition.domain.dto.HerolandDiamMonthRecordDto;
 import com.heroland.competition.domain.dto.HerolandDiamondStockDto;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
+import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.domain.qo.HerolandDiamRecordQO;
 import com.heroland.competition.domain.qo.HerolandSkuQO;
 import com.heroland.competition.domain.request.HerolandDiamMonthRecordRequest;
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -137,8 +140,11 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
     public HerolandDiamondStockDto recordList(HerolandDiamMonthRecordRequest request) {
         HerolandDiamondStockDto stockDto = new HerolandDiamondStockDto();
         stockDto.setUserId(request.getUserId());
-        //todo mock的数据
-        stockDto.setStockNum(1000);
+        HeroLandAccountQO qo = new HeroLandAccountQO();
+        qo.setUserId(request.getUserId());
+        ResponseBody<List<HeroLandAccountDP>> account = heroLandAccountService.getAccount(qo);
+        AssertUtils.assertThat(!CollectionUtils.isEmpty(account.getData()), "用户账户不存在");
+        stockDto.setStockNum(NumberUtils.nullOrZeroLong(account.getData().get(0).getBalance()) ? 0 : account.getData().get(0).getBalance().intValue());
         HerolandDiamRecordQO recordQO = new HerolandDiamRecordQO();
         recordQO.setType(request.getChangeStockType());
         recordQO.setBizType(request.getBizName());
