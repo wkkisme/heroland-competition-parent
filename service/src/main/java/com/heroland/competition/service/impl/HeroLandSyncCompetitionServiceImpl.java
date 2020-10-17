@@ -201,10 +201,10 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             HeroLandQuestionRecordDetailDP preAnswer;
             if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                 log.info("我是邀请人:{}", record.getUserId());
-                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getInviteId());
+                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
             } else {
                 log.info("我是邀请人:{}", record.getUserId());
-                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
+                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getInviteId());
             }
             log.info("preAnswer :{},userId :{}", JSON.toJSONString(preAnswer), record.getUserId());
             // 如果正确 且未超时 则看前一个答题者答案正确与否
