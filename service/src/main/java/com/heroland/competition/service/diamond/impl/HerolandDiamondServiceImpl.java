@@ -7,6 +7,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.DiamBizGroupEnum;
+import com.heroland.competition.common.constants.DiamBizTypeEnum;
 import com.heroland.competition.common.constants.StockEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -148,7 +149,7 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
         HerolandDiamRecordQO recordQO = new HerolandDiamRecordQO();
         recordQO.setType(request.getChangeStockType());
         recordQO.setBizType(request.getBizName());
-        recordQO.setBizGroup(request.getBizGroup());
+        recordQO.setBizGroup(DiamBizGroupEnum.COMPETITON.getGroup());
         recordQO.setUserId(request.getUserId());
         if (StringUtils.isBlank(request.getYear())){
             String nowYear = DateUtils.dateToYear(new Date());
@@ -162,9 +163,15 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
 //        List<HerolandDiamRecordDto> result = new ArrayList<>();
         Map<Integer,List<HerolandDiamMonthRecordDto>> monthRecordMap = Maps.newHashMap();
         List<HerolandDiamondStockLog> stockLogs = herolandDiamondStockLogMapper.getByQuery(recordQO);
-        Map<Integer, List<HerolandDiamondStockLog>> monthMap = Maps.newHashMap();
-        stockLogs.stream().forEach(e -> {
+        List<String> column = Lists.newArrayList(
+                DiamBizGroupEnum.COMPETITON.getGroup()+"-"+ DiamBizTypeEnum.ANALYSE.getValue(),
+                DiamBizGroupEnum.COMPETITON.getGroup()+"-"+ DiamBizTypeEnum.SPY.getValue(),
+                DiamBizGroupEnum.COMPETITON.getGroup()+"-"+ DiamBizTypeEnum.SKIP.getValue(),
+                DiamBizGroupEnum.COMPETITON.getGroup()+"-"+ DiamBizTypeEnum.SAME.getValue()
+                );
 
+        Map<Integer, List<HerolandDiamondStockLog>> monthMap = Maps.newHashMap();
+        stockLogs.stream().filter(e -> column.contains(e.getBizGroup()+"-"+e.getBizType())).forEach(e -> {
             Calendar instance = Calendar.getInstance();
             instance.setTime(e.getGmtCreate());
             int month = instance.get(Calendar.MONTH);
@@ -180,7 +187,7 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
             List<HerolandDiamMonthRecordDto> list = new ArrayList<>();
             Map<String, List<HerolandDiamondStockLog>> bizMap = Maps.newHashMap();
             entry.getValue().stream().forEach(e -> {
-                String biz = e.getBizGroup()+ "_" +e.getBizType();
+                String biz = e.getBizGroup()+ "-" +e.getBizType();
                 if (bizMap.containsKey(biz)){
                     bizMap.get(biz).add(e);
                 }else {
@@ -198,6 +205,17 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
                 recordDto.setTotal(subEntry.getValue().stream().mapToInt(HerolandDiamondStockLog::getNum).sum());
                 list.add(recordDto);
             }
+            column.removeAll(new ArrayList<>(bizMap.keySet()));
+            column.stream().forEach(e -> {
+                HerolandDiamMonthRecordDto recordDto = new HerolandDiamMonthRecordDto();
+                recordDto.setBizGroup(DiamBizGroupEnum.COMPETITON.getGroup());
+                String[] split = e.split("-");
+                recordDto.setBizName(split[1]);
+                recordDto.setUserId(request.getUserId());
+                recordDto.setChangeStockType(request.getChangeStockType());
+                recordDto.setTotal(0);
+                list.add(recordDto);
+            });
             monthRecordMap.put(entry.getKey(), list);
         }
         stockDto.setMonthRecordMap(monthRecordMap);

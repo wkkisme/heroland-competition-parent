@@ -14,6 +14,8 @@ public enum DiamBizTypeEnum {
     ANALYSE("ANALYSE","解说分析","GAME"),
     SPY("SPY","侦查敌情","GAME"),
     TIPS("TIPS","解题技巧","GAME"),
+    SKIP("SKIP","越级挑战","GAME"),
+    SAME("SAME","赛类似题","GAME"),
     PAY("PAY","充值","BUY"),
 
     ;

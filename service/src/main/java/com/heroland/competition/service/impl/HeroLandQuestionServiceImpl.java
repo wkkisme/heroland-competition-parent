@@ -335,6 +335,21 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         Map<String, List<HerolandQuestionUniqDP>> qtSnapshotMap = uniqDPS.stream().collect(Collectors.groupingBy(HerolandQuestionUniqDP::getQtId));
         List<HerolandQuestionBankDetail> byQtId = herolandQuestionBankDetailMapper.getByQtId(bankIds);
         Map<Long, List<HerolandQuestionBankDetail>> qtMap = byQtId.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
+
+        List<HerolandKnowledgeRefer> refers = herolandKnowledgeReferMapper.selectByReferIds(bankIds, KnowledgeReferEnum.QUESTION.getType());
+        Map<Long, List<HerolandKnowledgeRefer>> konwlegeReferMap = Maps.newHashMap();
+        Map<Long, List<HerolandKnowledge>> konwlegeMap = Maps.newHashMap();
+        if (!CollectionUtils.isEmpty(refers)){
+            List<Long> konwlegeIds = refers.stream().map(HerolandKnowledgeRefer::getKnowledgeId).collect(Collectors.toList());
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByIds(konwlegeIds);
+            konwlegeReferMap = refers.stream().collect(Collectors.groupingBy(HerolandKnowledgeRefer::getReferId));
+            konwlegeMap = herolandKnowledges.stream().collect(Collectors.groupingBy(HerolandKnowledge::getId));
+        }
+
+        Map<Long, List<HerolandKnowledgeRefer>> konwlegeReferV2Map = konwlegeReferMap;
+        Map<Long, List<HerolandKnowledge>> konwlegeV2Map = konwlegeMap;
+
+
         banks.stream().forEach(e -> {
             HeroLandQuestionListForTopicDto dto = new HeroLandQuestionListForTopicDto();
             dto.setGrade(e.getGradeCode());
@@ -368,6 +383,15 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 dto.setAnalysis(qtMap.get(e.getId()).get(0).getAnalysis());
                 List<QuestionOptionDto> questionOptionDto = JSON.parseArray(qtMap.get(e.getId()).get(0).getOption(), QuestionOptionDto.class);
                 dto.setOptions(questionOptionDto);
+            }
+            if (konwlegeReferV2Map.containsKey(e.getId())){
+                konwlegeReferV2Map.get(e.getId()).stream().forEach(k -> {
+                    if (konwlegeV2Map.containsKey(k.getKnowledgeId())){
+                        HerolandKnowledgeSimpleDto simpleDto = new HerolandKnowledgeSimpleDto();
+                        simpleDto.setKnowledge(konwlegeV2Map.get(k.getKnowledgeId()).get(0).getKnowledge());
+                        dto.getKnowledges().add(simpleDto);
+                    }
+                });
             }
             topicDtos.add(dto);
 
