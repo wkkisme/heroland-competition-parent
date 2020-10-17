@@ -3,16 +3,15 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper">
 
 
-  <select id="countAll" resultMap="com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper.BaseResultMap">
-    select count(*) total_count ,org_code from heroland_topic_question
+    <select id="countAll" resultType="Long">
+        select count(*) total_count from heroland_topic_question
 
-    where is_deleted = 0
-
-    <if test="type != null ">
-      and type = #{type}
-    </if>
-
-    group by org_code
-
-  </select>
+        where is_deleted = 0
+        <if test="topicIds != null and topicIds.size() > 0">
+        and topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
+        </if>
+    </select>
 </mapper>

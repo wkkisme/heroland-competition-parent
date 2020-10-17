@@ -74,7 +74,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-10-04
+     * heroland_question_record_detail 2020-10-17
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -1816,6 +1816,66 @@ public class HeroLandQuestionRecordDetailExample {
             addCriterion("diff not between", value1, value2, "diff");
             return (Criteria) this;
         }
+
+        public Criteria andHistoryIsNull() {
+            addCriterion("history is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryIsNotNull() {
+            addCriterion("history is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryEqualTo(Boolean value) {
+            addCriterion("history =", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryNotEqualTo(Boolean value) {
+            addCriterion("history <>", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryGreaterThan(Boolean value) {
+            addCriterion("history >", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("history >=", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryLessThan(Boolean value) {
+            addCriterion("history <", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryLessThanOrEqualTo(Boolean value) {
+            addCriterion("history <=", value, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryIn(List<Boolean> values) {
+            addCriterion("history in", values, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryNotIn(List<Boolean> values) {
+            addCriterion("history not in", values, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryBetween(Boolean value1, Boolean value2) {
+            addCriterion("history between", value1, value2, "history");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("history not between", value1, value2, "history");
+            return (Criteria) this;
+        }
     }
 
     /**
@@ -1829,7 +1889,7 @@ public class HeroLandQuestionRecordDetailExample {
     }
 
     /**
-     * heroland_question_record_detail 2020-10-04
+     * heroland_question_record_detail 2020-10-17
      */
     public static class Criterion {
         private String condition;

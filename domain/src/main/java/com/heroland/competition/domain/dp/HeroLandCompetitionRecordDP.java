@@ -281,7 +281,7 @@ public class HeroLandCompetitionRecordDP extends BaseDO implements Serializable 
         if (StringUtils.isAnyBlank(this.topicId, this.topicName)) {
             ResponseBodyWrapper.failParamException();
         }
-        AssertUtils.assertThat(redisService.setNx(this.getUserId() + this.getTopicId() + this.getDetails().get(0).getId(), "防重复提交", "PT1D"), "请勿重复提交");
+        AssertUtils.assertThat(redisService.setNx(this.getUserId() + this.getTopicId() + this.getDetails().get(0).getId(), "防重复提交", "P1D"), "请勿重复提交");
     }
 
 

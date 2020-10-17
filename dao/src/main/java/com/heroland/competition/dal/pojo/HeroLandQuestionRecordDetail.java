@@ -129,6 +129,12 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     private Integer diff;
 
     /**
+     * 是否历史
+     */
+    @ApiModelProperty(value="history是否历史")
+    private Boolean history;
+
+    /**
      * heroland_question_record_detail
      */
     private static final long serialVersionUID = 1L;
@@ -451,5 +457,21 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setDiff(Integer diff) {
         this.diff = diff;
+    }
+
+    /**
+     * 是否历史
+     * @return history 是否历史
+     */
+    public Boolean getHistory() {
+        return history;
+    }
+
+    /**
+     * 是否历史
+     * @param history 是否历史
+     */
+    public void setHistory(Boolean history) {
+        this.history = history;
     }
 }

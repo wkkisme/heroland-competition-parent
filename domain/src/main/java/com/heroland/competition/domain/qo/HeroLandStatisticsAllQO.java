@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
 public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
@@ -83,6 +84,16 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
     private Integer resultInvite;
 
     private Boolean ifCorrectAnswer;
+
+    private List<Integer> topicIds;
+
+    public List<Integer> getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(List<Integer> topicIds) {
+        this.topicIds = topicIds;
+    }
 
     public Boolean getIfCorrectAnswer() {
         return ifCorrectAnswer;

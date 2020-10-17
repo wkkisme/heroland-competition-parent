@@ -9,7 +9,7 @@
         answer, your_answer, user_id,
         record_id, record_detail_id, begin_date,
         end_date, score, correct_answer,
-        topic_id, subject_code, opponent_name,org_code,type,qt_type,diff
+        topic_id, subject_code, opponent_name,org_code,type,qt_type,diff,history
         )
         values
 
@@ -21,7 +21,7 @@
             #{do.recordId,jdbcType=VARCHAR}, #{do.recordDetailId,jdbcType=VARCHAR}, #{do.beginDate,jdbcType=TIMESTAMP},
             #{do.endDate,jdbcType=TIMESTAMP}, #{do.score,jdbcType=INTEGER}, #{do.correctAnswer,jdbcType=BIT},
             #{do.topicId,jdbcType=VARCHAR}, #{do.subjectCode,jdbcType=VARCHAR}, #{do.opponentName,jdbcType=VARCHAR},#{do.orgCode},#{do.type}
-            ,#{do.qtType},#{do.diff}
+            ,#{do.qtType},#{do.diff},#{do.history,jdbcType=BIT}
             )
         </foreach>
 

@@ -1,6 +1,7 @@
 package com.heroland.competition.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
@@ -272,27 +273,31 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        List<HerolandTopicQuestion> totalCount = herolandTopicQuestionExtMapper.countAll();
-        Map<String, HerolandTopicQuestion> collect = totalCount.stream().collect(Collectors.toMap(HerolandTopicQuestion::getOrgCode, Function.identity()));
+        Long totalCount = herolandTopicQuestionExtMapper.countAll(qo);
              /*
                 计算正确率和完成率
              */
-        if (!CollectionUtils.isEmpty(dps) && !CollectionUtils.isEmpty(totalCount) ) {
+        if (!CollectionUtils.isEmpty(dps) && totalCount != null  ) {
+            logger.info("dps:{}", JSON.toJSONString(dps));
+            logger.info("totalCount:{}", JSON.toJSONString(totalCount));
             dps.forEach(v -> {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                HerolandTopicQuestion herolandTopicQuestion = collect.get(v.getOrgCode());
-                if (herolandTopicQuestion != null) {
-                    if (herolandTopicQuestion.getTotalCount() != 0){
-                        double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
-                        v.setAnswerRightRate(rate);
-                        v.setCompleteRate(rate);
-                    }else {
-                        v.setAnswerRightRate(0D);
-                        v.setCompleteRate(0D);
-                    }
-
+                if (v.getTopicId() != null) {
+                        if (totalCount != 0) {
+                            double rate = ( (double)v.getRightCount() /  (double)totalCount);
+                            if (rate >= 1){
+                                v.setAnswerRightRate(1D);
+                                v.setCompleteRate(1D);
+                            }else {
+                                v.setAnswerRightRate(rate);
+                                v.setCompleteRate(rate);
+                            }
+                        } else {
+                            v.setAnswerRightRate(0D);
+                            v.setCompleteRate(0D);
+                        }
                 }else {
                     v.setAnswerRightRate(0D);
                     v.setCompleteRate(0D);
@@ -326,7 +331,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
 
                     if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                        landStatisticsDetailDp.setWinRate((double) (heroLandStatisticsDetailDp.getRightCount() / landStatisticsDetailDp.getRightCount()));
+                        landStatisticsDetailDp.setWinRate( ((double)heroLandStatisticsDetailDp.getRightCount() / (double)landStatisticsDetailDp.getRightCount()));
                     }
                 }
             }

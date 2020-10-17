@@ -136,6 +136,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setSubjectCode(question.getCourse());
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey + record.getId(), record.getUserId(), "PT2H");
+        redisService.del("question:" + redisKey + record.getUserId());
         redisService.set("question:" + redisKey + record.getUserId(), heroLandQuestionRecordDetailDP, 1800000L);
         HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
@@ -200,10 +201,10 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             HeroLandQuestionRecordDetailDP preAnswer;
             if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                 log.info("我是邀请人:{}", record.getUserId());
-                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getInviteId());
-            } else {
-                log.info("我是邀请人:{}", record.getUserId());
                 preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
+            } else {
+                log.info("我是被邀请人:{}", record.getUserId());
+                preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getInviteId());
             }
             log.info("preAnswer :{},userId :{}", JSON.toJSONString(preAnswer), record.getUserId());
             // 如果正确 且未超时 则看前一个答题者答案正确与否
@@ -221,6 +222,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                             heroLandAccountManageQO.setUserId(record.getUserId());
                             heroLandQuestionRecordDetailDP.setScore(levelScore);
                             heroLandAccountManageQO.setScore(levelScore);
+                            record.setInviteScore(levelScore);
                         } else {
                             // 如果我是被邀请人
                             record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
@@ -229,6 +231,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                             heroLandQuestionRecordDetailDP.setScore(levelScore);
                             heroLandAccountManageQO.setUserId(record.getUserId());
                             heroLandAccountManageQO.setScore(levelScore);
+                            record.setOpponentScore(levelScore);
                         }
                     }
 

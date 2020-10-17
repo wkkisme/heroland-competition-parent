@@ -28,6 +28,7 @@
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="qt_type" jdbcType="INTEGER" property="qtType" />
     <result column="diff" jdbcType="INTEGER" property="diff" />
+    <result column="history" jdbcType="BIT" property="history" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -91,7 +92,7 @@
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, grade_code, class_code, 
     question_id, title, answer, your_answer, user_id, record_id, record_detail_id, begin_date, 
     end_date, score, correct_answer, topic_id, subject_code, opponent_name, org_code, 
-    type, qt_type, diff
+    type, qt_type, diff, history
   </sql>
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
@@ -135,7 +136,7 @@
       end_date, score, correct_answer, 
       topic_id, subject_code, opponent_name, 
       org_code, type, qt_type, 
-      diff)
+      diff, history)
     values (#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}, #{gradeCode,jdbcType=VARCHAR}, 
       #{classCode,jdbcType=VARCHAR}, #{questionId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, 
@@ -144,7 +145,7 @@
       #{endDate,jdbcType=TIMESTAMP}, #{score,jdbcType=INTEGER}, #{correctAnswer,jdbcType=BIT}, 
       #{topicId,jdbcType=VARCHAR}, #{subjectCode,jdbcType=VARCHAR}, #{opponentName,jdbcType=VARCHAR}, 
       #{orgCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{qtType,jdbcType=INTEGER}, 
-      #{diff,jdbcType=INTEGER})
+      #{diff,jdbcType=INTEGER}, #{history,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -227,6 +228,9 @@
       <if test="diff != null">
         diff,
       </if>
+      <if test="history != null">
+        history,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="creator != null">
@@ -303,6 +307,9 @@
       </if>
       <if test="diff != null">
         #{diff,jdbcType=INTEGER},
+      </if>
+      <if test="history != null">
+        #{history,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -393,6 +400,9 @@
       <if test="record.diff != null">
         diff = #{record.diff,jdbcType=INTEGER},
       </if>
+      <if test="record.history != null">
+        history = #{record.history,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -425,7 +435,8 @@
       org_code = #{record.orgCode,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=INTEGER},
       qt_type = #{record.qtType,jdbcType=INTEGER},
-      diff = #{record.diff,jdbcType=INTEGER}
+      diff = #{record.diff,jdbcType=INTEGER},
+      history = #{record.history,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -508,6 +519,9 @@
       <if test="diff != null">
         diff = #{diff,jdbcType=INTEGER},
       </if>
+      <if test="history != null">
+        history = #{history,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -537,7 +551,8 @@
       org_code = #{orgCode,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
       qt_type = #{qtType,jdbcType=INTEGER},
-      diff = #{diff,jdbcType=INTEGER}
+      diff = #{diff,jdbcType=INTEGER},
+      history = #{history,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -113,6 +113,19 @@ public class StatisticsTask {
                     mergeMap.put(heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
                 }
 
+                totalQo.setTopicIds(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toList()));
+                /*
+                 *  3 完成率
+                 */
+                List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(totalQo);
+
+                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : completeRate) {
+                    HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDP.getUserId());
+                    if (dp != null) {
+                        dp.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
+                    }
+                }
+
                 /*
                  *
                  *   4 答对率
@@ -124,18 +137,6 @@ public class StatisticsTask {
                     HeroLandStatisticsDetailDP totalDP = mergeMap.get(heroLandStatisticsTotalDP.getUserId());
                     if (totalDP != null) {
                         totalDP.setAnswerRightRate(heroLandStatisticsTotalDP.getAnswerRightRate());
-                    }
-                }
-
-                /*
-                 *  3 完成率
-                 */
-                List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(totalQo);
-
-                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : completeRate) {
-                    HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDP.getUserId());
-                    if (dp != null) {
-                        dp.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
                     }
                 }
 

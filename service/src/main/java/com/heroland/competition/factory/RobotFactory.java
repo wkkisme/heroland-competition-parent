@@ -4,6 +4,7 @@ import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.domain.dp.OnlineDP;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.ADMIN;
@@ -15,17 +16,17 @@ import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.AD
  */
 public class RobotFactory {
 
-    public Set<OnlineDP> createRobot(int robotCount,String topicId){
+    public static Set<OnlineDP> createRobot(int robotCount,String topicId){
 
         if (robotCount <= 0){
-            return null;
+            return new HashSet<>();
         }
-        Set<OnlineDP> robots = new HashSet<>();
+        Set<OnlineDP> robots = new LinkedHashSet<>();
         for (int i = 0; i < robotCount; i++) {
             OnlineDP onlineDP = new OnlineDP();
             onlineDP.setRobot(true);
             onlineDP.setSenderId(IDGenerateUtils.getIdByRandom(ADMIN) + "");
-            onlineDP.setSenderName("robot"+robotCount);
+            onlineDP.setSenderName("robot"+i);
             onlineDP.setTopicId(topicId);
             robots.add(onlineDP);
         }
