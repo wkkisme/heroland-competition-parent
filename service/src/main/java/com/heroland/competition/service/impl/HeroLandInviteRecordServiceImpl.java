@@ -131,6 +131,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
             onlineUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
             redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+
+
+            Object beUser = redisService.get("user:" + dp.getBeInviteUserId());
+            OnlineDP beOnlineUser = JSON.parseObject(beUser.toString(), OnlineDP.class);
+            beOnlineUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+            redisService.set("user:" + dp.getBeInviteUserId(), JSON.toJSONString(beOnlineUser), 1000 * 60 * 60 * 2);
+
             rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
             inviteUser.setUserId(dp.getBeInviteUserId());
@@ -169,6 +176,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
             onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
             redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+
+
+            Object beUser = redisService.get("user:" + dp.getBeInviteUserId());
+            OnlineDP beOnlineUser = JSON.parseObject(beUser.toString(), OnlineDP.class);
+            beOnlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+            redisService.set("user:" + dp.getBeInviteUserId(), JSON.toJSONString(beOnlineUser), 1000 * 60 * 60 * 2);
 
             rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
