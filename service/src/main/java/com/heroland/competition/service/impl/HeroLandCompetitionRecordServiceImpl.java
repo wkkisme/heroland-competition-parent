@@ -286,7 +286,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 }
                 if (v.getTopicId() != null) {
                         if (totalCount.size() != 0) {
-                            double rate = (double) (v.getRightCount() / totalCount.size());
+                            double rate = ( (double)v.getRightCount() /  (double)totalCount.size());
                             if (rate >= 1){
                                 v.setAnswerRightRate(1D);
                                 v.setCompleteRate(1D);
@@ -331,7 +331,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
 
                     if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                        landStatisticsDetailDp.setWinRate((double) (heroLandStatisticsDetailDp.getRightCount() / landStatisticsDetailDp.getRightCount()));
+                        landStatisticsDetailDp.setWinRate( ((double)heroLandStatisticsDetailDp.getRightCount() / (double)landStatisticsDetailDp.getRightCount()));
                     }
                 }
             }
