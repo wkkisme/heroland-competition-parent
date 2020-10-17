@@ -3,7 +3,7 @@
 <mapper namespace="com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper">
 
 
-  <select id="countAll" resultMap="com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper.BaseResultMap">
+  <select id="countAll" resultType="Long">
     select count(*) total_count from heroland_topic_question
 
     where is_deleted = 0

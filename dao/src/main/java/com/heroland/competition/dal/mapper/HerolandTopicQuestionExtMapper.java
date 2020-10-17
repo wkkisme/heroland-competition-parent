@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface HerolandTopicQuestionExtMapper  extends  HerolandTopicQuestionMapper{
 
-    List<HerolandTopicQuestion> countAll();
+    Long countAll();
 }

@@ -273,11 +273,11 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        List<HerolandTopicQuestion> totalCount = herolandTopicQuestionExtMapper.countAll();
+        Long totalCount = herolandTopicQuestionExtMapper.countAll();
              /*
                 计算正确率和完成率
              */
-        if (!CollectionUtils.isEmpty(dps) && !CollectionUtils.isEmpty(totalCount) ) {
+        if (!CollectionUtils.isEmpty(dps) && totalCount != null  ) {
             logger.info("dps:{}", JSON.toJSONString(dps));
             logger.info("totalCount:{}", JSON.toJSONString(totalCount));
             dps.forEach(v -> {
@@ -285,8 +285,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                     v.setRightCount(0L);
                 }
                 if (v.getTopicId() != null) {
-                        if (totalCount.size() != 0) {
-                            double rate = ( (double)v.getRightCount() /  (double)totalCount.size());
+                        if (totalCount != 0) {
+                            double rate = ( (double)v.getRightCount() /  (double)totalCount);
                             if (rate >= 1){
                                 v.setAnswerRightRate(1D);
                                 v.setCompleteRate(1D);
