@@ -22,6 +22,7 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecord;
 import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
@@ -126,6 +127,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setAddresseeId(dp.getBeInviteUserId());
         dp.setType(CommandResType.BE_INVITE.getCode());
         try {
+            Object user = redisService.get("user:" + dp.getInviteUserId());
+            OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+            onlineUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
+            redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
             rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
             inviteUser.setUserId(dp.getBeInviteUserId());
@@ -160,6 +165,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         dp.setSenderId(dp.getBeInviteUserId());
         dp.setAddresseeId(dp.getInviteUserId());
         try {
+            Object user = redisService.get("user:" + dp.getInviteUserId());
+            OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+            onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+            redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+
             rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
             userStatusDP.setUserId(dp.getBeInviteUserId());

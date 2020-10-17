@@ -10,6 +10,7 @@ import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.constant.UserStatusEnum;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.factory.CompetitionTopicFactory;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
@@ -77,6 +78,11 @@ public class HeroLandCompetitionController {
                 userStatusDP.setOrgCode(dp.getOrgCode());
                 userStatusDP.setUserStatus(UserStatusEnum.ONLINE.getStatus());
                 rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
+                Object user = redisService.get("user:" + dp.getUserId());
+                OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+                onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+                redisService.set("user:" + dp.getUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+
             }
         } catch (Exception ignored) {
         }

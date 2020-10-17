@@ -3,10 +3,12 @@ package com.heroland.competition.mq;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.constant.UserStatusEnum;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +40,7 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
 
     @Override
     public void onMessage(HeroLandCompetitionRecordDP message) {
-        log.info("比赛记录监听{}",JSON.toJSONString(message));
+        log.info("比赛记录监听{}", JSON.toJSONString(message));
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
         heroLandCompetitionRecordQO.setInviteRecordId(message.getInviteRecordId());
         ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
@@ -47,9 +49,9 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
             if (data.getResult() == null) {
                 String redisKey;
                 if (CompetitionEnum.SYNC.getType().equals(message.getTopicType())) {
-                     redisKey = data.getTopicId() + data.getQuestionId() + data.getInviteId() + data.getOpponentId() + data.getId();
-                }else {
-                    redisKey = data.getTopicId()  + data.getInviteId() + data.getOpponentId() + data.getId();
+                    redisKey = data.getTopicId() + data.getQuestionId() + data.getInviteId() + data.getOpponentId() + data.getId();
+                } else {
+                    redisKey = data.getTopicId() + data.getInviteId() + data.getOpponentId() + data.getId();
                 }
 
                 message.setRecordId(data.getRecordId());
@@ -60,8 +62,18 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
                 message.setOpponentScore(0);
                 heroLandCompetitionRecordService.updateCompetitionRecord(message);
                 redisService.del(redisKey);
-                redisService.del(INVITE_KEY+ data.getInviteId());
-                redisService.del(INVITE_KEY+ data.getOpponentId());
+                redisService.del(INVITE_KEY + data.getInviteId());
+                redisService.del(INVITE_KEY + data.getOpponentId());
+                Object user = redisService.get("user:" + data.getInviteId());
+                OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+                onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+                redisService.set("user:" + data.getInviteId(), JSON.toJSONString(onlineUser), 1000 * 60 * 60 * 2);
+
+                Object beUser = redisService.get("user:" + data.getOpponentId());
+                OnlineDP beOnlineUser = JSON.parseObject(beUser.toString(), OnlineDP.class);
+                beOnlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+                redisService.set("user:" + data.getOpponentId(), JSON.toJSONString(beOnlineUser), 1000 * 60 * 60 * 2);
+
             }
             if (data.getInviteEndTime() == null) {
                 message.setSenderId(message.getInviteId());
