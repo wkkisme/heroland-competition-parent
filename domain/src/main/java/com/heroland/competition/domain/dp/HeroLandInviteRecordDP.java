@@ -76,7 +76,7 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     private String subjectCode;
 
     private String courseCode;
-
+    @ApiModelProperty(value = "是否邀请的机器人")
     private Boolean inviteRobot;
 
     public Boolean getInviteRobot() {
