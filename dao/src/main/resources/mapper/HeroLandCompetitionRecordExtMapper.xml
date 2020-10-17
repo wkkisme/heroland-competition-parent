@@ -57,7 +57,7 @@
 
         select
         sum(total_score) total_score,user_id ,type,grade_code,class_code ,org_code,
-        sum(total_score)/sum(competitionCount) average_score,sum(competitionCount) total_games ,subject_code
+        sum(total_score)/sum(competitionCount) average_score,sum(competitionCount) total_games ,subject_code,topic_id
         from (
         select sum(invite_score) total_score,invite_id user_id ,topic_type type
         ,class_code ,grade_code ,org_code ,subject_code
@@ -87,7 +87,7 @@
         union all
 
         select sum(opponent_score) total_score , opponent_id user_id ,topic_type type
-        ,class_code ,grade_code ,org_code ,subject_code,
+        ,class_code ,grade_code ,org_code ,subject_code,topic_id
         count(opponent_score) competitionCount
         from heroland_competition_record
         where is_deleted = 0
