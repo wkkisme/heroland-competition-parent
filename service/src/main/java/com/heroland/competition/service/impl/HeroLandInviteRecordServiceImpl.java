@@ -252,10 +252,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
                             new TypeReference<HeroLandCompetitionRecordDP>() {
                             }.getType(), 300, 7);
 
-                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(dp), new TypeReference<String>() {
+                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(heroLandCompetitionRecordDP), new TypeReference<String>() {
                     }.getType(),300,5);
                 }else {
-                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(dp), new TypeReference<String>() {
+                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(heroLandCompetitionRecordDP), new TypeReference<String>() {
                     }.getType(),300,14);
                 }
             } catch (Exception ignored) {
