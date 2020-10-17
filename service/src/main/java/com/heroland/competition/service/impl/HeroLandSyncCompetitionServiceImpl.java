@@ -203,7 +203,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                 log.info("我是邀请人:{}", record.getUserId());
                 preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getOpponentId());
             } else {
-                log.info("我是邀请人:{}", record.getUserId());
+                log.info("我是被邀请人:{}", record.getUserId());
                 preAnswer = (HeroLandQuestionRecordDetailDP) redisService.get("question:" + redisKey + record.getInviteId());
             }
             log.info("preAnswer :{},userId :{}", JSON.toJSONString(preAnswer), record.getUserId());
