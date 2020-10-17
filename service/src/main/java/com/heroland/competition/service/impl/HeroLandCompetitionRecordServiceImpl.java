@@ -300,6 +300,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                         v.setAnswerRightRate(0D);
                         v.setCompleteRate(0D);
                     }
+                }else {
+                    v.setAnswerRightRate(0D);
+                    v.setCompleteRate(0D);
                 }
             });
         }
