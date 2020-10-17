@@ -273,7 +273,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 查出所有比赛里有效题
              */
         List<HerolandTopicQuestion> totalCount = herolandTopicQuestionExtMapper.countAll();
-        Map<String, HerolandTopicQuestion> collect = totalCount.stream().collect(Collectors.toMap(HerolandTopicQuestion::getOrgCode, Function.identity()));
+        Map<Long, HerolandTopicQuestion> collect = totalCount.stream().collect(Collectors.toMap(HerolandTopicQuestion::getTopicId, Function.identity()));
              /*
                 计算正确率和完成率
              */
@@ -282,7 +282,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                HerolandTopicQuestion herolandTopicQuestion = collect.get(v.getOrgCode());
+                HerolandTopicQuestion herolandTopicQuestion = collect.get(Long.valueOf(v.getTotalId()));
                 if (herolandTopicQuestion != null) {
                     if (herolandTopicQuestion.getTotalCount() != 0){
                         double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
