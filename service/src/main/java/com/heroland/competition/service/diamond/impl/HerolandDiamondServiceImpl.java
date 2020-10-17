@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import com.heroland.competition.common.constants.DiamBizGroupEnum;
 import com.heroland.competition.common.constants.DiamBizTypeEnum;
 import com.heroland.competition.common.constants.StockEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.DateUtils;
@@ -135,6 +136,29 @@ public class HerolandDiamondServiceImpl implements HerolandDiamondService {
             heroLandAccountService.incrUserDiamond(heroLandAccountManageQO);
         }
         return herolandDiamondStockLogMapper.insertSelective(stockLog) > 0;
+    }
+
+    @Override
+    public Boolean createGameRecord(HerolandDiamRequest request) {
+
+        AssertUtils.assertThat(!NumberUtils.nullOrZero(request.getChangeStockType()), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.assertThat(!NumberUtils.nullOrZero(request.getNum()),HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.notBlank(request.getUserId(),HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        StockEnum stockEnum = StockEnum.valueOfLevel(request.getChangeStockType());
+        if (stockEnum == null){
+            ResponseBodyWrapper.failException("宝石使用类型错误");
+        }
+        AssertUtils.assertThat(StringUtils.isNotBlank(request.getBizGroup()), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.assertThat(StringUtils.isNotBlank(request.getBizName()),HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+
+        HeroLandAccountManageQO qo = new HeroLandAccountManageQO();
+        qo.setUserId(request.getUserId());
+        qo.setBizGroup(request.getBizGroup());
+        qo.setBizName(request.getBizName());
+        qo.setNum(request.getNum());
+        qo.setCompetitionType(request.getCompetitionEnum());
+        heroLandAccountService.decrUserDiamond(qo);
+        return true;
     }
 
     @Override
