@@ -12,85 +12,85 @@ import java.io.Serializable;
 
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 
-@ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsDetail")
+@ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandStatisticsDetail")
 public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     /**
      * userid
      */
-    @ApiModelProperty(value="userIduserid")
+    @ApiModelProperty(value = "userIduserid")
     private String userId;
 
     /**
      * 科目code
      */
-    @ApiModelProperty(value="subjectCode科目code")
+    @ApiModelProperty(value = "subjectCode科目code")
     private String subjectCode;
 
     /**
      * 科目名称
      */
-    @ApiModelProperty(value="subjectName科目名称")
+    @ApiModelProperty(value = "subjectName科目名称")
     private String subjectName;
 
 
     /**
      * 总分数
      */
-    @ApiModelProperty(value="totalScore总分数")
-    private Integer totalScore;
+    @ApiModelProperty(value = "totalScore总分数")
+    private Integer totalScore = 0;
 
     /**
      * 得分率
      */
-    @ApiModelProperty(value="completeRate得分率")
-    private Double completeRate;
+    @ApiModelProperty(value = "completeRate得分率")
+    private Double completeRate = 0d;
 
     /**
      * 正确率
      */
-    @ApiModelProperty(value="answerRightRate正确率")
-    private Double answerRightRate;
+    @ApiModelProperty(value = "answerRightRate正确率")
+    private Double answerRightRate = 0d;
 
     /**
      * 胜率
      */
-    @ApiModelProperty(value="winRate胜率")
-    private Double winRate;
+    @ApiModelProperty(value = "winRate胜率")
+    private Double winRate = 0d;
 
     /**
      * 总时长单位s
      */
-    @ApiModelProperty(value="totalTime总时长单位s")
-    private Integer totalTime;
+    @ApiModelProperty(value = "totalTime总时长单位s")
+    private Integer totalTime = 0;
 
     /**
      * 平均分
      */
-    @ApiModelProperty(value="averageScore平均分")
-    private Double averageScore;
+    @ApiModelProperty(value = "averageScore平均分")
+    private Double averageScore = 0d;
 
     /**
      * 总表id
      */
-    @ApiModelProperty(value="totalId总表id")
+    @ApiModelProperty(value = "totalId总表id")
     private String totalId;
 
     /**
      * 业务id
      */
-    @ApiModelProperty(value="detailId业务id")
+    @ApiModelProperty(value = "detailId业务id")
     private String detailId;
 
     /**
      * 机构code
      */
-    @ApiModelProperty(value="orgCode机构code")
+    @ApiModelProperty(value = "orgCode机构code")
     private String orgCode;
 
     /**
      * 是否历史
      */
-    @ApiModelProperty(value="history是否历史")
+    @ApiModelProperty(value = "history是否历史")
     private Boolean history;
 
     /**
@@ -109,42 +109,42 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     /**
      * 总场次
      */
-    @ApiModelProperty(value="totalGames总场次")
+    @ApiModelProperty(value = "totalGames总场次")
     private Integer totalGames;
 
     /**
      * 班级code
      */
-    @ApiModelProperty(value="classCode班级code")
+    @ApiModelProperty(value = "classCode班级code")
     private String classCode;
 
     /**
      * 年级code
      */
-    @ApiModelProperty(value="gradeCode年级code")
+    @ApiModelProperty(value = "gradeCode年级code")
     private String gradeCode;
 
     /**
      * 姓名
      */
-    @ApiModelProperty(value="userName姓名")
+    @ApiModelProperty(value = "userName姓名")
     private String userName;
 
     /**
      * 比赛类型
      */
-    @ApiModelProperty(value="type比赛类型")
+    @ApiModelProperty(value = "type比赛类型")
     private Integer type;
     /**
      * 年级名称
      */
-    @ApiModelProperty(value="gradeName年级名称")
+    @ApiModelProperty(value = "gradeName年级名称")
     private String gradeName;
 
     /**
      * 班级名称
      */
-    @ApiModelProperty(value="className班级名称")
+    @ApiModelProperty(value = "className班级名称")
     private String className;
 
     private String topicId;
@@ -152,18 +152,18 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     private HeroLandStatisticsDetailDP myselfRank;
 
-    public HeroLandStatisticsDetailDP addDetailCheck(){
+    public HeroLandStatisticsDetailDP addDetailCheck() {
         AssertUtils.notBlank(userId);
 //        AssertUtils.notBlank(orgCode);
         this.beforeInsert();
 
-            try {
-                this.beforeInsert();
-                this.setDetailId(TinyId.nextId("statistics").toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                this.setDetailId(IDGenerateUtils.getIdByRandom(DEFAULT)+"");
-            }
+        try {
+            this.beforeInsert();
+            this.setDetailId(TinyId.nextId("statistics").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.setDetailId(IDGenerateUtils.getIdByRandom(DEFAULT) + "");
+        }
 
         return this;
     }
@@ -283,6 +283,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * userid
+     *
      * @return user_id userid
      */
     public String getUserId() {
@@ -291,6 +292,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * userid
+     *
      * @param userId userid
      */
     public void setUserId(String userId) {
@@ -299,6 +301,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 科目code
+     *
      * @return subject_code 科目code
      */
     public String getSubjectCode() {
@@ -307,6 +310,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 科目code
+     *
      * @param subjectCode 科目code
      */
     public void setSubjectCode(String subjectCode) {
@@ -315,6 +319,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 科目名称
+     *
      * @return subject_name 科目名称
      */
     public String getSubjectName() {
@@ -323,6 +328,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 科目名称
+     *
      * @param subjectName 科目名称
      */
     public void setSubjectName(String subjectName) {
@@ -339,6 +345,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 得分率
+     *
      * @return complete_rate 得分率
      */
     public Double getCompleteRate() {
@@ -347,6 +354,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 得分率
+     *
      * @param completeRate 得分率
      */
     public void setCompleteRate(Double completeRate) {
@@ -355,6 +363,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 正确率
+     *
      * @return answer_right_rate 正确率
      */
     public Double getAnswerRightRate() {
@@ -363,6 +372,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 正确率
+     *
      * @param answerRightRate 正确率
      */
     public void setAnswerRightRate(Double answerRightRate) {
@@ -371,6 +381,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 胜率
+     *
      * @return win_rate 胜率
      */
     public Double getWinRate() {
@@ -379,6 +390,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 胜率
+     *
      * @param winRate 胜率
      */
     public void setWinRate(Double winRate) {
@@ -387,6 +399,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 总时长单位s
+     *
      * @return total_time 总时长单位s
      */
     public Integer getTotalTime() {
@@ -395,6 +408,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 总时长单位s
+     *
      * @param totalTime 总时长单位s
      */
     public void setTotalTime(Integer totalTime) {
@@ -403,6 +417,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 平均分
+     *
      * @return average_score 平均分
      */
     public Double getAverageScore() {
@@ -411,6 +426,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 平均分
+     *
      * @param averageScore 平均分
      */
     public void setAverageScore(Double averageScore) {
@@ -419,6 +435,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 总表id
+     *
      * @return total_id 总表id
      */
     public String getTotalId() {
@@ -427,6 +444,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 总表id
+     *
      * @param totalId 总表id
      */
     public void setTotalId(String totalId) {
@@ -435,6 +453,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 业务id
+     *
      * @return detail_id 业务id
      */
     public String getDetailId() {
@@ -443,6 +462,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     /**
      * 业务id
+     *
      * @param detailId 业务id
      */
     public void setDetailId(String detailId) {
