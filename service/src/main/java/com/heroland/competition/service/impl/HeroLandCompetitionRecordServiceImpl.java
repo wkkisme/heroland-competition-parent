@@ -280,6 +280,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              */
         if (!CollectionUtils.isEmpty(dps) && !CollectionUtils.isEmpty(totalCount) ) {
             logger.info("dps:{}", JSON.toJSONString(dps));
+            logger.info("totalCount:{}", JSON.toJSONString(totalCount));
             dps.forEach(v -> {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
