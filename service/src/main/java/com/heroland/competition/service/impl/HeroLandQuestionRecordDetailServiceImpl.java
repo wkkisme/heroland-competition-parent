@@ -70,6 +70,7 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
                     criteria.andQuestionIdEqualTo(v.getQuestionId());
                     criteria.andTopicIdEqualTo(v.getTopicId());
                     v.setHistory(true);
+                    v.setId(null);
                     questionRecordDetailExtMapper.updateByExampleSelective(v, heroLandQuestionRecordDetailExample);
                     v.setHistory(false);
                 });
