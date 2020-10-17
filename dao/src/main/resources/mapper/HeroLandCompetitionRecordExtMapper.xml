@@ -11,6 +11,7 @@
     <resultMap id="StatisticsMap" type="com.heroland.competition.dal.pojo.HeroLandStatisticsDetailAll"
                extends="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.BaseResultMap">
         <result column="right_count" property="rightCount"/>
+        <result column="topic_id" property="topicId"/>
 
     </resultMap>
     <select id="selectCompetitionRecordsAndQuestions"

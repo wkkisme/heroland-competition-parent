@@ -284,8 +284,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                if (v.getTotalId() != null) {
-                    HerolandTopicQuestion herolandTopicQuestion = collect.get(Long.valueOf(v.getTotalId()));
+                if (v.getTopicId() != null) {
+                    HerolandTopicQuestion herolandTopicQuestion = collect.get(Long.valueOf(v.getTopicId()));
                     if (herolandTopicQuestion != null) {
                         if (herolandTopicQuestion.getTotalCount() != 0) {
                             double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());

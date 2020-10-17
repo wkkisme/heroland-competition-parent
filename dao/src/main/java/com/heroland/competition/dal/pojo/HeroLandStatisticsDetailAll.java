@@ -12,6 +12,16 @@ public class HeroLandStatisticsDetailAll extends HeroLandStatisticsDetail {
      */
     private Long classRank;
 
+    private String topicId;
+
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
+    }
+
     public Long getClassRank() {
         return classRank;
     }
