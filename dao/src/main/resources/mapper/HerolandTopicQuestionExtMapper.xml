@@ -4,15 +4,13 @@
 
 
   <select id="countAll" resultMap="com.heroland.competition.dal.mapper.HerolandTopicQuestionMapper.BaseResultMap">
-    select count(*) total_count ,org_code,topic_id from heroland_topic_question
+    select count(*) total_count from heroland_topic_question
 
     where is_deleted = 0
 
     <if test="type != null ">
       and type = #{type}
     </if>
-
-    group by topic_id
 
   </select>
 </mapper>
