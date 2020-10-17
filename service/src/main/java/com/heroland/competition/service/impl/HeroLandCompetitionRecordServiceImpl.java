@@ -1,6 +1,7 @@
 package com.heroland.competition.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
@@ -278,24 +279,27 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 计算正确率和完成率
              */
         if (!CollectionUtils.isEmpty(dps) && !CollectionUtils.isEmpty(totalCount) ) {
+            logger.info("dps:{}", JSON.toJSONString(dps));
             dps.forEach(v -> {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                HerolandTopicQuestion herolandTopicQuestion = collect.get(Long.valueOf(v.getTotalId()));
-                if (herolandTopicQuestion != null) {
-                    if (herolandTopicQuestion.getTotalCount() != 0){
-                        double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
-                        v.setAnswerRightRate(rate);
-                        v.setCompleteRate(rate);
-                    }else {
+                if (v.getTotalId() != null) {
+                    HerolandTopicQuestion herolandTopicQuestion = collect.get(Long.valueOf(v.getTotalId()));
+                    if (herolandTopicQuestion != null) {
+                        if (herolandTopicQuestion.getTotalCount() != 0) {
+                            double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
+                            v.setAnswerRightRate(rate);
+                            v.setCompleteRate(rate);
+                        } else {
+                            v.setAnswerRightRate(0D);
+                            v.setCompleteRate(0D);
+                        }
+
+                    } else {
                         v.setAnswerRightRate(0D);
                         v.setCompleteRate(0D);
                     }
-
-                }else {
-                    v.setAnswerRightRate(0D);
-                    v.setCompleteRate(0D);
                 }
             });
         }
