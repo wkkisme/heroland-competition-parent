@@ -96,6 +96,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         try {
 
             responseBody = addInvite(dp.inviteCheck(redisService));
+
+            redisService.set("invite_record:" + responseBody.getData(),dp,1000 * 60 * 60 * 2);
         } catch (AppSystemException e) {
             return ResponseBodyWrapper.fail(e.getMessage(), "40002");
         }

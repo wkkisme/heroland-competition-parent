@@ -220,6 +220,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByInviteRecordId(HeroLandCompetitionRecordQO recordId) {
         try {
             HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
+            if (heroLandCompetitionRecord == null){
+                heroLandCompetitionRecord = (HeroLandCompetitionRecord) redisService.get("invite_record:" + recordId.getInviteRecordId());
+            }
             return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecord, HeroLandCompetitionRecordDP.class);
         } catch (Exception e) {
             logger.error("", e);
