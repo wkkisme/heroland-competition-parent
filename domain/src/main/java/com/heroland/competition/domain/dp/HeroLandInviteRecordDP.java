@@ -165,7 +165,7 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
     }
 
     private Boolean getInviteStatus(RedisService redisService, String userId) {
-        boolean isInvited = redisService.setNx(INVITE_KEY + userId, this, "PT6M");
+        boolean isInvited = redisService.setNx(INVITE_KEY + userId, this, "PT3M");
         return !isInvited;
     }
 
