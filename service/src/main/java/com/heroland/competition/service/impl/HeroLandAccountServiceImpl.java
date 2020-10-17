@@ -64,7 +64,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public ResponseBody<Set<OnlineDP>> getOnLineUserByType(HeroLandAccountDP dp) {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopicId());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
-        Set<OnlineDP> users = new HashSet<>();
+        Set<OnlineDP> users = new LinkedHashSet<>();
         members.forEach(userId -> {
             if (userId != null && !userId.equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
