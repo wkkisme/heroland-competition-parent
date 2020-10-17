@@ -4,6 +4,7 @@ import com.anycommon.response.common.BaseDO;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
+import com.heroland.competition.common.utils.DateUtils;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -116,12 +117,22 @@ public class HeroLandTopicGroupDP extends BaseDO implements Serializable {
         if (startTime == null || endTime == null){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
-        if (startTime.before(now)){
-            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_1.getErrorMessage());
+        //这四种比赛的时间按天设置
+        if (type == 0 || type == 1 || type == 2 || type == 3){
+            Date date = DateUtils.formatDate(now, DateUtils.PATTERN_DATE);
+            if (startTime.before(date)){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_1.getErrorMessage());
+            }
+        }else {
+            if (startTime.before(now)){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME_1.getErrorMessage());
+            }
+
         }
         if (startTime.after(endTime)){
             ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TIME.getErrorMessage());
         }
+
         if (StringUtils.isBlank(topicName)) {
             ResponseBodyWrapper.failParamException();
         }
