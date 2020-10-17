@@ -132,6 +132,15 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String topicGradeCode;
     private String topicOrgCode;
 
+    private Boolean history;
+
+    public Boolean getHistory() {
+        return history;
+    }
+
+    public void setHistory(Boolean history) {
+        this.history = history;
+    }
 
     public String getTopicClassCode() {
         return topicClassCode;

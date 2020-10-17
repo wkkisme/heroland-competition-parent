@@ -290,8 +290,13 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                     if (herolandTopicQuestion != null) {
                         if (herolandTopicQuestion.getTotalCount() != 0) {
                             double rate = (double) (v.getRightCount() / herolandTopicQuestion.getTotalCount());
-                            v.setAnswerRightRate(rate);
-                            v.setCompleteRate(rate);
+                            if (rate >= 1){
+                                v.setAnswerRightRate(1D);
+                                v.setCompleteRate(1D);
+                            }else {
+                                v.setAnswerRightRate(rate);
+                                v.setCompleteRate(rate);
+                            }
                         } else {
                             v.setAnswerRightRate(0D);
                             v.setCompleteRate(0D);

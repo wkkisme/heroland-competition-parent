@@ -64,8 +64,17 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
                         v.setAnswer(detail.getAnswer());
                         v.setType(detail.getTopicType());
                     }
+                    HeroLandQuestionRecordDetailExample heroLandQuestionRecordDetailExample = new HeroLandQuestionRecordDetailExample();
+                    HeroLandQuestionRecordDetailExample.Criteria criteria = heroLandQuestionRecordDetailExample.createCriteria();
+                    criteria.andUserIdEqualTo(v.getUserId());
+                    criteria.andQuestionIdEqualTo(v.getQuestionId());
+                    criteria.andTopicIdEqualTo(v.getTopicId());
+                    v.setHistory(true);
+                    questionRecordDetailExtMapper.updateByExampleSelective(v, heroLandQuestionRecordDetailExample);
+                    v.setHistory(false);
                 });
             });
+
             questionRecordDetailExtMapper.insertBach(heroLandQuestionRecordDetails);
         } catch (Exception e) {
             logger.error("e", e);

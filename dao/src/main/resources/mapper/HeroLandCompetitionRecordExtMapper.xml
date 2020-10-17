@@ -155,7 +155,7 @@
 
         select count(*) right_count,user_id ,grade_code ,class_code,topic_id
         from heroland_question_record_detail
-        where is_deleted =0
+        where is_deleted =0 and history = 0
         <if test="ifCorrectAnswer == true">
             and correct_answer = 1
         </if>
