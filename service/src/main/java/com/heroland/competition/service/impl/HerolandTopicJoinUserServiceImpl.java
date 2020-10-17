@@ -8,6 +8,8 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constant.TopicJoinConstant;
+import com.heroland.competition.common.constants.DiamBizGroupEnum;
+import com.heroland.competition.common.constants.DiamBizTypeEnum;
 import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
@@ -130,16 +132,9 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             qo.setUserId(dp.getJoinUsers().get(0));
             qo.setRemark("报名世界赛:"+ dp.getTopicId());
             qo.setNum(1);
+            qo.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
+            qo.setBizGroup(DiamBizTypeEnum.PAY.getValue());
             heroLandAccountService.decrUserDiamond(qo);
-
-            HerolandDiamRequest herolandDiamRequest = new HerolandDiamRequest();
-            herolandDiamRequest.setUserId(dp.getJoinUsers().get(0));
-            herolandDiamRequest.setBizGroup(CompetitionEnum.WORLD.getType().toString());
-            herolandDiamRequest.setBizName(CompetitionEnum.WORLD.getName());
-            herolandDiamRequest.setNum(1);
-            herolandDiamRequest.setChangeStockType(2);
-            herolandDiamondService.createDiamondRecord(herolandDiamRequest);
-
             //对报名人数+1
             heroLandTopicGroupMapper.incrRegisterCount(dp.getTopicId(), heroLandTopicGroup.getRegisterCount() + 1, heroLandTopicGroup.getRegisterCount());
 

@@ -115,7 +115,7 @@ public class HeroLandDiamondController {
     @org.springframework.web.bind.annotation.ResponseBody
     public ResponseBody<Boolean> record(@RequestBody HerolandDiamRequest request){
         ResponseBody<Boolean> result = new ResponseBody<>();
-        result.setData(herolandDiamondService.createDiamondRecord(request));
+        result.setData(herolandDiamondService.createGameRecord(request));
         return result;
     }
 

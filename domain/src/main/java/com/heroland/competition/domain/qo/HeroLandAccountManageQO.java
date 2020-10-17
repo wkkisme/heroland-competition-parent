@@ -3,6 +3,8 @@ package com.heroland.competition.domain.qo;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 钻石账户相关
  * @author mac
@@ -39,6 +41,32 @@ public class HeroLandAccountManageQO {
      * 增加或者扣除数量
      */
     private Integer score;
+
+
+    /**
+     * 业务名称
+     * ANALYSE("ANALYSE","解说分析"),
+     * SPY("SPY","侦查敌情"),
+     * TIPS("TIPS","解题技巧"),
+     * SKIP("SKIP","越级挑战"),
+     * SAME("SAME","赛类似题"),
+     *
+     *
+     * 传参：ANALYSE ...
+     * 目前不完整，新增需要业务方来后端注册
+     */
+    private String bizName;
+
+    /**
+     * 业务组别
+     * 比如有 对赛策略，应试训练等
+     *
+     *  COMPETITON("GAME","对赛策略"),
+     *
+     * 新增组别需要在后端注册
+     */
+    private String bizGroup;
+
 
     public HeroLandAccountManageQO queryDecrCheck(){
 
@@ -121,5 +149,21 @@ public class HeroLandAccountManageQO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getBizName() {
+        return bizName;
+    }
+
+    public void setBizName(String bizName) {
+        this.bizName = bizName;
+    }
+
+    public String getBizGroup() {
+        return bizGroup;
+    }
+
+    public void setBizGroup(String bizGroup) {
+        this.bizGroup = bizGroup;
     }
 }

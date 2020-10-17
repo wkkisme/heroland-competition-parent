@@ -36,5 +36,7 @@ public interface HerolandDiamondService {
 
     Boolean createDiamondRecord(HerolandDiamRequest request);
 
+    Boolean createGameRecord(HerolandDiamRequest request);
+
     HerolandDiamondStockDto recordList(HerolandDiamMonthRecordRequest request);
 }

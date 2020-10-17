@@ -179,9 +179,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public ResponseBody<HeroLandAccountDP> decrUserDiamond(HeroLandAccountManageQO dp) {
         String userId = dp.getUserId();
         dp.queryDecrCheck();
+        String key = "user_diamond_decr:"+dp.getUserId()+dp.getBizGroup()+dp.getBizName();
         try {
-
-            if (redisService.setNx("user_diamond_decr:" + userId, dp, "PT2h")) {
+            if (redisService.setNx(key, dp, "PT3S")) {
 
                 HeroLandAccountQO qo = new HeroLandAccountQO();
                 qo.setUserId(userId);
@@ -207,15 +207,15 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 
                     HerolandDiamRequest herolandDiamRequest = new HerolandDiamRequest();
                     herolandDiamRequest.setUserId(userId);
-                    herolandDiamRequest.setBizGroup(dp.getCompetitionType().getType().toString());
-                    herolandDiamRequest.setBizName(dp.getCompetitionType().getName());
+                    herolandDiamRequest.setBizGroup(dp.getBizGroup());
+                    herolandDiamRequest.setBizName(dp.getBizName());
                     herolandDiamRequest.setNum(dp.getNum());
                     herolandDiamRequest.setChangeStockType(2);
                     herolandDiamondService.createDiamondRecord(herolandDiamRequest);
                 }
             }
         } finally {
-            redisService.del("user_diamond_decr:" + userId);
+            redisService.del(key);
         }
         return ResponseBodyWrapper.success();
     }

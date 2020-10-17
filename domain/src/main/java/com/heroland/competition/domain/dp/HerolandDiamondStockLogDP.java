@@ -9,6 +9,7 @@ import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +35,9 @@ public class HerolandDiamondStockLogDP extends BaseDO {
         if (stockEnum == null){
             ResponseBodyWrapper.failException("宝石使用类型错误");
         }
+        AssertUtils.assertThat(StringUtils.isNotBlank(bizGroup), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        AssertUtils.assertThat(StringUtils.isNotBlank(bizType),HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+
 //        DiamBizGroupEnum diamBizGroupEnum = DiamBizGroupEnum.valueOfLevel(bizGroup);
 //        if (diamBizGroupEnum == null){
 //            ResponseBodyWrapper.failException("宝石使用分组不存在，请先注册");

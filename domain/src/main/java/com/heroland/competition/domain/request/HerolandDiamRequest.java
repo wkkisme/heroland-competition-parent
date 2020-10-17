@@ -25,7 +25,7 @@ public class HerolandDiamRequest extends BaseQO implements Serializable {
      * 扣减 | 增加
      * INCREASE(1,"增加"),
      * DECREASE(2,"扣减"),
-     *
+     * 比赛中目前只有扣减钻石的
      */
     @NotNull
     private Integer changeStockType;
@@ -41,6 +41,10 @@ public class HerolandDiamRequest extends BaseQO implements Serializable {
      * ANALYSE("ANALYSE","解说分析"),
      * SPY("SPY","侦查敌情"),
      * TIPS("TIPS","解题技巧"),
+     * SKIP("SKIP","越级挑战"),
+     * SAME("SAME","赛类似题"),
+     *
+     *
      * 传参：ANALYSE ...
      * 目前不完整，新增需要业务方来后端注册
      */
@@ -52,9 +56,7 @@ public class HerolandDiamRequest extends BaseQO implements Serializable {
      * 比如有 对赛策略，应试训练等
      *
      *  COMPETITON("GAME","对赛策略"),
-     *  TRAIN("TRAIN","应试训练"),
-     *  BUY("buy","充值"),
-     * 传参：GAME ...
+     *
      * 新增组别需要在后端注册
      */
     @NotNull
