@@ -151,7 +151,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     public HeroLandStatisticsDetailDP addDetailCheck(){
         AssertUtils.notBlank(userId);
-        AssertUtils.notBlank(orgCode);
+//        AssertUtils.notBlank(orgCode);
         this.beforeInsert();
 
             try {
