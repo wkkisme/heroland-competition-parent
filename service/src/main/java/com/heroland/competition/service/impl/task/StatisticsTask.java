@@ -113,7 +113,7 @@ public class StatisticsTask {
                     mergeMap.put(heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
                 }
 
-
+                totalQo.setTopicIds(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toList()));
                 /*
                  *  3 完成率
                  */

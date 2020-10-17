@@ -273,7 +273,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        Long totalCount = herolandTopicQuestionExtMapper.countAll();
+        Long totalCount = herolandTopicQuestionExtMapper.countAll(qo);
              /*
                 计算正确率和完成率
              */
