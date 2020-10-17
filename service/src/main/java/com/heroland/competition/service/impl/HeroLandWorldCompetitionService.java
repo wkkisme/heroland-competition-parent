@@ -39,6 +39,7 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP record) {
         record.worldCheck(redisService);
         HeroLandTopicPageRequest heroLandTopicPageRequest = new HeroLandTopicPageRequest();
+        heroLandTopicPageRequest.setTopicId(Long.valueOf(record.getTopicId()));
         HeroLandTopicDto topic = heroLandQuestionService.getTopic(heroLandTopicPageRequest);
         if (topic == null || topic.getRegisterCount() == null) {
             return ResponseBodyWrapper.fail("比赛为空,或者报名人数为空！", "5000");
