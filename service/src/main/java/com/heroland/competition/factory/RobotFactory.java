@@ -1,5 +1,6 @@
 package com.heroland.competition.factory;
 
+import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.heroland.competition.domain.dp.OnlineDP;
 
@@ -28,6 +29,8 @@ public class RobotFactory {
             onlineDP.setSenderId(IDGenerateUtils.getIdByRandom(ADMIN) + "");
             onlineDP.setSenderName("robot"+i);
             onlineDP.setTopicId(topicId);
+            onlineDP.setUserStatus(0);
+            onlineDP.setLevel(HeroLevelEnum.ADVERSITY_HERO.name());
             robots.add(onlineDP);
         }
         return robots;
