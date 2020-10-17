@@ -222,6 +222,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                             heroLandAccountManageQO.setUserId(record.getUserId());
                             heroLandQuestionRecordDetailDP.setScore(levelScore);
                             heroLandAccountManageQO.setScore(levelScore);
+                            record.setInviteScore(levelScore);
                         } else {
                             // 如果我是被邀请人
                             record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
@@ -230,6 +231,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
                             heroLandQuestionRecordDetailDP.setScore(levelScore);
                             heroLandAccountManageQO.setUserId(record.getUserId());
                             heroLandAccountManageQO.setScore(levelScore);
+                            record.setOpponentScore(levelScore);
                         }
                     }
 
