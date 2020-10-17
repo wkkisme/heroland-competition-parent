@@ -25,7 +25,7 @@ public class RobotFactory {
             OnlineDP onlineDP = new OnlineDP();
             onlineDP.setRobot(true);
             onlineDP.setSenderId(IDGenerateUtils.getIdByRandom(ADMIN) + "");
-            onlineDP.setSenderName("robot"+robotCount);
+            onlineDP.setSenderName("robot"+i);
             onlineDP.setTopicId(topicId);
             robots.add(onlineDP);
         }

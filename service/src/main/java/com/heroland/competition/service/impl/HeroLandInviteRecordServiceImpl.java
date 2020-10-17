@@ -29,11 +29,16 @@ import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import com.heroland.competition.service.HeroLandQuestionService;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -102,6 +107,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             rocketMQTemplate.sendAndReceive("competition-invite", dp,
                     new TypeReference<HeroLandInviteRecordDP>() {
                     }.getType(), 300, 7);
+
+            rocketMQTemplate.syncSend("robot:invite", JSON.toJSONString(dp), 300);
         } catch (Exception ignored) {
         }
 
@@ -207,8 +214,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             redisService.set("competition-record:" + heroLandCompetitionRecordDP.getInviteRecordId(), heroLandCompetitionRecordDP, 180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
+            /*
+             *  delayTimeLevel  默认延迟等级 : 1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h，
+             *         传入1代表1s, 2代表5s, 以此类推
+             */
             // 广播所有人和发给对手
-            // TODO 先判断是否在线
             dp.setType(CommandResType.INVITE_AGREE.getCode());
             dp.setSenderId(dp.getBeInviteUserId());
             dp.setAddresseeId(dp.getInviteUserId());
@@ -218,6 +228,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
                     rocketMQTemplate.sendAndReceive("competition-record", dp,
                             new TypeReference<HeroLandCompetitionRecordDP>() {
                             }.getType(), 300, 7);
+
+                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(dp), new TypeReference<String>() {
+                    }.getType(),300,5);
+                }else {
+                    rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(dp), new TypeReference<String>() {
+                    }.getType(),300,14);
                 }
             } catch (Exception ignored) {
             }
@@ -225,12 +241,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
                 rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
                 // 最近游戏的人
-                redisService.sAdd("recent_user:" +dp.getTopicId()+ dp.getInviteUserId(), dp.getBeInviteUserId());
-                redisService.sAdd("recent_user:" + dp.getTopicId()+ dp.getBeInviteUserId(), dp.getInviteUserId());
+                redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getInviteUserId(), dp.getBeInviteUserId());
+                redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getBeInviteUserId(), dp.getInviteUserId());
 
-                if (redisService.sIsMember("recent_user:" + dp.getInviteUserId(), dp.getBeInviteUserId())) {
-
-                }
             } catch (Exception ignored) {
             }
             return ResponseBodyWrapper.successWrapper(dp.getRecordId());

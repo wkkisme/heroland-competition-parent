@@ -56,6 +56,8 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
                 message.setId(data.getId());
                 // 如果超时了还是空的 要么是前一个打错，要么是都没答 平局
                 message.setResult(CompetitionResultEnum.DRAW.getResult());
+                message.setInviteScore(0);
+                message.setOpponentScore(0);
                 heroLandCompetitionRecordService.updateCompetitionRecord(message);
                 redisService.del(redisKey);
                 redisService.del(INVITE_KEY+ data.getInviteId());
