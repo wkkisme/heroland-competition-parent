@@ -79,6 +79,16 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
 
     private String classCode;
 
+    private Integer userStatus;
+
+    public Integer getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
     public HeroLandAccountDP queryCheck() {
         if (StringUtils.isBlank(this.userId)) {
             ResponseBodyWrapper.failParamException();

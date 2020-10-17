@@ -3,12 +3,14 @@ package com.heroland.competition.mq;
 import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.constant.UserStatusEnum;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
 import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
+import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
@@ -91,12 +93,20 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
 
                     message.setRecordId(data.getRecordId());
                     message.setId(data.getId());
+                    message.setOpponentScore(0);
                     // 如果超时了还是空的 要么是前一个打错，要么是都没答 平局
                     message.setResult(CompetitionResultEnum.DRAW.getResult());
                     heroLandCompetitionRecordService.updateCompetitionRecord(message);
                     redisService.del(redisKey);
                     redisService.del(INVITE_KEY+ data.getInviteId());
                     redisService.del(INVITE_KEY+ data.getOpponentId());
+
+
+                    Object user = redisService.get("user:" + data.getInviteId());
+                    OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+                    onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
+                    redisService.set("user:" + data.getInviteId(), JSON.toJSONString(onlineUser), 1000 * 60 * 60 * 2);
+
                 }
                 if (data.getInviteEndTime() == null) {
                     message.setSenderId(message.getInviteId());

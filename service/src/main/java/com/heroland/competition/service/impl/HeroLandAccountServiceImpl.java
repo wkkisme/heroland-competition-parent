@@ -112,11 +112,17 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 redisService.sRemove(RedisConstant.ONLINE_KEY + dp.getTopicId(), userId);
             }
         });
-
+        Set<OnlineDP> finalUsers = users;
         if (users.size() < 10){
-           users.addAll(RobotFactory.createRobot(10 - users.size(),dp.getTopicId()));
+            finalUsers.addAll(RobotFactory.createRobot(10 - users.size(),dp.getTopicId()));
         }
-        objectResponseBody.setData(users);
+        if (dp.getLevelCode() != null){
+            finalUsers = users.stream().filter(v -> dp.getLevelCode().equals(v.getLevel())).collect(Collectors.toSet());
+        }
+        if (dp.getUserStatus() != null){
+            finalUsers =  users.stream().filter(v -> dp.getUserStatus().equals(v.getUserStatus())).collect(Collectors.toSet());
+        }
+        objectResponseBody.setData(finalUsers);
         return objectResponseBody;
     }
 
