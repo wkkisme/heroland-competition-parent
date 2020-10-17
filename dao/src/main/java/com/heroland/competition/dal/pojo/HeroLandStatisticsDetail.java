@@ -29,37 +29,37 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      * 总分数
      */
     @ApiModelProperty(value="totalScore总分数")
-    private Integer totalScore;
+    private Integer totalScore= 0;
 
     /**
      * 得分率
      */
     @ApiModelProperty(value="completeRate得分率")
-    private Double completeRate;
+    private Double completeRate = 0D;
 
     /**
      * 正确率
      */
     @ApiModelProperty(value="answerRightRate正确率")
-    private Double answerRightRate;
+    private Double answerRightRate = 0D;
 
     /**
      * 胜率
      */
     @ApiModelProperty(value="winRate胜率")
-    private Double winRate;
+    private Double winRate = 0D;
 
     /**
      * 总时长单位s
      */
     @ApiModelProperty(value="totalTime总时长单位s")
-    private Integer totalTime;
+    private Integer totalTime = 0;
 
     /**
      * 平均分
      */
     @ApiModelProperty(value="averageScore平均分")
-    private Double averageScore;
+    private Double averageScore = 0D;
 
     /**
      * 总表id
@@ -89,7 +89,7 @@ public class HeroLandStatisticsDetail extends BaseDO implements Serializable {
      * 总场次
      */
     @ApiModelProperty(value="totalGames总场次")
-    private Integer totalGames;
+    private Integer totalGames = 0;
 
     /**
      * 班级code
