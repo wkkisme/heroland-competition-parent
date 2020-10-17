@@ -88,6 +88,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     public ResponseBody<String> invite(HeroLandInviteRecordDP dp) {
         ResponseBody<String> responseBody = null;
         try {
+
             responseBody = addInvite(dp.inviteCheck(redisService));
         } catch (AppSystemException e) {
             return ResponseBodyWrapper.fail(e.getMessage(), "40002");

@@ -77,6 +77,16 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
 
     private String courseCode;
 
+    private Boolean inviteRobot;
+
+    public Boolean getInviteRobot() {
+        return inviteRobot;
+    }
+
+    public void setInviteRobot(Boolean inviteRobot) {
+        this.inviteRobot = inviteRobot;
+    }
+
     public String getCourseCode() {
         return courseCode;
     }
@@ -160,6 +170,9 @@ public class HeroLandInviteRecordDP extends SocketTransferDP {
      * @return if
      */
     public Boolean isBeInvited(RedisService redisService) {
+        if (this.inviteRobot){
+            return false;
+        }
         return getInviteStatus(redisService, this.getBeInviteUserId());
 
     }

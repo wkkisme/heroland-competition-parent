@@ -19,6 +19,7 @@ import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
+import com.heroland.competition.factory.RobotFactory;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -33,7 +34,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -85,6 +88,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                                 OnlineDP online = new OnlineDP();
                                 online.setSenderId(v.getUserId());
                                 online.setSenderName(v.getUserName());
+                                if (!CollectionUtils.isEmpty(v.getClasses())) {
+                                    online.setClassCode(v.getClasses().get(0).getClassCode());
+                                }
                                 onlines.add(online);
                             });
 
@@ -106,6 +112,10 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 redisService.sRemove(RedisConstant.ONLINE_KEY + dp.getTopicId(), userId);
             }
         });
+
+        if (users.size() < 10){
+           users.addAll(RobotFactory.createRobot(10 - users.size(),dp.getTopicId()));
+        }
         objectResponseBody.setData(users);
         return objectResponseBody;
     }

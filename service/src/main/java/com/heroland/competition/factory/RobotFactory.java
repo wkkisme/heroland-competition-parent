@@ -15,10 +15,10 @@ import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.AD
  */
 public class RobotFactory {
 
-    public Set<OnlineDP> createRobot(int robotCount,String topicId){
+    public static Set<OnlineDP> createRobot(int robotCount,String topicId){
 
         if (robotCount <= 0){
-            return null;
+            return new HashSet<>();
         }
         Set<OnlineDP> robots = new HashSet<>();
         for (int i = 0; i < robotCount; i++) {
