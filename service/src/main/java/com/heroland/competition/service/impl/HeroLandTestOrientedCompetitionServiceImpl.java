@@ -181,6 +181,8 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     record.setAddresseeId(record.getOpponentId());
                     preRecord.setSenderId(record.getInviteId());
                     preRecord.setAddresseeId(record.getOpponentId());
+                    record.setOpponentScore(preRecord.getScore());
+                    record.setOpponentEndTime(preRecord.getOpponentEndTime());
                     // 对方答案
                     HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getOpponentId());
                     log.info("rightCount{}", JSON.toJSONString(rightCount));
@@ -224,8 +226,11 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     record.setAddresseeId(record.getInviteId());
                     preRecord.setSenderId(record.getInviteId());
                     preRecord.setAddresseeId(record.getOpponentId());
+                    record.setInviteScore(preRecord.getScore());
+                    record.setInviteEndTime(preRecord.getInviteEndTime());
                     log.info("inviteResult{}", JSON.toJSONString(inviteResult));
                     record.setOpponentScore(otherResult.getScore());
+
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
                     // 否则判断每个人的时间和答对数量
                     // 1 如果答题数量相等或者前一个答对数量多 则前一个人胜
@@ -250,8 +255,10 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandAccountManageQO.setUserId(record.getOpponentId());
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
                         record.setOpponentScore(otherResult.getScore() * 2);
+
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                     }
+
                     heroLandCompetitionRecordService.updateCompetitionRecord(record);
                     heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
                 }
