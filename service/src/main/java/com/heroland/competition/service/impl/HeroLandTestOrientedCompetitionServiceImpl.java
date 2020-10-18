@@ -224,8 +224,9 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
                     record.setSenderId(record.getOpponentId());
                     record.setAddresseeId(record.getInviteId());
-                    preRecord.setSenderId(record.getInviteId());
-                    preRecord.setAddresseeId(record.getOpponentId());
+                    preRecord.setSenderId(record.getOpponentId());
+                    preRecord.setAddresseeId(record.getInviteId());
+
                     record.setInviteScore(preRecord.getScore());
                     record.setInviteEndTime(preRecord.getInviteEndTime());
                     log.info("inviteResult{}", JSON.toJSONString(inviteResult));
