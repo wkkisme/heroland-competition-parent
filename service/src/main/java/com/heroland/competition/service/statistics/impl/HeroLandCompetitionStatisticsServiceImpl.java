@@ -241,9 +241,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
-
+        List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+        if (qo.getUserId() == null){
+            qo.setUserId(qo.getCurrentUserId());
+            List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+            detailAlls.addAll(0,myRank);
+            qo.setUserId(null);
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
-                .successListWrapper(heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo),
+                .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
         if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
             // 同步作业赛时不需要班级排名

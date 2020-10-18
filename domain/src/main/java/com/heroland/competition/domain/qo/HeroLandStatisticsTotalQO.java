@@ -153,6 +153,16 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private List<String> userIds;
 
+    private String currentUserId;
+
+    public String getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(String currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
     public void checkType(){
 
         AssertUtils.assertThat(type != null);
