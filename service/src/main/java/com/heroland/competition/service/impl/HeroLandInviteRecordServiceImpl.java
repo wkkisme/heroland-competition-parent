@@ -97,7 +97,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
             responseBody = addInvite(dp.inviteCheck(redisService));
 
-            redisService.set("invite_record:" + responseBody.getData(),dp,1000 * 60 * 60 * 2);
+
         } catch (AppSystemException e) {
             return ResponseBodyWrapper.fail(e.getMessage(), "40002");
         }
@@ -110,8 +110,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             rocketMQTemplate.sendAndReceive("competition-invite", dp,
                     new TypeReference<HeroLandInviteRecordDP>() {
                     }.getType(), 300, 7);
+        if (dp.getInviteRobot()){
+            agreeInvite(dp);
+        }
 
-            rocketMQTemplate.syncSend("robot:invite", JSON.toJSONString(dp), 300);
         } catch (Exception ignored) {
         }
 
