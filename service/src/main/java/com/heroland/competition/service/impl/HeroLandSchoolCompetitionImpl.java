@@ -120,13 +120,13 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                 rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
             } else {
                 record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
-                Long otherRightCount;
+                Integer otherRightCount;
                 if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
 
-                    otherRightCount = (Long) redisService.get("competition_answer_right_count:" + getType() + record.getInviteId());
+                    otherRightCount = (Integer) redisService.get("competition_answer_right_count:" + getType() + record.getInviteId());
 
                 } else {
-                    otherRightCount = (Long) redisService.get("competition_answer_right_count:" + getType() + record.getOpponentId());
+                    otherRightCount = (Integer) redisService.get("competition_answer_right_count:" + getType() + record.getOpponentId());
                 }
                 if (rightCount > otherRightCount){
                     if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
