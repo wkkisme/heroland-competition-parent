@@ -193,7 +193,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandAccountManageQO.setScore(otherResult.getScore());
                         heroLandAccountManageQO.setUserId(record.getInviteId());
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-
+                        record.setInviteScore(otherResult.getScore());
                         // 被邀请人的分数*2
                         heroLandAccountManageQO.setScore(rightCount.getScore());
                         heroLandAccountManageQO.setUserId(record.getOpponentId());
@@ -205,6 +205,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         // 邀请人的分数 *2
                         heroLandAccountManageQO.setScore(otherResult.getScore() * 2);
                         heroLandAccountManageQO.setUserId(record.getInviteId());
+                        record.setInviteScore(otherResult.getScore() * 2);
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
 
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
@@ -229,7 +230,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandAccountManageQO.setScore(inviteResult.getScore());
                         heroLandAccountManageQO.setUserId(record.getInviteId());
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-
+                        record.setOpponentScore(otherResult.getScore());
                         // 被邀请方
                         heroLandAccountManageQO.setScore(otherResult.getScore());
                         heroLandAccountManageQO.setUserId(record.getOpponentId());
@@ -244,7 +245,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandAccountManageQO.setScore(otherResult.getScore() * 2);
                         heroLandAccountManageQO.setUserId(record.getOpponentId());
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-
+                        record.setOpponentScore(otherResult.getScore() * 2);
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                     }
                     heroLandCompetitionRecordService.updateCompetitionRecord(record);
