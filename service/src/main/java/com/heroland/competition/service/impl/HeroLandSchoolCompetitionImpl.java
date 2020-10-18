@@ -228,7 +228,7 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                 detail.setScore(1);
             }
         }
-        log.info("校际赛最终结果：{}",record);
+        log.info("校际赛最终结果：{}",JSON.toJSONString(record));
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         heroLandCompetitionRecordService.updateCompetitionRecord(record);
         return ResponseBodyWrapper.successWrapper(record);
