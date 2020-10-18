@@ -133,7 +133,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             qo.setRemark("报名世界赛:"+ dp.getTopicId());
             qo.setNum(1);
             qo.setBizGroup(DiamBizGroupEnum.BUY.getGroup());
-            qo.setBizGroup(DiamBizTypeEnum.PAY.getValue());
+            qo.setBizName(DiamBizTypeEnum.PAY.getValue());
             heroLandAccountService.decrUserDiamond(qo);
             //对报名人数+1
             heroLandTopicGroupMapper.incrRegisterCount(dp.getTopicId(), heroLandTopicGroup.getRegisterCount() + 1, heroLandTopicGroup.getRegisterCount());
