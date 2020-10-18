@@ -17,9 +17,6 @@
         and
         a.is_deleted = b.is_deleted
 
-        <if test="userId != null">
-            and a.user_id = b.user_id
-        </if>
 
         <if test="history != null">
             and a.history = b.history
