@@ -226,6 +226,8 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         for (HeroLandQuestionRecordDetailDP detail : record.getDetails()) {
             if (detail.getCorrectAnswer()){
                 detail.setScore(1);
+            }else {
+                detail.setScore(0);
             }
         }
         log.info("校际赛最终结果：{}",JSON.toJSONString(record));
