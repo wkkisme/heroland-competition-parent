@@ -270,6 +270,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         }else {
             record.setScore(record.getOpponentScore());
         }
+        log.info("最后结果：{}",JSON.toJSONString(record));
         redisService.set("test_oriented_record:"+record.getUserId(),record,60*60*3);
         return ResponseBodyWrapper.successWrapper(record);
     }
