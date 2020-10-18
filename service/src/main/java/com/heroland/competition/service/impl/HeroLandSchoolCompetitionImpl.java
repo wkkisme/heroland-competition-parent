@@ -10,6 +10,7 @@ import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
+import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.*;
 import org.apache.dubbo.config.annotation.Service;
@@ -23,7 +24,7 @@ import static com.heroland.competition.common.enums.Constants.CommandReqType.STO
 
 /**
  * 對賽規則，要麼12題對賽完結束，
- * 要麼連續戰勝對手4場結束，中間不能由和，
+ * 要麼連續戰勝對手8場結束，中間不能由和，
  * 要4題連勝就立刻終止對賽，並跳轉至勝負界面。
  * （注意：不管負方有沒有完成答題，也不管勝方做了多少題。）
  * <p>
@@ -70,6 +71,8 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         //  判断当前人连续答题次数 连续答对4题
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
         heroLandCompetitionRecordQO.setRecordId(record.getRecordId());
+        HeroLandAccountManageQO heroLandAccountManageQO = new HeroLandAccountManageQO();
+
         ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByRecordId = heroLandCompetitionRecordService.getCompetitionRecordByRecordId(heroLandCompetitionRecordQO);
         if (competitionRecordByRecordId.getData() == null) {
             return ResponseBodyWrapper.fail("比赛不存在", "40000");
@@ -83,24 +86,51 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                 if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                     record.setAddresseeId(record.getOpponentId());
+                    record.setOpponentScore(16);
+                    heroLandAccountManageQO.setScore(16);
+                    heroLandAccountManageQO.setUserId(record.getOpponentId());
                 } else {
                     record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                     record.setAddresseeId(record.getInviteId());
+                    record.setInviteScore(16);
+                    heroLandAccountManageQO.setScore(16);
+                    heroLandAccountManageQO.setUserId(record.getInviteId());
                 }
                 record.setSenderId(record.getUserId());
                 record.setOpponentEndTime(new Date());
                 record.setInviteEndTime(new Date());
                 record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
+
                 //通知
                 record.setType(STOP_ANSWER_QUESTIONS.getCode());
+
                 rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
+            }else {
+
+                if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
+                    record.setAddresseeId(record.getOpponentId());
+                    record.setOpponentScore(8);
+                    heroLandAccountManageQO.setScore(8);
+                    heroLandAccountManageQO.setUserId(record.getOpponentId());
+                } else {
+                    record.setAddresseeId(record.getInviteId());
+                    record.setInviteScore(8);
+                    heroLandAccountManageQO.setScore(8);
+                    heroLandAccountManageQO.setUserId(record.getInviteId());
+                }
+                record.setSenderId(record.getUserId());
+                record.setOpponentEndTime(new Date());
+                record.setInviteEndTime(new Date());
+                record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
+
             }
+            heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
 
         } else {
             // 否则就是答12道题的提交答案
             List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
             // 答对题数
-            long rightCount = dps.parallelStream().map(HeroLandQuestionRecordDetailDP::getCorrectAnswer).count();
+            int rightCount = Math.toIntExact(dps.parallelStream().map(HeroLandQuestionRecordDetailDP::getCorrectAnswer).count());
             // 如果是先答题的人
             if (lock) {
                 redisService.set("competition_answer_right_count:" + getType() + record.getUserId(), rightCount);
@@ -109,15 +139,21 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                         record.setAddresseeId(record.getOpponentId());
                         record.setOpponentEndTime(new Date());
+                        record.setOpponentScore(rightCount * 2);
+                        heroLandAccountManageQO.setScore(rightCount);
+                        heroLandAccountManageQO.setUserId(record.getOpponentId());
                     } else {
-                        record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                         record.setAddresseeId(record.getInviteId());
                         record.setInviteEndTime(new Date());
+                        record.setInviteScore(rightCount );
+                        heroLandAccountManageQO.setScore(rightCount);
+                        heroLandAccountManageQO.setUserId(record.getInviteId());
                     }
                 }
                 //通知
                 record.setType(STOP_ANSWER_QUESTIONS.getCode());
                 rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
+                heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
             } else {
                 record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
                 Integer otherRightCount;
@@ -128,27 +164,53 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                 } else {
                     otherRightCount = (Integer) redisService.get("competition_answer_right_count:" + getType() + record.getOpponentId());
                 }
-                if (rightCount > otherRightCount){
+                if (rightCount > otherRightCount){ // 后者胜
                     if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                         record.setAddresseeId(record.getOpponentId());
                         record.setOpponentEndTime(new Date());
+                        record.setOpponentScore(rightCount * 2);
+                        heroLandAccountManageQO.setScore(rightCount * 2);
+                        heroLandAccountManageQO.setUserId(record.getOpponentId());
                     } else {
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                         record.setAddresseeId(record.getInviteId());
                         record.setInviteEndTime(new Date());
+                        record.setInviteScore(rightCount * 2);
+                        heroLandAccountManageQO.setScore(rightCount * 2);
+                        heroLandAccountManageQO.setUserId(record.getInviteId());
                     }
-                }else {
+                    heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+                }else { // 后者败
                     if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                         record.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
                         record.setAddresseeId(record.getOpponentId());
+                        record.setInviteScore(rightCount * 2);
+                        heroLandAccountManageQO.setScore(otherRightCount);
+                        heroLandAccountManageQO.setUserId(record.getInviteId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+
+                        heroLandAccountManageQO.setScore(rightCount);
+                        heroLandAccountManageQO.setUserId(record.getOpponentId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
                     } else {
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                         record.setAddresseeId(record.getInviteId());
+                        record.setOpponentScore(rightCount * 2);
+
+                        heroLandAccountManageQO.setScore(otherRightCount);
+                        heroLandAccountManageQO.setUserId(record.getOpponentId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
+
+                        heroLandAccountManageQO.setScore(rightCount);
+                        heroLandAccountManageQO.setUserId(record.getInviteId());
+                        heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
                     }
                 }
             }
         }
+
+
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         heroLandCompetitionRecordService.updateCompetitionRecord(record);
         return ResponseBodyWrapper.successWrapper(record);
