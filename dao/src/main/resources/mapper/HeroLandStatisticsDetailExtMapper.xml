@@ -63,7 +63,7 @@
         <if test="userIds != null and userIds.size() > 0">
             and a.user_id = b.user_id
         </if>
-        )+1 AS rank ${orderType}
+        )+1 AS rank
         FROM heroland_statistics_detail
         as a
         where a.is_deleted = 0
