@@ -13,6 +13,7 @@ import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 
@@ -33,6 +34,7 @@ import static com.heroland.competition.common.enums.Constants.CommandReqType.STO
  * @author mac
  */
 @Service
+@Slf4j
 public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService {
 
     @Resource
@@ -131,8 +133,10 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
             List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
             // 答对题数
             int rightCount = Math.toIntExact(dps.parallelStream().map(HeroLandQuestionRecordDetailDP::getCorrectAnswer).count());
+
             // 如果是先答题的人
             if (lock) {
+                log.info("先进入答对：{}",rightCount);
                 redisService.set("competition_answer_right_count:" + getType() + record.getUserId(), rightCount);
                 if (rightCount == record.getDetails().size()) {
                     if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
@@ -164,6 +168,8 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
                 } else {
                     otherRightCount = (Integer) redisService.get("competition_answer_right_count:" + getType() + record.getOpponentId());
                 }
+                log.info("后进入答对：{}",rightCount);
+                log.info("前一个人答对：{}",otherRightCount);
                 if (rightCount > otherRightCount){ // 后者胜
                     if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                         record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
@@ -210,7 +216,12 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
             }
         }
 
-
+        if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+            record.setScore(record.getInviteScore());
+        }else {
+            record.setScore(record.getOpponentScore());
+        }
+        log.info("校际赛最终结果：{}",record);
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         heroLandCompetitionRecordService.updateCompetitionRecord(record);
         return ResponseBodyWrapper.successWrapper(record);
