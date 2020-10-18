@@ -468,9 +468,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getId().toString());
 
-                if (heroLandCompetitionRecordDPS != null) {
+                if (!CollectionUtils.isEmpty(heroLandCompetitionRecordDPS)) {
                     // 因为一个人下的topicId只会有一场比赛 取出来即可
-                    HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.get(0);
+                    HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList()).get(0);
                     if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
 
                         if (recordDP.getResult() != null) {
