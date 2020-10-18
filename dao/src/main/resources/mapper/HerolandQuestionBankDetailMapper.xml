@@ -206,7 +206,7 @@
     from heroland_question_bank_detail
     where is_deleted = 0
     <if test="ids != null and ids.size > 0">
-      and id IN
+      and qb_id IN
       <foreach collection="ids" item="id" open="(" close=")" separator=",">
         #{id}
       </foreach>
