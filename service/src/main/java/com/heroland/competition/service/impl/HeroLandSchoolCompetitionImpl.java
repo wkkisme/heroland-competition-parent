@@ -82,6 +82,7 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         if (competitionRecordByRecordId.getData().getStatus().equals(CompetitionStatusEnum.FINISH.getStatus())) {
             return ResponseBodyWrapper.fail("比赛已经结束", "40001");
         }
+        List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
         boolean lock = redisService.setNx("competition_school_answer_key:" + record.getOpponentId() + record.getInviteId() + record.getTopicId(), record, "PT1H");
         if (record.getAnswerType() == 0) {
             if (lock) {
@@ -130,7 +131,7 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
 
         } else {
             // 否则就是答12道题的提交答案
-            List<HeroLandQuestionRecordDetailDP> dps = heroLandQuestionService.judgeQuestionResult(record.getDetails());
+
             // 答对题数
             int rightCount = Math.toIntExact(dps.parallelStream().map(HeroLandQuestionRecordDetailDP::getCorrectAnswer).count());
 
