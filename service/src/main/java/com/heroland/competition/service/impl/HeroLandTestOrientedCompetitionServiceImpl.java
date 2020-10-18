@@ -173,11 +173,14 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 // 后答题的人进入
                 log.info("后进入：{}",JSON.toJSONString(record));
                 HeroLandCompetitionResultDP otherResult = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
-
+                HeroLandCompetitionRecordDP preRecord;
                 // 当前人是邀请人
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                    preRecord = (HeroLandCompetitionRecordDP) redisService.get("test_oriented_record:"+record.getOpponentId());
                     record.setSenderId(record.getInviteId());
                     record.setAddresseeId(record.getOpponentId());
+                    preRecord.setSenderId(record.getInviteId());
+                    preRecord.setAddresseeId(record.getOpponentId());
                     // 对方答案
                     HeroLandCompetitionResultDP rightCount = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getOpponentId());
                     log.info("rightCount{}", JSON.toJSONString(rightCount));
@@ -214,11 +217,13 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
 
                 } else {
-
+                    preRecord = (HeroLandCompetitionRecordDP) redisService.get("test_oriented_record:"+record.getOpponentId());
                     // 当前人是被邀请人
                     HeroLandCompetitionResultDP inviteResult = (HeroLandCompetitionResultDP) redisService.get("question:" + getType() + record.getInviteId());
                     record.setSenderId(record.getOpponentId());
                     record.setAddresseeId(record.getInviteId());
+                    preRecord.setSenderId(record.getInviteId());
+                    preRecord.setAddresseeId(record.getOpponentId());
                     log.info("inviteResult{}", JSON.toJSONString(inviteResult));
                     record.setOpponentScore(otherResult.getScore());
                     // 答题数相等对方胜 1 需要把对方计算过后的分数*2 加上
@@ -230,7 +235,6 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                         heroLandAccountManageQO.setScore(inviteResult.getScore());
                         heroLandAccountManageQO.setUserId(record.getInviteId());
                         heroLandAccountService.incrDecrUserScore(heroLandAccountManageQO);
-                        record.setOpponentScore(otherResult.getScore());
                         // 被邀请方
                         heroLandAccountManageQO.setScore(otherResult.getScore());
                         heroLandAccountManageQO.setUserId(record.getOpponentId());
@@ -253,7 +257,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 }
                 record.setType(STOP_ANSWER_QUESTIONS.getCode());
 
-                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
+                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(preRecord));
 
 
             } finally {
@@ -266,7 +270,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         }else {
             record.setScore(record.getOpponentScore());
         }
-
+        redisService.set("test_oriented_record:"+record.getUserId(),record,60*60*3);
         return ResponseBodyWrapper.successWrapper(record);
     }
 
