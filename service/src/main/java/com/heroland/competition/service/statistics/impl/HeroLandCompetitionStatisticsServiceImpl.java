@@ -237,6 +237,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (qo.getOrderByField() != null) {
             qo.setOrderField(qo.getOrderByField().getOrderByFiled());
             qo.setRankField(qo.getOrderByField().getFiled());
+            qo.setOrderType(OrderByEnum.getOrderType(qo.getOrderField()));
         } else {
             qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());

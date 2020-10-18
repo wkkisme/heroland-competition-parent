@@ -63,7 +63,7 @@
         <if test="userIds != null and userIds.size() > 0">
             and a.user_id = b.user_id
         </if>
-        )+1 AS rank
+        )+1 AS rank ${orderType}
         FROM heroland_statistics_detail
         as a
         where a.is_deleted = 0
@@ -123,7 +123,7 @@
 
         </if>
 
-        ORDER BY rank
+        ORDER BY rank ${orderType}
         <if test="startRow != null and startRow != -1 and pageSize != null">
             limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>

@@ -155,6 +155,16 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private String currentUserId;
 
+    private String orderType;
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
     public String getCurrentUserId() {
         return currentUserId;
     }

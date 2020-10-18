@@ -21,10 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -195,6 +192,13 @@ public class StatisticsTask {
 
                     }
                 });
+                Iterator<HeroLandStatisticsDetailDP> iterator = values.iterator();
+                if (iterator.hasNext()){
+                    HeroLandStatisticsDetailDP next = iterator.next();
+                    if (next.getUserName() == null){
+                        iterator.remove();
+                    }
+                }
                 heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
             }
         } catch (Exception e) {
