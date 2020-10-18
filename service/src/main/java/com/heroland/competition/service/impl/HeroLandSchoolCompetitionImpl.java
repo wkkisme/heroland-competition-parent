@@ -221,6 +221,12 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         }else {
             record.setScore(record.getOpponentScore());
         }
+
+        for (HeroLandQuestionRecordDetailDP detail : record.getDetails()) {
+            if (detail.getCorrectAnswer()){
+                detail.setScore(1);
+            }
+        }
         log.info("校际赛最终结果：{}",record);
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         heroLandCompetitionRecordService.updateCompetitionRecord(record);
