@@ -987,7 +987,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         if (!CollectionUtils.isEmpty(questionBanks)) {
             questionBanks.forEach(v->{
                 questions.forEach(q->{
-                    if (v.getId().equals(q.getId())){
+                    if (v.getQbId().equals(q.getId())){
                         q.setCorrectAnswer(q.getYourAnswer().equalsIgnoreCase(v.getOptionAnswer()));
                     }
                 });
