@@ -107,12 +107,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         传入1代表1s, 2代表5s, 以此类推
          */
         try {
+            if (dp.getInviteRobot()){
+                agreeInvite(dp);
+            }
             rocketMQTemplate.sendAndReceive("competition-invite", dp,
                     new TypeReference<HeroLandInviteRecordDP>() {
                     }.getType(), 300, 7);
-        if (dp.getInviteRobot()){
-            agreeInvite(dp);
-        }
 
         } catch (Exception ignored) {
         }
@@ -238,6 +238,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
             heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
             ResponseBody<String> stringResponseBody = heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
+            logger.info("recordid -------》：{}",dp.getRecordId());
             redisService.set("competition-record:" + dp.getRecordId(), heroLandCompetitionRecordDP, 180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
