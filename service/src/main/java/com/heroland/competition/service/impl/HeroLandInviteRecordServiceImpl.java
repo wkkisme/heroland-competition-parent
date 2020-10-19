@@ -23,23 +23,13 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
-import com.heroland.competition.domain.dto.HeroLandQuestionListForTopicDto;
-import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
-import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import com.heroland.competition.service.HeroLandQuestionService;
-import org.apache.rocketmq.client.producer.SendCallback;
-import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
-import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -142,8 +132,14 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             beOnlineUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
             redisService.set("user:" + dp.getBeInviteUserId(), JSON.toJSONString(beOnlineUser), 1000 * 60 * 60 * 2);
 
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
+            try {
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+            } catch (Exception ignored) {
+            }
+            try {
+                rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
+            } catch (Exception ignored) {
+            }
             inviteUser.setUserId(dp.getBeInviteUserId());
             inviteUser.setSenderId(dp.getBeInviteUserId());
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", inviteUser.toJSONString());
@@ -187,8 +183,15 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             beOnlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
             redisService.set("user:" + dp.getBeInviteUserId(), JSON.toJSONString(beOnlineUser), 1000 * 60 * 60 * 2);
 
-            rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
-            rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
+            try {
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+            } catch (Exception ignored) {
+            }
+            try {
+                rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
+            } catch (Exception ignored) {
+
+            }
             userStatusDP.setUserId(dp.getBeInviteUserId());
             userStatusDP.setSenderId(dp.getBeInviteUserId());
             rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
