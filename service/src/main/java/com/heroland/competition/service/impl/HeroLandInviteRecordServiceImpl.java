@@ -237,8 +237,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setInviteRecordId(dp.getRecordId());
             heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
             heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
-            heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
-            redisService.set("competition-record:" + heroLandCompetitionRecordDP.getInviteRecordId(), heroLandCompetitionRecordDP, 180000);
+            ResponseBody<String> stringResponseBody = heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
+            redisService.set("competition-record:" + dp.getRecordId(), heroLandCompetitionRecordDP, 180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
             /*
@@ -252,9 +252,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             updateInvite(dp);
             try {
                 if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
-                    rocketMQTemplate.sendAndReceive("competition-record", dp,
-                            new TypeReference<HeroLandCompetitionRecordDP>() {
-                            }.getType(), 300, 7);
+                    try {
+                        rocketMQTemplate.sendAndReceive("competition-record", dp,
+                                new TypeReference<HeroLandCompetitionRecordDP>() {
+                                }.getType(), 300, 7);
+                    } catch (Exception ignored) {
+
+                    }
 
                     rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(heroLandCompetitionRecordDP), new TypeReference<String>() {
                     }.getType(),300,5);
@@ -265,11 +269,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             } catch (Exception ignored) {
             }
             try {
-
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
                 // 最近游戏的人
                 redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getInviteUserId(), dp.getBeInviteUserId());
                 redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getBeInviteUserId(), dp.getInviteUserId());
+                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
 
             } catch (Exception ignored) {
             }
