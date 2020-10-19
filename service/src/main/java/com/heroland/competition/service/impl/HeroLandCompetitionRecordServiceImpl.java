@@ -221,11 +221,15 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         try {
             HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
             if (heroLandCompetitionRecord == null){
-                heroLandCompetitionRecord = (HeroLandCompetitionRecord) redisService.get("competition-record:" + recordId.getInviteRecordId());
+                HeroLandCompetitionRecordDP  heroLandCompetitionRecordDP = (HeroLandCompetitionRecordDP) redisService.get("competition-record:" + recordId.getInviteRecordId());
+                if (heroLandCompetitionRecordDP != null) {
+                    return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecordDP);
+                }
             }
             if (heroLandCompetitionRecord == null){
                 Thread.sleep(500);
             }
+            heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
             return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecord, HeroLandCompetitionRecordDP.class);
         } catch (Exception e) {
             logger.error("", e);
