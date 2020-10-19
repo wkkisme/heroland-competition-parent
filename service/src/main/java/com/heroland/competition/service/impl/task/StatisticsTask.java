@@ -16,6 +16,7 @@ import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -192,14 +193,8 @@ public class StatisticsTask {
 
                     }
                 });
-                Iterator<HeroLandStatisticsDetailDP> iterator = values.iterator();
-                if (iterator.hasNext()){
-                    HeroLandStatisticsDetailDP next = iterator.next();
-                    if (next.getUserName() == null){
-                        iterator.remove();
-                    }
-                }
-                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
+                List<HeroLandStatisticsDetailDP> collect = values.stream().filter(v -> StringUtils.isNotBlank(v.getUserName())).collect(Collectors.toList());
+                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(collect));
             }
         } catch (Exception e) {
             log.error("", e);
