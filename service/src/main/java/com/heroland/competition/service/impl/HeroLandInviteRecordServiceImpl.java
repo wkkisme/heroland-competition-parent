@@ -313,7 +313,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
         if (!CollectionUtils.isEmpty(data)) {
             HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
-            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 120000) {
+            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 180000) {
                 return ResponseBodyWrapper.success();
             }
         }
