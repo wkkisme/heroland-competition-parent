@@ -116,7 +116,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         if (users.size() < 10){
             finalUsers.addAll(RobotFactory.createRobot(10 - users.size(),dp.getTopicId()));
         }
-        if (dp.getLevelCode() != null){
+        if (StringUtils.isNotBlank(dp.getLevelCode())){
             finalUsers = users.stream().filter(v -> dp.getLevelCode().equals(v.getLevel())).collect(Collectors.toSet());
         }
         if (dp.getUserStatus() != null){
