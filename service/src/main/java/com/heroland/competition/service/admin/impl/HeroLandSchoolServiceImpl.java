@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.heroland.competition.common.constants.AdminFieldEnum;
+import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -150,7 +151,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
 
     @Override
     @Transactional
-    public Boolean deleteNode(String key) {
+    public Boolean deleteNode(String key, String schoolKey) {
         if (StringUtils.isBlank(key)){
             return false;
         }
@@ -161,6 +162,12 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         //如果删除的是某一个学校，则他的子节点都要删除掉，只删除该学校的
         if (AdminFieldEnum.SCHOOL.getCode().equalsIgnoreCase(herolandSchools.get(0).getCode())){
             deleteSchoolKeyNode(herolandSchools, key);
+            return true;
+        }
+
+        //如果删除的是删除的某一年级
+        if (AdminFieldEnum.GRADE.getCode().equalsIgnoreCase(herolandSchools.get(0).getCode())){
+            deleteGradeKeyNode(herolandSchools, key, schoolKey);
             return true;
         }
 
@@ -203,6 +210,33 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
                 List<String> classKeys = classInSchool.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
                 heroLandAdminService.deleteDict(classKeys);
             }
+
+        }
+    }
+
+    private void deleteGradeKeyNode(List<HerolandSchool> herolandSchools, String gradeKdy, String schoolKey){
+        //1 删除年级，不删除字典数据
+
+        if (StringUtils.isBlank(schoolKey)){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        }
+
+        herolandSchools = herolandSchools.stream().filter(e -> Objects.equals(e.getParentKey(), schoolKey)).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(herolandSchools)){
+            return;
+        }
+        herolandSchoolMapper.batchDeleteByIds(herolandSchools.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList()));
+        List<HerolandSchool> classList = herolandSchoolMapper.getByParent(gradeKdy);
+        if (!CollectionUtils.isEmpty(classList)){
+            //2 删除班级
+            List<HerolandSchool> classInSchool = classList.stream().filter(e -> StringUtils.isNotBlank(e.getSchoolKey()) && e.getSchoolKey().equalsIgnoreCase(schoolKey)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(classInSchool)){
+                return;
+            }
+            List<Long> ids = classInSchool.stream().map(HerolandSchool::getId).distinct().collect(Collectors.toList());
+            herolandSchoolMapper.batchDeleteByIds(ids);
+            List<String> classKeys = classInSchool.stream().map(HerolandSchool::getKey).distinct().collect(Collectors.toList());
+            heroLandAdminService.deleteDict(classKeys);
 
         }
     }
