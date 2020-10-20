@@ -351,6 +351,9 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         if (CompetitionStatusEnum.FINISH.getStatus().equals(data1.getStatus())) {
             return ResponseBodyWrapper.success();
         }
+        if (data1.getInviteEndTime() != null && data1.getOpponentEndTime() != null){
+            return ResponseBodyWrapper.success();
+        }
 
         if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId) && data1.getOpponentEndTime() != null){
             return ResponseBodyWrapper.success();
