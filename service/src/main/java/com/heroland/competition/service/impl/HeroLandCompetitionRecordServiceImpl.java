@@ -22,6 +22,7 @@ import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import com.platfrom.payment.dto.PayOrderDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -271,6 +272,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     @Override
     public List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO qo) {
         try {
+            logger.info("计算完成率开始：{}",JSON.toJSONString(qo));
             return getHeroLandStatisticsDetail(qo);
         } catch (Exception e) {
             logger.error("e", e);
@@ -284,19 +286,25 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        Long totalCount = herolandTopicQuestionExtMapper.countAll(qo);
+        List<HerolandTopicQuestion> total = herolandTopicQuestionExtMapper.countAll(qo);
              /*
                 计算正确率和完成率
              */
-        if (!CollectionUtils.isEmpty(dps) && totalCount != null  ) {
+
+
+
+        if (!CollectionUtils.isEmpty(dps) && total != null  ) {
             logger.info("dps:{}", JSON.toJSONString(dps));
-            logger.info("totalCount:{}", JSON.toJSONString(totalCount));
+            logger.info("totalCount:{}", JSON.toJSONString(total));
+            Map<Long, List<HerolandTopicQuestion>> totalMap = total.stream().collect(Collectors.groupingBy(HerolandTopicQuestion::getTopicId));
             dps.forEach(v -> {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                if (v.getTopicId() != null) {
-                        if (totalCount != 0) {
+                List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(Long.valueOf(v.getTotalId()));
+                if (!CollectionUtils.isEmpty(herolandTopicQuestions )) {
+                    Long totalCount = herolandTopicQuestions.get(0).getTotalCount();
+                    if (totalCount != 0) {
                             double rate = ( (double)v.getRightCount() /  (double)totalCount);
                             if (rate >= 1){
                                 v.setAnswerRightRate(1D);

@@ -71,13 +71,13 @@ public class StatisticsTask {
      * 0 0/10 * * * ?
      *
      */
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void statistics() {
         log.info("start  statistics =================");
-        if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
-            log.info("start statistics is lock");
-            return;
-        }
+//        if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
+//            log.info("start statistics is lock");
+//            return;
+//        }
         // 1 先清除历史版本
 
         try {
@@ -111,7 +111,7 @@ public class StatisticsTask {
                     mergeMap.put(heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
                 }
 
-                totalQo.setTopicIds(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toList()));
+                totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toSet())));
                 /*
                  *  3 完成率
                  */
