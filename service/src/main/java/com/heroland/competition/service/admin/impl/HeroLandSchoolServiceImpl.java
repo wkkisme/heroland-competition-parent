@@ -95,7 +95,7 @@ public class HeroLandSchoolServiceImpl implements HeroLandSchoolService {
         //如果父节点在school表中没有则也需要增加上
         if (Objects.equals(AdminFieldEnum.SCHOOL.getCode(),schoolDP.getCode())){
             List<HerolandSchool> area = herolandSchoolMapper.getByKey(schoolDP.getParentKey());
-            if (!CollectionUtils.isEmpty(area)){
+            if (CollectionUtils.isEmpty(area)){
                 List<HerolandBasicDataDP> areaData = heroLandAdminService.getDictInfoByKeys(Lists.newArrayList(schoolDP.getParentKey()));
                 if (CollectionUtils.isEmpty(areaData)){
                     ResponseBodyWrapper.failException("无地区数据，请联系管理人员");
