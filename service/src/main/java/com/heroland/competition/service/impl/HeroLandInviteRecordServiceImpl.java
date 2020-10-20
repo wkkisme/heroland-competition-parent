@@ -23,6 +23,7 @@ import com.heroland.competition.dal.pojo.HeroLandInviteRecordExample;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
+import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
@@ -97,7 +98,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         传入1代表1s, 2代表5s, 以此类推
          */
         try {
-            if (dp.getInviteRobot()){
+            if (dp.getInviteRobot()) {
                 agreeInvite(dp);
             }
             rocketMQTemplate.sendAndReceive("competition-invite", dp,
@@ -124,7 +125,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             Object user = redisService.get("user:" + dp.getInviteUserId());
             OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
             onlineUser.setUserStatus(UserStatusEnum.CANT_BE_INVITE.getStatus());
-            redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+            redisService.set("user:" + dp.getInviteUserId(), JSON.toJSONString(onlineUser), 1000 * 60 * 60 * 2);
 
 
             Object beUser = redisService.get("user:" + dp.getBeInviteUserId());
@@ -175,7 +176,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             Object user = redisService.get("user:" + dp.getInviteUserId());
             OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
             onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
-            redisService.set("user:" + dp.getInviteUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
+            redisService.set("user:" + dp.getInviteUserId(), JSON.toJSONString(onlineUser), 1000 * 60 * 60 * 2);
 
 
             Object beUser = redisService.get("user:" + dp.getBeInviteUserId());
@@ -241,7 +242,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
             heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
             ResponseBody<String> stringResponseBody = heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
-            logger.info("recordid -------》：{}",dp.getRecordId());
+            logger.info("recordid -------》：{}", dp.getRecordId());
             redisService.set("competition-record:" + dp.getRecordId(), heroLandCompetitionRecordDP, 180000);
             // 发送消息给websocket去通知 发给所有在线人，和发给对方；
 
@@ -265,10 +266,10 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
                     }
 
                     rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(heroLandCompetitionRecordDP), new TypeReference<String>() {
-                    }.getType(),300,5);
-                }else {
+                    }.getType(), 300, 5);
+                } else {
                     rocketMQTemplate.sendAndReceive("robot:competition-record", JSON.toJSONString(heroLandCompetitionRecordDP), new TypeReference<String>() {
-                    }.getType(),300,14);
+                    }.getType(), 300, 14);
                 }
             } catch (Exception ignored) {
             }
@@ -318,13 +319,27 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         }
         List<HeroLandInviteRecordDP> data = invite.getData();
 
-        if (!CollectionUtils.isEmpty(data)) {
-            HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
-            if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 180000) {
-                return ResponseBodyWrapper.success();
-            }
+        if (CollectionUtils.isEmpty(data)) {
+            return ResponseBodyWrapper.success();
         }
-        return ResponseBodyWrapper.successWrapper(data.get(0));
+
+        HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
+        if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 180000) {
+            return ResponseBodyWrapper.success();
+        }
+
+        HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
+        heroLandCompetitionRecordQO.setInviteRecordId(heroLandInviteRecord.getRecordId());
+        ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
+
+        if (competitionRecordByInviteRecordId.getData() == null) {
+            return ResponseBodyWrapper.success();
+        }
+
+        if (CompetitionStatusEnum.FINISH.getStatus().equals(competitionRecordByInviteRecordId.getData().getStatus())) {
+            return ResponseBodyWrapper.success();
+        }
+        return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
     }
 
 
