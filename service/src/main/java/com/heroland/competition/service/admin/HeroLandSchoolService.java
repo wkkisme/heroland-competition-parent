@@ -23,7 +23,7 @@ public interface HeroLandSchoolService {
 
     Boolean updateNode(HerolandSchoolDP schoolDP);
 
-    Boolean deleteNode(String key);
+    Boolean deleteNode(String key, String schoolKey);
 
 
     List<HerolandSchoolDto> queryChild(HerolandSchoolRequest request);

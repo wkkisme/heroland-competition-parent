@@ -127,9 +127,9 @@ public class HeroLandSchoolController {
      */
     @RequestMapping(value = "/deleteNode", produces = "application/json;charset=UTF-8")
     @org.springframework.web.bind.annotation.ResponseBody
-    public ResponseBody<Boolean> deleteNode(@RequestParam("key") String key) {
+    public ResponseBody<Boolean> deleteNode(@RequestParam("key") String key, @RequestParam(value = "schoolKey", required = false) String schoolKey) {
         ResponseBody<Boolean> result = new ResponseBody<>();
-        result.setData(heroLandSchoolService.deleteNode(key));
+        result.setData(heroLandSchoolService.deleteNode(key, schoolKey));
         return result;
     }
 

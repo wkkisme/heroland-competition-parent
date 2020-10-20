@@ -10,6 +10,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
@@ -62,9 +63,11 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
                     ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PARAM.getErrorMessage());
                 }
             }
-            List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodesAndValue(Lists.newArrayList(dp.getCode()), dp.getDictValue());
-            if (!CollectionUtils.isEmpty(herolandBasicData)){
-                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_NAME.getErrorMessage());
+            if (!Objects.equals(dp.getCode(), AdminFieldEnum.CLASS.getCode())){
+                List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodesAndValue(Lists.newArrayList(dp.getCode()), dp.getDictValue());
+                if (!CollectionUtils.isEmpty(herolandBasicData)){
+                    ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_NAME.getErrorMessage());
+                }
             }
             HerolandBasicData basicData = BeanUtil.insertConversion(dp, new HerolandBasicData());
             herolandBasicDataMapper.insertSelective(basicData);
