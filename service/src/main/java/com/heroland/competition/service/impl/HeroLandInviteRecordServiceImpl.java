@@ -28,6 +28,11 @@ import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandInviteRecordService;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.domain.qo.PlatformSysUserQO;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
+import jdk.nashorn.internal.ir.annotations.Reference;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +66,8 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     @Resource
     private HeroLandQuestionService heroLandQuestionService;
 
+    @Reference
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
     @Resource(name = "rocketMQTemplate")
     private RocketMQTemplate rocketMQTemplate;
 
@@ -337,6 +344,13 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         }
 
         if (CompetitionStatusEnum.FINISH.getStatus().equals(competitionRecordByInviteRecordId.getData().getStatus())) {
+            return ResponseBodyWrapper.success();
+        }
+
+        PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+        platformSysUserQO.setUserId(heroLandInviteRecordDP.getBeInviteUserId());
+        RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+        if (listRpcResult == null || CollectionUtils.isEmpty(listRpcResult.getData())){
             return ResponseBodyWrapper.success();
         }
         return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
