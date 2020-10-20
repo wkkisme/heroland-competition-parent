@@ -77,7 +77,7 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
             log.info("机器人比赛记录监听{}",JSON.toJSONString(messages));
             String msg = new String(messages.getBody());
             HeroLandCompetitionRecordDP message = JSON.parseObject(msg, HeroLandCompetitionRecordDP.class);
-
+            log.info("机器人比赛记录监听message:{}",JSON.toJSONString(message));
             HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
             heroLandCompetitionRecordQO.setInviteRecordId(message.getInviteRecordId());
             ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
