@@ -342,7 +342,12 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
 
                     if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                        landStatisticsDetailDp.setWinRate( ((double)heroLandStatisticsDetailDp.getRightCount() / (double)landStatisticsDetailDp.getRightCount()));
+                        double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
+                        if (v > 1){
+                            landStatisticsDetailDp.setWinRate(1D);
+                        }else {
+                            landStatisticsDetailDp.setWinRate(v);
+                        }
                     }
                 }
             }
