@@ -265,7 +265,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             try {
                 if (CompetitionEnum.SYNC.getType().equals(dp.getTopicType())) {
                     try {
-                        rocketMQTemplate.sendAndReceive("competition-record", dp,
+                        rocketMQTemplate.sendAndReceive("competition-record", heroLandCompetitionRecordDP,
                                 new TypeReference<HeroLandCompetitionRecordDP>() {
                                 }.getType(), 300, 7);
                     } catch (Exception ignored) {
