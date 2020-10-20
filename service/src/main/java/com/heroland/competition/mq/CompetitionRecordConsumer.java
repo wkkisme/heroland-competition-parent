@@ -55,14 +55,14 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
                     redisKey = data.getTopicId() + data.getInviteId() + data.getOpponentId() + data.getId();
                 }
 
-                message.setRecordId(data.getRecordId());
-                message.setId(data.getId());
+                data.setRecordId(data.getRecordId());
+                data.setId(data.getId());
                 // 如果超时了还是空的 要么是前一个打错，要么是都没答 平局
-                message.setResult(CompetitionResultEnum.DRAW.getResult());
-                message.setInviteScore(0);
-                message.setOpponentScore(0);
-                message.setStatus(CompetitionStatusEnum.FINISH.getStatus());
-                heroLandCompetitionRecordService.updateCompetitionRecord(message);
+                data.setResult(CompetitionResultEnum.DRAW.getResult());
+                data.setInviteScore(0);
+                data.setOpponentScore(0);
+                data.setStatus(CompetitionStatusEnum.FINISH.getStatus());
+                heroLandCompetitionRecordService.updateCompetitionRecord(data);
                 redisService.del(redisKey);
                 redisService.del(INVITE_KEY + data.getInviteId());
                 redisService.del(INVITE_KEY + data.getOpponentId());
@@ -78,13 +78,13 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
 
             }
             if (data.getInviteEndTime() == null) {
-                message.setSenderId(message.getInviteId());
-                message.setAddresseeId(message.getOpponentId());
+                data.setSenderId(message.getInviteId());
+                data.setAddresseeId(message.getOpponentId());
             } else {
-                message.setSenderId(message.getOpponentId());
-                message.setAddresseeId(message.getInviteId());
+                data.setSenderId(message.getOpponentId());
+                data.setAddresseeId(message.getInviteId());
             }
-            rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(message));
+            rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(data));
 
         }
     }
