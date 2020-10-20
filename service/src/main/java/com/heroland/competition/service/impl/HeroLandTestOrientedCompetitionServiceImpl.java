@@ -5,10 +5,7 @@ import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.enums.CompetitionEnum;
-import com.heroland.competition.common.enums.CompetitionResultEnum;
-import com.heroland.competition.common.enums.HeroLevelEnum;
-import com.heroland.competition.common.enums.RedisRocketmqConstant;
+import com.heroland.competition.common.enums.*;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandCompetitionResultDP;
@@ -172,6 +169,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
             try {
                 // 后答题的人进入
                 log.info("后进入：{}",JSON.toJSONString(record));
+                record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
                 HeroLandCompetitionResultDP otherResult = judgeAnswerAndCalculateScore(record, topicQuestions.getItems());
                 HeroLandCompetitionRecordDP preRecord;
                 // 当前人是邀请人

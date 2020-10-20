@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.UserStatusEnum;
-import com.heroland.competition.common.enums.CompetitionEnum;
-import com.heroland.competition.common.enums.CompetitionResultEnum;
-import com.heroland.competition.common.enums.InviteStatusEnum;
-import com.heroland.competition.common.enums.RedisRocketmqConstant;
+import com.heroland.competition.common.enums.*;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
@@ -77,7 +74,7 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
             log.info("机器人比赛记录监听{}",JSON.toJSONString(messages));
             String msg = new String(messages.getBody());
             HeroLandCompetitionRecordDP message = JSON.parseObject(msg, HeroLandCompetitionRecordDP.class);
-
+            log.info("机器人比赛记录监听message:{}",JSON.toJSONString(message));
             HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
             heroLandCompetitionRecordQO.setInviteRecordId(message.getInviteRecordId());
             ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
@@ -91,12 +88,11 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
                         redisKey = data.getTopicId()  + data.getInviteId() + data.getOpponentId() + data.getId();
                     }
 
-                    message.setRecordId(data.getRecordId());
-                    message.setId(data.getId());
-                    message.setOpponentScore(0);
+                    data.setOpponentScore(0);
                     // 如果超时了还是空的 要么是前一个打错，要么是都没答 平局
-                    message.setResult(CompetitionResultEnum.DRAW.getResult());
-                    heroLandCompetitionRecordService.updateCompetitionRecord(message);
+                    data.setResult(CompetitionResultEnum.DRAW.getResult());
+                    data.setStatus(CompetitionStatusEnum.FINISH.getStatus());
+                    heroLandCompetitionRecordService.updateCompetitionRecord(data);
                     redisService.del(redisKey);
                     redisService.del(INVITE_KEY+ data.getInviteId());
                     redisService.del(INVITE_KEY+ data.getOpponentId());
@@ -109,13 +105,13 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
 
                 }
                 if (data.getInviteEndTime() == null) {
-                    message.setSenderId(message.getInviteId());
-                    message.setAddresseeId(message.getOpponentId());
+                    data.setSenderId(message.getInviteId());
+                    data.setAddresseeId(message.getOpponentId());
                 } else {
-                    message.setSenderId(message.getOpponentId());
-                    message.setAddresseeId(message.getInviteId());
+                    data.setSenderId(message.getOpponentId());
+                    data.setAddresseeId(message.getInviteId());
                 }
-                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(message));
+                rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(data));
 
             }
         }
