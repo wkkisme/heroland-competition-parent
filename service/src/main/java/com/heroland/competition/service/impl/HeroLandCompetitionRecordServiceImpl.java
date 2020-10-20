@@ -301,7 +301,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(Long.valueOf(v.getTotalId()));
+                List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(Long.valueOf(v.getTopicId()));
                 if (!CollectionUtils.isEmpty(herolandTopicQuestions )) {
                     Long totalCount = herolandTopicQuestions.get(0).getTotalCount();
                     if (totalCount != 0) {
