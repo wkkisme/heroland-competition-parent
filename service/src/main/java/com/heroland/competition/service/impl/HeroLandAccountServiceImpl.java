@@ -9,6 +9,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
@@ -71,6 +72,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 // 如果为空去查下是否有这个人
                 if (user != null) {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+                    if (StringUtils.isBlank(onlineUser.getLevel())){
+                        onlineUser.setLevel(HeroLevelEnum.ADVERSITY_HERO.name());
+                    }
                     Set<Object> dps = null;
                     try {
                         dps = redisService.sMembers("recent_user:" + dp.getTopic() + userId);
