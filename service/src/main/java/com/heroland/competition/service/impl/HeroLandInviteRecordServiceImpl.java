@@ -349,13 +349,16 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         if (CompetitionStatusEnum.FINISH.getStatus().equals(competitionRecordByInviteRecordId.getData().getStatus())) {
             return ResponseBodyWrapper.success();
         }
-
+        if (competitionRecordByInviteRecordId.getData().getInviteEndTime() == null){
+            ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
+        }
         PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
         platformSysUserQO.setUserId(heroLandInviteRecordDP.getBeInviteUserId());
         RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-        if (listRpcResult == null || CollectionUtils.isEmpty(listRpcResult.getData())){
+        if (listRpcResult == null || CollectionUtils.isEmpty(listRpcResult.getData()) ){
             return ResponseBodyWrapper.success();
         }
+
         return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
     }
 
