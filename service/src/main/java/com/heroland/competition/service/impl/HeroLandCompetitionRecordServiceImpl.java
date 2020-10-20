@@ -218,6 +218,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
     @Override
     public ResponseBody<HeroLandCompetitionRecordDP> getCompetitionRecordByInviteRecordId(HeroLandCompetitionRecordQO recordId) {
+        recordId.queryInviteIdCheck();
         try {
             HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
             if (heroLandCompetitionRecord == null){
