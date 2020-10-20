@@ -350,7 +350,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             return ResponseBodyWrapper.success();
         }
         if (competitionRecordByInviteRecordId.getData().getInviteEndTime() == null){
-            ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
+            return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
         }
         PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
         platformSysUserQO.setUserId(heroLandInviteRecordDP.getBeInviteUserId());
