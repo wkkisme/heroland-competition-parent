@@ -282,9 +282,12 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             }
             try {
                 // 最近游戏的人
+
                 redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getInviteUserId(), dp.getBeInviteUserId());
                 redisService.sAdd("recent_user:" + dp.getTopicId() + dp.getBeInviteUserId(), dp.getInviteUserId());
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+                if (!dp.getInviteRobot()) {
+                    rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
+                }
 
             } catch (Exception ignored) {
             }
