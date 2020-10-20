@@ -67,6 +67,16 @@ public class HeroLandInviteRecordQO extends BaseQO implements Serializable {
     @MybatisCriteriaAnnotation
     private String statusRemark;
 
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     /**
      * 题目id
      */

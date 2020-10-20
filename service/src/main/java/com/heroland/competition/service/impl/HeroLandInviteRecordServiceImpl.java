@@ -317,6 +317,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Override
     public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
+        String userId = heroLandInviteRecord.getUserId();
         HeroLandInviteRecordQO qo = new HeroLandInviteRecordQO();
         qo.setBeInviteUserId(null);
         qo.setInviteUserId(heroLandInviteRecord.getInviteUserId());
@@ -342,14 +343,28 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         heroLandCompetitionRecordQO.setInviteRecordId(heroLandInviteRecordDP.getRecordId());
         ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
 
-        if (competitionRecordByInviteRecordId.getData() == null) {
+        HeroLandCompetitionRecordDP data1 = competitionRecordByInviteRecordId.getData();
+        if (data1 == null) {
             return ResponseBodyWrapper.success();
         }
 
-        if (CompetitionStatusEnum.FINISH.getStatus().equals(competitionRecordByInviteRecordId.getData().getStatus())) {
+        if (CompetitionStatusEnum.FINISH.getStatus().equals(data1.getStatus())) {
             return ResponseBodyWrapper.success();
         }
-        if (competitionRecordByInviteRecordId.getData().getInviteEndTime() == null){
+
+        if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId)){
+            return ResponseBodyWrapper.success();
+        }
+
+        if (data1.getOpponentEndTime() == null && !data1.getOpponentId().equals(userId)){
+            return ResponseBodyWrapper.success();
+        }
+
+        if (data1.getInviteEndTime() == null && data1.getInviteId().equals(userId)){
+            return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
+        }
+
+        if (data1.getOpponentEndTime() == null && data1.getOpponentId().equals(userId)){
             return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
         }
         PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
