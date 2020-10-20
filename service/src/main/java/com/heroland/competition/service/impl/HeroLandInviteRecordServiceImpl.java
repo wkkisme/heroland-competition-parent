@@ -329,7 +329,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         }
 
         HeroLandCompetitionRecordQO heroLandCompetitionRecordQO = new HeroLandCompetitionRecordQO();
-        heroLandCompetitionRecordQO.setInviteRecordId(heroLandInviteRecord.getRecordId());
+        heroLandCompetitionRecordQO.setInviteRecordId(heroLandInviteRecordDP.getRecordId());
         ResponseBody<HeroLandCompetitionRecordDP> competitionRecordByInviteRecordId = heroLandCompetitionRecordService.getCompetitionRecordByInviteRecordId(heroLandCompetitionRecordQO);
 
         if (competitionRecordByInviteRecordId.getData() == null) {
