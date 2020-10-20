@@ -109,7 +109,7 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
 
                 rocketMQTemplate.syncSend(RedisRocketmqConstant.IM_SINGLE, JSON.toJSONString(record));
             }else {
-
+                record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
                 if (record.getUserId().equalsIgnoreCase(record.getOpponentId())) {
                     record.setAddresseeId(record.getOpponentId());
                     record.setOpponentScore(8);

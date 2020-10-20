@@ -7,6 +7,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
+import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
@@ -198,6 +199,7 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
             //  后一个答题者
         } else {
             // 前一个答题者答案
+            record.setStatus(CompetitionStatusEnum.FINISH.getStatus());
             HeroLandQuestionRecordDetailDP preAnswer;
             if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                 log.info("我是邀请人:{}", record.getUserId());

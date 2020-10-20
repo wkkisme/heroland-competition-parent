@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.UserStatusEnum;
-import com.heroland.competition.common.enums.CompetitionEnum;
-import com.heroland.competition.common.enums.CompetitionResultEnum;
-import com.heroland.competition.common.enums.InviteStatusEnum;
-import com.heroland.competition.common.enums.RedisRocketmqConstant;
+import com.heroland.competition.common.enums.*;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
@@ -96,6 +93,7 @@ public class RobotConsumer implements RocketMQListener<MessageExt> {
                     message.setOpponentScore(0);
                     // 如果超时了还是空的 要么是前一个打错，要么是都没答 平局
                     message.setResult(CompetitionResultEnum.DRAW.getResult());
+                    message.setStatus(CompetitionStatusEnum.FINISH.getStatus());
                     heroLandCompetitionRecordService.updateCompetitionRecord(message);
                     redisService.del(redisKey);
                     redisService.del(INVITE_KEY+ data.getInviteId());

@@ -6,6 +6,7 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.UserStatusEnum;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionResultEnum;
+import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.common.enums.RedisRocketmqConstant;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.OnlineDP;
@@ -60,6 +61,7 @@ public class CompetitionRecordConsumer implements RocketMQListener<HeroLandCompe
                 message.setResult(CompetitionResultEnum.DRAW.getResult());
                 message.setInviteScore(0);
                 message.setOpponentScore(0);
+                message.setStatus(CompetitionStatusEnum.FINISH.getStatus());
                 heroLandCompetitionRecordService.updateCompetitionRecord(message);
                 redisService.del(redisKey);
                 redisService.del(INVITE_KEY + data.getInviteId());
