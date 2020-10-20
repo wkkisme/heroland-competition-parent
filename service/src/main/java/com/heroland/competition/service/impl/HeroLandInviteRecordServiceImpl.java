@@ -66,7 +66,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
     @Resource
     private HeroLandQuestionService heroLandQuestionService;
 
-    @Reference
+    @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
     @Resource(name = "rocketMQTemplate")
     private RocketMQTemplate rocketMQTemplate;
