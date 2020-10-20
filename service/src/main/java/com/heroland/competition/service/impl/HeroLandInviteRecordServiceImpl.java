@@ -352,11 +352,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             return ResponseBodyWrapper.success();
         }
 
-        if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId)){
+        if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId) && data1.getOpponentEndTime() != null){
             return ResponseBodyWrapper.success();
         }
 
-        if (data1.getOpponentEndTime() == null && !data1.getOpponentId().equals(userId)){
+        if (data1.getOpponentEndTime() == null && !data1.getOpponentId().equals(userId) && data1.getInviteEndTime() != null){
             return ResponseBodyWrapper.success();
         }
 
