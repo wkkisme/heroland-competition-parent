@@ -166,7 +166,7 @@ public class HeroLandQuestionBankController {
 
     }
     /**
-     * 题库导入 入参为文件
+     * 题库导入 入参为文件 excel
      * @param request
      * @return
      */
