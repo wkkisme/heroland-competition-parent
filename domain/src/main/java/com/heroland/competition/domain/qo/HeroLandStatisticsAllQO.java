@@ -92,6 +92,16 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
     private Map<String,String> topic2Subject;
     private Map<String,List<String>> subject2Topic;
 
+    private Map<String,String> topic2OrgCode;
+
+    public Map<String, String> getTopic2OrgCode() {
+        return topic2OrgCode;
+    }
+
+    public void setTopic2OrgCode(Map<String, String> topic2OrgCode) {
+        this.topic2OrgCode = topic2OrgCode;
+    }
+
     public Map<String, List<String>> getSubject2Topic() {
         return subject2Topic;
     }
