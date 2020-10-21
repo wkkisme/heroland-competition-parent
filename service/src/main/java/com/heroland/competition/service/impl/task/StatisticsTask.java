@@ -200,7 +200,7 @@ public class StatisticsTask {
                     }
                 });
                 List<HeroLandStatisticsDetailDP> collect = values.stream().filter(v -> StringUtils.isNotBlank(v.getUserName())).collect(Collectors.toList());
-//                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(collect));
+                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(collect));
             }
         } catch (Exception e) {
             log.error("", e);
