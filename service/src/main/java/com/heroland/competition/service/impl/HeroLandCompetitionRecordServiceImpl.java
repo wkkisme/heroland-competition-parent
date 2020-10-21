@@ -309,7 +309,6 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 }
                 String topicId = v.getTopicId();
                 String subject = topic2Subject.get(topicId);
-                String orgCode = topic2OrgCode.get(topicId);
                 Long totalCount = 0L;
                 if (subject != null) {
                     // 拿出该subject下的所有topic
