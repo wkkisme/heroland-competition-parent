@@ -169,7 +169,7 @@
                 #{topicId}
             </foreach>
         </if>
-        group by user_id,subject_code,topic_id
+        group by user_id
 
     </select>
 
