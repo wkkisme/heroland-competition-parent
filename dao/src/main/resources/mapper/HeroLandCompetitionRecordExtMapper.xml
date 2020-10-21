@@ -112,7 +112,7 @@
 
 
         ) a
-        GROUP BY user_id
+        GROUP BY user_id,topic_id
 
     </select>
 
@@ -148,7 +148,7 @@
         ,opponent_id
 
         ) a
-        GROUP BY user_id
+        GROUP BY user_id,topic_id
 
     </select>
     <select id="getDetailCount" resultMap="StatisticsMap">
@@ -169,7 +169,7 @@
                 #{topicId}
             </foreach>
         </if>
-        group by user_id,subject_code
+        group by user_id,subject_code,topic_id
 
     </select>
 

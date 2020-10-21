@@ -292,9 +292,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              /*
                 计算正确率和完成率
              */
-        Map<String, String> topic2OrgCode = dps.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getOrgCode,(o,n)->n));
         Map<String, List<String>> subject2Topic = qo.getSubject2Topic();
         Map<String, String> topic2Subject = qo.getTopic2Subject();
+        Map<String, String> topic2OrgCode = qo.getTopic2OrgCode();
 
         if (!CollectionUtils.isEmpty(dps) && total != null) {
             logger.info("dps:{}", JSON.toJSONString(dps));
