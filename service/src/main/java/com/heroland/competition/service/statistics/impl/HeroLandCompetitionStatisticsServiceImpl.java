@@ -405,8 +405,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             //根据topicId和questionId group by
             Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionStatisticsServiceImpl::fetchGroupKey));
 
-            topicQuestionsItems.forEach(v -> {
-                // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
+            for (HeroLandQuestionListForTopicDto v : topicQuestionsItems) {// 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
                 List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString() + v.getId());
 
                 if (heroLandCompetitionRecordDPS != null) {
@@ -416,7 +415,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     // 如果questionid相等  同步作业赛
                     List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
                     if (!CollectionUtils.isEmpty(details)) {
-                        details.forEach(detail -> {
+                        for (HeroLandQuestionRecordDetailDP detail : details) {
                             if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(record.getQuestionId())) {
                                 if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
                                     if (record.getResult() != null) {
@@ -457,10 +456,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                                     v.setScore(record.getInviteScore());
                                 }
                             }
-                        });
+                        }
                     }
                 }
-            });
+            }
 
 
         } else if (!CollectionUtils.isEmpty(questionRecord.getData())) {

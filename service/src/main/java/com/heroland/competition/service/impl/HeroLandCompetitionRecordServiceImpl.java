@@ -182,6 +182,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
             heroLandQuestionQO.setUserId(qo.getUserId());
             heroLandQuestionQO.setRecords(records);
+            heroLandQuestionQO.setHistory(false);
+            heroLandQuestionQO.setNeedPage(false);
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             List<HeroLandQuestionRecordDetailDP> questionRecordData = questionRecord.getData();
             if (!CollectionUtils.isEmpty(questionRecordData)) {
