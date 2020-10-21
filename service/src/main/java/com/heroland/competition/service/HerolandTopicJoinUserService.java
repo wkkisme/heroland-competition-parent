@@ -7,6 +7,9 @@ import com.heroland.competition.domain.dto.HerolandTopicCanJoinDto;
 import com.heroland.competition.domain.dto.HerolandTopicCanSeeDto;
 import com.heroland.competition.domain.dto.HerolandTopicJoinStatisticsDto;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
+import com.heroland.competition.domain.qo.HerolandTopicHeaderTeacherCanAssignQO;
+
+import java.util.List;
 
 /**
  * @author smjyouzan
@@ -21,4 +24,6 @@ public interface HerolandTopicJoinUserService {
     HerolandTopicJoinStatisticsDto statistics(HerolandTopicJoinUserDP dp);
 
     PageResponse<HeroLandTopicForSDto> canOperableTopics(HerolandTopicCanSeeQO qo);
+
+    List<HeroLandTopicForSDto> getSchoolTopicsForHeaderTeacher(HerolandTopicHeaderTeacherCanAssignQO request);
 }

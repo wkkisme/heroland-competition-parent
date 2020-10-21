@@ -24,10 +24,7 @@ import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dp.HerolandTopicJoinUserDP;
 import com.heroland.competition.domain.dto.*;
-import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
-import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
-import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
-import com.heroland.competition.domain.qo.HerolandTopicForSQO;
+import com.heroland.competition.domain.qo.*;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.service.HeroLandAccountService;
 import com.heroland.competition.service.HeroLandQuestionService;
@@ -189,6 +186,91 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
 //
 //        }
         return canSeeTopics(qo, platformSysUserDPRpcResult.getData());
+    }
+
+    @Override
+    public List<HeroLandTopicForSDto> getSchoolTopicsForHeaderTeacher(HerolandTopicHeaderTeacherCanAssignQO request) {
+        PlatformSysUserQO userQO = new PlatformSysUserQO();
+        RpcResult<List<PlatformSysUserDP>> user = platformSsoUserServiceFacade.queryUserList(userQO);
+        if (!user.isSuccess() || CollectionUtils.isEmpty(user.getData())) {
+            return null;
+        }
+        //非教师返回为空
+        if (user.getData().get(0).getType() != 2){
+            return null;
+        }
+        //非班主任返回为空
+        if (CollectionUtils.isEmpty(user.getData().get(0).getClasses())){
+            return null;
+        }
+        List<PlatformSysUserClassDP> headerClasses = user.getData().get(0).getClasses().stream().filter(e -> Objects.equals(e.getHeadTeacher(), Boolean.TRUE)).collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(headerClasses)){
+            return null;
+        }
+        headerClasses = headerClasses.stream().filter(e -> {
+            boolean orgFilter = true;
+            boolean gradeFilter = true;
+            boolean classFilter = true;
+            if (StringUtils.isEmpty(request.getOrgCode())){
+                orgFilter = Objects.equals(request.getOrgCode(), e.getOrgCode());
+            }
+            if (StringUtils.isEmpty(request.getGradeCode())){
+                gradeFilter = Objects.equals(request.getGradeCode(), e.getGradeCode());
+            }
+            if (StringUtils.isEmpty(request.getClassCode())){
+                classFilter = Objects.equals(request.getClassCode(), e.getClassCode());
+            }
+            return orgFilter && gradeFilter && classFilter;
+        }).collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(headerClasses)){
+            return null;
+        }
+
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByTypeAndState(4, request.getTopicState());
+        if (CollectionUtils.isEmpty(heroLandTopicGroups)){
+            return null;
+        }
+        List<HeroLandTopicForSDto> list = Lists.newArrayList();
+        List<Long> topicIds = heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList());
+        Map<Long, HeroLandTopicGroup> topicGroupMap = heroLandTopicGroups.stream().collect(Collectors.toMap(HeroLandTopicGroup::getId, Function.identity()));
+        HerolandTopicForSQO sqo = new HerolandTopicForSQO();
+        sqo.setTopicIds(topicIds);
+        List<HerolandTopicGroupPartDP> partDPS = herolandTopicGroupPartService.listPartByTopicIds(sqo);
+        List<PlatformSysUserClassDP> headerClassesList = headerClasses;
+        List<HerolandTopicGroupPartDP> filter = partDPS.stream().filter(e -> {
+            long count = headerClassesList.stream().filter(headerClass -> Objects.equals(headerClass.getOrgCode(), e.getOrgCode()) &&
+                    Objects.equals(headerClass.getGradeCode(), e.getGradeCode())
+            ).count();
+            if (count > 0L) {
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
+        List<Long> finalTopic = filter.stream().map(HerolandTopicGroupPartDP::getTopicId).distinct().collect(Collectors.toList());
+        finalTopic.stream().forEach(e -> {
+            Date now = new Date();
+            HeroLandTopicGroup topicGroup = topicGroupMap.get(e);
+            if (Objects.isNull(topicGroup)){
+                return;
+            }
+            HeroLandTopicForSDto heroLandTopicForSDto = new HeroLandTopicForSDto();
+            heroLandTopicForSDto.setTopicName(topicGroup.getTopicName());
+            heroLandTopicForSDto.setTopicId(topicGroup.getId());
+            heroLandTopicForSDto.setStartTime(topicGroup.getStartTime());
+            heroLandTopicForSDto.setEndTime(topicGroup.getEndTime());
+            heroLandTopicForSDto.setDesc(topicGroup.getDescription());
+            if (now.before(heroLandTopicForSDto.getStartTime())){
+                heroLandTopicForSDto.setState(TopicJoinConstant.NOTSTART);
+            }else if(now.after(heroLandTopicForSDto.getEndTime())){
+                heroLandTopicForSDto.setState(TopicJoinConstant.OVERDUE);
+            }else {
+                heroLandTopicForSDto.setState(TopicJoinConstant.DOING);
+            }
+            list.add(heroLandTopicForSDto);
+
+        });
+        return list;
     }
 
 
