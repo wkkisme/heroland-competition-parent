@@ -53,4 +53,6 @@ public interface HeroLandQuestionBankService {
 
 
     ResponseBody<Boolean> importQuestions(MultipartHttpServletRequest request,Integer bankType) throws Exception;
+
+    ResponseBody<Boolean> importQuestionBankExcel(MultipartHttpServletRequest request,Integer bankType) throws Exception;
 }

@@ -14,10 +14,7 @@ import com.heroland.competition.common.constants.QtYearRangeEnum;
 import com.heroland.competition.common.constants.TimeIntervalUnit;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
-import com.heroland.competition.common.utils.BatchUtils;
-import com.heroland.competition.common.utils.BeanCopyUtils;
-import com.heroland.competition.common.utils.DateUtils;
-import com.heroland.competition.common.utils.NumberUtils;
+import com.heroland.competition.common.utils.*;
 import com.heroland.competition.dal.mapper.HerolandKnowledgeMapper;
 import com.heroland.competition.dal.mapper.HerolandKnowledgeReferMapper;
 import com.heroland.competition.dal.mapper.HerolandQuestionBankDetailMapper;
@@ -394,41 +391,61 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.close();    //关闭文件输出流
 
                 List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
-                List<HerolandQuestionBankImportDP> dps = new ArrayList<>();
-                questions.forEach(v -> {
-                    HerolandQuestionBankImportDP herolandQuestionBankImportDP = new HerolandQuestionBankImportDP();
-                    try {
-                        dps.add(BeanUtil.insertConversion(v, herolandQuestionBankImportDP));
-                        herolandQuestionBankImportDP.setBankType(bankType);
-                    } catch (Exception e) {
-                        log.error("e", e);
-                    }
-
-                    try {
-                        herolandQuestionBankImportDP.setDiff(Integer.valueOf(v.getDiff()));
-                    } catch (NumberFormatException ignored) {
-                    }
-                    try {
-                        herolandQuestionBankImportDP.setPassageid(Long.valueOf(v.getPassageid()));
-                    } catch (NumberFormatException ignored) {
-                    }
-                    try {
-                        herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype()));
-                    } catch (NumberFormatException ignored) {
-                    }
-                    try {
-                        herolandQuestionBankImportDP.setThink(Integer.parseInt(v.getThink()));
-                    } catch (NumberFormatException ignored) {
-                    }
-
-                });
-
-                importQuestion(dps);
+                toBank(bankType, questions);
 
             }
         }
 
         return new ResponseBody<>();
+    }
+
+    @Override
+    public ResponseBody<Boolean> importQuestionBankExcel(MultipartHttpServletRequest request, Integer bankType) throws Exception {
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
+            MultipartFile multipartFile = entry.getValue();
+
+            if (multipartFile instanceof CommonsMultipartFile) {
+
+                List<Question> questions = ExcelFileUtils.importExcel(multipartFile, 0, 1, Question.class);
+                toBank(bankType, questions);
+            }
+
+        }
+        return new ResponseBody<>();
+    }
+
+    public void toBank(Integer bankType, List<Question> questions) {
+        List<HerolandQuestionBankImportDP> dps = new ArrayList<>();
+        questions.forEach(v -> {
+            HerolandQuestionBankImportDP herolandQuestionBankImportDP = new HerolandQuestionBankImportDP();
+            try {
+                dps.add(BeanUtil.insertConversion(v, herolandQuestionBankImportDP));
+                herolandQuestionBankImportDP.setBankType(bankType);
+            } catch (Exception e) {
+                log.error("e", e);
+            }
+
+            try {
+                herolandQuestionBankImportDP.setDiff(Integer.valueOf(v.getDiff()));
+            } catch (NumberFormatException ignored) {
+            }
+            try {
+                herolandQuestionBankImportDP.setPassageid(Long.valueOf(v.getPassageid()));
+            } catch (NumberFormatException ignored) {
+            }
+            try {
+                herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype()));
+            } catch (NumberFormatException ignored) {
+            }
+            try {
+                herolandQuestionBankImportDP.setThink(Integer.parseInt(v.getThink()));
+            } catch (NumberFormatException ignored) {
+            }
+
+        });
+
+        importQuestion(dps);
     }
 
 
