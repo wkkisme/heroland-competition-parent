@@ -191,6 +191,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
     @Override
     public List<HeroLandTopicForSDto> getSchoolTopicsForHeaderTeacher(HerolandTopicHeaderTeacherCanAssignQO request) {
         PlatformSysUserQO userQO = new PlatformSysUserQO();
+        userQO.setUserId(request.getUserId());
         RpcResult<List<PlatformSysUserDP>> user = platformSsoUserServiceFacade.queryUserList(userQO);
         if (!user.isSuccess() || CollectionUtils.isEmpty(user.getData())) {
             return null;

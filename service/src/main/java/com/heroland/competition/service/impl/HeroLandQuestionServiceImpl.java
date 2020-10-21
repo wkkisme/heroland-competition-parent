@@ -956,13 +956,13 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         List<HerolandCourseSimpleDto> result = new ArrayList<>();
         List<HerolandCourse> herolandCourses = getPartInfoForSchoolCompetitionTopic(request.getUserId(), request.getTopicId());
         if (!CollectionUtils.isEmpty(herolandCourses)){
-            List<String> courseCodeList = herolandCourses.stream().map(HerolandCourse::getCourse).collect(Collectors.toList());
+            List<String> courseCodeList = herolandCourses.stream().map(HerolandCourse::getCourse).distinct().collect(Collectors.toList());
             List<HerolandBasicDataDP> courseDataList = heroLandAdminService.getDictInfoByKeys(courseCodeList);
             Map<String, HerolandBasicDataDP> courseDataMap = courseDataList.stream().collect(Collectors.toMap(HerolandBasicDataDP::getDictKey, Function.identity()));
-            result = herolandCourses.stream().map(e -> {
+            result = courseCodeList.stream().map(e -> {
                 HerolandCourseSimpleDto simpleDto = new HerolandCourseSimpleDto();
-                simpleDto.setCourse(e.getCourse());
-                simpleDto.setCourseName(courseDataMap.containsKey(e.getCourse()) ? courseDataMap.get(e.getCourse()).getDictValue() : "");
+                simpleDto.setCourse(e);
+                simpleDto.setCourseName(courseDataMap.containsKey(e) ? courseDataMap.get(e).getDictValue() : "");
                 HeroLandCompetitionRecordQO request1 = new HeroLandCompetitionRecordQO();
                 request1.setTopicId(request.getTopicId()+"");
                 request1.setUserId(request.getUserId());

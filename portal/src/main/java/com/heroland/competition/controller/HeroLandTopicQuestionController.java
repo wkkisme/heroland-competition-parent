@@ -103,6 +103,11 @@ public class HeroLandTopicQuestionController {
         return result;
     }
 
+    /**
+     * 查询班主任可推荐参赛的校际赛
+     * @param request
+     * @return
+     */
     @RequestMapping("/schoolTopicsForTeacher")
     public ResponseBody<List<HeroLandTopicForSDto>> getSchoolTopicsForHeaderTeacher(@RequestBody HerolandTopicHeaderTeacherCanAssignQO request){
         ResponseBody<List<HeroLandTopicForSDto>> result = new ResponseBody<>();
