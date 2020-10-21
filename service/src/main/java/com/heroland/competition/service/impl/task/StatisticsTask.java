@@ -71,7 +71,7 @@ public class StatisticsTask {
      * 0 0/10 * * * ?
      *
      */
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void statistics() {
         log.info("start  statistics =================");
         if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
@@ -115,9 +115,13 @@ public class StatisticsTask {
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
                 Map<String, List<String>> subject2Topic = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.groupingBy(this::fetchSubjectKey))
                         .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, key -> new ArrayList<>(key.getValue().stream().map(this::fetchKey).collect(Collectors.toSet()))));
+
+                totalQo.setTopic2OrgCode(totalSyncTotalScore.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId,HeroLandStatisticsDetailDP::getOrgCode,(o,n)->n)));
+
                 totalQo.setTopic2Subject(topic2Subject);
 
                 totalQo.setSubject2Topic(subject2Topic);
+
                 /*
                  *  3 完成率
                  */
