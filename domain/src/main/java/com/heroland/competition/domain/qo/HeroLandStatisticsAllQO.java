@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
 public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
@@ -86,6 +87,26 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
     private Boolean ifCorrectAnswer;
 
     private List<Integer> topicIds;
+
+
+    private Map<String,String> topic2Subject;
+    private Map<String,List<String>> subject2Topic;
+
+    public Map<String, List<String>> getSubject2Topic() {
+        return subject2Topic;
+    }
+
+    public void setSubject2Topic(Map<String, List<String>> subject2Topic) {
+        this.subject2Topic = subject2Topic;
+    }
+
+    public Map<String, String> getTopic2Subject() {
+        return topic2Subject;
+    }
+
+    public void setTopic2Subject(Map<String, String> topic2Subject) {
+        this.topic2Subject = topic2Subject;
+    }
 
     public List<Integer> getTopicIds() {
         return topicIds;

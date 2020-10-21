@@ -111,7 +111,13 @@ public class StatisticsTask {
                     mergeMap.put(heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
                 }
 
-                totalQo.setTopicIds(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toList()));
+                totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toSet())));
+                Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
+                Map<String, List<String>> subject2Topic = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.groupingBy(this::fetchSubjectKey))
+                        .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, key -> new ArrayList<>(key.getValue().stream().map(this::fetchKey).collect(Collectors.toSet()))));
+                totalQo.setTopic2Subject(topic2Subject);
+
+                totalQo.setSubject2Topic(subject2Topic);
                 /*
                  *  3 完成率
                  */
@@ -205,6 +211,14 @@ public class StatisticsTask {
         log.info("end statistics =================");
 
 
+    }
+
+    private String fetchKey(HeroLandStatisticsDetailDP detailDP) {
+        return detailDP.getOrgCode() + detailDP.getTopicId();
+    }
+
+    private String fetchSubjectKey(HeroLandStatisticsDetailDP detailDP) {
+        return detailDP.getOrgCode() + detailDP.getSubjectCode();
     }
 
 

@@ -22,6 +22,7 @@ import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import com.platfrom.payment.dto.PayOrderDTO;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -221,13 +222,13 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         recordId.queryInviteIdCheck();
         try {
             HeroLandCompetitionRecord heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
-            if (heroLandCompetitionRecord == null){
-                HeroLandCompetitionRecordDP  heroLandCompetitionRecordDP = (HeroLandCompetitionRecordDP) redisService.get("competition-record:" + recordId.getInviteRecordId());
+            if (heroLandCompetitionRecord == null) {
+                HeroLandCompetitionRecordDP heroLandCompetitionRecordDP = (HeroLandCompetitionRecordDP) redisService.get("competition-record:" + recordId.getInviteRecordId());
                 if (heroLandCompetitionRecordDP != null) {
                     return ResponseBodyWrapper.successWrapper(heroLandCompetitionRecordDP);
                 }
             }
-            if (heroLandCompetitionRecord == null){
+            if (heroLandCompetitionRecord == null) {
                 Thread.sleep(500);
             }
             heroLandCompetitionRecord = heroLandCompetitionRecordExtMapper.selectByInviteRecordId(recordId.queryInviteIdCheck().getInviteRecordId());
@@ -271,6 +272,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     @Override
     public List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO qo) {
         try {
+            logger.info("计算完成率开始：{}", JSON.toJSONString(qo));
             return getHeroLandStatisticsDetail(qo);
         } catch (Exception e) {
             logger.error("e", e);
@@ -284,39 +286,74 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             /*
                 查出所有比赛里有效题
              */
-        Long totalCount = herolandTopicQuestionExtMapper.countAll(qo);
+        List<HerolandTopicQuestion> total = herolandTopicQuestionExtMapper.countAll(qo);
              /*
                 计算正确率和完成率
              */
-        if (!CollectionUtils.isEmpty(dps) && totalCount != null  ) {
+        Map<String, String> topic2OrgCode = dps.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getOrgCode,(o,n)->n));
+        Map<String, List<String>> subject2Topic = qo.getSubject2Topic();
+        Map<String, String> topic2Subject = qo.getTopic2Subject();
+
+        if (!CollectionUtils.isEmpty(dps) && total != null) {
             logger.info("dps:{}", JSON.toJSONString(dps));
-            logger.info("totalCount:{}", JSON.toJSONString(totalCount));
-            dps.forEach(v -> {
+            logger.info("totalCount:{}", JSON.toJSONString(total));
+            total.forEach(v-> {
+                v.setOrgCode(topic2OrgCode.get(v.getTopicId().toString()));
+            });
+            Map<String, List<HerolandTopicQuestion>> totalMap = total.stream().collect(Collectors.groupingBy(this::fetchKey));
+            for (HeroLandStatisticsDetailDP v : dps) {
                 if (v.getRightCount() == null) {
                     v.setRightCount(0L);
                 }
-                if (v.getTopicId() != null) {
-                        if (totalCount != 0) {
-                            double rate = ( (double)v.getRightCount() /  (double)totalCount);
-                            if (rate >= 1){
-                                v.setAnswerRightRate(1D);
-                                v.setCompleteRate(1D);
-                            }else {
-                                v.setAnswerRightRate(rate);
-                                v.setCompleteRate(rate);
-                            }
-                        } else {
-                            v.setAnswerRightRate(0D);
-                            v.setCompleteRate(0D);
+                String topicId = v.getTopicId();
+                String subject = topic2Subject.get(topicId);
+                String orgCode = topic2OrgCode.get(topicId);
+                Long totalCount = 0L;
+                if (subject != null) {
+                    // 拿出该subject下的所有topic
+                    List<String> topics = subject2Topic.get(v.getOrgCode()+ subject);
+                    for (String tId : topics) {
+                        List<HerolandTopicQuestion> questions = totalMap.get(tId);
+                        if (questions != null) {
+                            totalCount = totalCount + questions.get(0).getTotalCount();
                         }
-                }else {
-                    v.setAnswerRightRate(0D);
-                    v.setCompleteRate(0D);
+                    }
+                    calRate(v, totalCount);
+                } else {
+                    List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(topicId);
+                    if (!CollectionUtils.isEmpty(herolandTopicQuestions)) {
+                        totalCount = herolandTopicQuestions.get(0).getTotalCount();
+                        calRate(v, totalCount);
+                    } else {
+                        v.setAnswerRightRate(0D);
+                        v.setCompleteRate(0D);
+                    }
                 }
-            });
+
+            }
         }
 
         return dps;
+    }
+
+    private String fetchKey(HerolandTopicQuestion question){
+
+        return question.getOrgCode() + question.getTopicId();
+    }
+    private void calRate(HeroLandStatisticsDetailDP v, Long totalCount) {
+        if (totalCount != 0) {
+            double rate = ((double) v.getRightCount() / (double) totalCount);
+            if (rate >= 1) {
+                v.setAnswerRightRate(1D);
+                v.setCompleteRate(1D);
+            } else {
+                v.setAnswerRightRate(rate);
+                v.setCompleteRate(rate);
+            }
+        } else {
+            v.setAnswerRightRate(0D);
+            v.setCompleteRate(0D);
+        }
     }
 
     @Override
@@ -342,7 +379,12 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
 
                     if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                        landStatisticsDetailDp.setWinRate( ((double)heroLandStatisticsDetailDp.getRightCount() / (double)landStatisticsDetailDp.getRightCount()));
+                        double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
+                        if (v > 1) {
+                            landStatisticsDetailDp.setWinRate(1D);
+                        } else {
+                            landStatisticsDetailDp.setWinRate(v);
+                        }
                     }
                 }
             }

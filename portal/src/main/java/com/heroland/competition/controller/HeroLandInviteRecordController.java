@@ -139,6 +139,7 @@ public class HeroLandInviteRecordController {
         if (data != null && data.getUserId() != null){
             heroLandInviteRecord.setBeInviteUserId(data.getUserId());
             heroLandInviteRecord.setInviteUserId(data.getUserId());
+            heroLandInviteRecord.setUserId(data.getUserId());
             return heroLandInviteRecordService.getCurrentInvitingRecord(heroLandInviteRecord);
         }
 

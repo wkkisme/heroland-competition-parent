@@ -9,6 +9,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
@@ -71,6 +72,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
                 // 如果为空去查下是否有这个人
                 if (user != null) {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
+                    if (StringUtils.isBlank(onlineUser.getLevel())){
+                        onlineUser.setLevel(HeroLevelEnum.ADVERSITY_HERO.name());
+                    }
                     Set<Object> dps = null;
                     try {
                         dps = redisService.sMembers("recent_user:" + dp.getTopic() + userId);
@@ -116,7 +120,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         if (users.size() < 10){
             finalUsers.addAll(RobotFactory.createRobot(10 - users.size(),dp.getTopicId()));
         }
-        if (dp.getLevelCode() != null){
+        if (StringUtils.isNotBlank(dp.getLevelCode())){
             finalUsers = users.stream().filter(v -> dp.getLevelCode().equals(v.getLevel())).collect(Collectors.toSet());
         }
         if (dp.getUserStatus() != null){

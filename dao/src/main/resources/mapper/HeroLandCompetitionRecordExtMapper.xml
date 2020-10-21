@@ -153,7 +153,7 @@
     </select>
     <select id="getDetailCount" resultMap="StatisticsMap">
 
-        select count(*) right_count,user_id ,grade_code ,class_code,topic_id
+        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code
         from heroland_question_record_detail
         where is_deleted =0 and history = 0
         <if test="ifCorrectAnswer == true">
@@ -162,6 +162,12 @@
 
         <if test="type != null ">
             and type = #{type}
+        </if>
+        <if test="topicIds != null and topicIds.size() > 0">
+            and topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
         </if>
         group by user_id,subject_code
 
