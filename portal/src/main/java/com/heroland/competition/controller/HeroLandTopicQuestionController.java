@@ -14,6 +14,7 @@ import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
 import com.heroland.competition.domain.dto.*;
 import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
+import com.heroland.competition.domain.qo.HerolandTopicHeaderTeacherCanAssignQO;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
@@ -99,6 +100,14 @@ public class HeroLandTopicQuestionController {
         pagination.setTotalCount(pageResponse.getTotal());
         pagination.setTotalPage(pageResponse.getTotalPages());
         result.setPage(pagination);
+        return result;
+    }
+
+    @RequestMapping("/schoolTopicsForTeacher")
+    public ResponseBody<List<HeroLandTopicForSDto>> getSchoolTopicsForHeaderTeacher(@RequestBody HerolandTopicHeaderTeacherCanAssignQO request){
+        ResponseBody<List<HeroLandTopicForSDto>> result = new ResponseBody<>();
+        List<HeroLandTopicForSDto> topics = herolandTopicJoinUserService.getSchoolTopicsForHeaderTeacher(request);
+        result.setData(topics);
         return result;
     }
 
