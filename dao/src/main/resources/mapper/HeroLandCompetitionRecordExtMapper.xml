@@ -199,7 +199,7 @@
 
         from heroland_competition_record
 
-        where is_deleted = 0 and history = 0
+        where is_deleted = 0
 
         <if test="userId != null">
             and invite_id= #{userId}
@@ -228,7 +228,7 @@
 
         from heroland_competition_record
 
-        where is_deleted = 0 and history = 0
+        where is_deleted = 0
 
 
         <if test="userId != null">
