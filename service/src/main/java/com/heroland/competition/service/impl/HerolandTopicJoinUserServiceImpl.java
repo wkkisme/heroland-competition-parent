@@ -212,13 +212,13 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
             boolean orgFilter = true;
             boolean gradeFilter = true;
             boolean classFilter = true;
-            if (StringUtils.isEmpty(request.getOrgCode())){
+            if (!StringUtils.isEmpty(request.getOrgCode())){
                 orgFilter = Objects.equals(request.getOrgCode(), e.getOrgCode());
             }
-            if (StringUtils.isEmpty(request.getGradeCode())){
+            if (!StringUtils.isEmpty(request.getGradeCode())){
                 gradeFilter = Objects.equals(request.getGradeCode(), e.getGradeCode());
             }
-            if (StringUtils.isEmpty(request.getClassCode())){
+            if (!StringUtils.isEmpty(request.getClassCode())){
                 classFilter = Objects.equals(request.getClassCode(), e.getClassCode());
             }
             return orgFilter && gradeFilter && classFilter;
