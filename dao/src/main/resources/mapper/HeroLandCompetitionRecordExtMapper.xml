@@ -209,6 +209,12 @@
             and result =#{resultInvite}
 
         </if>
+        <if test="topicIds != null and topicIds.size() > 0">
+            and topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
+        </if>
         group by invite_id,topic_type,subject_code
 
 
@@ -232,6 +238,12 @@
         <if test="resultOpponent != null">
             and result =#{resultOpponent}
 
+        </if>
+        <if test="topicIds != null and topicIds.size() > 0">
+            and topic_id in
+            <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
+                #{topicId}
+            </foreach>
         </if>
 
         group by opponent_id,topic_type,subject_code
