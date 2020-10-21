@@ -71,11 +71,12 @@ public class HeroLandQuestionQO extends BaseQO {
      */
     private Integer type;
 
-    private List<String> questionIds;
+    private Set<Long> questionIds;
 
     private Set<Long> topicIds;
     private Set<String> records;
 
+    private Boolean history;
 
 
     public HeroLandQuestionQO querySynCheck() {

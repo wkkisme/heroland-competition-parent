@@ -317,6 +317,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
 
     @Override
     public ResponseBody<HeroLandInviteRecordDP> getCurrentInvitingRecord(HeroLandInviteRecordQO heroLandInviteRecord) {
+
         String userId = heroLandInviteRecord.getUserId();
         HeroLandInviteRecordQO qo = new HeroLandInviteRecordQO();
         qo.setBeInviteUserId(null);
@@ -334,7 +335,11 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             return ResponseBodyWrapper.success();
         }
 
+
         HeroLandInviteRecordDP heroLandInviteRecordDP = data.get(0);
+        if (redisService.get("inviting:" + heroLandInviteRecord.getUserId() + heroLandInviteRecordDP.getRecordId()) != null) {
+            return ResponseBodyWrapper.success();
+        }
         if (Math.abs(heroLandInviteRecordDP.getGmtCreate().getTime() - System.currentTimeMillis()) > 180000) {
             return ResponseBodyWrapper.success();
         }
@@ -351,29 +356,29 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
         if (CompetitionStatusEnum.FINISH.getStatus().equals(data1.getStatus())) {
             return ResponseBodyWrapper.success();
         }
-        if (data1.getInviteEndTime() != null && data1.getOpponentEndTime() != null){
+        if (data1.getInviteEndTime() != null && data1.getOpponentEndTime() != null) {
             return ResponseBodyWrapper.success();
         }
 
-        if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId) && data1.getOpponentEndTime() != null){
+        if (data1.getInviteEndTime() == null && !data1.getInviteId().equals(userId) && data1.getOpponentEndTime() != null) {
             return ResponseBodyWrapper.success();
         }
 
-        if (data1.getOpponentEndTime() == null && !data1.getOpponentId().equals(userId) && data1.getInviteEndTime() != null){
+        if (data1.getOpponentEndTime() == null && !data1.getOpponentId().equals(userId) && data1.getInviteEndTime() != null) {
             return ResponseBodyWrapper.success();
         }
 
-        if (data1.getInviteEndTime() == null && data1.getInviteId().equals(userId)){
+        if (data1.getInviteEndTime() == null && data1.getInviteId().equals(userId)) {
             return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
         }
 
-        if (data1.getOpponentEndTime() == null && data1.getOpponentId().equals(userId)){
+        if (data1.getOpponentEndTime() == null && data1.getOpponentId().equals(userId)) {
             return ResponseBodyWrapper.successWrapper(heroLandInviteRecordDP);
         }
         PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
         platformSysUserQO.setUserId(heroLandInviteRecordDP.getBeInviteUserId());
         RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
-        if (listRpcResult == null || CollectionUtils.isEmpty(listRpcResult.getData()) ){
+        if (listRpcResult == null || CollectionUtils.isEmpty(listRpcResult.getData())) {
             return ResponseBodyWrapper.success();
         }
 

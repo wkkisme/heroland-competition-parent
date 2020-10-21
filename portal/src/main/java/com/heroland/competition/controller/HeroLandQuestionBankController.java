@@ -165,6 +165,18 @@ public class HeroLandQuestionBankController {
         return heroLandQuestionBankService.importQuestions(request,bankType);
 
     }
+    /**
+     * 题库导入 入参为文件 excel
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/importQuestionBankExcel")
+    public ResponseBody<Boolean> importQuestionBankExcel(MultipartHttpServletRequest request,@RequestParam("bankType") Integer bankType) throws Exception {
+
+
+        return heroLandQuestionBankService.importQuestionBankExcel(request,bankType);
+
+    }
 
     /**
      * 题库导入 入参为文件

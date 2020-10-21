@@ -105,6 +105,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             if (qo.getStartTime() != null) {
                 criteria.andGmtCreateGreaterThanOrEqualTo(qo.getStartTime());
             }
+            if (qo.getHistory() != null) {
+                criteria.andHistoryEqualTo(qo.getHistory());
+            }
             if (qo.getEndTime() != null) {
                 criteria.andGmtCreateLessThanOrEqualTo(qo.getEndTime());
             }
@@ -113,6 +116,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             }
             if (!CollectionUtils.isEmpty(qo.getRecords())) {
                 criteria.andRecordIdIn(new ArrayList<>(qo.getRecords()));
+            }
+            if (!CollectionUtils.isEmpty(qo.getQuestionIds())) {
+                criteria.andQuestionIdIn(new ArrayList<>(qo.getQuestionIds()));
             }
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
             if (qo.getNeedPage()) {
