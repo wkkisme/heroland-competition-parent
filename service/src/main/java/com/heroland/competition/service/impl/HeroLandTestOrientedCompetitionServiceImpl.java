@@ -160,10 +160,10 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 } else {
                     record.setOpponentScore(resultDP.getScore());
                 }
-                heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             }
 
+            heroLandCompetitionRecordService.updateCompetitionRecord(record);
+            heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
 
         } else {
             try {
