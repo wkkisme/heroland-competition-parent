@@ -88,7 +88,7 @@ public class HeroLandCompetitionController {
         }
         // 结束比赛，可被邀请
         redisService.del(INVITE_KEY+ dp.getUserId());
-        redisService.set("inviting:"+dp.getUserId()+dp.getRecordId(),"true",1000 * 60 * 60 * 2);
+        redisService.set("inviting:"+dp.getUserId()+dp.getInviteRecordId(),"true",1000 * 60 * 60 * 2);
         return result;
     }
 
