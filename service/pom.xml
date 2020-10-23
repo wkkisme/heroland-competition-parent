@@ -22,6 +22,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.crossoverjie.netty</groupId>
+            <artifactId>cim-client</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.alicp.jetcache</groupId>
             <artifactId>jetcache-starter-redis-lettuce</artifactId>
         </dependency>
