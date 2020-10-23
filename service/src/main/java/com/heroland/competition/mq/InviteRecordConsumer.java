@@ -46,7 +46,6 @@ public class InviteRecordConsumer  implements RocketMQListener<HeroLandInviteRec
             if (InviteStatusEnum.WAITING.getStatus().equals(dp.getStatus())){
                 dp.setStatusRemark("自动同意");
                 heroLandInviteRecordService.agreeInvite(dp);
-                rocketMQTemplate.syncSend("IM_LINE:SINGLE", JSON.toJSONString(dp));
             }
         }
     }
