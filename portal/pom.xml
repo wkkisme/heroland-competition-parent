@@ -21,11 +21,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.crossoverjie.netty</groupId>
-            <artifactId>cim-client</artifactId>
-            <version>${im.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.crossoverjie.netty</groupId>-->
+<!--            <artifactId>cim-client</artifactId>-->
+<!--            <version>${im.version}</version>-->
+<!--        </dependency>-->
         
         <dependency>
             <groupId>com.crossoverjie.netty</groupId>
