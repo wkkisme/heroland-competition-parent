@@ -116,7 +116,11 @@ public class StatisticsTask {
                 Map<String, List<String>> subject2Topic = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.groupingBy(this::fetchSubjectKey))
                         .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, key -> new ArrayList<>(key.getValue().stream().map(this::fetchKey).collect(Collectors.toSet()))));
 
-                totalQo.setTopic2OrgCode(totalSyncTotalScore.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId,HeroLandStatisticsDetailDP::getOrgCode,(o,n)->n)));
+
+                try {
+                    totalQo.setTopic2OrgCode(totalSyncTotalScore.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId,HeroLandStatisticsDetailDP::getOrgCode,(o,n)->n)));
+                } catch (Exception ignored) {
+                }
 
                 totalQo.setTopic2Subject(topic2Subject);
 
