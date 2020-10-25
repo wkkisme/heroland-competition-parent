@@ -157,6 +157,16 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private String orderType;
 
+    private Boolean queryTotal;
+
+    public Boolean getQueryTotal() {
+        return queryTotal;
+    }
+
+    public void setQueryTotal(Boolean queryTotal) {
+        this.queryTotal = queryTotal;
+    }
+
     public String getOrderType() {
         return orderType;
     }

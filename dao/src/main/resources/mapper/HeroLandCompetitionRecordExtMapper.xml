@@ -112,14 +112,14 @@
 
 
         ) a
-        GROUP BY org_code, user_id
+        GROUP BY org_code
         <if test="groupByType == true">
             ,`type`
         </if>
         <if test="groupByGradeCode == true">
             ,grade_code
         </if>
-
+        , user_id
         <if test="groupBySubjectCode == true">
             ,subject_code
         </if>
