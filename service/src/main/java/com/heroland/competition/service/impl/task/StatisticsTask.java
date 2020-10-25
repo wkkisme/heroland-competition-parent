@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -78,6 +79,7 @@ public class StatisticsTask {
      *
      */
     @Scheduled(cron = "0 0/1 * * * ?")
+    @Transactional(rollbackFor = Exception.class)
     public void statistics() {
         log.info("start  statistics =================");
         if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
@@ -236,6 +238,7 @@ public class StatisticsTask {
             }
         } catch (Exception e) {
             log.error("", e);
+            throw new RuntimeException(e);
         } finally {
             redisService.del("statistics_redis_key");
         }
