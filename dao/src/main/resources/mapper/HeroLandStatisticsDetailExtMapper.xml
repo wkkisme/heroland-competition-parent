@@ -45,7 +45,7 @@
            <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
          </if>
          <if test="queryAll != null">
-           <include refid="queryAllSql"/>
+           <include refid="queryAllSql"/>,
          </if>
         (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField}
 
