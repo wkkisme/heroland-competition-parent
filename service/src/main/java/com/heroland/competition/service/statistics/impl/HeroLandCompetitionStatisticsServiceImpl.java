@@ -400,7 +400,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             List<HeroLandQuestionRecordDetailDP> details = item.getDetails();
             if (details != null){
                 for (HeroLandQuestionRecordDetailDP detail : details) {
-                    topic.put(item.getTopicId() + detail.getId(),item);
+                    topic.put(item.getTopicId() + detail.getQuestionId(),item);
                 }
             }
         }
