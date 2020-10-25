@@ -6,9 +6,13 @@ import com.google.common.collect.Maps;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
+import com.heroland.competition.domain.dto.HeroLandTopicDto;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
+import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -50,6 +54,8 @@ public class StatisticsTask {
     @Resource
     private RedisService redisService;
 
+    @Resource
+    private HeroLandQuestionService heroLandQuestionService;
     /**
      * 统计所有人的比赛记录
      * 1 总表统计所有人的总记录，
@@ -108,8 +114,7 @@ public class StatisticsTask {
                 }
                 Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
 
-
-                totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toSet())));
+                totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet())));
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
                 Map<String, List<String>> subject2Topic = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.groupingBy(this::fetchSubjectKey))
                         .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, key -> new ArrayList<>(key.getValue().stream().map(this::fetchKey).collect(Collectors.toSet()))));
@@ -123,6 +128,8 @@ public class StatisticsTask {
                 totalQo.setTopic2Subject(topic2Subject);
 
                 totalQo.setSubject2Topic(subject2Topic);
+                HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
+                heroLandTopicQuestionsPageRequest.setTopicIds(totalQo.getTopicIds());
 
                 /*
                  *  3 完成率
@@ -187,11 +194,19 @@ public class StatisticsTask {
                 // 查询人信息
                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
                 platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList()));
-                RpcResult<List<PlatformSysUserDP>> userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+                RpcResult<List<PlatformSysUserDP>> userList = null;
+                try {
+                    userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                RpcResult<List<PlatformSysUserDP>> finalUserList = userList;
+                List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
+                Map<Long, String> subjectRefect = topics.stream().collect(Collectors.toMap(HeroLandTopicDto::getTopicId, HeroLandTopicDto::getCourseCode, (o, n) -> n));
                 values.forEach(v -> {
                     v.setHistory(false);
-                    if (!CollectionUtils.isEmpty(userList.getData())) {
-                        userList.getData().forEach(u -> {
+                    if (!CollectionUtils.isEmpty(finalUserList.getData())) {
+                        finalUserList.getData().forEach(u -> {
                             if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
                                 v.setUserName(u.getUserName());
                             }
@@ -203,6 +218,9 @@ public class StatisticsTask {
                         v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getClassCode()).getDictValue() : "");
                         v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getSubjectCode()).getDictValue() : "");
 
+                    }
+                    if (v.getSubjectCode() == null && v.getTopicId() != null){
+                       v.setSubjectCode(subjectRefect.get(Long.valueOf(v.getTopicId())));
                     }
                 });
                 List<HeroLandStatisticsDetailDP> collect = values.stream().filter(v -> StringUtils.isNotBlank(v.getUserName())).collect(Collectors.toList());

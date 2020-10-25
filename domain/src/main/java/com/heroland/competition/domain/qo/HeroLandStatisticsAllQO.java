@@ -86,7 +86,7 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
 
     private Boolean ifCorrectAnswer;
 
-    private List<Integer> topicIds;
+    private List<Long> topicIds;
 
 
     private Map<String,String> topic2Subject;
@@ -118,11 +118,11 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
         this.topic2Subject = topic2Subject;
     }
 
-    public List<Integer> getTopicIds() {
+    public List<Long> getTopicIds() {
         return topicIds;
     }
 
-    public void setTopicIds(List<Integer> topicIds) {
+    public void setTopicIds(List<Long> topicIds) {
         this.topicIds = topicIds;
     }
 
