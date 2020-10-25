@@ -178,17 +178,20 @@ public class StatisticsTask {
                         total.setTotalTime(holistically.getTotalTime());
                     }
                 }
-                List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
-                Map<Long, String> subjectRefect = topics.stream().collect(Collectors.toMap(HeroLandTopicDto::getTopicId, HeroLandTopicDto::getCourseCode, (o, n) -> n));
-
                 Collection<HeroLandStatisticsDetailDP> values = mergeMap.values();
 
-                for (HeroLandStatisticsDetailDP v : values) {
-                    if (v.getSubjectCode() == null && v.getTopicId() != null){
-                        v.setSubjectCode(subjectRefect.get(Long.valueOf(v.getTopicId())));
-                    }
-                }
+                List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
+                if (topics != null) {
+                    Map<Long, String> subjectRefect = topics.stream().collect(Collectors.toMap(HeroLandTopicDto::getTopicId, HeroLandTopicDto::getCourseCode, (o, n) -> n));
 
+
+                    for (HeroLandStatisticsDetailDP v : values) {
+                        if (v.getSubjectCode() == null && v.getTopicId() != null) {
+                            v.setSubjectCode(subjectRefect.get(Long.valueOf(v.getTopicId())));
+                        }
+                    }
+
+                }
                 // 查询字典
                 List<String> departmentCode = Lists.newArrayList();
                 departmentCode.addAll(values.stream().map(HeroLandStatisticsDetailDP::getClassCode).collect(Collectors.toList()));
