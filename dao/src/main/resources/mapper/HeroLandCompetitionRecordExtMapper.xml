@@ -112,7 +112,18 @@
 
 
         ) a
-        GROUP BY user_id,subject_code,topic_id
+        GROUP BY org_code, user_id
+        <if test="groupByType == true">
+            ,`type`
+        </if>
+        <if test="groupByGradeCode == true">
+            ,grade_code
+        </if>
+
+        <if test="groupBySubjectCode == true">
+            ,subject_code
+        </if>
+
 
     </select>
 
