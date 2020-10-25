@@ -436,6 +436,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             topicQuestion.setQuestionId(e);
             topicQuestion.setTopicId(request.getTopicId());
             topicQuestion.setChapterId(0L);
+            topicQuestion.setOrgCode(request.getOrgCode());
             list.add(topicQuestion);
         });
         request.getChapterQuestions().stream().forEach(e -> {
