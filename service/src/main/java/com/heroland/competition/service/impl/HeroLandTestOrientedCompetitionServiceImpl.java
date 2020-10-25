@@ -117,7 +117,7 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
         if (topic.getEndTime().getTime() - System.currentTimeMillis() < 0) {
             ResponseBodyWrapper.fail("请在规定时间范围内答题", "50005");
         }
-
+        record.setSubjectCode(topic.getCourseCode());
         String redisKey = record.getTopicId() + record.getInviteId() + record.getOpponentId() + record.getId();
         boolean lock = redisService.setNx(redisKey, record.getTopicId(), "PT24H");
         if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
@@ -160,10 +160,10 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                 } else {
                     record.setOpponentScore(resultDP.getScore());
                 }
-                heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             }
 
+            heroLandCompetitionRecordService.updateCompetitionRecord(record);
+            heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
 
         } else {
             try {

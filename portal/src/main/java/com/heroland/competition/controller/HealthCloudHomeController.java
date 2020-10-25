@@ -1,12 +1,12 @@
 package com.heroland.competition.controller;
 
 import com.anycommon.cache.service.RedisService;
-//import com.anycommon.logger.annotation.CommonLogger;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 public class HealthCloudHomeController {
 
     private final static Logger logger = LoggerFactory.getLogger(HealthCloudHomeController.class);
+
+
 
     @Resource
     private RedisService redisService;
@@ -47,6 +49,7 @@ public class HealthCloudHomeController {
 //
 //        System.out.println("***************");
 //    }
+
 
 
 }
