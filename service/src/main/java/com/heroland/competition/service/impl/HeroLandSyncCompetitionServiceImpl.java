@@ -134,7 +134,9 @@ public class HeroLandSyncCompetitionServiceImpl implements HeroLandCompetitionSe
         record.setOpponentLevel(heroLandCompetitionRecordDP.getOpponentLevel());
         record.setId(heroLandCompetitionRecordDP.getId());
         record.setQuestionId(heroLandQuestionRecordDetailDP.getId());
-        record.setSubjectCode(question.getCourse());
+        if (record.getSubjectCode() == null) {
+            record.setSubjectCode(question.getCourse());
+        }
         String redisKey = record.getTopicId() + record.getQuestionId() + record.getInviteId() + record.getOpponentId();
         boolean lock = redisService.setNx(redisKey + record.getId(), record.getUserId(), "PT2H");
         redisService.del("question:" + redisKey + record.getUserId());
