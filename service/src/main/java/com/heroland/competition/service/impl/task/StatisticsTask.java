@@ -71,7 +71,7 @@ public class StatisticsTask {
      * 0 0/10 * * * ?
      *
      */
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void statistics() {
         log.info("start  statistics =================");
         if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
@@ -106,10 +106,8 @@ public class StatisticsTask {
                 if (CollectionUtils.isEmpty(totalSyncTotalScore)) {
                     continue;
                 }
-                Map<String, HeroLandStatisticsDetailDP> mergeMap = Maps.newHashMapWithExpectedSize(totalSyncTotalScore.size());
-                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : totalSyncTotalScore) {
-                    mergeMap.put(heroLandStatisticsTotalDP.getUserId(), heroLandStatisticsTotalDP);
-                }
+                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
+
 
                 totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Integer::valueOf).collect(Collectors.toSet())));
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
@@ -132,7 +130,7 @@ public class StatisticsTask {
                 List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(totalQo);
 
                 for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : completeRate) {
-                    HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDP.getUserId());
+                    HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDP));
                     if (dp != null) {
                         dp.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
                     }
@@ -146,7 +144,7 @@ public class StatisticsTask {
                 List<HeroLandStatisticsDetailDP> answerRightRate = heroLandCompetitionRecordService.getAnswerRightRate(totalQo);
 
                 for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : answerRightRate) {
-                    HeroLandStatisticsDetailDP totalDP = mergeMap.get(heroLandStatisticsTotalDP.getUserId());
+                    HeroLandStatisticsDetailDP totalDP = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDP));
                     if (totalDP != null) {
                         totalDP.setAnswerRightRate(heroLandStatisticsTotalDP.getAnswerRightRate());
                     }
@@ -157,7 +155,7 @@ public class StatisticsTask {
                  */
                 List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
                 for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
-                    HeroLandStatisticsDetailDP dp = mergeMap.get(heroLandStatisticsTotalDp.getUserId());
+                    HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
                     if (dp != null) {
                         dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
                     }
@@ -227,6 +225,10 @@ public class StatisticsTask {
 
     private String fetchSubjectKey(HeroLandStatisticsDetailDP detailDP) {
         return detailDP.getOrgCode() + detailDP.getSubjectCode();
+    }
+
+    private String fetchUserKey(HeroLandStatisticsDetailDP detailDP) {
+        return detailDP.getUserId() + detailDP.getSubjectCode();
     }
 
 
