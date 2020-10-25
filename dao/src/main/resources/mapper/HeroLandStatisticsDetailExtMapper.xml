@@ -168,16 +168,17 @@
     <select id="countStatisticsByRank" resultType="java.lang.Long">
         <if test="queryAll != null">
 
-            select count(*) from c (
+            select count(*) from (
             SELECT
             count(*)
             FROM heroland_statistics_detail
 
             where is_deleted =0
-            <if test="userId != null">and user_id = #{userId}
+            <if test="userId != null">
+            and user_id = #{userId}
             </if>
-            <if test="
-            history != null">and history = #{history}
+            <if test="history != null">
+            and history = #{history}
             </if>
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
