@@ -387,16 +387,23 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
         heroLandQuestionQO.setNeedPage(false);
         heroLandQuestionQO.setUserId(qo.getUserId());
-        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord;
-        questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
+        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
 
         List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
+        /**
+         * Map<String, HitRuleConfig> configMap = configList.parallelStream().collect(
+         *  　　　　　　　　　　　　　　Collectors.groupingBy(HitRuleConfig::getAppId, // 先根据appId分组
+         * 　　　　　　　　　　　　　　 Collectors.collectingAndThen(
+         * 　　　　　　　　　　　　　　 Collectors.reducing(( c1,  c2) -> c1.getVersionSort() > c2.getVersionSort() ? c1 : c2), Optional::get)));
+         */
+        Map<String, HeroLandCompetitionRecordDP> collect = items.stream().collect(Collectors.toMap(HeroLandCompetitionRecordDP::getTopicId, Function.identity(), (a, b) -> a.getGmtCreate().getTime() > b.getGmtCreate().getTime() ? a : b));
+
         ResponseBody<List<AnswerQuestionRecordStatisticDP>> responseBody = new ResponseBody<>();
 
         List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
         //根据topicId和questionId group by
         Map<String, HeroLandCompetitionRecordDP> topic = Maps.newHashMap();
-        for (HeroLandCompetitionRecordDP item : items) {
+        for (HeroLandCompetitionRecordDP item : collect.values()) {
             List<HeroLandQuestionRecordDetailDP> details = item.getDetails();
             if (details != null){
                 for (HeroLandQuestionRecordDetailDP detail : details) {
@@ -447,9 +454,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             platformSysUserQO.setUserId(record.getOpponentId());
 
                             if (qo.getUserId().equalsIgnoreCase(record.getOpponentId())) {
-                                v.setScore(record.getOpponentScore());
+                                v.setScore(detail.getScore());
                             } else {
-                                v.setScore(record.getInviteScore());
+                                v.setScore(detail.getScore());
                             }
                         }
                     }
@@ -474,7 +481,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             answerQuestionRecordStatisticDP.setResult(v.getResult());
             answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
             answerQuestionRecordStatisticDP.setType(v.getType());
-            answerQuestionRecordStatisticDP.setQuestionId(v.getId());
+            if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
+                answerQuestionRecordStatisticDP.setQuestionId(v.getId());
+            }
             answerQuestionRecordStatisticDP.setId(v.getId());
             answerQuestionRecordStatisticDP.setTopicId(v.getTopicId());
             answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
