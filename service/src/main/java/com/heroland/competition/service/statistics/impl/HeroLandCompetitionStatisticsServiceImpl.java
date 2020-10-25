@@ -412,7 +412,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
                 if (!CollectionUtils.isEmpty(details)) {
                     for (HeroLandQuestionRecordDetailDP detail : details) {
-                        if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(record.getQuestionId())) {
+                        if (detail.getQuestionId().equals(v.getId())) {
                             if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
                                 if (record.getResult() != null) {
                                     // 如果当前人是邀请者 0负1胜2平局
