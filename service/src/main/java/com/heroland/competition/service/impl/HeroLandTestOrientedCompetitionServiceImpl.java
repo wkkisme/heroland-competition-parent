@@ -146,9 +146,6 @@ public class HeroLandTestOrientedCompetitionServiceImpl implements HeroLandCompe
                     record.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
                     record.setOpponentScore(resultDP.getScore() * 2);
                 }
-
-                heroLandCompetitionRecordService.updateCompetitionRecord(record);
-                heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
             } else if (resultDP.getRightCount() == 0) {
                 if (record.getUserId().equalsIgnoreCase(record.getInviteId())) {
                     record.setInviteScore(0);
