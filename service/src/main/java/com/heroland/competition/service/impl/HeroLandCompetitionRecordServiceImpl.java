@@ -313,13 +313,15 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 if (subject != null) {
                     // 拿出该subject下的所有topic
                     List<String> topics = subject2Topic.get(v.getOrgCode()+ subject);
-                    for (String tId : topics) {
-                        List<HerolandTopicQuestion> questions = totalMap.get(tId);
-                        if (questions != null) {
-                            totalCount = totalCount + questions.get(0).getTotalCount();
+                    if (topics != null) {
+                        for (String tId : topics) {
+                            List<HerolandTopicQuestion> questions = totalMap.get(tId);
+                            if (questions != null) {
+                                totalCount = totalCount + questions.get(0).getTotalCount();
+                            }
                         }
+                        calRate(v, totalCount);
                     }
-                    calRate(v, totalCount);
                 } else {
                     List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(topicId);
                     if (!CollectionUtils.isEmpty(herolandTopicQuestions)) {
