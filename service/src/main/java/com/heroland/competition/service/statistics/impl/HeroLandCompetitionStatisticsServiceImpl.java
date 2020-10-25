@@ -420,6 +420,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 if (!CollectionUtils.isEmpty(details)) {
                     for (HeroLandQuestionRecordDetailDP detail : details) {
                         if (detail.getQuestionId().equals(v.getId())) {
+                            v.setScore(detail.getScore());
                             if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
                                 if (record.getResult() != null) {
                                     // 如果当前人是邀请者 0负1胜2平局
@@ -449,24 +450,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                             }
                             v.setCorrectAnswer(detail.getCorrectAnswer());
 
-
-                            PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                            platformSysUserQO.setUserId(record.getOpponentId());
-
-                            if (qo.getUserId().equalsIgnoreCase(record.getOpponentId())) {
-                                v.setScore(detail.getScore());
-                            } else {
-                                v.setScore(detail.getScore());
-                            }
                         }
                     }
                 }
             }
         }
 
-
         List<AnswerQuestionRecordStatisticDP> result = new ArrayList<>();
-
         List<HeroLandQuestionListForTopicDto> questionsItems = topicQuestions.getItems();
         questionsItems.forEach(v -> {
             AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
