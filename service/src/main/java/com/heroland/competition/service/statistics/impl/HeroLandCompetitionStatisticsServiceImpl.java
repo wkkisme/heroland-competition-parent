@@ -13,6 +13,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.heroland.competition.common.constant.TopicJoinConstant;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.constants.TopicTypeConstants;
@@ -394,16 +395,20 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
         //根据topicId和questionId group by
-        Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionStatisticsServiceImpl::fetchGroupKey));
+        Map<String, HeroLandCompetitionRecordDP> topic = Maps.newHashMap();
+        for (HeroLandCompetitionRecordDP item : items) {
+            List<HeroLandQuestionRecordDetailDP> details = item.getDetails();
+            if (details != null){
+                for (HeroLandQuestionRecordDetailDP detail : details) {
+                    topic.put(item.getTopicId() + detail.getId(),item);
+                }
+            }
+        }
 
         for (HeroLandQuestionListForTopicDto v : topicQuestionsItems) {// 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
-            List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString() + v.getId());
+            HeroLandCompetitionRecordDP record = topic.get(v.getTopicId().toString() + v.getId());
 
-            if (heroLandCompetitionRecordDPS != null) {
-                // 因为一个人下的topicId会有多场比赛 取最新的展示
-                List<HeroLandCompetitionRecordDP> sorted = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList());
-                HeroLandCompetitionRecordDP record = sorted.get(0);
-                // 如果questionid相等  同步作业赛
+            if (record != null) {
                 List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
                 if (!CollectionUtils.isEmpty(details)) {
                     for (HeroLandQuestionRecordDetailDP detail : details) {
@@ -494,7 +499,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
     }
 
-    private static String fetchGroupKey(HeroLandCompetitionRecordDP user) {
+    private String fetchGroupKey(HeroLandCompetitionRecordDP user) {
         return user.getTopicId() + user.getQuestionId();
     }
 
