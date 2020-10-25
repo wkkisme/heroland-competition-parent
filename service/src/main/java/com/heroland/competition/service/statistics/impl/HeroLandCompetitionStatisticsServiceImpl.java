@@ -242,6 +242,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setOrderField(OrderByEnum.TOTAL_SCORE_DESC.getOrderByFiled());
             qo.setRankField(OrderByEnum.TOTAL_SCORE_DESC.getFiled());
         }
+        if (qo.getSubjectCode() == null){
+            qo.setQueryAll(true);
+        }
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
         if (qo.getUserId() == null){
             qo.setUserId(qo.getCurrentUserId());

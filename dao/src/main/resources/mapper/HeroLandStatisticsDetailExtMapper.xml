@@ -7,11 +7,46 @@
         <result column="class_rank" property="classRank"/>
 
     </resultMap>
+
+    <sql id="queryAllSql">
+
+        id,
+	creator,
+	modifier,
+	gmt_create,
+	gmt_modified,
+	is_deleted,
+	user_id,
+	subject_code,
+	subject_name,
+	sum(total_score) total_score,
+	sum(complete_rate)/count(subject_code) complete_rate,
+	sum(answer_right_rate) /count(subject_code) answer_right_rate,
+	sum(win_rate)/count(subject_code) win_rate,
+	sum(total_time) total_time,
+	sum(average_score)/count(subject_code) average_score,
+	total_id,
+	detail_id,
+	org_code,
+	history,
+	sum(total_games) total_games,
+	class_code,
+	grade_code,
+	user_name,
+	type,
+	grade_name,
+	class_name,
+
+    </sql>
     <select id="selectStatisticsByRank" resultMap="DetailRankBaseMap">
 
          SELECT
-        <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
-
+         <if test="queryAll == null" >
+           <include refid="com.heroland.competition.dal.mapper.HeroLandStatisticsDetailMapper.Base_Column_List"/>,
+         </if>
+         <if test="queryAll != null">
+           <include refid="queryAllSql"/>
+         </if>
         (SELECT count(${rankField}) FROM heroland_statistics_detail AS b WHERE a.${rankField}  <![CDATA[ < ]]> b.${rankField}
 
         and
@@ -119,7 +154,9 @@
             </foreach>
 
         </if>
-
+        <if test="queryAll != null">
+            group by subject_code
+        </if>
         ORDER BY rank ${orderType}
         <if test="startRow != null and startRow != -1 and pageSize != null">
             limit #{startRow,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
@@ -129,18 +166,19 @@
     </select>
 
     <select id="countStatisticsByRank" resultType="java.lang.Long">
-        SELECT
-        count(*)
-        FROM heroland_statistics_detail
+        <if test="queryAll != null">
 
-        where is_deleted =0
+            select count(*) from c (
+            SELECT
+            count(*)
+            FROM heroland_statistics_detail
 
-        <if test="userId != null">
-            and user_id = #{userId}
-        </if>
-        <if test="history != null">
-            and history = #{history}
-        </if>
+            where is_deleted =0
+            <if test="userId != null">and user_id = #{userId}
+            </if>
+            <if test="
+            history != null">and history = #{history}
+            </if>
         <if test="subjectCode != null">
             and subject_code = #{subjectCode,jdbcType=VARCHAR}
         </if>
@@ -187,8 +225,72 @@
         <if test="type != null">
             and type = #{type}
         </if>
+        <if test="queryAll != null">
+            group by subject_code
+        </if>
+            ) c
+        </if>
 
-        <!--        group by user_id-->
+
+        <if test="queryAll == null">
+            SELECT
+            count(*)
+            FROM heroland_statistics_detail
+
+            where is_deleted =0
+            <if test="userId != null">and user_id = #{userId}
+            </if>
+            <if test="
+            history != null">and history = #{history}
+            </if>
+            <if test="subjectCode != null">
+                and subject_code = #{subjectCode,jdbcType=VARCHAR}
+            </if>
+            <if test="gradeCode != null">
+                and grade_code = #{gradeCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="orgCode != null">
+                and org_code = #{orgCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="classCode != null">
+                and class_code = #{classCode,jdbcType=VARCHAR}
+            </if>
+
+            <if test="startTime != null">
+                and gmt_create >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and gmt_create <![CDATA[ <= ]]> #{endTime}
+
+            </if>
+
+            <if test="userName != null and userName.length > 0">
+                and user_name like concat ( #{userName},'%')
+            </if>
+
+            <if test="userIds != null and userIds.size() > 0">
+                and user_id in
+                <foreach collection="userIds" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+
+
+            </if>
+
+            <if test="classCodes != null and classCodes.size()>0">
+                and class_code  in
+                <foreach collection="classCodes" item="classCode" separator="," close=")" open="(">
+                    #{classCode}
+                </foreach>
+            </if>
+
+            <if test="type != null">
+                and type = #{type}
+            </if>
+
+        </if>
 
 
     </select>
