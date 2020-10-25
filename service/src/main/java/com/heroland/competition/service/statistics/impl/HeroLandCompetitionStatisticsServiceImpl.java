@@ -378,120 +378,214 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 //        }
         List<HeroLandTopicDto> topics = Lists.newArrayList();
         PageResponse<HeroLandQuestionListForTopicDto> topicQuestions = new PageResponse<>();
-        topicQuestions = heroLandQuestionService.getTopicQuestions(qo);
-
-
-        // 根据topicId 加questionId查出 题目的对战情况
-        HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
-        BeanUtil.copyProperties(qo, heroLandQuestionQO);
-        heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
-        heroLandQuestionQO.setNeedPage(false);
-        heroLandQuestionQO.setUserId(qo.getUserId());
-        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
-
-        List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
-        /**
-         * Map<String, HitRuleConfig> configMap = configList.parallelStream().collect(
-         *  　　　　　　　　　　　　　　Collectors.groupingBy(HitRuleConfig::getAppId, // 先根据appId分组
-         * 　　　　　　　　　　　　　　 Collectors.collectingAndThen(
-         * 　　　　　　　　　　　　　　 Collectors.reducing(( c1,  c2) -> c1.getVersionSort() > c2.getVersionSort() ? c1 : c2), Optional::get)));
-         */
-        Map<String, HeroLandCompetitionRecordDP> collect = items.stream().collect(Collectors.toMap(HeroLandCompetitionRecordDP::getTopicId, Function.identity(), (a, b) -> a.getGmtCreate().getTime() > b.getGmtCreate().getTime() ? a : b));
-
-        ResponseBody<List<AnswerQuestionRecordStatisticDP>> responseBody = new ResponseBody<>();
-
-        List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
-        //根据topicId和questionId group by
-        Map<String, HeroLandCompetitionRecordDP> topic = Maps.newHashMap();
-        for (HeroLandCompetitionRecordDP item : collect.values()) {
-            List<HeroLandQuestionRecordDetailDP> details = item.getDetails();
-            if (details != null){
-                for (HeroLandQuestionRecordDetailDP detail : details) {
-                    topic.put(item.getTopicId() + detail.getQuestionId(),item);
-                }
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+            topicQuestions = heroLandQuestionService.getTopicQuestions(qo);
+            if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
+                return ResponseBodyWrapper.success();
+            }
+        }  else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())){
+            topics = heroLandQuestionService.getTopics(qo);
+            if (CollectionUtils.isEmpty(topics)) {
+                return ResponseBodyWrapper.success();
             }
         }
 
-        for (HeroLandQuestionListForTopicDto v : topicQuestionsItems) {// 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
-            HeroLandCompetitionRecordDP record = topic.get(v.getTopicId().toString() + v.getId());
+        // 根据topicId 加questionId查出 题目的对战情况
+        HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
+        BeanUtil.copyProperties(qo,heroLandQuestionQO);
+        heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
+        heroLandQuestionQO.setNeedPage(false);
+        heroLandQuestionQO.setUserId(qo.getUserId());
+        ResponseBody<List<HeroLandCompetitionRecordDP>> questionRecord;
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+            questionRecord = heroLandCompetitionRecordService.getCompetitionRecordsAndDetail(heroLandQuestionQO);
+        } else {
+            questionRecord = heroLandCompetitionRecordService.getCompetitionRecords(heroLandQuestionQO);
+        }
 
-            if (record != null) {
-                List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
-                if (!CollectionUtils.isEmpty(details)) {
-                    for (HeroLandQuestionRecordDetailDP detail : details) {
-                        if (detail.getQuestionId().equals(v.getId())) {
-                            v.setScore(detail.getScore());
-                            if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
-                                if (record.getResult() != null) {
-                                    // 如果当前人是邀请者 0负1胜2平局
-                                    if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
-                                        v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                                        // 如果是被邀请者胜
-                                    } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
-                                        v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                                    } else {
-                                        v.setResult(record.getResult());
+        List<HeroLandCompetitionRecordDP> items = questionRecord.getData();
+        ResponseBody<List<AnswerQuestionRecordStatisticDP>> responseBody = new ResponseBody<>();
+
+        List<HeroLandQuestionListForTopicDto> topicQuestionsItems = topicQuestions.getItems();
+        if (!CollectionUtils.isEmpty(questionRecord.getData()) && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+            //根据topicId和questionId group by
+            Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(this::fetchGroupKey));
+
+            for (HeroLandQuestionListForTopicDto v : topicQuestionsItems) {// 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
+                List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getTopicId().toString() + v.getId());
+
+                if (heroLandCompetitionRecordDPS != null) {
+                    // 因为一个人下的topicId会有多场比赛 取最新的展示
+                    List<HeroLandCompetitionRecordDP> sorted = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList());
+                    HeroLandCompetitionRecordDP record = sorted.get(0);
+                    // 如果questionid相等  同步作业赛
+                    List<HeroLandQuestionRecordDetailDP> details = record.getDetails();
+                    if (!CollectionUtils.isEmpty(details)) {
+                        for (HeroLandQuestionRecordDetailDP detail : details) {
+                            if (detail.getQuestionId().equals(v.getId()) && detail.getQuestionId().equals(record.getQuestionId())) {
+                                if (qo.getUserId().equalsIgnoreCase(record.getInviteId())) {
+                                    if (record.getResult() != null) {
+                                        // 如果当前人是邀请者 0负1胜2平局
+                                        if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                            // 如果是被邀请者胜
+                                        } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                        } else {
+                                            v.setResult(record.getResult());
+                                        }
                                     }
-                                }
-                                v.setOpponent(HeroLevelEnum.getLevelDistance(record.getInviteLevel(), record.getOpponentLevel()));
-                            } else {
-                                if (record.getResult() != null) {
-                                    // 如果当前人是被邀请者 0负1胜2平局
-                                    if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
-                                        v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
-                                        // 如果是被邀请者胜
-                                    } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
-                                        v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
-                                    } else {
-                                        v.setResult(record.getResult());
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(record.getInviteLevel(), record.getOpponentLevel()));
+                                } else {
+                                    if (record.getResult() != null) {
+                                        // 如果当前人是被邀请者 0负1胜2平局
+                                        if (record.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                            // 如果是被邀请者胜
+                                        } else if (record.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                            v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                        } else {
+                                            v.setResult(record.getResult());
+                                        }
                                     }
+                                    v.setOpponent(HeroLevelEnum.getLevelDistance(record.getOpponentLevel(), record.getInviteLevel()));
                                 }
-                                v.setOpponent(HeroLevelEnum.getLevelDistance(record.getOpponentLevel(), record.getInviteLevel()));
+                                v.setCorrectAnswer(detail.getCorrectAnswer());
+
+
+                                PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+                                platformSysUserQO.setUserId(record.getOpponentId());
+
+                                if (qo.getUserId().equalsIgnoreCase(record.getOpponentId())) {
+                                    v.setScore(record.getOpponentScore());
+                                } else {
+                                    v.setScore(record.getInviteScore());
+                                }
                             }
-                            v.setCorrectAnswer(detail.getCorrectAnswer());
-
                         }
                     }
                 }
             }
+
+
+        } else if (!CollectionUtils.isEmpty(questionRecord.getData())) {
+            //根据topicId和questionId group by
+            Map<String, List<HeroLandCompetitionRecordDP>> topic = items.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecordDP::getTopicId));
+            if (CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
+                HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
+                heroLandTopicQuestionsPageRequest.setTopicIds(items.parallelStream().map(HeroLandCompetitionRecordDP::getTopicId).map(Long::valueOf).collect(Collectors.toList()));
+                topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
+            }
+            topics.forEach(v -> {
+                // 题目id，题组名称。对手。知识点、难度。题型、对错、胜负、得分
+                List<HeroLandCompetitionRecordDP> heroLandCompetitionRecordDPS = topic.get(v.getId().toString());
+
+                if (!CollectionUtils.isEmpty(heroLandCompetitionRecordDPS)) {
+                    // 因为一个人下的topicId只会有一场比赛 取出来即可
+                    HeroLandCompetitionRecordDP recordDP = heroLandCompetitionRecordDPS.stream().sorted(Comparator.comparing(HeroLandCompetitionRecordDP::getGmtCreate).reversed()).collect(Collectors.toList()).get(0);
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getInviteId())) {
+
+                        if (recordDP.getResult() != null) {
+                            // 如果当前人是邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                                // 如果是被邀请者胜
+                            } else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                            } else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getInviteLevel(), recordDP.getOpponentLevel()));
+                    } else {
+                        if (recordDP.getResult() != null) {
+                            // 如果当前人是被邀请者 0负1胜2平局
+                            if (recordDP.getResult().equals(CompetitionResultEnum.INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.INVITE_WIN.getResult());
+                                // 如果是被邀请者胜
+                            } else if (recordDP.getResult().equals(CompetitionResultEnum.BE_INVITE_WIN.getResult())) {
+                                v.setResult(CompetitionResultEnum.BE_INVITE_WIN.getResult());
+                            } else {
+                                v.setResult(recordDP.getResult());
+                            }
+                        }
+                        v.setOpponent(HeroLevelEnum.getLevelDistance(recordDP.getOpponentLevel(), recordDP.getInviteLevel()));
+                    }
+
+                    PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
+                    platformSysUserQO.setUserId(recordDP.getOpponentId());
+
+                    if (qo.getUserId().equalsIgnoreCase(recordDP.getOpponentId())) {
+                        v.setScore(recordDP.getOpponentScore());
+                    } else {
+                        v.setScore(recordDP.getInviteScore());
+                    }
+
+
+                }
+            });
+
+
         }
-
         List<AnswerQuestionRecordStatisticDP> result = new ArrayList<>();
-        List<HeroLandQuestionListForTopicDto> questionsItems = topicQuestions.getItems();
-        questionsItems.forEach(v -> {
-            AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
-            answerQuestionRecordStatisticDP.setDiff(v.getDiff());
-            List<HerolandKnowledgeSimpleDto> knowledges = v.getKnowledges();
-            if (!CollectionUtils.isEmpty(knowledges)) {
-                answerQuestionRecordStatisticDP.setKnowledge(knowledges.stream().map(HerolandKnowledgeSimpleDto::getKnowledge).collect(Collectors.toList()));
-            }
-            answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
-            answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
-            answerQuestionRecordStatisticDP.setScore(v.getScore());
-            answerQuestionRecordStatisticDP.setResult(v.getResult());
-            answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
-            answerQuestionRecordStatisticDP.setType(v.getType());
-            if (CompetitionEnum.SYNC.getType().equals(qo.getTopicType())) {
+        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+
+            List<HeroLandQuestionListForTopicDto> questionsItems = topicQuestions.getItems();
+            questionsItems.forEach(v -> {
+                AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
+                answerQuestionRecordStatisticDP.setDiff(v.getDiff());
+                List<HerolandKnowledgeSimpleDto> knowledges = v.getKnowledges();
+                if (!CollectionUtils.isEmpty(knowledges)) {
+                    answerQuestionRecordStatisticDP.setKnowledge(knowledges.stream().map(HerolandKnowledgeSimpleDto::getKnowledge).collect(Collectors.toList()));
+                }
+                answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
+                answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
+                answerQuestionRecordStatisticDP.setScore(v.getScore());
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
+                answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
+                answerQuestionRecordStatisticDP.setType(v.getType());
                 answerQuestionRecordStatisticDP.setQuestionId(v.getId());
-            }
-            answerQuestionRecordStatisticDP.setId(v.getId());
-            answerQuestionRecordStatisticDP.setTopicId(v.getTopicId());
-            answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
-            if (v.getKnowledges() != null) {
+                answerQuestionRecordStatisticDP.setId(v.getId());
+                answerQuestionRecordStatisticDP.setTopicId(v.getTopicId());
+                answerQuestionRecordStatisticDP.setQuestionTitle(v.getTitle());
+                if (v.getKnowledges() != null) {
 
-                answerQuestionRecordStatisticDP.setKnowledge(v.getKnowledges().stream().map(HerolandKnowledgeSimpleDto::getKnowledge).collect(Collectors.toList()));
-            }
-            result.add(answerQuestionRecordStatisticDP);
+                    answerQuestionRecordStatisticDP.setKnowledge(v.getKnowledges().stream().map(HerolandKnowledgeSimpleDto::getKnowledge).collect(Collectors.toList()));
+                }
+                result.add(answerQuestionRecordStatisticDP);
 
-        });
-        responseBody.setData(result);
-        responseBody.setPage(new
+            });
+            responseBody.setData(result);
+            responseBody.setPage(new
 
-                Pagination(qo.getPageIndex(), qo.
+                    Pagination(qo.getPageIndex(), qo.
 
-                getPageSize(), topicQuestions.
+                    getPageSize(), topicQuestions.
 
-                getTotal()));
+                    getTotal()));
+        } else {
+            topics.forEach(v -> {
+
+                AnswerQuestionRecordStatisticDP answerQuestionRecordStatisticDP = new AnswerQuestionRecordStatisticDP();
+                if (StringUtils.isNotBlank(v.getLevelCode())) {
+                    answerQuestionRecordStatisticDP.setDiff(Integer.valueOf(v.getLevelCode()));
+                }
+                answerQuestionRecordStatisticDP.setOpponent(v.getOpponent());
+                answerQuestionRecordStatisticDP.setCorrectAnswer(v.getCorrectAnswer());
+                answerQuestionRecordStatisticDP.setScore(v.getScore());
+                answerQuestionRecordStatisticDP.setResult(v.getResult());
+                answerQuestionRecordStatisticDP.setTopicName(v.getTopicName());
+                answerQuestionRecordStatisticDP.setType(v.getDiff());
+                answerQuestionRecordStatisticDP.setId(v.getId());
+                answerQuestionRecordStatisticDP.setTopicId(v.getId());
+                result.add(answerQuestionRecordStatisticDP);
+            });
+            responseBody.setData(result);
+            responseBody.setPage(new
+                    Pagination(qo.getPageIndex(), qo.
+
+                    getPageSize(), topics.size()));
+        }
 
 
         return responseBody;
