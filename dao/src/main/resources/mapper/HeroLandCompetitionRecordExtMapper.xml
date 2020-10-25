@@ -164,7 +164,7 @@
     </select>
     <select id="getDetailCount" resultMap="StatisticsMap">
 
-        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code
+        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code,subject_code
         from heroland_question_record_detail
         where is_deleted =0 and history = 0
         <if test="ifCorrectAnswer == true">
@@ -263,7 +263,7 @@
     <select id="getTotalTime" resultMap="StatisticsMap">
 
 
-        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time,org_code ,user_id from
+        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time,org_code ,user_id,subject_code from
         heroland_question_record_detail
 
         where is_deleted = 0
