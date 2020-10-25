@@ -178,9 +178,16 @@ public class StatisticsTask {
                         total.setTotalTime(holistically.getTotalTime());
                     }
                 }
-
+                List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
+                Map<Long, String> subjectRefect = topics.stream().collect(Collectors.toMap(HeroLandTopicDto::getTopicId, HeroLandTopicDto::getCourseCode, (o, n) -> n));
 
                 Collection<HeroLandStatisticsDetailDP> values = mergeMap.values();
+
+                for (HeroLandStatisticsDetailDP v : values) {
+                    if (v.getSubjectCode() == null && v.getTopicId() != null){
+                        v.setSubjectCode(subjectRefect.get(Long.valueOf(v.getTopicId())));
+                    }
+                }
 
                 // 查询字典
                 List<String> departmentCode = Lists.newArrayList();
@@ -201,8 +208,7 @@ public class StatisticsTask {
                     e.printStackTrace();
                 }
                 RpcResult<List<PlatformSysUserDP>> finalUserList = userList;
-                List<HeroLandTopicDto> topics = heroLandQuestionService.getTopics(heroLandTopicQuestionsPageRequest);
-                Map<Long, String> subjectRefect = topics.stream().collect(Collectors.toMap(HeroLandTopicDto::getTopicId, HeroLandTopicDto::getCourseCode, (o, n) -> n));
+
                 values.forEach(v -> {
                     v.setHistory(false);
                     if (!CollectionUtils.isEmpty(finalUserList.getData())) {
@@ -213,15 +219,14 @@ public class StatisticsTask {
 //                            v.setOrgCode(u.getOrgCode());
                         });
                     }
+
                     if (!CollectionUtils.isEmpty(adminDataMap)) {
                         v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
                         v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getClassCode()).getDictValue() : "");
                         v.setSubjectName(adminDataMap.containsKey(v.getSubjectCode()) ? adminDataMap.get(v.getSubjectCode()).getDictValue() : "");
 
                     }
-                    if (v.getSubjectCode() == null && v.getTopicId() != null){
-                       v.setSubjectCode(subjectRefect.get(Long.valueOf(v.getTopicId())));
-                    }
+
                 });
                 List<HeroLandStatisticsDetailDP> collect = values.stream().filter(v -> StringUtils.isNotBlank(v.getUserName())).collect(Collectors.toList());
                 heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(collect));
