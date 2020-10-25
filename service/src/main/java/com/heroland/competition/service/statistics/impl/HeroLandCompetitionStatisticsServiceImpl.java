@@ -249,7 +249,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
-            detailAlls.addAll(0, myRank);
+            if ( !CollectionUtils.isEmpty(myRank)) {
+                detailAlls.add(0, myRank.get(0));
+            }
             qo.setUserId(null);
         }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
