@@ -55,7 +55,7 @@ public class HealthCloudHomeController {
 //        System.out.println("***************");
 //    }
 
-    @RequestMapping(value ={"/tests"} )
+    @RequestMapping(value ={"/heroland/tests"} )
 //    @CommonLogger(name = "home 方法")
     @ResponseBody
     public Object test(HttpServletRequest request,String sendId,String addId) throws Exception {
