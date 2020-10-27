@@ -35,8 +35,8 @@
         <bqcommon.version>1.1</bqcommon.version>
         <bqcommon.schedule.version>1.9</bqcommon.schedule.version>
         <elasticsearch.version>7.2.0</elasticsearch.version>
-        <dubbo.version>2.7.4.1</dubbo.version>
-        <nacos.version>0.2.4</nacos.version>
+        <dubbo.version>2.7.8</dubbo.version>
+        <nacos.version>0.2.7</nacos.version>
         <harding.jdbc.version>4.0.0</harding.jdbc.version>
         <bqcommon.search.version>1.4.2</bqcommon.search.version>
         <spring.version>5.2.4.RELEASE</spring.version>
@@ -56,8 +56,6 @@
     </properties>
 
     <dependencies>
-
-
         <dependency>
             <groupId>com.anycommon</groupId>
             <artifactId>response-common-base</artifactId>
@@ -85,11 +83,12 @@
     <dependencyManagement>
 
         <dependencies>
-<!--            <dependency>-->
-<!--                <groupId>com.crossoverjie.netty</groupId>-->
-<!--                <artifactId>cim-client</artifactId>-->
-<!--                <version>${im.version}</version>-->
-<!--            </dependency>-->
+
+            <dependency>
+                <groupId>com.crossoverjie.netty</groupId>
+                <artifactId>cim-client</artifactId>
+                <version>${im.version}</version>
+            </dependency>
 <!--            <dependency>-->
 <!--                <groupId>com.alicp.jetcache</groupId>-->
 <!--                <artifactId>jetcache-starter-redis</artifactId>-->
@@ -754,17 +753,27 @@
             </dependency>
 
             <!-- nacos start -->
-            <dependency>
-                <groupId>com.alibaba.boot</groupId>
-                <artifactId>nacos-config-spring-boot-starter</artifactId>
-                <version>${nacos.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-io</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.boot</groupId>-->
+<!--                <artifactId>nacos-config-spring-boot-starter</artifactId>-->
+<!--                <version>${nacos.version}</version>-->
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>commons-io</groupId>-->
+<!--                        <artifactId>*</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>com.alibaba.nacos</groupId>-->
+<!--                        <artifactId>nacos-spring-context</artifactId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.nacos</groupId>-->
+<!--                <artifactId>nacos-spring-context</artifactId>-->
+<!--                <version>1.0.0</version>-->
+<!--            </dependency>-->
+
 
             <dependency>
                 <groupId>com.alibaba.boot</groupId>
@@ -778,6 +787,10 @@
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.alibaba.nacos</groupId>
+                        <artifactId>nacos-spring-context</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -830,26 +843,26 @@
             <!--<version>${jetcache.version}</version>-->
             <!--</dependency>-->
 
-            <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-framework -->
-            <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-framework</artifactId>
-                <version>${curator.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>*</artifactId>
-                        <groupId>ch.qos.logback</groupId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+<!--            &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.curator/curator-framework &ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.apache.curator</groupId>-->
+<!--                <artifactId>curator-framework</artifactId>-->
+<!--                <version>${curator.version}</version>-->
+<!--                <exclusions>-->
+<!--                    <exclusion>-->
+<!--                        <groupId>log4j</groupId>-->
+<!--                        <artifactId>log4j</artifactId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <artifactId>slf4j-api</artifactId>-->
+<!--                        <groupId>org.slf4j</groupId>-->
+<!--                    </exclusion>-->
+<!--                    <exclusion>-->
+<!--                        <artifactId>*</artifactId>-->
+<!--                        <groupId>ch.qos.logback</groupId>-->
+<!--                    </exclusion>-->
+<!--                </exclusions>-->
+<!--            </dependency>-->
 
         </dependencies>
 

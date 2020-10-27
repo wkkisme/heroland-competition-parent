@@ -1,38 +1,47 @@
 package com.heroland.competition.config;
 
 import com.crossoverjie.cim.route.api.RouteApi;
+import com.platform.sso.facade.PlatformSsoAclServiceFacade;
 import com.platform.sso.facade.PlatformSsoServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserClassServiceFacade;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platfrom.payment.api.PayQueryRemoteService;
 import com.platfrom.payment.api.PrePayRemoteService;
-import org.apache.dubbo.config.annotation.Reference;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DubboInitConfig {
 
-    @Reference(group = "heroland-competition",version = "1.0.0",check = false)
+    @DubboReference(group = "heroland-competition",version = "1.0.0",check = false)
     private PrePayRemoteService prePayRemoteService;
 
-    @Reference(group = "heroland-competition",version = "1.0.0",check = false)
+    @DubboReference(group = "heroland-competition",version = "1.0.0",check = false)
     private PayQueryRemoteService payQueryRemoteService;
 
 
-    @Reference(group = "platform-sso",version = "1.0.0",check = false)
+    @DubboReference(group = "platform-sso",version = "1.0.0",check = false)
     private PlatformSsoServiceFacade platformSsoServiceFacade;
 
-    @Reference(group = "platform-sso",version = "1.0.0",check = false)
+    @DubboReference(group = "platform-sso",version = "1.0.0",check = false)
     private PlatformSsoUserClassServiceFacade platformSsoUserClassServiceFacade;
 
 
-    @Reference(group = "platform-sso",version = "1.0.0",check = false)
+    @DubboReference(group = "platform-sso",version = "1.0.0",check = false)
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
 
-    @Reference(group = "cim-server",version = "1.0.0",check = false)
+    @DubboReference(group = "cim-server",version = "1.0.0",check = false)
     private RouteApi routeApi;
+
+    @DubboReference(group = "platform-sso",version = "1.0.0",check = false)
+    private PlatformSsoAclServiceFacade platformSsoAclServiceFacade;
+
+    @Bean("platformSsoAclServiceFacade")
+    public PlatformSsoAclServiceFacade getPlatformSsoAclServiceFacade() {
+        return platformSsoAclServiceFacade;
+    }
 
     @Bean("prePayRemoteService")
     public PrePayRemoteService getPrePayRemoteService(){

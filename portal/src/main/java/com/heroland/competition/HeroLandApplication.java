@@ -1,6 +1,5 @@
 package com.heroland.competition;
 
-import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource;
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.anno.config.EnableMethodCache;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
@@ -30,7 +29,6 @@ import javax.annotation.Resource;
 @EnableTransactionManagement
 @EnableAsync
 @EnableDubbo(scanBasePackages = "com.heroland.competition")
-@NacosPropertySource(dataId = "hero_data", groupId = "hero_group", autoRefreshed = true)
 @EnableMethodCache(basePackages = "com.heroland.competition")
 @EnableCreateCacheAnnotation
 public class HeroLandApplication {

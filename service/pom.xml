@@ -21,10 +21,10 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>com.crossoverjie.netty</groupId>-->
-<!--            <artifactId>cim-client</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.crossoverjie.netty</groupId>
+            <artifactId>cim-client</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.alicp.jetcache</groupId>
@@ -138,15 +138,15 @@
 
 
         <!-- nacos start -->
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>nacos-config-spring-boot-starter</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.boot</groupId>-->
+<!--            <artifactId>nacos-config-spring-boot-starter</artifactId>-->
+<!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.alibaba.boot</groupId>
-            <artifactId>nacos-discovery-spring-boot-starter</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.boot</groupId>-->
+<!--            <artifactId>nacos-discovery-spring-boot-starter</artifactId>-->
+<!--        </dependency>-->
         <!-- nacos end -->
 
         <dependency>
@@ -231,10 +231,10 @@
             <artifactId>platform-sso-client</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.curator</groupId>
-            <artifactId>curator-framework</artifactId>
-        </dependency>
+    <!--        <dependency>-->
+    <!--            <groupId>org.apache.curator</groupId>-->
+    <!--            <artifactId>curator-framework</artifactId>-->
+    <!--        </dependency>-->
 
     </dependencies>
 

@@ -1,6 +1,5 @@
 package com.heroland.competition.config;
 
-import com.alibaba.nacos.common.util.Md5Utils;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
@@ -76,7 +75,6 @@ public class Configuration {
         this.address = (this.sslSwitch ? "wss://" : "ws://") + this.getHostname() + ":" + this.getPort();
 //        this.appId = TokenUtils.MD5(address + "&" + this.appType);
 
-        this.appId =  Md5Utils.getMD5((address + "&" + this.appType).getBytes());
     }
 
     /**

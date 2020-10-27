@@ -1,7 +1,6 @@
 package com.heroland.competition.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.nacos.api.config.annotation.NacosValue;
 import com.anycommon.cache.service.RedisService;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
@@ -31,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.docx4j.wml.P;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -58,7 +58,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
-    @NacosValue("${competition.defaultBalance:0}")
+    @Value("${competition.defaultBalance:0}")
     private Long defaultBalance;
 
     @Override
