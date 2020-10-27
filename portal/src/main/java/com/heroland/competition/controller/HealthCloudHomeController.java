@@ -58,7 +58,7 @@ public class HealthCloudHomeController {
     @RequestMapping(value ={"/heroland/tests"} )
 //    @CommonLogger(name = "home 方法")
     @ResponseBody
-    public Object test(HttpServletRequest request,String sendId,String addId) throws Exception {
+    public Object test(HttpServletRequest request,String sendId,String addId,String topic) throws Exception {
 
         /**
          * {"inviteId":"2718467022236156294001","opponentId":"2",
@@ -73,7 +73,7 @@ public class HealthCloudHomeController {
         BaseSenderDTO baseSenderDTO = new BaseSenderDTO();
         baseSenderDTO.setAddresseeId(addId);
         baseSenderDTO.setSenderId(sendId);
-
+        baseSenderDTO.setTopic(topic);
         return imMessageServerService.sendOne2One("sss", baseSenderDTO);
 
     }
