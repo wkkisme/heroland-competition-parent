@@ -9,8 +9,10 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constants.HeroLandRedisConstants;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.CompetitionStatusEnum;
 import com.heroland.competition.dal.mapper.HeroLandCompetitionRecordExtMapper;
+import com.heroland.competition.dal.mapper.HeroLandTopicGroupExtMapper;
 import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
 import com.heroland.competition.dal.mapper.HerolandTopicQuestionExtMapper;
 import com.heroland.competition.dal.pojo.*;
@@ -52,7 +54,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     private HerolandTopicQuestionExtMapper herolandTopicQuestionExtMapper;
 
     @Resource
-    private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
+    private HeroLandTopicGroupExtMapper heroLandTopicGroupExtMapper;
 
     @Resource
     private RedisService redisService;
@@ -65,7 +67,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             dp.addCheck();
 //            boolean aBoolean = redisService.setNx(HeroLandRedisConstants.COMPETITION + dp.getPrimaryRedisKey(), dp, "P1D");
 //            if (!aBoolean) {
-            HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(Long.valueOf(dp.getTopicId()));
+            HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupExtMapper.selectByPrimaryKey(Long.valueOf(dp.getTopicId()));
             if (ObjectUtil.isNull(heroLandTopicGroup)) {
                 ResponseBodyWrapper.failException("题组不存在");
             }
@@ -296,10 +298,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         Map<String, String> topic2Subject = qo.getTopic2Subject();
         Map<String, String> topic2OrgCode = qo.getTopic2OrgCode();
 
-        if (!CollectionUtils.isEmpty(dps) && total != null) {
+        if (!CollectionUtils.isEmpty(dps) && total != null && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
             logger.info("dps:{}", JSON.toJSONString(dps));
             logger.info("totalCount:{}", JSON.toJSONString(total));
-            total.forEach(v-> {
+            total.forEach(v -> {
                 v.setOrgCode(topic2OrgCode.get(v.getTopicId().toString()));
             });
             Map<String, List<HerolandTopicQuestion>> totalMap = total.stream().collect(Collectors.groupingBy(this::fetchKey));
@@ -312,15 +314,20 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 Long totalCount = 0L;
                 if (subject != null) {
                     // 拿出该subject下的所有topic
-                    List<String> topics = subject2Topic.get(v.getOrgCode()+ subject);
+                    List<String> topics = subject2Topic.get(v.getOrgCode() + subject);
                     if (topics != null) {
-                        for (String tId : topics) {
-                            List<HerolandTopicQuestion> questions = totalMap.get(tId);
-                            if (questions != null) {
-                                totalCount = totalCount + questions.get(0).getTotalCount();
+                        if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+                            for (String tId : topics) {
+                                List<HerolandTopicQuestion> questions = totalMap.get(tId);
+                                if (questions != null) {
+                                    totalCount = totalCount + questions.get(0).getTotalCount();
+                                }
                             }
+                            calRate(v, totalCount);
+                        } else {
+                            totalCount = (long) topics.size();
+                            calRate(v, totalCount);
                         }
-                        calRate(v, totalCount);
                     }
                 } else {
                     List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(topicId);
@@ -334,15 +341,20 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 }
 
             }
+            // 其余比赛都是看topic的完成度，并不是题目的完成度
+        } else {
+
+
         }
 
         return dps;
     }
 
-    private String fetchKey(HerolandTopicQuestion question){
+    private String fetchKey(HerolandTopicQuestion question) {
 
         return question.getOrgCode() + question.getTopicId();
     }
+
     private void calRate(HeroLandStatisticsDetailDP v, Long totalCount) {
         if (totalCount != 0) {
             double rate = ((double) v.getRightCount() / (double) totalCount);

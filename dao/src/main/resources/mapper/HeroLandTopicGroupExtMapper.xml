@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.HeroLandTopicGroupExtMapper">
+
+  <resultMap id="counALlMap" type="com.heroland.competition.dal.pojo.HeroLandTopicGroupExt" extends="com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper.BaseResultMap">
+    <result column="total_count" property="totalCount"/>
+  </resultMap>
+
+  <select id="countAll" resultMap="com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper.BaseResultMap">
+
+    select count(*) totalCount, <include refid="com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper.Base_Column_List"/>
+    from heroland_topic_group
+    where type =${type} and is_deleted = 0
+  </select>
+</mapper>
