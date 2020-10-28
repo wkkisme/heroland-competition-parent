@@ -297,8 +297,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         Map<String, List<String>> subject2Topic = qo.getSubject2Topic();
         Map<String, String> topic2Subject = qo.getTopic2Subject();
         Map<String, String> topic2OrgCode = qo.getTopic2OrgCode();
-
-        if (!CollectionUtils.isEmpty(dps) && total != null && CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+        if (!CollectionUtils.isEmpty(dps) && total != null ) {
+            long count = total.stream().map(HerolandTopicQuestion::getTopicId).count();
             logger.info("dps:{}", JSON.toJSONString(dps));
             logger.info("totalCount:{}", JSON.toJSONString(total));
             total.forEach(v -> {
@@ -311,7 +311,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 }
                 String topicId = v.getTopicId();
                 String subject = topic2Subject.get(topicId);
-                Long totalCount = 0L;
+                long totalCount = 0L;
                 if (subject != null) {
                     // 拿出该subject下的所有topic
                     List<String> topics = subject2Topic.get(v.getOrgCode() + subject);
@@ -325,14 +325,14 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                             }
                             calRate(v, totalCount);
                         } else {
-                            totalCount = (long) topics.size();
+                            totalCount = topics.size();
                             calRate(v, totalCount);
                         }
                     }
                 } else {
-                    List<HerolandTopicQuestion> herolandTopicQuestions = totalMap.get(topicId);
-                    if (!CollectionUtils.isEmpty(herolandTopicQuestions)) {
-                        totalCount = herolandTopicQuestions.get(0).getTotalCount();
+
+                    if (count > 0) {
+                        totalCount = count;
                         calRate(v, totalCount);
                     } else {
                         v.setAnswerRightRate(0D);
@@ -341,12 +341,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                 }
 
             }
-            // 其余比赛都是看topic的完成度，并不是题目的完成度
-        } else {
-
-
         }
-
         return dps;
     }
 
