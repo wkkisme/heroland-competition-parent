@@ -68,13 +68,11 @@
             and topic_type = #{type}
         </if>
 
-        GROUP BY org_code
+        GROUP BY
         <if test="groupByType == true">
             ,`topic_type`
         </if>
-        <if test="groupByGradeCode == true">
-            ,grade_code
-        </if>
+
         <if test="groupByInviteId == true">
             ,invite_id
         </if>
@@ -96,13 +94,11 @@
         </if>
 
 
-        GROUP BY org_code
+        GROUP BY
         <if test="groupByType == true">
             ,`topic_type`
         </if>
-        <if test="groupByGradeCode == true">
-            ,grade_code
-        </if>
+
         <if test="groupByOpponentId == true">
             ,opponent_id
         </if>
@@ -112,14 +108,11 @@
 
 
         ) a
-        GROUP BY org_code
+        GROUP BY user_id
         <if test="groupByType == true">
             ,`type`
         </if>
-        <if test="groupByGradeCode == true">
-            ,grade_code
-        </if>
-        , user_id
+
         <if test="groupBySubjectCode == true">
             ,subject_code
         </if>
