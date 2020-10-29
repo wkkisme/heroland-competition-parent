@@ -402,7 +402,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                     } else {
 
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                            double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
+                            double total = alls.stream().filter(v-> v.getUserId().equals(landStatisticsDetailDp.getUserId())).mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
                             double right = heroLandStatisticsDetailAlls.stream().filter(v-> v.getUserId().equals(landStatisticsDetailDp.getUserId())).mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
                             double v = right / total;
                             if (v > 1) {
