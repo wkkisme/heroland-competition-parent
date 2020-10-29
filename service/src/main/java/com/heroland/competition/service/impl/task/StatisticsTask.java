@@ -175,7 +175,7 @@ public class StatisticsTask {
                  */
                 List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(totalQo);
                 for (HeroLandStatisticsDetailDP holistically : totalTime) {
-                    HeroLandStatisticsDetailDP total = mergeMap.get(holistically.getUserId());
+                    HeroLandStatisticsDetailDP total = mergeMap.get(this.fetchUserKey(holistically));
                     if (total != null) {
                         total.setTotalTime(holistically.getTotalTime());
                     }
