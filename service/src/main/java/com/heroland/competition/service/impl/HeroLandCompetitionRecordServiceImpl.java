@@ -382,13 +382,15 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             qo.setResultInvite(0);
             qo.setResultOpponent(1);
             List<HeroLandStatisticsDetailAll> rightCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
+            Map<String, List<HeroLandStatisticsDetailAll>> rightCountMap = rightCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
 
 
             //  计算胜率，正确的/总答题数
             for (HeroLandStatisticsDetailAll heroLandStatisticsDetailDp : rightCount) {
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
                     List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(heroLandStatisticsDetailDp.getSubjectCode());
-                    if (CollectionUtils.isEmpty(alls)) {
+                    List<HeroLandStatisticsDetailAll> heroLandStatisticsDetailAlls = rightCountMap.get(heroLandStatisticsDetailDp.getSubjectCode());
+                    if (CollectionUtils.isEmpty(alls) || CollectionUtils.isEmpty(heroLandStatisticsDetailAlls)) {
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
                             double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
                             if (v > 1) {
@@ -399,8 +401,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                         }
                     } else {
                         double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
+                        double right = heroLandStatisticsDetailAlls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                            double v = (double) heroLandStatisticsDetailDp.getRightCount() / total;
+                            double v = right / total;
                             if (v > 1) {
                                 landStatisticsDetailDp.setWinRate(1D);
                             } else {
