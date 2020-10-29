@@ -297,7 +297,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         Map<String, List<String>> subject2Topic = qo.getSubject2Topic();
         Map<String, String> topic2Subject = qo.getTopic2Subject();
         Map<String, String> topic2OrgCode = qo.getTopic2OrgCode();
-        if (!CollectionUtils.isEmpty(dps) && total != null ) {
+        if (!CollectionUtils.isEmpty(dps) && total != null) {
             long count = total.stream().map(HerolandTopicQuestion::getTopicId).count();
             logger.info("dps:{}", JSON.toJSONString(dps));
             logger.info("totalCount:{}", JSON.toJSONString(total));
@@ -375,7 +375,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              * 再查出总的
              */
             List<HeroLandStatisticsDetailAll> totalCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
+            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
             /*
              * 先查出正确的
              */
@@ -397,7 +397,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                                 landStatisticsDetailDp.setWinRate(v);
                             }
                         }
-                    }else {
+                    } else {
                         double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
                             double v = (double) heroLandStatisticsDetailDp.getRightCount() / total;
