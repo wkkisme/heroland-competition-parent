@@ -43,6 +43,7 @@ public class HerolandDiamRequest extends BaseQO implements Serializable {
      * TIPS("TIPS","解题技巧"),
      * SKIP("SKIP","越级挑战"),
      * SAME("SAME","赛类似题"),
+     * WEAPON("WEAPON","使用武器"),
      *
      *
      * 传参：ANALYSE ...
