@@ -11,6 +11,12 @@ import java.util.List;
 public class HerolandQuestionBankImportDP extends BaseDO implements Serializable {
 
     /**
+     * 对应的导入时文件上显示的id
+     * 在校验题目时可以通过这个字段告诉操作者是哪个题目校验不通过
+     */
+    private String importId;
+
+    /**
      *
      */
     private Long passageid;
@@ -95,7 +101,7 @@ public class HerolandQuestionBankImportDP extends BaseDO implements Serializable
     private Integer diff;
 
     /**
-     * 难度
+     *
      * 暂时不落库
      */
     private String knowledges;

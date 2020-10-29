@@ -9,9 +9,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.heroland.competition.common.constants.KnowledgeReferEnum;
-import com.heroland.competition.common.constants.QtYearRangeEnum;
-import com.heroland.competition.common.constants.TimeIntervalUnit;
+import com.heroland.competition.common.constants.*;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.*;
@@ -419,12 +417,15 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         List<HerolandQuestionBankImportDP> dps = new ArrayList<>();
         questions.forEach(v -> {
             HerolandQuestionBankImportDP herolandQuestionBankImportDP = new HerolandQuestionBankImportDP();
+
             try {
                 dps.add(BeanUtil.insertConversion(v, herolandQuestionBankImportDP));
                 herolandQuestionBankImportDP.setBankType(bankType);
             } catch (Exception e) {
                 log.error("e", e);
             }
+
+            herolandQuestionBankImportDP.setImportId(v.getId());
 
             try {
                 herolandQuestionBankImportDP.setDiff(Integer.valueOf(v.getDiff()));
@@ -442,10 +443,26 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 herolandQuestionBankImportDP.setThink(Integer.parseInt(v.getThink()));
             } catch (NumberFormatException ignored) {
             }
-
+            checkBankFromImport(herolandQuestionBankImportDP);
         });
 
         importQuestion(dps);
+    }
+
+    private void checkBankFromImport(HerolandQuestionBankImportDP importDP){
+        if (StringUtils.isEmpty(importDP.getQuestion())){
+            ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_TITLE.getErrorMessage());
+        }
+        AssertUtils.notNull(importDP.getQtype(), HerolandErrMsgEnum.ERROR_TYPE.getErrorMessage());
+        AssertUtils.notNull(importDP.getAnswer1(), HerolandErrMsgEnum.ERROR_ANSWER.getErrorMessage());
+        if (QtTypeEnum.OPTION.equals(importDP.getQtype())){
+            boolean empty = StringUtils.isEmpty(importDP.getOption_a()) && StringUtils.isEmpty(importDP.getOption_b())
+                    && StringUtils.isEmpty(importDP.getOption_c()) && StringUtils.isEmpty(importDP.getOption_d())
+                    && StringUtils.isEmpty(importDP.getOption_e());
+            if (empty){
+                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_OPTION.getErrorMessage());
+            }
+        }
     }
 
 

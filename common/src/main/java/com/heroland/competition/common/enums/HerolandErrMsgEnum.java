@@ -58,6 +58,14 @@ public enum HerolandErrMsgEnum {
     DUPLICATE_ORDER("70110", "下单过于频繁，请稍后重试"),
 
 
+    ERROR_TITLE("70200", "题目信息不能为空"),
+    ERROR_TYPE("70201", "题型不能为空"),
+    ERROR_OPTION("70202", "题目选项不能为空"),
+    ERROR_ANSWER("70203", "题目答案不能为空"),
+
+
+
+
    ;
 
     private String errorCode;
