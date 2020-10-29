@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -143,6 +144,21 @@ public class HeroLandAdminDataController {
     public ResponseBody<Boolean> trigger() {
         worldStatisticsTask.statistics();
         return null;
+    }
+
+
+    /**
+     * 基础数据导入 入参为文件 excel
+     * 只为刷数据
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/importBasicData")
+    public ResponseBody<Boolean> importQuestionBankExcel(MultipartHttpServletRequest request) throws Exception {
+
+
+        return heroLandAdminService.importBasicDataExcel(request);
+
     }
 
 

@@ -49,6 +49,10 @@ public class HerolandBasicDataDP extends BaseDO implements Serializable {
      */
     private String bizI18N;
 
+    //以下两字段只为刷数据使用
+    private String mappingId;
+    private String mappingKey;
+
 
     public HerolandBasicDataDP checkAndBuildBeforeCreate() {
         if (StringUtils.isBlank(this.getCode()) || StringUtils.isBlank(this.getDictValue())) {

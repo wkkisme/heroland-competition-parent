@@ -9,6 +9,7 @@ import com.heroland.competition.domain.qo.HerolandBasicDataQO;
 import com.heroland.competition.domain.qo.HerolandLocationDataQO;
 import com.heroland.competition.domain.request.HerolandBasicDataPageRequest;
 import com.heroland.competition.domain.request.HerolandDataPageRequest;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.util.List;
 
@@ -72,6 +73,9 @@ public interface HeroLandAdminService {
      * @return
      */
     ResponseBody<Boolean> addClass(HerolandLocationDP dp);
+
+
+    ResponseBody<Boolean> importBasicDataExcel(MultipartHttpServletRequest request);
 
 
 

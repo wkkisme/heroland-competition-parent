@@ -43,4 +43,9 @@ public class HerolandBasicData extends BaseDO implements Serializable {
      */
     private String bizI18N;
 
+
+    //以下两字段只为刷数据使用
+    private String mappingId;
+    private String mappingKey;
+
 }

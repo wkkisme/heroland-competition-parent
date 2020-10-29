@@ -15,10 +15,13 @@
     <result column="modifier" jdbcType="VARCHAR" property="modifier" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+
+    <result column="mapping_id" jdbcType="VARCHAR" property="mappingId" />
+    <result column="mapping_key" jdbcType="VARCHAR" property="mappingKey" />
   </resultMap>
   <sql id="Base_Column_List">
     id, code, `field`,ch_name, dict_key, dict_value,biz_no, biz_i18N, is_deleted, creator,
-    modifier, gmt_create, gmt_modified
+    modifier, gmt_create, gmt_modified,mapping_id , mapping_key
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -41,16 +44,16 @@
     </foreach>
   </update>
 
-  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
-      SELECT LAST_INSERT_ID()
-    </selectKey>
-    insert into heroland_basic_data (code, `field`,ch_name, dict_key,
-    dict_value, biz_no, biz_i18N, is_deleted, creator, modifier, gmt_create, gmt_modified)
-    values (#{code,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR},#{chName,jdbcType=VARCHAR}, #{dictKey,jdbcType=VARCHAR},
-      #{dictValue,jdbcType=VARCHAR},#{bizNo,jdbcType=VARCHAR}, #{bizI18N,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},
-      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})
-  </insert>
+  <!--<insert id="insert" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">-->
+    <!--<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">-->
+      <!--SELECT LAST_INSERT_ID()-->
+    <!--</selectKey>-->
+    <!--insert into heroland_basic_data (code, `field`,ch_name, dict_key,-->
+    <!--dict_value, biz_no, biz_i18N, is_deleted, creator, modifier, gmt_create, gmt_modified)-->
+    <!--values (#{code,jdbcType=VARCHAR}, #{field,jdbcType=VARCHAR},#{chName,jdbcType=VARCHAR}, #{dictKey,jdbcType=VARCHAR},-->
+      <!--#{dictValue,jdbcType=VARCHAR},#{bizNo,jdbcType=VARCHAR}, #{bizI18N,jdbcType=VARCHAR}, #{isDeleted,jdbcType=TINYINT},#{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR},-->
+      <!--#{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP})-->
+  <!--</insert>-->
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
@@ -95,6 +98,15 @@
       <if test="gmtModified != null">
         gmt_modified,
       </if>
+
+      <if test="mappingId != null">
+        mapping_id,
+      </if>
+      <if test="mappingKey != null">
+        mapping_key,
+      </if>
+
+
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="code != null">
@@ -133,6 +145,15 @@
       <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
       </if>
+
+      <if test="mappingId != null">
+        #{mappingId,jdbcType=VARCHAR},
+      </if>
+      <if test="mappingKey != null">
+        #{mappingKey,jdbcType=VARCHAR},
+      </if>
+
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
@@ -174,25 +195,33 @@
       <if test="gmtModified != null">
         gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
+
+      <if test="mappingId != null">
+        `mapping_id` = #{mappingId,jdbcType=VARCHAR},
+      </if>
+      <if test="mappingKey != null">
+        `mapping_key`= #{mappingKey,jdbcType=VARCHAR},
+      </if>
+
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">
-    update heroland_basic_data
-    set code = #{code,jdbcType=VARCHAR},
-      `field` = #{field,jdbcType=VARCHAR},
-      `ch_name` = #{chName,jdbcType=VARCHAR},
-      dict_key = #{dictKey,jdbcType=VARCHAR},
-      dict_value = #{dictValue,jdbcType=VARCHAR},
-       biz_no = #{bizNo,jdbcType=VARCHAR},
-       biz_i18N = #{bizI18N,jdbcType=VARCHAR},
-      is_deleted = #{isDeleted,jdbcType=TINYINT},
-      creator = #{creator,jdbcType=VARCHAR},
-      modifier = #{modifier,jdbcType=VARCHAR},
-      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
-      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+  <!--<update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.basic.HerolandBasicData">-->
+    <!--update heroland_basic_data-->
+    <!--set code = #{code,jdbcType=VARCHAR},-->
+      <!--`field` = #{field,jdbcType=VARCHAR},-->
+      <!--`ch_name` = #{chName,jdbcType=VARCHAR},-->
+      <!--dict_key = #{dictKey,jdbcType=VARCHAR},-->
+      <!--dict_value = #{dictValue,jdbcType=VARCHAR},-->
+       <!--biz_no = #{bizNo,jdbcType=VARCHAR},-->
+       <!--biz_i18N = #{bizI18N,jdbcType=VARCHAR},-->
+      <!--is_deleted = #{isDeleted,jdbcType=TINYINT},-->
+      <!--creator = #{creator,jdbcType=VARCHAR},-->
+      <!--modifier = #{modifier,jdbcType=VARCHAR},-->
+      <!--gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},-->
+      <!--gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}-->
+    <!--where id = #{id,jdbcType=BIGINT}-->
+  <!--</update>-->
 
   <select id="selectByDictKeys"  resultMap="BaseResultMap">
     select

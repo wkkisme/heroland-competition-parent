@@ -10,7 +10,7 @@ public interface HerolandBasicDataMapper {
 
     int deleteByDictKey(@Param("dictKeys")List<String> dictKeys);
 
-    int insert(HerolandBasicData record);
+//    int insert(HerolandBasicData record);
 
     int insertSelective(HerolandBasicData record);
 
@@ -20,7 +20,7 @@ public interface HerolandBasicDataMapper {
 
     int updateByPrimaryKeySelective(HerolandBasicData record);
 
-    int updateByPrimaryKey(HerolandBasicData record);
+//    int updateByPrimaryKey(HerolandBasicData record);
 
 
 

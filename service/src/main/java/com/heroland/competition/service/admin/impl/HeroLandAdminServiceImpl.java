@@ -2,6 +2,8 @@ package com.heroland.competition.service.admin.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.anycommon.cache.service.RedisService;
+import com.anycommon.poi.word.BasicData;
+import com.anycommon.poi.word.Question;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
@@ -13,12 +15,15 @@ import com.heroland.competition.common.constant.RedisConstant;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.AssertUtils;
 import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.common.utils.ExcelFileUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandBasicDataMapper;
 import com.heroland.competition.dal.mapper.HerolandLocationMapper;
 import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandLocation;
+import com.heroland.competition.domain.dp.BasicDataMappingDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandLocationDP;
 import com.heroland.competition.domain.request.HerolandBasicDataPageRequest;
@@ -29,10 +34,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -252,5 +261,81 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         herolandBasicDataDP.setBizNo(data.getBizNo());
         herolandBasicDataDP.setBizI18N(data.getBizI18N());
         return herolandBasicDataDP;
+    }
+
+
+    @Override
+    public ResponseBody<Boolean> importBasicDataExcel(MultipartHttpServletRequest request) {
+
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        for (Map.Entry<String, MultipartFile> entry : fileMap.entrySet()) {
+            MultipartFile multipartFile = entry.getValue();
+
+            if (multipartFile instanceof CommonsMultipartFile) {
+
+                List<BasicData> basicData = ExcelFileUtils.importExcel(multipartFile, 0, 1, BasicData.class);
+                if (CollectionUtils.isEmpty(basicData)){
+                    return null;
+                }
+                check(basicData);
+                List<BasicDataMappingDP> mapping = basicData.stream().map(e -> {
+                    BasicDataMappingDP basicDataMappingDP = new BasicDataMappingDP();
+                    basicDataMappingDP.setDataTypeId(e.getDataTypeId());
+                    basicDataMappingDP.setId(e.getId());
+                    basicDataMappingDP.setName(e.getName());
+                    basicDataMappingDP.setCode(e.getCode());
+                    return basicDataMappingDP;
+                }).collect(Collectors.toList());
+                mapping.stream().forEach(e -> {
+                    List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodesAndValue(Lists.newArrayList(e.getCode()), e.getName());
+                    if (!CollectionUtils.isEmpty(herolandBasicData)){
+                        herolandBasicData.stream().forEach(data -> {
+                            data.setMappingId(e.getId());
+                            data.setMappingKey(e.getDataTypeId());
+                            herolandBasicDataMapper.updateByPrimaryKeySelective(data);
+                        });
+                        //如果不存在，手动添加一条数据
+                    }else {
+                        HerolandBasicDataDP dataDP = new HerolandBasicDataDP();
+                        dataDP.setDictValue(e.getName());
+                        dataDP.setCode(e.getCode());
+                        dataDP.setMappingId(e.getId());
+                        dataDP.setMappingKey(e.getDataTypeId());
+                        addDict(dataDP);
+                    }
+                });
+            }
+
+        }
+        return new ResponseBody<>();
+    }
+
+    private void check(List<BasicData> basicData){
+        basicData.stream().forEach(e -> {
+            AssertUtils.notBlank(e.getId(),e.getCode(),e.getDataTypeId(),e.getName());
+            if (e.getCode().equalsIgnoreCase("GA")){
+                if (!e.getDataTypeId().toLowerCase().equalsIgnoreCase("gradeid")){
+                    ResponseBodyWrapper.failException("格式不对");
+                }
+            }else
+            if (e.getCode().equalsIgnoreCase("CU")){
+                if (!e.getDataTypeId().toLowerCase().equalsIgnoreCase("subjectid")){
+                    ResponseBodyWrapper.failException("格式不对");
+                }
+            }else
+            if (e.getCode().equalsIgnoreCase("PA")){
+                if (!e.getDataTypeId().toLowerCase().equalsIgnoreCase("pharseid")){
+                    ResponseBodyWrapper.failException("格式不对");
+                }
+            }else
+            if (e.getCode().equalsIgnoreCase("ED")){
+                if (!e.getDataTypeId().toLowerCase().equalsIgnoreCase("edtionid")){
+                    ResponseBodyWrapper.failException("格式不对");
+                }
+            }else {
+                ResponseBodyWrapper.failException("不支持的基础类型数据");
+            }
+
+        });
     }
 }
