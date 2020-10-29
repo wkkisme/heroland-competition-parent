@@ -375,21 +375,21 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              * 再查出总的
              */
             List<HeroLandStatisticsDetailAll> totalCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
+            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetch));
             /*
              * 先查出正确的
              */
             qo.setResultInvite(0);
             qo.setResultOpponent(1);
             List<HeroLandStatisticsDetailAll> rightCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-            Map<String, List<HeroLandStatisticsDetailAll>> rightCountMap = rightCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
+            Map<String, List<HeroLandStatisticsDetailAll>> rightCountMap = rightCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetch));
 
 
             //  计算胜率，正确的/总答题数
             for (HeroLandStatisticsDetailAll heroLandStatisticsDetailDp : rightCount) {
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
-                    List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(heroLandStatisticsDetailDp.getSubjectCode());
-                    List<HeroLandStatisticsDetailAll> heroLandStatisticsDetailAlls = rightCountMap.get(heroLandStatisticsDetailDp.getSubjectCode());
+                    List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(this.fetch(landStatisticsDetailDp));
+                    List<HeroLandStatisticsDetailAll> heroLandStatisticsDetailAlls = rightCountMap.get(this.fetch(landStatisticsDetailDp));
                     if (CollectionUtils.isEmpty(alls) || CollectionUtils.isEmpty(heroLandStatisticsDetailAlls)) {
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
                             double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
@@ -400,9 +400,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                             }
                         }
                     } else {
-                        double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
-                        double right = heroLandStatisticsDetailAlls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
+
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
+                            double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
+                            double right = heroLandStatisticsDetailAlls.stream().filter(v-> v.getUserId().equals(landStatisticsDetailDp.getUserId())).mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
                             double v = right / total;
                             if (v > 1) {
                                 landStatisticsDetailDp.setWinRate(1D);
@@ -465,5 +466,9 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             }
         }
         return result;
+    }
+
+    public String fetch(HeroLandStatisticsDetailAll all){
+        return all.getOrgCode() + all.getSubjectCode();
     }
 }
