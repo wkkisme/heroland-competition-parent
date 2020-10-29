@@ -263,7 +263,7 @@
 
         group by opponent_id,topic_type,subject_code
         ) a
-        group user_id,type,subject_code
+        group by user_id,type,subject_code
     </select>
 
     <select id="getTotalTime" resultMap="StatisticsMap">
