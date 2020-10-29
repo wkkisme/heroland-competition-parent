@@ -375,7 +375,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              * 再查出总的
              */
             List<HeroLandStatisticsDetailAll> totalCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-
+            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getSubjectCode));
             /*
              * 先查出正确的
              */
@@ -387,14 +387,27 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             //  计算胜率，正确的/总答题数
             for (HeroLandStatisticsDetailAll heroLandStatisticsDetailDp : rightCount) {
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
-
-                    if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
-                        double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
-                        if (v > 1) {
-                            landStatisticsDetailDp.setWinRate(1D);
-                        } else {
-                            landStatisticsDetailDp.setWinRate(v);
+                    List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(heroLandStatisticsDetailDp.getSubjectCode());
+                    if (CollectionUtils.isEmpty(alls)) {
+                        if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
+                            double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
+                            if (v > 1) {
+                                landStatisticsDetailDp.setWinRate(1D);
+                            } else {
+                                landStatisticsDetailDp.setWinRate(v);
+                            }
                         }
+                    }else {
+                        double total = alls.stream().mapToDouble(HeroLandStatisticsDetailAll::getRightCount).sum();
+                        if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
+                            double v = (double) heroLandStatisticsDetailDp.getRightCount() / total;
+                            if (v > 1) {
+                                landStatisticsDetailDp.setWinRate(1D);
+                            } else {
+                                landStatisticsDetailDp.setWinRate(v);
+                            }
+                        }
+
                     }
                 }
             }
