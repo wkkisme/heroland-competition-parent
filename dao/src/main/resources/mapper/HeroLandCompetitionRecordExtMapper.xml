@@ -70,7 +70,7 @@
 
         GROUP BY
         <if test="groupByType == true">
-            ,`topic_type`
+           `topic_type`
         </if>
 
         <if test="groupByInviteId == true">
@@ -95,8 +95,8 @@
 
 
         GROUP BY
-        <if test="groupByType == true">
-            ,`topic_type`
+        <if test="groupByType == true" >
+            `topic_type`
         </if>
 
         <if test="groupByOpponentId == true">
