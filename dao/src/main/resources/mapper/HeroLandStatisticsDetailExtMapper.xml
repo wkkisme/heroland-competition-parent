@@ -109,7 +109,7 @@
         </if>
 
         <if test="userName != null and userName.length > 0">
-            and b.user_name like concat ( #{userName},'%')
+            and a.user_name = #{userName}
         </if>
 
         <if test="subjectCode != null">
