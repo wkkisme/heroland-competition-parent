@@ -202,6 +202,10 @@
 
     <select id="getWinRate" resultMap="StatisticsMap">
         <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
+        select   user_id , type
+        ,class_code ,grade_code ,org_code ,subject_code
+        , sum(right_count) right_count
+        from(
         select
 
         invite_id user_id ,topic_type type
@@ -258,6 +262,8 @@
         </if>
 
         group by opponent_id,topic_type,subject_code
+        )
+        group user_id,type,subject_code
     </select>
 
     <select id="getTotalTime" resultMap="StatisticsMap">
