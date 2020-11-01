@@ -327,7 +327,7 @@ public class HeroLandAdminMappingController {
         List<Long> knowledgeIds = getKnowledgeIds(e);
         importDP.setBankType(1);
         importDP.setDiff(e.getDiff().intValue());
-        importDP.setQtype(QtTypeEnum.valueOf(e.getQtpye()).getType());
+        importDP.setQtype(1);
         importDP.setAnswer1(e.getAnswer1());
         importDP.setAnswer2(e.getAnswer2());
         importDP.setParse(e.getParse());
