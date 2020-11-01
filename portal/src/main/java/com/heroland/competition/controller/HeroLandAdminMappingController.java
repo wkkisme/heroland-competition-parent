@@ -187,10 +187,12 @@ public class HeroLandAdminMappingController {
         mappingChapters.stream().forEach(e -> {
             Integer knowledgeid = e.getKnowledgeid();
             HerolandKnowledge knowledge = herolandKnowledgeMapper.selectByPrimaryKey(knowledgeid.longValue());
-            if (knowledge != null && StringUtils.isNotBlank(knowledge.getGrade())){
-
+            if (knowledge != null && StringUtils.isBlank(knowledge.getGrade())){
+                Integer gradeid = e.getGradeid();
+                String ga = transfer("GA", gradeid);
+                knowledge.setGrade(ga);
+                herolandKnowledgeMapper.updateByPrimaryKey(knowledge);
             }
-
         });
         return true;
     }
