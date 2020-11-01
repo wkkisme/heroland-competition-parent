@@ -29,4 +29,7 @@ public interface HerolandBasicDataMapper {
     List<HerolandBasicData> selectByCodeAndBizNo(@Param("code")String code, @Param("bizNo")String bizNo);
 
     List<HerolandBasicData> selectByCodesAndValue(@Param("codes")List<String> codes, @Param("value")String name);
+
+
+    List<HerolandBasicData> selectByCodeAndMappingId(@Param("code")String code, @Param("mappingId")String mappingId);
 }

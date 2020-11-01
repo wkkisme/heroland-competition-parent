@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.MappingKnowledgeMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.MappingKnowledge">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="knowledgeName" jdbcType="VARCHAR" property="knowledgename" />
+    <result column="subjectId" jdbcType="INTEGER" property="subjectid" />
+    <result column="pharseId" jdbcType="INTEGER" property="pharseid" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, knowledgeName, subjectId, pharseId
+  </sql>
+  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.MappingKnowledgeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mapping_knowledge
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mapping_knowledge
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mapping_knowledge
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.MappingKnowledgeExample">
+    delete from mapping_knowledge
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.MappingKnowledge">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mapping_knowledge (knowledgeName, subjectId, pharseId
+      )
+    values (#{knowledgename,jdbcType=VARCHAR}, #{subjectid,jdbcType=INTEGER}, #{pharseid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.MappingKnowledge">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mapping_knowledge
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="knowledgename != null">
+        knowledgeName,
+      </if>
+      <if test="subjectid != null">
+        subjectId,
+      </if>
+      <if test="pharseid != null">
+        pharseId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="knowledgename != null">
+        #{knowledgename,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        #{subjectid,jdbcType=INTEGER},
+      </if>
+      <if test="pharseid != null">
+        #{pharseid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.MappingKnowledgeExample" resultType="java.lang.Long">
+    select count(*) from mapping_knowledge
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mapping_knowledge
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.knowledgename != null">
+        knowledgeName = #{record.knowledgename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectid != null">
+        subjectId = #{record.subjectid,jdbcType=INTEGER},
+      </if>
+      <if test="record.pharseid != null">
+        pharseId = #{record.pharseid,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mapping_knowledge
+    set id = #{record.id,jdbcType=INTEGER},
+      knowledgeName = #{record.knowledgename,jdbcType=VARCHAR},
+      subjectId = #{record.subjectid,jdbcType=INTEGER},
+      pharseId = #{record.pharseid,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.MappingKnowledge">
+    update mapping_knowledge
+    <set>
+      <if test="knowledgename != null">
+        knowledgeName = #{knowledgename,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        subjectId = #{subjectid,jdbcType=INTEGER},
+      </if>
+      <if test="pharseid != null">
+        pharseId = #{pharseid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.MappingKnowledge">
+    update mapping_knowledge
+    set knowledgeName = #{knowledgename,jdbcType=VARCHAR},
+      subjectId = #{subjectid,jdbcType=INTEGER},
+      pharseId = #{pharseid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

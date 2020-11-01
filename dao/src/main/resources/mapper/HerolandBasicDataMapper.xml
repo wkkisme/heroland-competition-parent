@@ -267,4 +267,15 @@
     and is_deleted = 0
   </select>
 
+  <select id="selectByCodeAndMappingId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_basic_data
+    where code = #{code,jdbcType=VARCHAR}
+    <if test="mappingId != null">
+      and `mapping_id` = #{mappingId,jdbcType=VARCHAR}
+    </if>
+    and is_deleted = 0
+  </select>
+
 </mapper>

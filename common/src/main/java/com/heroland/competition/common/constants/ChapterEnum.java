@@ -8,7 +8,7 @@ import lombok.Getter;
  * @date 2020/7/4
  */
 public enum ChapterEnum {
-    ZHANG(1,"chpater"),
+    ZHANG(1,"chapter"),
     KEJIE(2,"unit"),
     JIE(3,"section"),
 
