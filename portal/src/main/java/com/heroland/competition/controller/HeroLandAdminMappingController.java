@@ -170,6 +170,18 @@ public class HeroLandAdminMappingController {
         return true;
     }
 
+    /**
+     * 抠出年级和知识点的对应关系
+     * 直接以章为依据
+     *
+     */
+    @RequestMapping(value = "/digGradeAndKnowledge")
+    public Boolean digGradeAndKnowledge(){
+        List<HerolandChapter> chapters = herolandChapterMapper.getByQuery(null, null, null, 1, null, null);
+
+        return true;
+    }
+
 
 
     public String transfer(String code, Integer mappingId){
@@ -179,11 +191,11 @@ public class HeroLandAdminMappingController {
 
         if (code.equalsIgnoreCase("GA")){
             String str = mappingId+"";
-            //说明是必修选修
-            if (str.length() > 3){
-                log.info("必修选修的年级");
-                return "";
-            }
+//            //说明是必修选修
+//            if (str.length() > 3){
+//                log.info("必修选修的年级");
+//                return "";
+//            }
             List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
             if (CollectionUtils.isEmpty(herolandBasicData)){
                 return "";
