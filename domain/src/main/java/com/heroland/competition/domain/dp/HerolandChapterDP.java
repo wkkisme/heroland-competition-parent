@@ -72,7 +72,8 @@ public class HerolandChapterDP extends BaseDO implements Serializable {
             parentId = 0L;
         }
         if (ChapterEnum.JIE.getType().equals(contentType) || ChapterEnum.KEJIE.getType().equals(contentType)){
-            AssertUtils.assertThat(!NumberUtils.nullOrZeroLong(parentId), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+            // TODO: 2020/11/1  
+//            AssertUtils.assertThat(!NumberUtils.nullOrZeroLong(parentId), HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         }
         return this;
     }
