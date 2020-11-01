@@ -3,6 +3,7 @@ package com.heroland.competition.controller;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
+import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -77,7 +78,9 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> chapters = mappingChapters.stream().filter(e -> !StringUtils.isBlank(e.getChapter())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(MappingChapter::getChapter));
+
+
+        Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()));
         for (Map.Entry<String, List<MappingChapter>> entry : chapterMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.ZHANG.getType());
@@ -108,7 +111,7 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> units = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(MappingChapter::getUnit));
+        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()));
         for (Map.Entry<String, List<MappingChapter>> entry : unitsMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.KEJIE.getType());
@@ -145,7 +148,7 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> sections = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getSection())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> sectionMap = sections.stream().collect(Collectors.groupingBy(MappingChapter::getSection));
+        Map<String, List<MappingChapter>> sectionMap = sections.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()+"*"+e.getSection()));
         for (Map.Entry<String, List<MappingChapter>> entry : sectionMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.JIE.getType());
@@ -177,8 +180,18 @@ public class HeroLandAdminMappingController {
      */
     @RequestMapping(value = "/digGradeAndKnowledge")
     public Boolean digGradeAndKnowledge(){
-        List<HerolandChapter> chapters = herolandChapterMapper.getByQuery(null, null, null, 1, null, null);
+        MappingChapterExample example = new MappingChapterExample();
+        MappingChapterExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
+        mappingChapters.stream().forEach(e -> {
+            Integer knowledgeid = e.getKnowledgeid();
+            HerolandKnowledge knowledge = herolandKnowledgeMapper.selectByPrimaryKey(knowledgeid.longValue());
+            if (knowledge != null && StringUtils.isNotBlank(knowledge.getGrade())){
 
+            }
+
+        });
         return true;
     }
 
