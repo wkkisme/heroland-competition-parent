@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -119,6 +120,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             }
             if (!CollectionUtils.isEmpty(qo.getQuestionIds())) {
                 criteria.andQuestionIdIn(new ArrayList<>(qo.getQuestionIds()));
+            }
+            if (!StringUtils.isEmpty(qo.getUserId())) {
+                criteria.andUserIdEqualTo(qo.getUserId());
             }
             MybatisCriteriaConditionUtil.createExample(criteria, qo);
             if (qo.getNeedPage()) {
