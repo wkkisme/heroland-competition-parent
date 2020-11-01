@@ -200,7 +200,7 @@ public class HeroLandAdminMappingController {
                 Integer gradeid = e.getGradeid();
                 String ga = transfer("GA", gradeid);
                 knowledge.setGrade(ga);
-                herolandKnowledgeMapper.updateByPrimaryKey(knowledge);
+                herolandKnowledgeMapper.updateByPrimaryKeySelective(knowledge);
             }
         });
         return true;
