@@ -96,8 +96,8 @@
 
 
 
-        <table tableName="mapping_knowledge" domainObjectName="MappingKnowledge" mapperName="MappingKnowledgeMapper">
-            <property name="rootClass" value="com.anycommon.response.common.BaseDO"/>
+        <table tableName="mapping_questions" domainObjectName="MappingQuestions" mapperName="MappingQuestionsMapper">
+            <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
 

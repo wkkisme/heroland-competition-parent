@@ -149,6 +149,10 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                     List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
                     bankDP.setKnowledges(knowledges);
                 }
+                if (!CollectionUtils.isEmpty(e.getKnowledgeIds())) {
+                    bankDP.setKnowledges(e.getKnowledgeIds());
+                }
+
             } catch (Exception ex) {
                 ResponseBodyWrapper.failException("知识点id" + HerolandErrMsgEnum.ERROR_PARSE.getErrorMessage());
             }

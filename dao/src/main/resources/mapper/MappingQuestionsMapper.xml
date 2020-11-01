@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heroland.competition.dal.mapper.MappingQuestionsMapper">
+  <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.MappingQuestions">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="qtpye" jdbcType="VARCHAR" property="qtpye" />
+    <result column="diff" jdbcType="REAL" property="diff" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="subjectId" jdbcType="TINYINT" property="subjectid" />
+    <result column="gradeId" jdbcType="INTEGER" property="gradeid" />
+    <result column="knowledges" jdbcType="VARCHAR" property="knowledges" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="year" jdbcType="INTEGER" property="year" />
+    <result column="paperTpye" jdbcType="VARCHAR" property="papertpye" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="fromSite" jdbcType="VARCHAR" property="fromsite" />
+    <result column="isSub" jdbcType="BIT" property="issub" />
+    <result column="isNormal" jdbcType="BIT" property="isnormal" />
+    <result column="isKonw" jdbcType="BIT" property="iskonw" />
+    <result column="tiid" jdbcType="VARCHAR" property="tiid" />
+    <result column="Similarity" jdbcType="INTEGER" property="similarity" />
+    <result column="isunique" jdbcType="TINYINT" property="isunique" />
+    <result column="md52" jdbcType="VARCHAR" property="md52" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.heroland.competition.dal.pojo.MappingQuestionsWithBLOBs">
+    <result column="title" jdbcType="LONGVARCHAR" property="title" />
+    <result column="option_a" jdbcType="LONGVARCHAR" property="optionA" />
+    <result column="option_b" jdbcType="LONGVARCHAR" property="optionB" />
+    <result column="option_c" jdbcType="LONGVARCHAR" property="optionC" />
+    <result column="option_d" jdbcType="LONGVARCHAR" property="optionD" />
+    <result column="option_e" jdbcType="LONGVARCHAR" property="optionE" />
+    <result column="answer1" jdbcType="LONGVARCHAR" property="answer1" />
+    <result column="answer2" jdbcType="LONGVARCHAR" property="answer2" />
+    <result column="parse" jdbcType="LONGVARCHAR" property="parse" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, qtpye, diff, md5, subjectId, gradeId, knowledges, area, year, paperTpye, source, 
+    fromSite, isSub, isNormal, isKonw, tiid, Similarity, isunique, md52
+  </sql>
+  <sql id="Blob_Column_List">
+    title, option_a, option_b, option_c, option_d, option_e, answer1, answer2, parse
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from mapping_questions
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from mapping_questions
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from mapping_questions
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mapping_questions
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsExample">
+    delete from mapping_questions
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsWithBLOBs">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mapping_questions (qtpye, diff, md5, 
+      subjectId, gradeId, knowledges, 
+      area, year, paperTpye, 
+      source, fromSite, isSub, 
+      isNormal, isKonw, tiid, Similarity, 
+      isunique, md52, title, 
+      option_a, option_b, option_c, 
+      option_d, option_e, answer1, 
+      answer2, parse)
+    values (#{qtpye,jdbcType=VARCHAR}, #{diff,jdbcType=REAL}, #{md5,jdbcType=VARCHAR}, 
+      #{subjectid,jdbcType=TINYINT}, #{gradeid,jdbcType=INTEGER}, #{knowledges,jdbcType=VARCHAR}, 
+      #{area,jdbcType=VARCHAR}, #{year,jdbcType=INTEGER}, #{papertpye,jdbcType=VARCHAR}, 
+      #{source,jdbcType=VARCHAR}, #{fromsite,jdbcType=VARCHAR}, #{issub,jdbcType=BIT}, 
+      #{isnormal,jdbcType=BIT}, #{iskonw,jdbcType=BIT}, #{tiid,jdbcType=VARCHAR}, #{similarity,jdbcType=INTEGER}, 
+      #{isunique,jdbcType=TINYINT}, #{md52,jdbcType=VARCHAR}, #{title,jdbcType=LONGVARCHAR}, 
+      #{optionA,jdbcType=LONGVARCHAR}, #{optionB,jdbcType=LONGVARCHAR}, #{optionC,jdbcType=LONGVARCHAR}, 
+      #{optionD,jdbcType=LONGVARCHAR}, #{optionE,jdbcType=LONGVARCHAR}, #{answer1,jdbcType=LONGVARCHAR}, 
+      #{answer2,jdbcType=LONGVARCHAR}, #{parse,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsWithBLOBs">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into mapping_questions
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="qtpye != null">
+        qtpye,
+      </if>
+      <if test="diff != null">
+        diff,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="subjectid != null">
+        subjectId,
+      </if>
+      <if test="gradeid != null">
+        gradeId,
+      </if>
+      <if test="knowledges != null">
+        knowledges,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="year != null">
+        year,
+      </if>
+      <if test="papertpye != null">
+        paperTpye,
+      </if>
+      <if test="source != null">
+        source,
+      </if>
+      <if test="fromsite != null">
+        fromSite,
+      </if>
+      <if test="issub != null">
+        isSub,
+      </if>
+      <if test="isnormal != null">
+        isNormal,
+      </if>
+      <if test="iskonw != null">
+        isKonw,
+      </if>
+      <if test="tiid != null">
+        tiid,
+      </if>
+      <if test="similarity != null">
+        Similarity,
+      </if>
+      <if test="isunique != null">
+        isunique,
+      </if>
+      <if test="md52 != null">
+        md52,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="optionA != null">
+        option_a,
+      </if>
+      <if test="optionB != null">
+        option_b,
+      </if>
+      <if test="optionC != null">
+        option_c,
+      </if>
+      <if test="optionD != null">
+        option_d,
+      </if>
+      <if test="optionE != null">
+        option_e,
+      </if>
+      <if test="answer1 != null">
+        answer1,
+      </if>
+      <if test="answer2 != null">
+        answer2,
+      </if>
+      <if test="parse != null">
+        parse,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="qtpye != null">
+        #{qtpye,jdbcType=VARCHAR},
+      </if>
+      <if test="diff != null">
+        #{diff,jdbcType=REAL},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        #{subjectid,jdbcType=TINYINT},
+      </if>
+      <if test="gradeid != null">
+        #{gradeid,jdbcType=INTEGER},
+      </if>
+      <if test="knowledges != null">
+        #{knowledges,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        #{year,jdbcType=INTEGER},
+      </if>
+      <if test="papertpye != null">
+        #{papertpye,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="fromsite != null">
+        #{fromsite,jdbcType=VARCHAR},
+      </if>
+      <if test="issub != null">
+        #{issub,jdbcType=BIT},
+      </if>
+      <if test="isnormal != null">
+        #{isnormal,jdbcType=BIT},
+      </if>
+      <if test="iskonw != null">
+        #{iskonw,jdbcType=BIT},
+      </if>
+      <if test="tiid != null">
+        #{tiid,jdbcType=VARCHAR},
+      </if>
+      <if test="similarity != null">
+        #{similarity,jdbcType=INTEGER},
+      </if>
+      <if test="isunique != null">
+        #{isunique,jdbcType=TINYINT},
+      </if>
+      <if test="md52 != null">
+        #{md52,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionA != null">
+        #{optionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionB != null">
+        #{optionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionC != null">
+        #{optionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionD != null">
+        #{optionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionE != null">
+        #{optionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="answer1 != null">
+        #{answer1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="answer2 != null">
+        #{answer2,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="parse != null">
+        #{parse,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsExample" resultType="java.lang.Long">
+    select count(*) from mapping_questions
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update mapping_questions
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.qtpye != null">
+        qtpye = #{record.qtpye,jdbcType=VARCHAR},
+      </if>
+      <if test="record.diff != null">
+        diff = #{record.diff,jdbcType=REAL},
+      </if>
+      <if test="record.md5 != null">
+        md5 = #{record.md5,jdbcType=VARCHAR},
+      </if>
+      <if test="record.subjectid != null">
+        subjectId = #{record.subjectid,jdbcType=TINYINT},
+      </if>
+      <if test="record.gradeid != null">
+        gradeId = #{record.gradeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.knowledges != null">
+        knowledges = #{record.knowledges,jdbcType=VARCHAR},
+      </if>
+      <if test="record.area != null">
+        area = #{record.area,jdbcType=VARCHAR},
+      </if>
+      <if test="record.year != null">
+        year = #{record.year,jdbcType=INTEGER},
+      </if>
+      <if test="record.papertpye != null">
+        paperTpye = #{record.papertpye,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null">
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fromsite != null">
+        fromSite = #{record.fromsite,jdbcType=VARCHAR},
+      </if>
+      <if test="record.issub != null">
+        isSub = #{record.issub,jdbcType=BIT},
+      </if>
+      <if test="record.isnormal != null">
+        isNormal = #{record.isnormal,jdbcType=BIT},
+      </if>
+      <if test="record.iskonw != null">
+        isKonw = #{record.iskonw,jdbcType=BIT},
+      </if>
+      <if test="record.tiid != null">
+        tiid = #{record.tiid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.similarity != null">
+        Similarity = #{record.similarity,jdbcType=INTEGER},
+      </if>
+      <if test="record.isunique != null">
+        isunique = #{record.isunique,jdbcType=TINYINT},
+      </if>
+      <if test="record.md52 != null">
+        md52 = #{record.md52,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.optionA != null">
+        option_a = #{record.optionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.optionB != null">
+        option_b = #{record.optionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.optionC != null">
+        option_c = #{record.optionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.optionD != null">
+        option_d = #{record.optionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.optionE != null">
+        option_e = #{record.optionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.answer1 != null">
+        answer1 = #{record.answer1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.answer2 != null">
+        answer2 = #{record.answer2,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.parse != null">
+        parse = #{record.parse,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update mapping_questions
+    set id = #{record.id,jdbcType=INTEGER},
+      qtpye = #{record.qtpye,jdbcType=VARCHAR},
+      diff = #{record.diff,jdbcType=REAL},
+      md5 = #{record.md5,jdbcType=VARCHAR},
+      subjectId = #{record.subjectid,jdbcType=TINYINT},
+      gradeId = #{record.gradeid,jdbcType=INTEGER},
+      knowledges = #{record.knowledges,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      year = #{record.year,jdbcType=INTEGER},
+      paperTpye = #{record.papertpye,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR},
+      fromSite = #{record.fromsite,jdbcType=VARCHAR},
+      isSub = #{record.issub,jdbcType=BIT},
+      isNormal = #{record.isnormal,jdbcType=BIT},
+      isKonw = #{record.iskonw,jdbcType=BIT},
+      tiid = #{record.tiid,jdbcType=VARCHAR},
+      Similarity = #{record.similarity,jdbcType=INTEGER},
+      isunique = #{record.isunique,jdbcType=TINYINT},
+      md52 = #{record.md52,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=LONGVARCHAR},
+      option_a = #{record.optionA,jdbcType=LONGVARCHAR},
+      option_b = #{record.optionB,jdbcType=LONGVARCHAR},
+      option_c = #{record.optionC,jdbcType=LONGVARCHAR},
+      option_d = #{record.optionD,jdbcType=LONGVARCHAR},
+      option_e = #{record.optionE,jdbcType=LONGVARCHAR},
+      answer1 = #{record.answer1,jdbcType=LONGVARCHAR},
+      answer2 = #{record.answer2,jdbcType=LONGVARCHAR},
+      parse = #{record.parse,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update mapping_questions
+    set id = #{record.id,jdbcType=INTEGER},
+      qtpye = #{record.qtpye,jdbcType=VARCHAR},
+      diff = #{record.diff,jdbcType=REAL},
+      md5 = #{record.md5,jdbcType=VARCHAR},
+      subjectId = #{record.subjectid,jdbcType=TINYINT},
+      gradeId = #{record.gradeid,jdbcType=INTEGER},
+      knowledges = #{record.knowledges,jdbcType=VARCHAR},
+      area = #{record.area,jdbcType=VARCHAR},
+      year = #{record.year,jdbcType=INTEGER},
+      paperTpye = #{record.papertpye,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR},
+      fromSite = #{record.fromsite,jdbcType=VARCHAR},
+      isSub = #{record.issub,jdbcType=BIT},
+      isNormal = #{record.isnormal,jdbcType=BIT},
+      isKonw = #{record.iskonw,jdbcType=BIT},
+      tiid = #{record.tiid,jdbcType=VARCHAR},
+      Similarity = #{record.similarity,jdbcType=INTEGER},
+      isunique = #{record.isunique,jdbcType=TINYINT},
+      md52 = #{record.md52,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsWithBLOBs">
+    update mapping_questions
+    <set>
+      <if test="qtpye != null">
+        qtpye = #{qtpye,jdbcType=VARCHAR},
+      </if>
+      <if test="diff != null">
+        diff = #{diff,jdbcType=REAL},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectid != null">
+        subjectId = #{subjectid,jdbcType=TINYINT},
+      </if>
+      <if test="gradeid != null">
+        gradeId = #{gradeid,jdbcType=INTEGER},
+      </if>
+      <if test="knowledges != null">
+        knowledges = #{knowledges,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="year != null">
+        year = #{year,jdbcType=INTEGER},
+      </if>
+      <if test="papertpye != null">
+        paperTpye = #{papertpye,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="fromsite != null">
+        fromSite = #{fromsite,jdbcType=VARCHAR},
+      </if>
+      <if test="issub != null">
+        isSub = #{issub,jdbcType=BIT},
+      </if>
+      <if test="isnormal != null">
+        isNormal = #{isnormal,jdbcType=BIT},
+      </if>
+      <if test="iskonw != null">
+        isKonw = #{iskonw,jdbcType=BIT},
+      </if>
+      <if test="tiid != null">
+        tiid = #{tiid,jdbcType=VARCHAR},
+      </if>
+      <if test="similarity != null">
+        Similarity = #{similarity,jdbcType=INTEGER},
+      </if>
+      <if test="isunique != null">
+        isunique = #{isunique,jdbcType=TINYINT},
+      </if>
+      <if test="md52 != null">
+        md52 = #{md52,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionA != null">
+        option_a = #{optionA,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionB != null">
+        option_b = #{optionB,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionC != null">
+        option_c = #{optionC,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionD != null">
+        option_d = #{optionD,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="optionE != null">
+        option_e = #{optionE,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="answer1 != null">
+        answer1 = #{answer1,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="answer2 != null">
+        answer2 = #{answer2,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="parse != null">
+        parse = #{parse,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.heroland.competition.dal.pojo.MappingQuestionsWithBLOBs">
+    update mapping_questions
+    set qtpye = #{qtpye,jdbcType=VARCHAR},
+      diff = #{diff,jdbcType=REAL},
+      md5 = #{md5,jdbcType=VARCHAR},
+      subjectId = #{subjectid,jdbcType=TINYINT},
+      gradeId = #{gradeid,jdbcType=INTEGER},
+      knowledges = #{knowledges,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      year = #{year,jdbcType=INTEGER},
+      paperTpye = #{papertpye,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      fromSite = #{fromsite,jdbcType=VARCHAR},
+      isSub = #{issub,jdbcType=BIT},
+      isNormal = #{isnormal,jdbcType=BIT},
+      isKonw = #{iskonw,jdbcType=BIT},
+      tiid = #{tiid,jdbcType=VARCHAR},
+      Similarity = #{similarity,jdbcType=INTEGER},
+      isunique = #{isunique,jdbcType=TINYINT},
+      md52 = #{md52,jdbcType=VARCHAR},
+      title = #{title,jdbcType=LONGVARCHAR},
+      option_a = #{optionA,jdbcType=LONGVARCHAR},
+      option_b = #{optionB,jdbcType=LONGVARCHAR},
+      option_c = #{optionC,jdbcType=LONGVARCHAR},
+      option_d = #{optionD,jdbcType=LONGVARCHAR},
+      option_e = #{optionE,jdbcType=LONGVARCHAR},
+      answer1 = #{answer1,jdbcType=LONGVARCHAR},
+      answer2 = #{answer2,jdbcType=LONGVARCHAR},
+      parse = #{parse,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.MappingQuestions">
+    update mapping_questions
+    set qtpye = #{qtpye,jdbcType=VARCHAR},
+      diff = #{diff,jdbcType=REAL},
+      md5 = #{md5,jdbcType=VARCHAR},
+      subjectId = #{subjectid,jdbcType=TINYINT},
+      gradeId = #{gradeid,jdbcType=INTEGER},
+      knowledges = #{knowledges,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      year = #{year,jdbcType=INTEGER},
+      paperTpye = #{papertpye,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      fromSite = #{fromsite,jdbcType=VARCHAR},
+      isSub = #{issub,jdbcType=BIT},
+      isNormal = #{isnormal,jdbcType=BIT},
+      isKonw = #{iskonw,jdbcType=BIT},
+      tiid = #{tiid,jdbcType=VARCHAR},
+      Similarity = #{similarity,jdbcType=INTEGER},
+      isunique = #{isunique,jdbcType=TINYINT},
+      md52 = #{md52,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

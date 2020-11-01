@@ -123,4 +123,7 @@ public class HerolandQuestionBankImportDP extends BaseDO implements Serializable
     private Integer bankType;
 
 
+    private List<Long> knowledgeIds;
+
+
 }

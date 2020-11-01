@@ -4,8 +4,10 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
 import com.anycommon.response.utils.BeanUtil;
 import com.google.common.collect.Lists;
+import com.heroland.competition.common.constants.BankTypeEnum;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
@@ -13,15 +15,18 @@ import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
+import com.heroland.competition.domain.dp.HerolandQuestionBankImportDP;
 import com.heroland.competition.domain.dto.HerolandChapterDto;
 import com.heroland.competition.domain.dto.HerolandChapterSimpleDto;
 import com.heroland.competition.domain.dto.HerolandKnowledgeSimpleDto;
+import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 import com.heroland.competition.domain.request.HerolandChapterKnowledgeRequest;
 import com.heroland.competition.domain.request.HerolandChapterPageRequest;
 import com.heroland.competition.domain.request.HerolandChapterRequest;
 import com.heroland.competition.domain.request.HerolandPreChapterRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandChapterService;
+import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,9 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -66,6 +69,12 @@ public class HeroLandAdminMappingController {
 
     @Resource
     private HerolandKnowledgeMapper herolandKnowledgeMapper;
+
+    @Resource
+    private MappingQuestionsMapper mappingQuestionsMapper;
+
+    @Resource
+    private HeroLandQuestionBankService heroLandQuestionBankService;
 
     /**
      * 写入章节01
@@ -283,4 +292,85 @@ public class HeroLandAdminMappingController {
 
         return true;
     }
+
+
+
+    /**
+     * 抠出题目中的知识点
+     * 并将数据库中不存在的知识点保存进表中
+     * 直接以章为依据
+     *
+     */
+    @RequestMapping(value = "/digKnowledgeFromQuestions")
+    public Boolean digKnowledgeFromQuestions(){
+        MappingQuestionsExample example = new MappingQuestionsExample();
+        MappingQuestionsExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingQuestionsWithBLOBs> mappingQuestions = mappingQuestionsMapper.selectByExampleWithBLOBs(example);
+        mappingQuestions.stream().forEach(e -> {
+            HerolandQuestionBankImportDP importDP1 = build(e);
+            HerolandQuestionBankImportDP importDP2 = BeanCopyUtils.copyByJSON(importDP1, HerolandQuestionBankImportDP.class);
+            HerolandQuestionBankImportDP importDP3 = BeanCopyUtils.copyByJSON(importDP1, HerolandQuestionBankImportDP.class);
+            HerolandQuestionBankImportDP importDP4 = BeanCopyUtils.copyByJSON(importDP1, HerolandQuestionBankImportDP.class);
+            importDP2.setBankType(2);
+            importDP3.setBankType(3);
+            importDP4.setBankType(4);
+            heroLandQuestionBankService.importQuestion(Lists.newArrayList(importDP1,importDP2,importDP3,importDP4));
+        });
+        return true;
+    }
+
+
+    private HerolandQuestionBankImportDP build(MappingQuestionsWithBLOBs e){
+        HerolandQuestionBankImportDP importDP = new HerolandQuestionBankImportDP();
+        List<Long> knowledgeIds = getKnowledgeIds(e);
+        importDP.setBankType(1);
+        importDP.setDiff(e.getDiff().intValue());
+        importDP.setQtype(Integer.parseInt(e.getQtpye()));
+        importDP.setAnswer1(e.getAnswer1());
+        importDP.setAnswer2(e.getAnswer2());
+        importDP.setParse(e.getParse());
+        importDP.setSubjectid(transfer("CU", e.getSubjectid().intValue()));
+        importDP.setGradeid(transfer("GA", e.getGradeid()));
+        importDP.setOption_a(e.getOptionA());
+        importDP.setOption_b(e.getOptionB());
+        importDP.setOption_c(e.getOptionC());
+        importDP.setOption_d(e.getOptionD());
+        importDP.setOption_e(e.getOptionE());
+        importDP.setQuestion(e.getTitle());
+        importDP.setKnowledgeIds(knowledgeIds);
+        return importDP;
+    }
+
+
+    private List<Long> getKnowledgeIds(MappingQuestionsWithBLOBs e){
+        List<Long> knowledgeIds = Lists.newArrayList();
+        List<String> knowledges = Arrays.asList(e.getKnowledges().split(","));
+        Byte subjectid = e.getSubjectid();
+        Integer gradeid = e.getGradeid();
+        HerolandKnowledgeQO qo = new HerolandKnowledgeQO();
+        qo.setCourse(transfer("CU", subjectid.intValue()));
+        qo.setGrade(transfer("GA", gradeid));
+        knowledges.stream().forEach(k -> {
+            qo.setKnowledge(k);
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery(qo);
+            if (CollectionUtils.isEmpty(herolandKnowledges)){
+                HerolandKnowledge knowledge = new HerolandKnowledge();
+                knowledge.setGrade(transfer("GA", gradeid));
+                knowledge.setCourse(transfer("CU", subjectid.intValue()));
+                knowledge.setDiff(e.getDiff().intValue());
+                herolandKnowledgeMapper.insertSelective(knowledge);
+                knowledgeIds.add(knowledge.getId());
+            }else {
+                herolandKnowledges.stream().forEach(kk -> {
+                    kk.setDiff(e.getDiff().intValue());
+                    herolandKnowledgeMapper.updateByPrimaryKey(kk);
+                });
+                knowledgeIds.add(herolandKnowledges.get(0).getId());
+            }
+        });
+
+        return knowledgeIds;
+    }
+
 }
