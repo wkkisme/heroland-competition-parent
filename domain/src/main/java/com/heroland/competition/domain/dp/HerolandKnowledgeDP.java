@@ -55,10 +55,12 @@ public class HerolandKnowledgeDP extends BaseDO implements Serializable {
 
     public HerolandKnowledgeDP checkAndBuildBeforeCreate(){
         AssertUtils.notBlank(course, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
-        AssertUtils.notBlank(grade, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        // TODO: 2020/11/1  
+//        AssertUtils.notBlank(grade, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         AssertUtils.notBlank(knowledge, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         DiffEnum diffEnum = DiffEnum.valueOfLevel(diff);
-        AssertUtils.notNull(diffEnum, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
+        // TODO: 2020/11/1  
+//        AssertUtils.notNull(diffEnum, HerolandErrMsgEnum.EMPTY_PARAM.getErrorMessage());
         return this;
     }
 
