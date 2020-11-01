@@ -6,6 +6,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.BankTypeEnum;
 import com.heroland.competition.common.constants.ChapterEnum;
+import com.heroland.competition.common.constants.QtTypeEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
@@ -326,7 +327,7 @@ public class HeroLandAdminMappingController {
         List<Long> knowledgeIds = getKnowledgeIds(e);
         importDP.setBankType(1);
         importDP.setDiff(e.getDiff().intValue());
-        importDP.setQtype(Integer.parseInt(e.getQtpye()));
+        importDP.setQtype(QtTypeEnum.valueOf(e.getQtpye()).getType());
         importDP.setAnswer1(e.getAnswer1());
         importDP.setAnswer2(e.getAnswer2());
         importDP.setParse(e.getParse());
