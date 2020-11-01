@@ -2,15 +2,14 @@ package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
+import com.anycommon.response.utils.BeanUtil;
 import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
-import com.heroland.competition.dal.mapper.HerolandBasicDataMapper;
-import com.heroland.competition.dal.mapper.HerolandChapterMapper;
-import com.heroland.competition.dal.mapper.MappingChapterMapper;
-import com.heroland.competition.dal.mapper.MappingKnowledgeMapper;
+import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
+import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
 import com.heroland.competition.domain.dto.HerolandChapterDto;
@@ -63,6 +62,9 @@ public class HeroLandAdminMappingController {
 
     @Resource
     private HerolandKnowledgeService herolandKnowledgeService;
+
+    @Resource
+    private HerolandKnowledgeMapper herolandKnowledgeMapper;
 
     /**
      * 写入章节
@@ -199,12 +201,12 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingKnowledge> mappingKnowledges = mappingKnowledgeMapper.selectByExample(example);
         mappingKnowledges.stream().forEach(e -> {
-            HerolandKnowledgeDP dp = new HerolandKnowledgeDP();
+            HerolandKnowledge dp = new HerolandKnowledge();
             dp.setId(e.getId().longValue());
             dp.setKnowledge(e.getKnowledgename());
 //            dp.setGrade(transfer("GA", e.));
             dp.setCourse(transfer("CU", e.getSubjectid()));
-            herolandKnowledgeService.add(dp);
+            herolandKnowledgeMapper.insertSelectiveWithId(dp);
         });
         return true;
     }

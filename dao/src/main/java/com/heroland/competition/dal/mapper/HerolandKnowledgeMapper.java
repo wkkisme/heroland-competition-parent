@@ -15,6 +15,8 @@ public interface HerolandKnowledgeMapper {
 
     int insertSelective(HerolandKnowledge knowledge);
 
+    int insertSelectiveWithId(HerolandKnowledge knowledge);
+
     int updateByPrimaryKeySelective(HerolandKnowledge knowledge);
 
     HerolandKnowledge selectByPrimaryKey(@Param("id") Long id);
