@@ -364,7 +364,7 @@ public class HeroLandAdminMappingController {
             }else {
                 herolandKnowledges.stream().forEach(kk -> {
                     kk.setDiff(e.getDiff().intValue());
-                    herolandKnowledgeMapper.updateByPrimaryKey(kk);
+                    herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
                 });
                 knowledgeIds.add(herolandKnowledges.get(0).getId());
             }
