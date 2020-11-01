@@ -112,6 +112,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             if (qo.getEndTime() != null) {
                 criteria.andGmtCreateLessThanOrEqualTo(qo.getEndTime());
             }
+            if (!StringUtils.isEmpty(qo.getTopicId())){
+                criteria.andTopicIdIn(Lists.newArrayList(qo.getTopicId()));
+            }
             if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
                 criteria.andTopicIdIn(qo.getTopicIds().stream().map(String::valueOf).collect(Collectors.toList()));
             }
