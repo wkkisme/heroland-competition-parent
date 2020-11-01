@@ -236,7 +236,7 @@
     select
     <include refid="Base_Column_List" />
     from heroland_chapter
-    where is_deleted = 0 and content_type = 1
+    where is_deleted = 0
     <if test="grade != null">
       and grade = #{grade,jdbcType=VARCHAR}
     </if>
@@ -248,6 +248,12 @@
     </if>
     <if test="content != null">
       and content = #{content,jdbcType=VARCHAR}
+    </if>
+    <if test="contentType != null">
+      and content_type = #{contentType,jdbcType=INTEGER}
+    </if>
+    <if test="order != null">
+      and `order` = #{order,jdbcType=INTEGER}
     </if>
   </select>
 

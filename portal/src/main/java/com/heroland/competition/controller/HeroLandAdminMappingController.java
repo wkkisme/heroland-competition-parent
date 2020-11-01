@@ -67,7 +67,7 @@ public class HeroLandAdminMappingController {
     private HerolandKnowledgeMapper herolandKnowledgeMapper;
 
     /**
-     * 写入章节
+     * 写入章节01
      *
      */
     @RequestMapping(value = "/writeChapter")
@@ -76,7 +76,7 @@ public class HeroLandAdminMappingController {
         MappingChapterExample.Criteria criteria = example.createCriteria();
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
-        List<MappingChapter> chapters = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getChapter())).collect(Collectors.toList());
+        List<MappingChapter> chapters = mappingChapters.stream().filter(e -> !StringUtils.isBlank(e.getChapter())).collect(Collectors.toList());
         Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(MappingChapter::getChapter));
         for (Map.Entry<String, List<MappingChapter>> entry : chapterMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
@@ -98,7 +98,7 @@ public class HeroLandAdminMappingController {
     }
 
     /**
-     * 写入章节
+     * 写入章节02
      *
      */
     @RequestMapping(value = "/writeUnit")
@@ -107,14 +107,14 @@ public class HeroLandAdminMappingController {
         MappingChapterExample.Criteria criteria = example.createCriteria();
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
-        List<MappingChapter> units = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(MappingChapter::getChapter));
+        List<MappingChapter> units = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
+        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(MappingChapter::getUnit));
         for (Map.Entry<String, List<MappingChapter>> entry : unitsMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.KEJIE.getType());
             dp.setContent(entry.getKey());
 //            dp.setParentId(0L);
-            dp.setOrder(entry.getValue().get(0).getChapterorder());
+            dp.setOrder(entry.getValue().get(0).getUnitorder());
             List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
             dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
             Integer editionid = entry.getValue().get(0).getEditionid();
@@ -125,7 +125,43 @@ public class HeroLandAdminMappingController {
             dp.setCourse(transfer("CU", subjectid));
 
             //从名字中找出chapter对应的名称
-            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), entry.getValue().get(0).getChapter());
+            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), 1, entry.getValue().get(0).getChapter(), entry.getValue().get(0).getChapterorder());
+            if (!CollectionUtils.isEmpty(chapters)){
+                dp.setParentId(chapters.get(0).getId());
+            }
+            heroLandChapterService.add(dp);
+        }
+        return true;
+    }
+
+    /**
+     * 写入章节03
+     *
+     */
+    @RequestMapping(value = "/writeSection")
+    public Boolean writeSection(){
+        MappingChapterExample example = new MappingChapterExample();
+        MappingChapterExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
+        List<MappingChapter> sections = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getSection())).collect(Collectors.toList());
+        Map<String, List<MappingChapter>> sectionMap = sections.stream().collect(Collectors.groupingBy(MappingChapter::getSection));
+        for (Map.Entry<String, List<MappingChapter>> entry : sectionMap.entrySet()){
+            HerolandChapterDP dp = new HerolandChapterDP();
+            dp.setContentType(ChapterEnum.JIE.getType());
+            dp.setContent(entry.getKey());
+            dp.setOrder(entry.getValue().get(0).getSectionorder());
+            List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
+            dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
+            Integer editionid = entry.getValue().get(0).getEditionid();
+            Integer gradeid = entry.getValue().get(0).getGradeid();
+            Integer subjectid = entry.getValue().get(0).getSubjectid();
+            dp.setGrade(transfer("GA", gradeid));
+            dp.setEdition(transfer("ED", editionid));
+            dp.setCourse(transfer("CU", subjectid));
+
+            //从名字中找出chapter对应的名称
+            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), 2, entry.getValue().get(0).getUnit(), entry.getValue().get(0).getUnitorder());
             if (!CollectionUtils.isEmpty(chapters)){
                 dp.setParentId(chapters.get(0).getId());
             }
