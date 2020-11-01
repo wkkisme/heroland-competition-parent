@@ -1,4 +1,4 @@
-package com.heroland.competition.controller.mapping;
+package com.heroland.competition.controller;
 
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.page.Pagination;
@@ -6,12 +6,10 @@ import com.heroland.competition.common.constants.ChapterEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HerolandBasicDataMapper;
+import com.heroland.competition.dal.mapper.HerolandChapterMapper;
 import com.heroland.competition.dal.mapper.MappingChapterMapper;
 import com.heroland.competition.dal.mapper.MappingKnowledgeMapper;
-import com.heroland.competition.dal.pojo.MappingChapter;
-import com.heroland.competition.dal.pojo.MappingChapterExample;
-import com.heroland.competition.dal.pojo.MappingKnowledge;
-import com.heroland.competition.dal.pojo.MappingKnowledgeExample;
+import com.heroland.competition.dal.pojo.*;
 import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.domain.dp.HerolandChapterDP;
 import com.heroland.competition.domain.dp.HerolandKnowledgeDP;
@@ -25,6 +23,7 @@ import com.heroland.competition.domain.request.HerolandPreChapterRequest;
 import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandChapterService;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +42,8 @@ import java.util.stream.Collectors;
  * 章节管理
  */
 @RestController
-@RequestMapping("/heroland/chapter")
+@RequestMapping("/mapping/chapter")
+@Slf4j
 public class HeroLandAdminMappingController {
 
     @Resource
@@ -56,6 +56,9 @@ public class HeroLandAdminMappingController {
     private MappingChapterMapper mappingChapterMapper;
 
     @Resource
+    private HerolandChapterMapper herolandChapterMapper;
+
+    @Resource
     private MappingKnowledgeMapper mappingKnowledgeMapper;
 
     @Resource
@@ -65,14 +68,13 @@ public class HeroLandAdminMappingController {
      * 写入章节
      *
      */
+    @RequestMapping(value = "/writeChapter")
     public Boolean writeChapter(){
         MappingChapterExample example = new MappingChapterExample();
         MappingChapterExample.Criteria criteria = example.createCriteria();
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> chapters = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getChapter())).collect(Collectors.toList());
-        List<MappingChapter> units = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
-        List<MappingChapter> sections = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getSection())).collect(Collectors.toList());
         Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(MappingChapter::getChapter));
         for (Map.Entry<String, List<MappingChapter>> entry : chapterMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
@@ -93,6 +95,43 @@ public class HeroLandAdminMappingController {
         return true;
     }
 
+    /**
+     * 写入章节
+     *
+     */
+    @RequestMapping(value = "/writeUnit")
+    public Boolean writeUnit(){
+        MappingChapterExample example = new MappingChapterExample();
+        MappingChapterExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
+        List<MappingChapter> units = mappingChapters.stream().filter(e -> StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
+        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(MappingChapter::getChapter));
+        for (Map.Entry<String, List<MappingChapter>> entry : unitsMap.entrySet()){
+            HerolandChapterDP dp = new HerolandChapterDP();
+            dp.setContentType(ChapterEnum.KEJIE.getType());
+            dp.setContent(entry.getKey());
+//            dp.setParentId(0L);
+            dp.setOrder(entry.getValue().get(0).getChapterorder());
+            List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
+            dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
+            Integer editionid = entry.getValue().get(0).getEditionid();
+            Integer gradeid = entry.getValue().get(0).getGradeid();
+            Integer subjectid = entry.getValue().get(0).getSubjectid();
+            dp.setGrade(transfer("GA", gradeid));
+            dp.setEdition(transfer("ED", editionid));
+            dp.setCourse(transfer("CU", subjectid));
+
+            //从名字中找出chapter对应的名称
+            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), entry.getValue().get(0).getChapter());
+            if (!CollectionUtils.isEmpty(chapters)){
+                dp.setParentId(chapters.get(0).getId());
+            }
+            heroLandChapterService.add(dp);
+        }
+        return true;
+    }
+
 
 
     public String transfer(String code, Integer mappingId){
@@ -102,6 +141,11 @@ public class HeroLandAdminMappingController {
 
         if (code.equalsIgnoreCase("GA")){
             String str = mappingId+"";
+            //说明是必修选修
+            if (str.length() > 3){
+                log.info("必修选修的年级");
+                return "";
+            }
             List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
             if (CollectionUtils.isEmpty(herolandBasicData)){
                 return "";
@@ -126,12 +170,29 @@ public class HeroLandAdminMappingController {
             return herolandBasicData.get(0).getDictKey();
         }
     }
+//
+//    public Integer transfer(Integer gradeid){
+//        if (gradeid == null){
+//            return null;
+//        }
+//        String str = mappingId+"";
+//        //说明是必修选修
+//        if (str.length() > 3){
+//            log.info("必修选修的年级");
+//            return null;
+//        }
+//        if (str.charAt(str.length()-1) == '1'){
+//            return
+//        }
+//
+//    }
 
     /**
      * 写入知识点
      * 但是知识点没有年级
      * 要从题目中抠出年级|从章节中抠出年级
      */
+    @RequestMapping(value = "/writeKnowledge")
     public Boolean writeKnowledge(){
         MappingKnowledgeExample example = new MappingKnowledgeExample();
         MappingKnowledgeExample.Criteria criteria = example.createCriteria();

@@ -231,4 +231,24 @@
     </foreach>
   </select>
 
+
+  <select id="getChapters"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_chapter
+    where is_deleted = 0 and content_type = 1
+    <if test="grade != null">
+      and grade = #{grade,jdbcType=VARCHAR}
+    </if>
+    <if test="course != null">
+      and course = #{course,jdbcType=VARCHAR}
+    </if>
+    <if test="edition != null">
+      and edition = #{edition,jdbcType=VARCHAR}
+    </if>
+    <if test="content != null">
+      and content = #{content,jdbcType=VARCHAR}
+    </if>
+  </select>
+
 </mapper>
