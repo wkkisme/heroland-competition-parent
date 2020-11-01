@@ -84,7 +84,7 @@ public class HeroLandAdminMappingController {
         for (Map.Entry<String, List<MappingChapter>> entry : chapterMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.ZHANG.getType());
-            dp.setContent(entry.getKey());
+            dp.setContent(entry.getValue().get(0).getChapter());
             dp.setParentId(0L);
             dp.setOrder(entry.getValue().get(0).getChapterorder());
             List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class HeroLandAdminMappingController {
         for (Map.Entry<String, List<MappingChapter>> entry : unitsMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.KEJIE.getType());
-            dp.setContent(entry.getKey());
+            dp.setContent(entry.getValue().get(0).getUnit());
 //            dp.setParentId(0L);
             dp.setOrder(entry.getValue().get(0).getUnitorder());
             List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
@@ -152,7 +152,7 @@ public class HeroLandAdminMappingController {
         for (Map.Entry<String, List<MappingChapter>> entry : sectionMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.JIE.getType());
-            dp.setContent(entry.getKey());
+            dp.setContent(entry.getValue().get(0).getSection());
             dp.setOrder(entry.getValue().get(0).getSectionorder());
             List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
             dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
