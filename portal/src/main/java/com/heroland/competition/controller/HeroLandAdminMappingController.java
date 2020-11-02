@@ -219,7 +219,7 @@ public class HeroLandAdminMappingController {
     }
 
 
-
+//    @RequestMapping(value = "/mapping")
     public String transfer(String code, Integer mappingId){
         if (mappingId == null){
             return "";
@@ -227,11 +227,16 @@ public class HeroLandAdminMappingController {
 
         if (code.equalsIgnoreCase("GA")){
             String str = mappingId+"";
-//            //说明是必修选修
-//            if (str.length() > 3){
-//                log.info("必修选修的年级");
-//                return "";
-//            }
+            //说明是必修选修
+            if (str.length() > 3){
+                log.info("必修选修的年级");
+                List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, str);
+                if (CollectionUtils.isEmpty(herolandBasicData)){
+                    return "";
+                }else {
+                    return herolandBasicData.get(0).getDictKey();
+                }
+            }
             List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
             if (CollectionUtils.isEmpty(herolandBasicData)){
                 return "";
