@@ -317,22 +317,43 @@ public class HeroLandAdminMappingController {
             Integer gradeid = e.getGradeid();
             HerolandKnowledgeQO qo = new HerolandKnowledgeQO();
             qo.setCourse(transfer("CU", subjectid.intValue()));
-            qo.setGrade(transfer("GA", gradeid));
+            String grade = transfer("GA", gradeid);
+//            qo.setGrade();
             knowledges.stream().forEach(k -> {
                 qo.setKnowledge(k);
                 List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery2(qo);
                 if (CollectionUtils.isEmpty(herolandKnowledges)){
                     HerolandKnowledge knowledge = new HerolandKnowledge();
-                    knowledge.setGrade(qo.getGrade());
+                    knowledge.setGrade(grade);
                     knowledge.setCourse(qo.getCourse());
                     knowledge.setKnowledge(k);
                     knowledge.setDiff(e.getDiff().intValue());
                     herolandKnowledgeMapper.insertSelective(knowledge);
                 }else {
-                    herolandKnowledges.stream().forEach(kk -> {
-                        kk.setDiff(e.getDiff().intValue());
-                        herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
-                    });
+
+                    List<HerolandKnowledge> collect = herolandKnowledges.stream().filter(s -> Objects.equals(s.getGrade(), grade)).collect(Collectors.toList());
+                    List<HerolandKnowledge> collect2 = herolandKnowledges.stream().filter(s -> StringUtils.isBlank(s.getGrade())).collect(Collectors.toList());
+                    if (collect.size() > 0){
+                        collect.stream().forEach(kk -> {
+                            kk.setDiff(e.getDiff().intValue());
+                            herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
+                        });
+                    }else{
+                        if (collect2.size() > 0){
+                            collect2.stream().forEach(kk -> {
+                                kk.setDiff(e.getDiff().intValue());
+                                kk.setGrade(grade);
+                                herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
+                            });
+                        }else {
+                            HerolandKnowledge knowledge1 = new HerolandKnowledge();
+                            knowledge1.setGrade(grade);
+                            knowledge1.setCourse(qo.getCourse());
+                            knowledge1.setKnowledge(k);
+                            knowledge1.setDiff(e.getDiff().intValue());
+                            herolandKnowledgeMapper.insertSelective(knowledge1);
+                        }
+                    }
                 }
             });
         });
