@@ -217,6 +217,7 @@
     <if test="parentId != null">
       and parent_id = #{parentId,jdbcType=INTEGER}
     </if>
+    order by content_type, grade,course,edition,`order`
   </select>
 
   <select id="getByIds"  resultMap="BaseResultMap">
