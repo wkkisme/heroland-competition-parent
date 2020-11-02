@@ -293,7 +293,7 @@
             </foreach>
         </if>
         <if test="grade != null">
-           and #{grade,jdbcType=VARCHAR}
+           and grade = #{grade,jdbcType=VARCHAR}
         </if>
 
     </select>
