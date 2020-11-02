@@ -22,6 +22,8 @@ public class HerolandChapterDP extends BaseDO implements Serializable {
      */
     private String grade;
 
+    private Integer gradeUnit;
+
     /**
      * 科目
      */

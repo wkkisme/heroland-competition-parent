@@ -24,7 +24,7 @@ public interface HerolandChapterMapper {
 
     List<HerolandChapter> getByQuery(@Param("grade") String grade,@Param("course") String course,@Param("edition") String edition,@Param("contentType") Integer contentType,@Param("content") String content, @Param("parentId") Long parentId);
 
-    List<HerolandChapter> getChapters(@Param("grade") String grade,@Param("course") String course,@Param("edition") String edition,@Param("contentType") Integer contentType,@Param("content") String content, @Param("order") Integer order);
+    List<HerolandChapter> getChapters(@Param("grade") String grade,@Param("gradeUnit") Integer gradeUnit,@Param("course") String course,@Param("edition") String edition,@Param("contentType") Integer contentType,@Param("content") String content, @Param("order") Integer order);
 
     List<HerolandChapter> getByIds(@Param("ids") List<Long> ids);
 

@@ -75,6 +75,7 @@ public class HeroLandChapterServiceImpl implements HeroLandChapterService {
         herolandChapter.setGrade(dp.getGrade());
         herolandChapter.setOrder(dp.getOrder());
         herolandChapter.setParentId(dp.getParentId());
+        herolandChapter.setGradeUnit(dp.getGradeUnit());
         heroLandChapterMapper.insertSelective(herolandChapter);
         if (!CollectionUtils.isEmpty(dp.getKnowledges())){
             List<HerolandKnowledgeRefer> list = Lists.newArrayList();

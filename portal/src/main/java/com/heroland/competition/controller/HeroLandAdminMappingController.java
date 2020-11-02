@@ -77,6 +77,9 @@ public class HeroLandAdminMappingController {
     @Resource
     private HeroLandQuestionBankService heroLandQuestionBankService;
 
+
+    //写入章节内容注意各种参数的必要性 如order
+
     /**
      * 写入章节01
      *
@@ -88,9 +91,7 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> chapters = mappingChapters.stream().filter(e -> !StringUtils.isBlank(e.getChapter())).collect(Collectors.toList());
-
-
-        Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()));
+        Map<String, List<MappingChapter>> chapterMap = chapters.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter() + "_"+e.getChapterorder()));
         for (Map.Entry<String, List<MappingChapter>> entry : chapterMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.ZHANG.getType());
@@ -105,6 +106,7 @@ public class HeroLandAdminMappingController {
             dp.setGrade(transfer("GA", gradeid));
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
+            dp.setGradeUnit(transferGradeUnit(gradeid));
             heroLandChapterService.add(dp);
         }
         return true;
@@ -121,7 +123,7 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> units = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getUnit())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()));
+        Map<String, List<MappingChapter>> unitsMap = units.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()+"_"+e.getChapterorder()+"_"+e.getUnitorder()));
         for (Map.Entry<String, List<MappingChapter>> entry : unitsMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.KEJIE.getType());
@@ -136,9 +138,9 @@ public class HeroLandAdminMappingController {
             dp.setGrade(transfer("GA", gradeid));
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
-
+            dp.setGradeUnit(transferGradeUnit(gradeid));
             //从名字中找出chapter对应的名称
-            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), 1, entry.getValue().get(0).getChapter(), entry.getValue().get(0).getChapterorder());
+            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(),dp.getGradeUnit(), dp.getCourse(), dp.getEdition(), 1, entry.getValue().get(0).getChapter(), entry.getValue().get(0).getChapterorder());
             if (!CollectionUtils.isEmpty(chapters)){
                 dp.setParentId(chapters.get(0).getId());
             }
@@ -158,7 +160,7 @@ public class HeroLandAdminMappingController {
         criteria.andIdIsNotNull();
         List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
         List<MappingChapter> sections = mappingChapters.stream().filter(e ->!StringUtils.isBlank(e.getSection())).collect(Collectors.toList());
-        Map<String, List<MappingChapter>> sectionMap = sections.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()+"*"+e.getSection()));
+        Map<String, List<MappingChapter>> sectionMap = sections.stream().collect(Collectors.groupingBy(e -> e.getGradeid()+"_"+e.getSubjectid()+"_"+e.getEditionid()+"*"+e.getChapter()+"*"+e.getUnit()+"*"+e.getSection()+"_"+e.getChapterorder()+"_"+e.getUnitorder() + "_"+e.getSectionorder()));
         for (Map.Entry<String, List<MappingChapter>> entry : sectionMap.entrySet()){
             HerolandChapterDP dp = new HerolandChapterDP();
             dp.setContentType(ChapterEnum.JIE.getType());
@@ -172,11 +174,20 @@ public class HeroLandAdminMappingController {
             dp.setGrade(transfer("GA", gradeid));
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
-
+            dp.setGradeUnit(transferGradeUnit(gradeid));
             //从名字中找出chapter对应的名称
-            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(), dp.getCourse(), dp.getEdition(), 2, entry.getValue().get(0).getUnit(), entry.getValue().get(0).getUnitorder());
+            List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(),dp.getGradeUnit(), dp.getCourse(), dp.getEdition(), 2, entry.getValue().get(0).getUnit(), entry.getValue().get(0).getUnitorder());
             if (!CollectionUtils.isEmpty(chapters)){
-                dp.setParentId(chapters.get(0).getId());
+                Optional<HerolandChapter> first = chapters.stream().filter(e -> !NumberUtils.nullOrZeroLong(e.getParentId())).filter(e -> {
+                    HerolandChapter chapter = herolandChapterMapper.selectByPrimaryKey(e.getParentId());
+                    if (chapter != null && chapter.getOrder() != null && chapter.getOrder() == entry.getValue().get(0).getChapterorder()) {
+                        return true;
+                    }
+                    return false;
+                }).findFirst();
+                if (first.isPresent()){
+                    dp.setParentId(first.get().getId());
+                }
             }
             heroLandChapterService.add(dp);
         }
@@ -245,22 +256,25 @@ public class HeroLandAdminMappingController {
             return herolandBasicData.get(0).getDictKey();
         }
     }
-//
-//    public Integer transfer(Integer gradeid){
-//        if (gradeid == null){
-//            return null;
-//        }
-//        String str = mappingId+"";
-//        //说明是必修选修
-//        if (str.length() > 3){
-//            log.info("必修选修的年级");
-//            return null;
-//        }
-//        if (str.charAt(str.length()-1) == '1'){
-//            return
-//        }
-//
-//    }
+
+    public Integer transferGradeUnit(Integer gradeid){
+        if (gradeid == null){
+            return null;
+        }
+        String str = gradeid+"";
+        //说明是必修选修
+        if (str.length() > 3){
+            log.info("必修选修的年级");
+            return null;
+        }
+        if (str.charAt(str.length()-1) == '1'){
+            return 1;
+        }
+        if (str.charAt(str.length()-1) == '2'){
+            return 2;
+        }
+        return null;
+    }
 
     /**
      * 写入知识点

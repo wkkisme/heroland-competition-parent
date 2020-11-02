@@ -217,7 +217,7 @@
     <if test="parentId != null">
       and parent_id = #{parentId,jdbcType=INTEGER}
     </if>
-    order by content_type, grade,course,edition,`order`
+    order by content_type,grade,course,edition, grade_unit,`order`
   </select>
 
   <select id="getByIds"  resultMap="BaseResultMap">
@@ -240,6 +240,9 @@
     where is_deleted = 0
     <if test="grade != null">
       and grade = #{grade,jdbcType=VARCHAR}
+    </if>
+    <if test="gradeUnit != null">
+      and grade_unit = #{gradeUnit,jdbcType=INTEGER}
     </if>
     <if test="course != null">
       and course = #{course,jdbcType=VARCHAR}
