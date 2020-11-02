@@ -27,5 +27,11 @@ public interface HerolandKnowledgeMapper {
 
     List<HerolandKnowledge> selectByQuery(HerolandKnowledgeQO qo);
 
+    List<HerolandKnowledge> selectByQuery2(HerolandKnowledgeQO qo);
+
     List<HerolandKnowledge> selectByIds(@Param("ids")List<Long> ids);
+
+    List<HerolandKnowledge> selectBymMappingId(@Param("mappingId") String mappingId);
+
+    List<HerolandKnowledge> selectBymMappingIdsAndGrade(@Param("mappingIds") List<String> mappingIds, @Param("grade") String grade);
 }

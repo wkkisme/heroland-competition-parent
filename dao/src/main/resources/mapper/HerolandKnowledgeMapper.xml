@@ -12,10 +12,12 @@
         <result column="modifier" jdbcType="VARCHAR" property="modifier" />
         <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
         <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+
+        <result column="mapping_id" jdbcType="VARCHAR" property="mappingId" />
     </resultMap>
     <sql id="Base_Column_List">
     id, grade, course, knowledge, diff, is_deleted, creator,
-    modifier, gmt_create, gmt_modified
+    modifier, gmt_create, gmt_modified,mapping_id
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -62,6 +64,11 @@
             <if test="gmtModified != null">
                 gmt_modified,
             </if>
+
+            <if test="mappingId != null">
+                mapping_id,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="grade != null">
@@ -91,6 +98,11 @@
             <if test="gmtModified != null">
                 #{gmtModified,jdbcType=TIMESTAMP},
             </if>
+
+            <if test="mappingId != null">
+                #{mappingId,jdbcType=VARCHAR},
+            </if>
+
         </trim>
     </insert>
 
@@ -196,6 +208,12 @@
             <if test="gmtModified != null">
                 gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
             </if>
+
+            <if test="mappingId != null">
+                mapping_id =  #{mappingId,jdbcType=VARCHAR},
+            </if>
+
+
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
@@ -226,6 +244,22 @@
         </if>
     </select>
 
+    <select id="selectByQuery2"  resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        where is_deleted = 0
+        <if test="grade != null">
+            and grade = #{grade,jdbcType=VARCHAR}
+        </if>
+        <if test="course != null">
+            and course = #{course,jdbcType=VARCHAR}
+        </if>
+        <if test="knowledge != null">
+            and  knowledge = #{knowledge}
+        </if>
+    </select>
+
     <select id="selectByIds" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
@@ -238,4 +272,30 @@
             </foreach>
         </if>
     </select>
+
+    <select id="selectBymMappingId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        where is_deleted = 0 and
+        mapping_id =  #{mappingId,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectBymMappingIdsAndGrade" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from heroland_knowledge
+        where is_deleted = 0
+        <if test="mappingIds != null and mappingIds.size > 0">
+            and mapping_id IN
+            <foreach collection="mappingIds" item="mappingId" open="(" close=")" separator=",">
+                #{mappingId,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="grade != null">
+           and #{grade,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
 </mapper>

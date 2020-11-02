@@ -43,4 +43,7 @@ public class HerolandKnowledge extends BaseDO implements Serializable {
      */
     private Integer diff;
 
+
+    private String mappingId;
+
 }

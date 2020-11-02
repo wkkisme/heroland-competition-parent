@@ -6,8 +6,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.BankTypeEnum;
 import com.heroland.competition.common.constants.ChapterEnum;
-import com.heroland.competition.common.constants.QtTypeEnum;
-import com.heroland.competition.common.pageable.PageResponse;
+
 import com.heroland.competition.common.utils.BeanCopyUtils;
 import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.*;
@@ -21,11 +20,7 @@ import com.heroland.competition.domain.dto.HerolandChapterDto;
 import com.heroland.competition.domain.dto.HerolandChapterSimpleDto;
 import com.heroland.competition.domain.dto.HerolandKnowledgeSimpleDto;
 import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
-import com.heroland.competition.domain.request.HerolandChapterKnowledgeRequest;
-import com.heroland.competition.domain.request.HerolandChapterPageRequest;
-import com.heroland.competition.domain.request.HerolandChapterRequest;
-import com.heroland.competition.domain.request.HerolandPreChapterRequest;
-import com.heroland.competition.service.admin.HeroLandAdminService;
+
 import com.heroland.competition.service.admin.HeroLandChapterService;
 import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import com.heroland.competition.service.admin.HerolandKnowledgeService;
@@ -78,7 +73,23 @@ public class HeroLandAdminMappingController {
     private HeroLandQuestionBankService heroLandQuestionBankService;
 
 
-    //写入章节内容注意各种参数的必要性 如order
+    /***
+     * 第二步刷数据：
+     *
+     *
+     * 以下是处理章节的东西，
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
     /**
      * 写入章节01
@@ -98,8 +109,6 @@ public class HeroLandAdminMappingController {
             dp.setContent(entry.getValue().get(0).getChapter());
             dp.setParentId(0L);
             dp.setOrder(entry.getValue().get(0).getChapterorder());
-            List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
-            dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
             Integer editionid = entry.getValue().get(0).getEditionid();
             Integer gradeid = entry.getValue().get(0).getGradeid();
             Integer subjectid = entry.getValue().get(0).getSubjectid();
@@ -107,6 +116,12 @@ public class HeroLandAdminMappingController {
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
             dp.setGradeUnit(transferGradeUnit(gradeid));
+
+            List<String> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).map(String::valueOf).distinct().collect(Collectors.toList());
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectBymMappingIdsAndGrade(konwledges, dp.getGrade());
+            if (!CollectionUtils.isEmpty(herolandKnowledges)){
+                dp.setKnowledges(herolandKnowledges.stream().map(HerolandKnowledge::getId).collect(Collectors.toList()));
+            }
             heroLandChapterService.add(dp);
         }
         return true;
@@ -130,8 +145,6 @@ public class HeroLandAdminMappingController {
             dp.setContent(entry.getValue().get(0).getUnit());
 //            dp.setParentId(0L);
             dp.setOrder(entry.getValue().get(0).getUnitorder());
-            List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
-            dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
             Integer editionid = entry.getValue().get(0).getEditionid();
             Integer gradeid = entry.getValue().get(0).getGradeid();
             Integer subjectid = entry.getValue().get(0).getSubjectid();
@@ -139,6 +152,11 @@ public class HeroLandAdminMappingController {
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
             dp.setGradeUnit(transferGradeUnit(gradeid));
+            List<String> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).map(String::valueOf).distinct().collect(Collectors.toList());
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectBymMappingIdsAndGrade(konwledges, dp.getGrade());
+            if (!CollectionUtils.isEmpty(herolandKnowledges)){
+                dp.setKnowledges(herolandKnowledges.stream().map(HerolandKnowledge::getId).collect(Collectors.toList()));
+            }
             //从名字中找出chapter对应的名称
             List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(),dp.getGradeUnit(), dp.getCourse(), dp.getEdition(), 1, entry.getValue().get(0).getChapter(), entry.getValue().get(0).getChapterorder());
             if (!CollectionUtils.isEmpty(chapters)){
@@ -166,8 +184,6 @@ public class HeroLandAdminMappingController {
             dp.setContentType(ChapterEnum.JIE.getType());
             dp.setContent(entry.getValue().get(0).getSection());
             dp.setOrder(entry.getValue().get(0).getSectionorder());
-            List<Integer> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).distinct().collect(Collectors.toList());
-            dp.setKnowledges(konwledges.stream().map(Integer::longValue).collect(Collectors.toList()));
             Integer editionid = entry.getValue().get(0).getEditionid();
             Integer gradeid = entry.getValue().get(0).getGradeid();
             Integer subjectid = entry.getValue().get(0).getSubjectid();
@@ -175,6 +191,12 @@ public class HeroLandAdminMappingController {
             dp.setEdition(transfer("ED", editionid));
             dp.setCourse(transfer("CU", subjectid));
             dp.setGradeUnit(transferGradeUnit(gradeid));
+            List<String> konwledges = entry.getValue().stream().map(MappingChapter::getKnowledgeid).map(String::valueOf).distinct().collect(Collectors.toList());
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectBymMappingIdsAndGrade(konwledges, dp.getGrade());
+            if (!CollectionUtils.isEmpty(herolandKnowledges)){
+                dp.setKnowledges(herolandKnowledges.stream().map(HerolandKnowledge::getId).collect(Collectors.toList()));
+            }
+
             //从名字中找出chapter对应的名称
             List<HerolandChapter> chapters = herolandChapterMapper.getChapters(dp.getGrade(),dp.getGradeUnit(), dp.getCourse(), dp.getEdition(), 2, entry.getValue().get(0).getUnit(), entry.getValue().get(0).getUnitorder());
             if (!CollectionUtils.isEmpty(chapters)){
@@ -194,95 +216,27 @@ public class HeroLandAdminMappingController {
         return true;
     }
 
-    /**
-     * 抠出年级和知识点的对应关系
-     * 直接以章为依据
+
+    /***
+     * 第一步刷数据：
+     *
+     *
+     * 以下是处理知识点的东西，
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
      *
      */
-    @RequestMapping(value = "/digGradeAndKnowledge")
-    public Boolean digGradeAndKnowledge(){
-        MappingChapterExample example = new MappingChapterExample();
-        MappingChapterExample.Criteria criteria = example.createCriteria();
-        criteria.andIdIsNotNull();
-        List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
-        mappingChapters.stream().forEach(e -> {
-            Integer knowledgeid = e.getKnowledgeid();
-            HerolandKnowledge knowledge = herolandKnowledgeMapper.selectByPrimaryKey(knowledgeid.longValue());
-            if (knowledge != null && StringUtils.isBlank(knowledge.getGrade())){
-                Integer gradeid = e.getGradeid();
-                String ga = transfer("GA", gradeid);
-                knowledge.setGrade(ga);
-                herolandKnowledgeMapper.updateByPrimaryKeySelective(knowledge);
-            }
-        });
-        return true;
-    }
-
-
-//    @RequestMapping(value = "/mapping")
-    public String transfer(String code, Integer mappingId){
-        if (mappingId == null){
-            return "";
-        }
-
-        if (code.equalsIgnoreCase("GA")){
-            String str = mappingId+"";
-            //说明是必修选修
-            if (str.length() > 3){
-                log.info("必修选修的年级");
-                List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, str);
-                if (CollectionUtils.isEmpty(herolandBasicData)){
-                    return "";
-                }else {
-                    return herolandBasicData.get(0).getDictKey();
-                }
-            }
-            List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
-            if (CollectionUtils.isEmpty(herolandBasicData)){
-                return "";
-            }
-            Optional<HerolandBasicData> first = herolandBasicData.stream().filter(e -> {
-                if (e.getMappingId().charAt(0) == str.charAt(0) && e.getMappingId().charAt(1) == str.charAt(1)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }).findFirst();
-            if (first.isPresent()){
-                return first.get().getDictKey();
-            }else {
-                return "";
-            }
-        }
-        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, mappingId + "");
-        if (CollectionUtils.isEmpty(herolandBasicData) || herolandBasicData.size() > 1){
-          return "";
-        }else {
-            return herolandBasicData.get(0).getDictKey();
-        }
-    }
-
-    public Integer transferGradeUnit(Integer gradeid){
-        if (gradeid == null){
-            return null;
-        }
-        String str = gradeid+"";
-        //说明是必修选修
-        if (str.length() > 3){
-            log.info("必修选修的年级");
-            return null;
-        }
-        if (str.charAt(str.length()-1) == '1'){
-            return 1;
-        }
-        if (str.charAt(str.length()-1) == '2'){
-            return 2;
-        }
-        return null;
-    }
 
     /**
-     * 写入知识点
+     * 01 写入知识点
      * 但是知识点没有年级
      * 要从题目中抠出年级|从章节中抠出年级
      */
@@ -294,25 +248,119 @@ public class HeroLandAdminMappingController {
         List<MappingKnowledge> mappingKnowledges = mappingKnowledgeMapper.selectByExample(example);
         mappingKnowledges.stream().forEach(e -> {
             HerolandKnowledge dp = new HerolandKnowledge();
-            dp.setId(e.getId().longValue());
+            dp.setMappingId(e.getId()+"");
             dp.setKnowledge(e.getKnowledgename());
 //            dp.setGrade(transfer("GA", e.));
             dp.setCourse(transfer("CU", e.getSubjectid()));
-            herolandKnowledgeMapper.insertSelectiveWithId(dp);
+            herolandKnowledgeMapper.insertSelective(dp);
         });
         return true;
     }
 
 
     /**
-     * 写入题目
+     * 02 抠出年级和知识点的对应关系
+     * 直接以章为依据
      *
      */
-    public Boolean writeQusetion(){
+    @RequestMapping(value = "/digGradeAndKnowledge")
+    public Boolean digGradeAndKnowledge() {
+        MappingChapterExample example = new MappingChapterExample();
+        MappingChapterExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingChapter> mappingChapters = mappingChapterMapper.selectByExample(example);
 
+        for (MappingChapter e : mappingChapters) {
+            Integer knowledgeid = e.getKnowledgeid();
+            String grade = transfer("GA", e.getGradeid());
+            List<HerolandKnowledge> knowledges = herolandKnowledgeMapper.selectBymMappingId(knowledgeid + "");
+            if (CollectionUtils.isEmpty(knowledges)) {
+                continue;
+            }
+            Optional<HerolandKnowledge> first = knowledges.stream().filter(k -> Objects.equals(k.getGrade(), grade)).findFirst();
+            if (first.isPresent()) {
+                continue;
+            }
+
+            Optional<HerolandKnowledge> first1 = knowledges.stream().filter(k -> StringUtils.isBlank(k.getGrade())).findFirst();
+            if (first1.isPresent()) {
+                HerolandKnowledge knowledge = first1.get();
+                knowledge.setGrade(grade);
+                herolandKnowledgeMapper.updateByPrimaryKeySelective(knowledge);
+            } else {
+                HerolandKnowledge knowledge = knowledges.get(0);
+                HerolandKnowledge knowledge1 = BeanCopyUtils.copyByJSON(knowledge, HerolandKnowledge.class);
+                knowledge1.setId(null);
+                knowledge1.setGrade(grade);
+                herolandKnowledgeMapper.insertSelective(knowledge1);
+
+            }
+
+        }
         return true;
     }
 
+    /**
+     * 03 抠出年级和知识点的对应关系
+     * 直接以题库为依据
+     *
+     */
+    @RequestMapping(value = "/digGradeAndKnowledgeFromQues")
+    public Boolean digGradeAndKnowledgeFromQues() {
+        MappingQuestionsExample example = new MappingQuestionsExample();
+        MappingQuestionsExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIsNotNull();
+        List<MappingQuestionsWithBLOBs> mappingQuestions = mappingQuestionsMapper.selectByExampleWithBLOBs(example);
+        mappingQuestions.stream().forEach(e -> {
+            List<String> knowledges = Arrays.asList(e.getKnowledges().split(","));
+            Byte subjectid = e.getSubjectid();
+            Integer gradeid = e.getGradeid();
+            HerolandKnowledgeQO qo = new HerolandKnowledgeQO();
+            qo.setCourse(transfer("CU", subjectid.intValue()));
+            qo.setGrade(transfer("GA", gradeid));
+            knowledges.stream().forEach(k -> {
+                qo.setKnowledge(k);
+                List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery2(qo);
+                if (CollectionUtils.isEmpty(herolandKnowledges)){
+                    HerolandKnowledge knowledge = new HerolandKnowledge();
+                    knowledge.setGrade(qo.getGrade());
+                    knowledge.setCourse(qo.getCourse());
+                    knowledge.setDiff(e.getDiff().intValue());
+                    herolandKnowledgeMapper.insertSelective(knowledge);
+                }else {
+                    herolandKnowledges.stream().forEach(kk -> {
+                        kk.setDiff(e.getDiff().intValue());
+                        herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
+                    });
+                }
+            });
+        });
+        return true;
+    }
+
+
+    /**
+     *
+     *
+     *
+     * 第三步刷数据：
+     *      *
+     *      *
+     *      * 以下是处理题目的东西，
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
 
     /**
@@ -321,8 +369,8 @@ public class HeroLandAdminMappingController {
      * 直接以章为依据
      *
      */
-    @RequestMapping(value = "/digKnowledgeFromQuestions")
-    public Boolean digKnowledgeFromQuestions(){
+    @RequestMapping(value = "/writeQuestions")
+    public Boolean writeQuestions(){
         MappingQuestionsExample example = new MappingQuestionsExample();
         MappingQuestionsExample.Criteria criteria = example.createCriteria();
         criteria.andIdIsNotNull();
@@ -373,24 +421,91 @@ public class HeroLandAdminMappingController {
         qo.setGrade(transfer("GA", gradeid));
         knowledges.stream().forEach(k -> {
             qo.setKnowledge(k);
-            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery(qo);
-            if (CollectionUtils.isEmpty(herolandKnowledges)){
-                HerolandKnowledge knowledge = new HerolandKnowledge();
-                knowledge.setGrade(transfer("GA", gradeid));
-                knowledge.setCourse(transfer("CU", subjectid.intValue()));
-                knowledge.setDiff(e.getDiff().intValue());
-                herolandKnowledgeMapper.insertSelective(knowledge);
-                knowledgeIds.add(knowledge.getId());
-            }else {
-                herolandKnowledges.stream().forEach(kk -> {
-                    kk.setDiff(e.getDiff().intValue());
-                    herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
-                });
-                knowledgeIds.add(herolandKnowledges.get(0).getId());
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery2(qo);
+            if (!CollectionUtils.isEmpty(herolandKnowledges)){
+                Optional<HerolandKnowledge> first = herolandKnowledges.stream().filter(kk -> Objects.equals(kk.getDiff(), e.getDiff().intValue())).findFirst();
+                if (first.isPresent()){
+                    knowledgeIds.add(first.get().getId());
+                }
             }
         });
 
         return knowledgeIds;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //    @RequestMapping(value = "/mapping")
+    public String transfer(String code, Integer mappingId){
+        if (mappingId == null){
+            return "";
+        }
+
+        if (code.equalsIgnoreCase("GA")){
+            String str = mappingId+"";
+            //说明是必修选修
+            if (str.length() > 3){
+                log.info("必修选修的年级");
+                List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, str);
+                if (CollectionUtils.isEmpty(herolandBasicData)){
+                    return "";
+                }else {
+                    return herolandBasicData.get(0).getDictKey();
+                }
+            }
+            List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
+            if (CollectionUtils.isEmpty(herolandBasicData)){
+                return "";
+            }
+            Optional<HerolandBasicData> first = herolandBasicData.stream().filter(e -> {
+                if (e.getMappingId().charAt(0) == str.charAt(0) && e.getMappingId().charAt(1) == str.charAt(1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).findFirst();
+            if (first.isPresent()){
+                return first.get().getDictKey();
+            }else {
+                return "";
+            }
+        }
+        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, mappingId + "");
+        if (CollectionUtils.isEmpty(herolandBasicData) || herolandBasicData.size() > 1){
+            return "";
+        }else {
+            return herolandBasicData.get(0).getDictKey();
+        }
+    }
+
+    public Integer transferGradeUnit(Integer gradeid){
+        if (gradeid == null){
+            return null;
+        }
+        String str = gradeid+"";
+        //说明是必修选修
+        if (str.length() > 3){
+            log.info("必修选修的年级");
+            return null;
+        }
+        if (str.charAt(str.length()-1) == '1'){
+            return 1;
+        }
+        if (str.charAt(str.length()-1) == '2'){
+            return 2;
+        }
+        return null;
     }
 
 }
