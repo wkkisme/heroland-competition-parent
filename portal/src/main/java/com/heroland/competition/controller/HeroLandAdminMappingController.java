@@ -325,6 +325,7 @@ public class HeroLandAdminMappingController {
                     HerolandKnowledge knowledge = new HerolandKnowledge();
                     knowledge.setGrade(qo.getGrade());
                     knowledge.setCourse(qo.getCourse());
+                    knowledge.setKnowledge(k);
                     knowledge.setDiff(e.getDiff().intValue());
                     herolandKnowledgeMapper.insertSelective(knowledge);
                 }else {
