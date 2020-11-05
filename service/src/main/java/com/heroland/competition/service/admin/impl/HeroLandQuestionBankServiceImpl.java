@@ -13,19 +13,18 @@ import com.heroland.competition.common.constants.*;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.*;
-import com.heroland.competition.dal.mapper.HerolandKnowledgeMapper;
-import com.heroland.competition.dal.mapper.HerolandKnowledgeReferMapper;
-import com.heroland.competition.dal.mapper.HerolandQuestionBankDetailMapper;
-import com.heroland.competition.dal.mapper.HerolandQuestionBankMapper;
+import com.heroland.competition.dal.mapper.*;
 import com.heroland.competition.dal.pojo.HerolandKnowledgeRefer;
 import com.heroland.competition.dal.pojo.HerolandQuestionBank;
 import com.heroland.competition.dal.pojo.HerolandQuestionBankDetail;
+import com.heroland.competition.dal.pojo.basic.HerolandBasicData;
 import com.heroland.competition.dal.pojo.basic.HerolandKnowledge;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dp.HerolandQuestionBankDP;
 import com.heroland.competition.domain.dp.HerolandQuestionBankImportDP;
 import com.heroland.competition.domain.dp.HerolandQuestionUniqDP;
 import com.heroland.competition.domain.dto.*;
+import com.heroland.competition.domain.qo.HerolandKnowledgeQO;
 import com.heroland.competition.domain.qo.HerolandQuestionBankQo;
 import com.heroland.competition.domain.qo.HerolandQuestionSelectQo;
 import com.heroland.competition.domain.request.HerolandQuestionBankListForChapterRequest;
@@ -34,6 +33,7 @@ import com.heroland.competition.service.admin.HeroLandAdminService;
 import com.heroland.competition.service.admin.HeroLandQuestionBankService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.FileItem;
+import org.docx4j.wml.Numbering;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -72,6 +72,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
     @Resource
     private WordFileService wordFileService;
+
+    @Resource
+    private HerolandBasicDataMapper herolandBasicDataMapper;
 
 
     @Override
@@ -145,10 +148,10 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDP.setInformation(e.getInformation());
             bankDP.setBankType(e.getBankType());
             try {
-                if (!StringUtils.isEmpty(e.getKnowledgeId())) {
-                    List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
-                    bankDP.setKnowledges(knowledges);
-                }
+//                if (!StringUtils.isEmpty(e.getKnowledgeId())) {
+//                    List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
+//                    bankDP.setKnowledges(knowledges);
+//                }
                 if (!CollectionUtils.isEmpty(e.getKnowledgeIds())) {
                     bankDP.setKnowledges(e.getKnowledgeIds());
                 }
@@ -431,6 +434,12 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
 
             herolandQuestionBankImportDP.setImportId(v.getId());
 
+
+            String gradeid = v.getGradeid();
+            String subjectid = v.getSubjectid();
+            herolandQuestionBankImportDP.setGradeid(transfer("GA", gradeid));
+            herolandQuestionBankImportDP.setSubjectid(transfer("CU", subjectid));
+
             try {
                 herolandQuestionBankImportDP.setDiff(Integer.valueOf(v.getDiff()));
             } catch (NumberFormatException ignored) {
@@ -448,9 +457,79 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             } catch (NumberFormatException ignored) {
             }
             checkBankFromImport(herolandQuestionBankImportDP);
+            List<Long> knowledgeIds = handleKnowlwdgeFromImportQuestion(herolandQuestionBankImportDP);
+            herolandQuestionBankImportDP.setKnowledgeIds(knowledgeIds);
         });
 
         importQuestion(dps);
+    }
+
+
+    private List<Long>  handleKnowlwdgeFromImportQuestion(HerolandQuestionBankImportDP importDP){
+        String knowledgeStrs = importDP.getKnowledges();
+        List<Long> knowledgeIds = Lists.newArrayList();
+        List<String> knowledges = Arrays.asList(knowledgeStrs.split(","));
+        String grade = importDP.getGradeid();
+        String course = importDP.getSubjectid();
+        HerolandKnowledgeQO qo = new HerolandKnowledgeQO();
+        qo.setCourse(course);
+//            qo.setGrade();
+        knowledges.stream().forEach(k -> {
+            qo.setKnowledge(k);
+            List<HerolandKnowledge> herolandKnowledges = herolandKnowledgeMapper.selectByQuery2(qo);
+            if (CollectionUtils.isEmpty(herolandKnowledges)){
+                knowledgeIds.add(createSimpleHerolandKnowledge(grade,course,importDP.getDiff(),k));
+            }else {
+
+                List<HerolandKnowledge> collect = herolandKnowledges.stream().filter(s -> Objects.equals(s.getGrade(), grade)).collect(Collectors.toList());
+                List<HerolandKnowledge> collect2 = herolandKnowledges.stream().filter(s -> org.apache.commons.lang3.StringUtils.isBlank(s.getGrade())).collect(Collectors.toList());
+                if (collect.size() > 0){
+                    collect.stream().forEach(kk -> {
+                        if (NumberUtils.nullOrZero(kk.getDiff())){
+                            kk.setDiff(importDP.getDiff());
+                            herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
+                        }
+                    });
+                    Optional<HerolandKnowledge> first = collect.stream().filter(s -> Objects.equals(s.getDiff(), importDP.getDiff())).findFirst();
+                    if (first.isPresent()){
+                        knowledgeIds.add(first.get().getId());
+                    }else {
+                        knowledgeIds.add(createSimpleHerolandKnowledge(grade,course,importDP.getDiff(),k));
+                    }
+                }else{
+                    if (collect2.size() > 0){
+                        collect2.stream().forEach(kk -> {
+                            if (NumberUtils.nullOrZero(kk.getDiff())){
+                                kk.setDiff(importDP.getDiff());
+                            }
+                            kk.setGrade(grade);
+                            herolandKnowledgeMapper.updateByPrimaryKeySelective(kk);
+                        });
+
+                        Optional<HerolandKnowledge> first = collect2.stream().filter(s -> Objects.equals(s.getDiff(), importDP.getDiff())).findFirst();
+                        if (first.isPresent()){
+                            knowledgeIds.add(first.get().getId());
+                        }else {
+                            knowledgeIds.add(createSimpleHerolandKnowledge(grade,course,importDP.getDiff(),k));
+                        }
+
+                    }else {
+                        knowledgeIds.add(createSimpleHerolandKnowledge(grade,course,importDP.getDiff(),k));
+                    }
+                }
+            }
+        });
+        return knowledgeIds;
+    }
+
+    private Long createSimpleHerolandKnowledge(String grade, String course, Integer diff, String content){
+        HerolandKnowledge knowledge1 = new HerolandKnowledge();
+        knowledge1.setGrade(grade);
+        knowledge1.setCourse(course);
+        knowledge1.setKnowledge(content);
+        knowledge1.setDiff(diff);
+        herolandKnowledgeMapper.insertSelective(knowledge1);
+        return knowledge1.getId();
     }
 
     private void checkBankFromImport(HerolandQuestionBankImportDP importDP){
@@ -646,6 +725,54 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDto.setGradeName(keyMap.get(bankDto.getGrade()).get(0).getDictValue());
         }
         return bankDto;
+    }
+
+
+
+    public String transfer(String code, String mappingId){
+        if (StringUtils.isEmpty(mappingId)){
+            return "";
+        }
+
+        if (mappingId.contains(code)){
+            return mappingId;
+        }
+
+        if (code.equalsIgnoreCase("GA")){
+
+            //说明是必修选修
+            if (mappingId.length() > 3){
+                log.info("必修选修的年级");
+                List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, mappingId);
+                if (CollectionUtils.isEmpty(herolandBasicData)){
+                    return "";
+                }else {
+                    return herolandBasicData.get(0).getDictKey();
+                }
+            }
+            List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, null);
+            if (CollectionUtils.isEmpty(herolandBasicData)){
+                return "";
+            }
+            Optional<HerolandBasicData> first = herolandBasicData.stream().filter(e -> {
+                if (e.getMappingId().charAt(0) == mappingId.charAt(0) && e.getMappingId().charAt(1) == mappingId.charAt(1)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).findFirst();
+            if (first.isPresent()){
+                return first.get().getDictKey();
+            }else {
+                return "";
+            }
+        }
+        List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndMappingId(code, mappingId);
+        if (CollectionUtils.isEmpty(herolandBasicData) || herolandBasicData.size() > 1){
+            return "";
+        }else {
+            return herolandBasicData.get(0).getDictKey();
+        }
     }
 
 
