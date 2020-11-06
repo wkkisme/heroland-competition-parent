@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.constant.ErrMsgEnum;
 import com.anycommon.response.utils.BeanUtil;
+import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -95,6 +96,8 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     private HerolandSchoolCourseMapper herolandSchoolCourseMapper;
     @Resource
     private HerolandTopicJoinUserMapper herolandTopicJoinUserMapper;
+    @Resource
+    private HeroLandQuestionRecordDetailMapper heroLandQuestionRecordDetailMapper;
 
     @Resource
     private HerolandCourseMapper herolandCourseMapper;
@@ -859,6 +862,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             logger.error("this is not a school competition");
             return null;
         }
+        if (Objects.equals(request.getToSee(), Boolean.TRUE)){
+            return toSee(heroLandTopicGroup, request);
+        }else {
+            return toCompetiton(heroLandTopicGroup, request);
+        }
+    }
+
+    /**
+     * 比赛时的题目 随机选择
+     * @param heroLandTopicGroup
+     * @param request
+     */
+    private TopicQuestionsForSDto toCompetiton(HeroLandTopicGroup heroLandTopicGroup, TopicQuestionsForSRequest request){
         TopicQuestionsForSDto dto = new TopicQuestionsForSDto();
         dto.setTopicId(request.getTopicId());
         dto.setTopicName(heroLandTopicGroup.getTopicName());
@@ -897,6 +913,54 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         Map<Long, List<HerolandQuestionBankDetail>> bankDetailsMap = bankDetails.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
 
         availQues.stream().forEach(e -> {
+            HeroLandQuestionBankSimpleDto simpleDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionBankSimpleDto.class);
+            dto.getQuestions().add(simpleDto);
+            if (bankDetailsMap.containsKey(e.getId())){
+                HerolandQuestionBankDetail detail = bankDetailsMap.get(e.getId()).get(0);
+                simpleDto.setOptionAnswer(detail.getOptionAnswer());
+                simpleDto.setParse(detail.getParse());
+                simpleDto.setStormAnswer(detail.getStormAnswer());
+                simpleDto.setOptions(JSON.parseArray(detail.getOption(), QuestionOptionDto.class));
+                simpleDto.setAnalysis(detail.getAnalysis());
+            }
+        });
+        return dto;
+    }
+
+    /**
+     * 比赛完成后查看题目
+     * @param heroLandTopicGroup
+     * @param request
+     */
+    private TopicQuestionsForSDto toSee(HeroLandTopicGroup heroLandTopicGroup, TopicQuestionsForSRequest request){
+        TopicQuestionsForSDto dto = new TopicQuestionsForSDto();
+        dto.setTopicId(request.getTopicId());
+        dto.setTopicName(heroLandTopicGroup.getTopicName());
+        dto.setUserId(request.getUserId());
+
+        PlatformSysUserQO qo = new PlatformSysUserQO();
+        qo.setUserId(request.getUserId());
+        RpcResult<List<PlatformSysUserDP>> platformSysUserDPRpcResult = platformSsoUserServiceFacade.queryUserList(qo);
+        if (!platformSysUserDPRpcResult.isSuccess() || CollectionUtils.isEmpty(platformSysUserDPRpcResult.getData())) {
+            return null;
+        }
+        HeroLandQuestionRecordDetailExample example = new HeroLandQuestionRecordDetailExample();
+        HeroLandQuestionRecordDetailExample.Criteria criteria = example.createCriteria();
+        criteria.andTopicIdIn(Lists.newArrayList(heroLandTopicGroup.getId()+""));
+        criteria.andUserIdEqualTo(qo.getUserId());
+        if (StringUtils.isNotBlank(request.getCourseCode())){
+            criteria.andSubjectCodeEqualTo(request.getCourseCode());
+        }
+        List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+            return dto;
+        }
+        List<Long> qbIds = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
+        List<HerolandQuestionBank> banks = herolandQuestionBankMapper.getByIdsWithDelete(qbIds);
+        List<HerolandQuestionBankDetail> bankDetails = herolandQuestionBankDetailMapper.getByQtId(qbIds);
+        Map<Long, List<HerolandQuestionBankDetail>> bankDetailsMap = bankDetails.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
+
+        banks.stream().forEach(e -> {
             HeroLandQuestionBankSimpleDto simpleDto = BeanCopyUtils.copyByJSON(e, HeroLandQuestionBankSimpleDto.class);
             dto.getQuestions().add(simpleDto);
             if (bankDetailsMap.containsKey(e.getId())){

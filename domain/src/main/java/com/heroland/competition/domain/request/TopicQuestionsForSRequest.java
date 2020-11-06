@@ -29,4 +29,10 @@ public class TopicQuestionsForSRequest implements Serializable {
      * 科目code
      */
     private String courseCode;
+
+
+    /**
+     * 是否查看
+     */
+    private Boolean toSee;
 }
