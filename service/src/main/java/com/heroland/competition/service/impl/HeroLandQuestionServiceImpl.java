@@ -890,6 +890,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
 
         List<Long> qbIds = availQues.stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
+        if(CollectionUtils.isEmpty(qbIds)){
+            return dto;
+        }
         List<HerolandQuestionBankDetail> bankDetails = herolandQuestionBankDetailMapper.getByQtId(qbIds);
         Map<Long, List<HerolandQuestionBankDetail>> bankDetailsMap = bankDetails.stream().collect(Collectors.groupingBy(HerolandQuestionBankDetail::getQbId));
 
