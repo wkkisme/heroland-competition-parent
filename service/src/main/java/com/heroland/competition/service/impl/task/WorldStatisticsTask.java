@@ -308,7 +308,7 @@ public class WorldStatisticsTask {
                 allScore.add(score);
             });
 
-            List<Integer> sorted = allScore.stream().sorted((o1, o2) -> {
+            List<Integer> sorted = allScore.stream().filter(Objects::nonNull).sorted((o1, o2) -> {
                 return (o2 - o1);
             }).collect(Collectors.toList());
             //如果分数个数小于报名人数，则后面补0,说明有很多人没有参与答题
