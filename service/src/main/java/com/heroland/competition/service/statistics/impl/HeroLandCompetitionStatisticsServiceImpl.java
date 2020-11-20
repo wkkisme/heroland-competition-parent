@@ -312,8 +312,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
-            criteria.andUserIdEqualTo(qo.getUserId());
         }
+        criteria.andUserIdEqualTo(qo.getUserId());
 
         List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
 
