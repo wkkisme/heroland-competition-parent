@@ -104,7 +104,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
     @Resource
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
 
-    private Random random = new Random();
+    private static Random random = new Random();
 
 
     @Override
@@ -1104,6 +1104,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                     HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
                     heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.NONJOINED);
                     heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+                    heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
                     return heroLandTopicForWDto;
                 }
             }
@@ -1138,6 +1139,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                         HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
                         heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
                         heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+                        HeroLandQuestionRecordDetailExample example1 = new HeroLandQuestionRecordDetailExample();
+                        HeroLandQuestionRecordDetailExample.Criteria criteria1 = example1.createCriteria();
+                        criteria1.andTopicIdEqualTo(heroLandTopicGroup.getId()+"");
+                        criteria1.andUserIdEqualTo(qo.getUserId());
+                        List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example1);
+                        heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
+                        if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+                            List<Long> hasFinished = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
+                            List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(heroLandTopicGroup.getId()), null);
+                            if (hasFinished.size() >= questions.size()){
+                                heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.FINISHED);
+                            }
+                        }
                         return heroLandTopicForWDto;
                     }
                 }

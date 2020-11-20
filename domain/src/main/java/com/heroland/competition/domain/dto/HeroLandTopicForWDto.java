@@ -76,6 +76,12 @@ public class HeroLandTopicForWDto implements Serializable {
      */
     private String studentJoinState;
 
+    /**
+     * 学生比赛是否完成的状态
+     * * 已完成比赛 -- FINISHED
+     * * 未参与 -- UNFINISHED
+     */
+    private String studentFinishState;
 
 
 

@@ -10,6 +10,12 @@ public class TopicJoinConstant {
     public static final String CANCELED = "CANCELED";
     public static final String NONJOINED = "NONJOINED";
 
+
+
+
+    public static final String FINISHED = "FINISHED";
+    public static final String UNFINISHED = "UNFINISHED";
+
     public static final String CAN_JOIN = "CAN_JOIN";
     public static final String CAN_ASSIGN = "CAN_ASSIGN";
     public static final String CAN_SEE = "CAN_SEE";
