@@ -1163,7 +1163,6 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
 
     private HeroLandTopicForWDto process(List<HeroLandTopicGroup> herolandTopics, String userId){
         HeroLandTopicForWDto forWDto = null;
-
         for (HeroLandTopicGroup heroLandTopicGroup : herolandTopics){
             HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
             heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
@@ -1174,17 +1173,19 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             criteria1.andTopicIdEqualTo(heroLandTopicGroup.getId()+"");
             criteria1.andUserIdEqualTo(userId);
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example1);
-            if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
-                List<Long> hasFinished = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
-                List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(heroLandTopicGroup.getId()), null);
-                if (CollectionUtils.isEmpty(questions)){
-                    return forWDto;
-                }
-                if (hasFinished.size() < questions.size()){
-                    heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
-                    forWDto = heroLandTopicForWDto;
-                    break;
-                }
+            if (CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+                forWDto = heroLandTopicForWDto;
+                return forWDto;
+            }
+            List<Long> hasFinished = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
+            List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(heroLandTopicGroup.getId()), null);
+            if (CollectionUtils.isEmpty(questions)){
+                continue;
+            }
+            if (hasFinished.size() < questions.size()){
+                heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
+                forWDto = heroLandTopicForWDto;
+                return forWDto;
             }
         }
         return forWDto;
@@ -1212,7 +1213,14 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 if (CollectionUtils.isEmpty(heroLandTopicGroups)){
                     return null;
                 }
-                return process(heroLandTopicGroups, request.getUserId());
+                if (Objects.equals(request.getTopicType(), TopicTypeConstants.WORLD_COMPETITION)){
+                    return process(heroLandTopicGroups, request.getUserId());
+                }else {
+                    HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroups.get(0), HeroLandTopicForWDto.class);
+                    heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+                    heroLandTopicForWDto.setTopicId(heroLandTopicGroups.get(0).getId());
+                    heroLandTopicForWDto.setState(getTopicState(heroLandTopicGroups.get(0)));
+                }
             }
         }
         return null;
