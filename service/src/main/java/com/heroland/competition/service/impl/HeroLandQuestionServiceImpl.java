@@ -1109,7 +1109,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 }
             }
         }else if(Objects.equals(request.getAction(), "BATTLE")){
-            criteria.andStartTimeLessThanOrEqualTo(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION).andIsDeletedEqualTo(false);
+            criteria.andStartTimeGreaterThan(now).andTypeEqualTo(TopicTypeConstants.WORLD_COMPETITION).andIsDeletedEqualTo(false);
             List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByExample(heroLandTopicGroupExample);
             if (!CollectionUtils.isEmpty(heroLandTopicGroups)){
                 heroLandTopicGroups = heroLandTopicGroups.stream().filter(e -> (e.getStartTime().getTime() - now.getTime()) < 10 * 60 *1000)
