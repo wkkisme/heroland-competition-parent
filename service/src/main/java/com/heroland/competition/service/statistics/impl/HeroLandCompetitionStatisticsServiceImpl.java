@@ -235,6 +235,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
         qo.checkType();
+        if (qo.getType() == 5){
+            return getCompetitionsDetailForWorld(qo);
+        }
+
         if (qo.getOrderByField() != null) {
             qo.setOrderField(qo.getOrderByField().getOrderByFiled());
             qo.setRankField(qo.getOrderByField().getFiled());
@@ -286,6 +290,62 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         return null;
     }
+
+    private ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetailForWorld(HeroLandStatisticsTotalQO qo) {
+        ResponseBody<List<HeroLandStatisticsDetailDP>> pageResult = new ResponseBody<>();
+        List<HeroLandStatisticsDetailDP> list = Lists.newArrayList();
+        HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+        HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+        if (Objects.nonNull(qo.getStartTime())) {
+            criteria.andStartTimeLessThanOrEqualTo(qo.getStartTime());
+        }
+        if (StringUtils.isNotBlank(qo.getSubjectCode())){
+            criteria.andSubjectCodeEqualTo(qo.getSubjectCode());
+            criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_course);
+        }else {
+            criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
+        }
+
+        if (Objects.nonNull(qo.getEndTime())) {
+            criteria.andEndTimeGreaterThanOrEqualTo(qo.getEndTime());
+        }
+
+        if (qo.getUserId() == null) {
+            qo.setUserId(qo.getCurrentUserId());
+            criteria.andUserIdEqualTo(qo.getUserId());
+        }
+
+        List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
+
+        if (CollectionUtils.isEmpty(words)){
+            return pageResult;
+        }
+
+        HeroLandStatisticsDetailDP totalWorld = new HeroLandStatisticsDetailDP();
+        //总得分
+        totalWorld.setTotalScore(words.stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
+        //平均分
+        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0/words.size()));
+        //得分率
+        totalWorld.setCompleteRate((words.stream().mapToDouble(HerolandStatisticsWord::getCompleteRate).sum() * 1.0 / words.size()));
+        //正确率 按照科目进行平均
+        double totalCorrectRate = words.stream().mapToDouble(HerolandStatisticsWord::getAnswerRightRate).sum();
+        totalWorld.setAnswerRightRate(totalCorrectRate * 1.0 / words.size());
+        //胜率，等所有的人员计算出来后才能排名,所以也不提供
+        //总时长
+        totalWorld.setTotalTime(words.stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum());
+        totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum()/ words.size()));
+        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum()/ words.size()));
+        totalWorld.setTotalGames(words.size());
+        list.add(totalWorld);
+
+        ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
+                .successListWrapper(list, 1L , qo, HeroLandStatisticsDetailDP.class);
+        return result;
+    }
+
+
+
 
 
     /**
