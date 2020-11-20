@@ -1134,30 +1134,41 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                         herolandTopicJoinUserMapper.selectByExample(example);
                 //如果有报名的，弹出最近的
                 if (!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
-                    HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
-                    if (heroLandTopicGroup != null){
-                        HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
-                        heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
-                        heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
-                        HeroLandQuestionRecordDetailExample example1 = new HeroLandQuestionRecordDetailExample();
-                        HeroLandQuestionRecordDetailExample.Criteria criteria1 = example1.createCriteria();
-                        criteria1.andTopicIdEqualTo(heroLandTopicGroup.getId()+"");
-                        criteria1.andUserIdEqualTo(qo.getUserId());
-                        List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example1);
-                        heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
-                        if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
-                            List<Long> hasFinished = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
-                            List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(heroLandTopicGroup.getId()), null);
-                            if (hasFinished.size() >= questions.size()){
-                                heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.FINISHED);
-                            }
-                        }
-                        return heroLandTopicForWDto;
-                    }
+                    return process(topicGroupMap, herolandTopicJoinUsers, qo.getUserId());
                 }
             }
         }
         return null;
+    }
+
+
+    private HeroLandTopicForWDto process(Map<Long, HeroLandTopicGroup> topicGroupMap, List<HerolandTopicJoinUser> herolandTopicJoinUsers, String userId){
+        HeroLandTopicForWDto forWDto = null;
+
+        for (HerolandTopicJoinUser e : herolandTopicJoinUsers){
+            HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(e.getTopicId());
+            HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+            heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+            heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+            HeroLandQuestionRecordDetailExample example1 = new HeroLandQuestionRecordDetailExample();
+            HeroLandQuestionRecordDetailExample.Criteria criteria1 = example1.createCriteria();
+            criteria1.andTopicIdEqualTo(heroLandTopicGroup.getId()+"");
+            criteria1.andUserIdEqualTo(userId);
+            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example1);
+            if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+                List<Long> hasFinished = heroLandQuestionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().collect(Collectors.toList());
+                List<HerolandTopicQuestion> questions = herolandTopicQuestionMapper.selectByTopics(Lists.newArrayList(e.getId()), null);
+                if (CollectionUtils.isEmpty(questions)){
+                    return forWDto;
+                }
+                if (hasFinished.size() < questions.size()){
+                    heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
+                    forWDto = heroLandTopicForWDto;
+                    break;
+                }
+            }
+        }
+        return forWDto;
     }
 
     @Override
