@@ -104,8 +104,9 @@ public class WorldStatisticsTask {
 //        }
         List<Long> ignoreTopicIds = Lists.newArrayList();
         try {
-
-            Date endDate = DateUtils.formatDate(now, DateUtils.PATTERN_DATE);
+            // TODO: 2020/11/21
+//            Date endDate = DateUtils.formatDate(now, DateUtils.PATTERN_DATE);
+            Date endDate = DateUtils.formatDate(now, DateUtils.PATTERN_YYYY_MM_DD_HH_MM);
             Date startDate = DateUtils.plusDate(endDate, -10, TimeIntervalUnit.DAY);
             //1 获取零点前结束的所有世界赛
             HeroLandTopicGroupExample example = new HeroLandTopicGroupExample();
