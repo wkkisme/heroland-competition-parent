@@ -31,7 +31,7 @@ public class CompetitionTopicFactory implements BeanPostProcessor {
     public static HeroLandCompetitionService get(Integer competitionType) {
         HeroLandCompetitionService heroLandCompetitionService = COMPETITION_SERVICE_HASH_MAP.get(competitionType);
         if (heroLandCompetitionService == null){
-            ResponseBodyWrapper.fail("不存在该类型比赛","50002");
+            ResponseBodyWrapper.failException("不存在该类型比赛");
         }
         return heroLandCompetitionService;
     }

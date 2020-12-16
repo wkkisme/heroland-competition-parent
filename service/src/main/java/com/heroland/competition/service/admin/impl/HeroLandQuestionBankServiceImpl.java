@@ -395,8 +395,13 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                 outStream.write("".getBytes());
                 outStream.close();    //关闭文件输出流
 
-                List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
-                toBank(bankType, questions);
+                try {
+                    List<Question> questions = wordFileService.importWord(Lists.newArrayListWithCapacity(50), Question.class, fileItem.getInputStream(), s, property + "/portal/src/main/resources/static/word");
+                    toBank(bankType, questions);
+                } catch (Exception e) {
+                    log.error("导入异常",e);
+                    throw new RuntimeException("导入异常");
+                }
 
             }
         }
