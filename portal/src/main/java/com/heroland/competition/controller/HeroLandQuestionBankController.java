@@ -134,6 +134,28 @@ public class HeroLandQuestionBankController {
     }
 
     /**
+     * 分页查询
+     * 供后台查询的
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pageQueryV2", produces = "application/json;charset=UTF-8")
+    @org.springframework.web.bind.annotation.ResponseBody
+    public ResponseBody<List<HeroLandQuestionBankSimpleDto>> pageQueryV2(@RequestBody HerolandQuestionBankPageRequest request) {
+
+        ResponseBody<List<HeroLandQuestionBankSimpleDto>> result = new ResponseBody<>();
+        PageResponse<HeroLandQuestionBankSimpleDto> pageResponse = heroLandQuestionBankService.pageQuery(request);
+        result.setData(pageResponse.getItems());
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(pageResponse.getPage());
+        pagination.setPageSize(pageResponse.getPageSize());
+        pagination.setTotalCount(pageResponse.getTotal());
+        pagination.setTotalPage(pageResponse.getTotalPages());
+        result.setPage(pagination);
+        return result;
+    }
+
+    /**
      * 获取题目进行分配
      * @param request
      * @return

@@ -35,6 +35,8 @@ public interface HerolandQuestionBankMapper {
 
     List<HerolandQuestionBank> getByQuery(@Param("item") HerolandQuestionBankQo qo);
 
+    List<HerolandQuestionBank> getByQueryV2(@Param("item") HerolandQuestionBankQo qo);
+
     List<HerolandQuestionBank> questionSelect(@Param("item") HerolandQuestionSelectQo qo);
 
     List<HerolandQuestionUniqDP> selectSimpleSnaphot(@Param("qtIds") List<String> qtIds);

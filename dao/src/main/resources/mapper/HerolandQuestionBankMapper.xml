@@ -381,6 +381,37 @@
         </if>
     </select>
 
+
+    <select id="getByQueryV2" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        from heroland_question_bank
+        where is_deleted = 0
+        <if test="item.grade != null">
+            and grade_code = #{item.grade,jdbcType=VARCHAR}
+        </if>
+        <if test="item.course != null">
+            and course = #{item.course,jdbcType=VARCHAR}
+        </if>
+        <if test="item.type != null">
+            and `type` = #{item.type,jdbcType=INTEGER}
+        </if>
+        <if test="item.subType != null">
+            and sub_type = #{item.subType,jdbcType=INTEGER}
+        </if>
+        <if test="item.diff != null">
+            and diff = #{item.diff,jdbcType=INTEGER}
+        </if>
+        <if test="item.bankType != null">
+            and bank_type = #{item.bankType,jdbcType=INTEGER}
+        </if>
+        <if test="item.title != null">
+            and title like concat('%',#{item.title},'%')
+        </if>
+        order by qt_id
+
+    </select>
+
     <select id="questionSelect" resultMap="ResultMapWithBLOBs">
         select
         <include refid="Base_Column_List"/>

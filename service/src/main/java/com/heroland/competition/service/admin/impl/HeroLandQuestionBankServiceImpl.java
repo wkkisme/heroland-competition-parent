@@ -320,8 +320,11 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             qo.setBeginTime(beginTime);
             qo.setEndTime(endTime);
         }
+//        Page<HerolandQuestionBank> data = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
+//                () -> herolandQuestionBankMapper.getByQuery(qo));
+
         Page<HerolandQuestionBank> data = PageHelper.startPage(request.getPageIndex(), request.getPageSize(), true).doSelectPage(
-                () -> herolandQuestionBankMapper.getByQuery(qo));
+                () -> herolandQuestionBankMapper.getByQueryV2(qo));
         if (!CollectionUtils.isEmpty(data.getResult())) {
             List<Long> qbIds = data.getResult().stream().map(HerolandQuestionBank::getId).collect(Collectors.toList());
 
