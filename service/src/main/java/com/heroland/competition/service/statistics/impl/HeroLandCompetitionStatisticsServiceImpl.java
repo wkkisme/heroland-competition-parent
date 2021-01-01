@@ -306,6 +306,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         } else {
             HeroLandTopicQuestionsQo heroLandTopicQuestionsQo1 = new HeroLandTopicQuestionsQo();
             heroLandTopicQuestionsQo1.setEndTime(new Date());
+            heroLandTopicQuestionsQo1.setType(qo.getType());
             topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo1);
 
         }
