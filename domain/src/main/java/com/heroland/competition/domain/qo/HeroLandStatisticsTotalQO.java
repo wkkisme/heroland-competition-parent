@@ -159,6 +159,16 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private Boolean queryAll;
 
+    private List<String> topicIds;
+
+    public List<String> getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(List<String> topicIds) {
+        this.topicIds = topicIds;
+    }
+
     public Boolean getQueryAll() {
         return queryAll;
     }

@@ -235,7 +235,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
         qo.checkType();
-        if (qo.getType() == 5){
+        if (qo.getType() == 5) {
             return getCompetitionsDetailForWorld(qo);
         }
 
@@ -254,14 +254,19 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
-            if ( !CollectionUtils.isEmpty(myRank)) {
+            if (!CollectionUtils.isEmpty(myRank)) {
                 detailAlls.add(0, myRank.get(0));
             }
             qo.setUserId(null);
         }
+
+
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
+        //  计算完成率
+        getComplate(qo, detailAlls);
+
         if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
             // 同步作业赛时不需要班级排名
             return result;
@@ -291,6 +296,39 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         return null;
     }
 
+    public void getComplate(HeroLandStatisticsTotalQO qo, List<HeroLandStatisticsDetailAll> detailAlls) {
+        List<HeroLandQuestionTopicListDto> topicsQuestions = null;
+        if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
+            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
+            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
+
+        } else {
+            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo1 = new HeroLandTopicQuestionsQo();
+            heroLandTopicQuestionsQo1.setEndTime(new Date());
+            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo1);
+
+        }
+
+
+        List<HeroLandQuestionTopicListDto> finalTopicsQuestions = topicsQuestions;
+        detailAlls.forEach(v -> {
+            if (finalTopicsQuestions == null) {
+                v.setCompleteRate(0D);
+                return;
+            }
+
+            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(finalTopicsQuestions.stream().map(HeroLandQuestionTopicListDto::getId).map(String::valueOf).collect(Collectors.toList()), v.getUserId());
+            if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
+                double v1 = (double) heroLandQuestionRecordDetailDPS.size() / (double) finalTopicsQuestions.size();
+                v.setCompleteRate(Math.min(v1, 1D));
+            } else {
+                v.setCompleteRate(0D);
+            }
+
+        });
+    }
+
     private ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetailForWorld(HeroLandStatisticsTotalQO qo) {
         ResponseBody<List<HeroLandStatisticsDetailDP>> pageResult = new ResponseBody<>();
         List<HeroLandStatisticsDetailDP> list = Lists.newArrayList();
@@ -299,10 +337,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (Objects.nonNull(qo.getStartTime())) {
             criteria.andStartTimeLessThanOrEqualTo(qo.getStartTime());
         }
-        if (StringUtils.isNotBlank(qo.getSubjectCode())){
+        if (StringUtils.isNotBlank(qo.getSubjectCode())) {
             criteria.andSubjectCodeEqualTo(qo.getSubjectCode());
             criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_course);
-        }else {
+        } else {
             criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
         }
 
@@ -317,7 +355,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
 
-        if (CollectionUtils.isEmpty(words)){
+        if (CollectionUtils.isEmpty(words)) {
             return pageResult;
         }
 
@@ -325,7 +363,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //总得分
         totalWorld.setTotalScore(words.stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
         //平均分
-        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0/words.size()));
+        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0 / words.size()));
         //得分率
         totalWorld.setCompleteRate((words.stream().mapToDouble(HerolandStatisticsWord::getCompleteRate).sum() * 1.0 / words.size()));
         //正确率 按照科目进行平均
@@ -334,18 +372,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //胜率，等所有的人员计算出来后才能排名,所以也不提供
         //总时长
         totalWorld.setTotalTime(words.stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum());
-        totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum()/ words.size()));
-        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum()/ words.size()));
+        totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum() / words.size()));
+        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / words.size()));
         totalWorld.setTotalGames(words.size());
         list.add(totalWorld);
 
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
-                .successListWrapper(list, 1L , qo, HeroLandStatisticsDetailDP.class);
+                .successListWrapper(list, 1L, qo, HeroLandStatisticsDetailDP.class);
         return result;
     }
-
-
-
 
 
     /**
@@ -443,7 +478,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
                 return ResponseBodyWrapper.success();
             }
-        }  else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())){
+        } else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
             topics = heroLandQuestionService.getTopics(qo);
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
@@ -452,7 +487,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         // 根据topicId 加questionId查出 题目的对战情况
         HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
-        BeanUtil.copyProperties(qo,heroLandQuestionQO);
+        BeanUtil.copyProperties(qo, heroLandQuestionQO);
         heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
         heroLandQuestionQO.setNeedPage(false);
         heroLandQuestionQO.setUserId(qo.getUserId());
