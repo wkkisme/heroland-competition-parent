@@ -632,7 +632,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                 Map<String, List<HerolandBasicDataDP>> dataMap = dataDPS.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
                 topicDto.setCourseName(dataMap.containsKey(topicDto.getCourseCode()) ? keysMap.get(topicDto.getCourseCode()).get(0).getDictValue() : "");
                 topicDto.setGradeName(dataMap.containsKey(topicDto.getGradeCode()) ? keysMap.get(topicDto.getGradeCode()).get(0).getDictValue() : "");
-                topicDto.setClassName(dataMap.containsKey(topicDto.getClassCode()) ? keysMap.get(topicDto.getClassCode()).get(0).getDictValue() : "");
+                topicDto.setClassName(dataMap.containsKey(topicDto.getClassCode()) && keysMap.containsKey(topicDto.getClassCode())? keysMap.get(topicDto.getClassCode()).get(0).getDictValue() : "");
                 topicDto.setOrgName(dataMap.containsKey(topicDto.getOrgCode()) ? keysMap.get(topicDto.getOrgCode()).get(0).getDictValue() : "");
             }
             List<HeroLandQuestionListForTopicDto> subQuestions = Lists.newArrayList();
