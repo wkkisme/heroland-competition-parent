@@ -307,6 +307,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             HeroLandTopicQuestionsQo heroLandTopicQuestionsQo1 = new HeroLandTopicQuestionsQo();
             heroLandTopicQuestionsQo1.setEndTime(new Date());
             heroLandTopicQuestionsQo1.setType(qo.getType());
+            heroLandTopicQuestionsQo1.setCourseCode(qo.getSubjectCode());
+            heroLandTopicQuestionsQo1.setOrgCode(qo.getOrgCode());
+            heroLandTopicQuestionsQo1.setClassCode(qo.getClassCode());
+
             topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo1);
 
         }

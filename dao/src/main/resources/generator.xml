@@ -96,7 +96,7 @@
 
 
 
-        <table tableName="mapping_questions" domainObjectName="MappingQuestions" mapperName="MappingQuestionsMapper">
+        <table tableName="heroland_banner" domainObjectName="HerolandBanner" mapperName="HerolandBannerMapper">
             <!--<property name="rootClass" value="com.anycommon.response.common.BaseDO"/>-->
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
