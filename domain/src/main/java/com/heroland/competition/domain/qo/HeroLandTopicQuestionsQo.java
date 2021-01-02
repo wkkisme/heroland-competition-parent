@@ -61,4 +61,10 @@ public class HeroLandTopicQuestionsQo extends BaseQO implements Serializable {
      */
     private Date endTime;
 
+
+
+    /**
+     * 有效时间
+     */
+    private Date validTime;
 }

@@ -56,4 +56,9 @@ public class CourseFinishStatisticQO extends BaseQO implements Serializable {
      * 结束时间
      */
     private Date endTime;
+
+    /**
+     * 有效时间
+     */
+    private Date validTime;
 }

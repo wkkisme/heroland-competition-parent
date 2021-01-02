@@ -13,10 +13,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.heroland.competition.common.constant.TopicJoinConstant;
-import com.heroland.competition.common.constants.AdminFieldEnum;
-import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.*;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -33,13 +30,10 @@ import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
-import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
-import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.docx4j.wml.P;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,7 +46,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 统计
@@ -297,33 +290,40 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     public void getComplate(HeroLandStatisticsTotalQO qo, List<HeroLandStatisticsDetailAll> detailAlls) {
-        List<HeroLandQuestionTopicListDto> topicsQuestions = null;
+        List<HeroLandQuestionTopicListDto> topicsQuestions;
         if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
             HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
             heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
             topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
 
         } else {
-            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo1 = new HeroLandTopicQuestionsQo();
-            heroLandTopicQuestionsQo1.setEndTime(new Date());
-            heroLandTopicQuestionsQo1.setType(qo.getType());
-            heroLandTopicQuestionsQo1.setCourseCode(qo.getSubjectCode());
-            heroLandTopicQuestionsQo1.setOrgCode(qo.getOrgCode());
-            heroLandTopicQuestionsQo1.setClassCode(qo.getClassCode());
+            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            heroLandTopicQuestionsQo.setValidTime(new Date());
+            heroLandTopicQuestionsQo.setType(qo.getType());
+            heroLandTopicQuestionsQo.setCourseCode(qo.getSubjectCode());
+            heroLandTopicQuestionsQo.setOrgCode(qo.getOrgCode());
+            heroLandTopicQuestionsQo.setClassCode(qo.getClassCode());
 
-            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo1);
+            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
 
         }
 
 
         List<HeroLandQuestionTopicListDto> finalTopicsQuestions = topicsQuestions;
         detailAlls.forEach(v -> {
-            if (finalTopicsQuestions == null) {
+            if (CollectionUtils.isEmpty(finalTopicsQuestions)) {
                 v.setCompleteRate(0D);
                 return;
             }
 
-            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(finalTopicsQuestions.stream().map(HeroLandQuestionTopicListDto::getId).map(String::valueOf).collect(Collectors.toList()), v.getUserId());
+            List<List<HeroLandQuestionListForTopicDto>> collect = finalTopicsQuestions.stream().
+                    map(HeroLandQuestionTopicListDto::getQuestions).collect(Collectors.toList());
+            AtomicReference<List<String>> topicIds =new AtomicReference<>();
+            collect.forEach(s-> {
+                topicIds.set(s.stream().map(HeroLandQuestionListForTopicDto::getTopicId).map(String::valueOf).collect(Collectors.toList()));
+
+            });
+            List<HeroLandQuestionRecordDetailDP> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds.get(), v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
                 double v1 = (double) heroLandQuestionRecordDetailDPS.size() / (double) finalTopicsQuestions.size();
                 v.setCompleteRate(Math.min(v1, 1D));
@@ -399,6 +399,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
+        if (request.getValidTime() == null && request.getStartTime() ==null && request.getEndTime() == null){
+            request.setValidTime(new Date());
+        }
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
         logger.info("拿到获取科目的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(topicQuestionForCourseStatistics));
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {

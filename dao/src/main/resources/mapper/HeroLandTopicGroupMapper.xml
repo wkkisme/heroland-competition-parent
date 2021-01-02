@@ -507,6 +507,9 @@
     <if test="item.startTime != null">
       and `start_time` &gt;= #{item.startTime,jdbcType=TIMESTAMP}
     </if>
+     <if test="item.validTime != null">
+      and `end_time` &gt;= #{item.validTime,jdbcType=TIMESTAMP}
+    </if>
     <if test="item.endTime != null">
       <![CDATA[
         and `end_time` <= #{item.endTime,jdbcType=TIMESTAMP}
