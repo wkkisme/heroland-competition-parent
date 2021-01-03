@@ -13,10 +13,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.heroland.competition.common.constant.TopicJoinConstant;
-import com.heroland.competition.common.constants.AdminFieldEnum;
-import com.heroland.competition.common.constants.TopicTypeConstants;
 import com.heroland.competition.common.enums.*;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -33,13 +30,10 @@ import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.heroland.competition.service.HeroLandQuestionService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
-import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
-import com.platform.sso.facade.result.RpcResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.docx4j.wml.P;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -52,7 +46,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 统计
@@ -235,7 +228,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     @Override
     public ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetail(HeroLandStatisticsTotalQO qo) {
         qo.checkType();
-        if (qo.getType() == 5){
+        if (qo.getType() == 5) {
             return getCompetitionsDetailForWorld(qo);
         }
 
@@ -254,14 +247,19 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
-            if ( !CollectionUtils.isEmpty(myRank)) {
+            if (!CollectionUtils.isEmpty(myRank)) {
                 detailAlls.add(0, myRank.get(0));
             }
             qo.setUserId(null);
         }
+
+
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
+        //  计算完成率
+        getComplate(qo, detailAlls);
+
         if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
             // 同步作业赛时不需要班级排名
             return result;
@@ -291,6 +289,52 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         return null;
     }
 
+    public void getComplate(HeroLandStatisticsTotalQO qo, List<HeroLandStatisticsDetailAll> detailAlls) {
+        List<HeroLandQuestionTopicListDto> topicsQuestions;
+        if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
+            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
+            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
+
+        } else {
+            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            heroLandTopicQuestionsQo.setValidTime(new Date());
+            heroLandTopicQuestionsQo.setType(qo.getType());
+            heroLandTopicQuestionsQo.setCourseCode(qo.getSubjectCode());
+            heroLandTopicQuestionsQo.setOrgCode(qo.getOrgCode());
+            heroLandTopicQuestionsQo.setClassCode(qo.getClassCode());
+
+            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
+
+        }
+
+
+        List<HeroLandQuestionTopicListDto> finalTopicsQuestions = topicsQuestions;
+        detailAlls.forEach(v -> {
+            if (CollectionUtils.isEmpty(finalTopicsQuestions)) {
+                v.setCompleteRate(0D);
+                return;
+            }
+
+            List<List<HeroLandQuestionListForTopicDto>> collect = finalTopicsQuestions.stream().
+                    map(HeroLandQuestionTopicListDto::getQuestions).collect(Collectors.toList());
+            AtomicReference<List<String>> topicIds =new AtomicReference<>();
+            collect.forEach(s-> {
+                topicIds.set(s.stream().map(HeroLandQuestionListForTopicDto::getTopicId).map(String::valueOf).collect(Collectors.toList()));
+
+            });
+            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds.get(), v.getUserId());
+            if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
+                long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
+                double v1 = (double) count / (double) finalTopicsQuestions.size();
+                v.setCompleteRate(Math.min(v1, 1D));
+            } else {
+                v.setCompleteRate(0D);
+            }
+
+        });
+    }
+
     private ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetailForWorld(HeroLandStatisticsTotalQO qo) {
         ResponseBody<List<HeroLandStatisticsDetailDP>> pageResult = new ResponseBody<>();
         List<HeroLandStatisticsDetailDP> list = Lists.newArrayList();
@@ -299,10 +343,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (Objects.nonNull(qo.getStartTime())) {
             criteria.andStartTimeLessThanOrEqualTo(qo.getStartTime());
         }
-        if (StringUtils.isNotBlank(qo.getSubjectCode())){
+        if (StringUtils.isNotBlank(qo.getSubjectCode())) {
             criteria.andSubjectCodeEqualTo(qo.getSubjectCode());
             criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_course);
-        }else {
+        } else {
             criteria.andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
         }
 
@@ -317,7 +361,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
 
-        if (CollectionUtils.isEmpty(words)){
+        if (CollectionUtils.isEmpty(words)) {
             return pageResult;
         }
 
@@ -325,7 +369,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //总得分
         totalWorld.setTotalScore(words.stream().mapToInt(HerolandStatisticsWord::getTotalScore).sum());
         //平均分
-        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0/words.size()));
+        totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0 / words.size()));
         //得分率
         totalWorld.setCompleteRate((words.stream().mapToDouble(HerolandStatisticsWord::getCompleteRate).sum() * 1.0 / words.size()));
         //正确率 按照科目进行平均
@@ -334,18 +378,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //胜率，等所有的人员计算出来后才能排名,所以也不提供
         //总时长
         totalWorld.setTotalTime(words.stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum());
-        totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum()/ words.size()));
-        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum()/ words.size()));
+        totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum() / words.size()));
+        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / words.size()));
         totalWorld.setTotalGames(words.size());
         list.add(totalWorld);
 
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
-                .successListWrapper(list, 1L , qo, HeroLandStatisticsDetailDP.class);
+                .successListWrapper(list, 1L, qo, HeroLandStatisticsDetailDP.class);
         return result;
     }
-
-
-
 
 
     /**
@@ -359,6 +400,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         HeroLandTopicQuestionForCourseRequest request = new HeroLandTopicQuestionForCourseRequest();
         BeanUtil.copyProperties(qo, request);
+        if (request.getValidTime() == null && request.getStartTime() ==null && request.getEndTime() == null){
+            request.setValidTime(new Date());
+        }
         List<HeroLandQuestionTopicListForStatisticDto> topicQuestionForCourseStatistics = heroLandQuestionService.getTopicQuestionForCourseStatistics(request);
         logger.info("拿到获取科目的数据,request={}, list={}", JSONObject.toJSONString(qo), JSONObject.toJSONString(topicQuestionForCourseStatistics));
         if (CollUtil.isEmpty(topicQuestionForCourseStatistics)) {
@@ -443,7 +487,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollectionUtils.isEmpty(topicQuestions.getItems())) {
                 return ResponseBodyWrapper.success();
             }
-        }  else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())){
+        } else if (!CompetitionEnum.SCHOOL.getType().equals(qo.getType())) {
             topics = heroLandQuestionService.getTopics(qo);
             if (CollectionUtils.isEmpty(topics)) {
                 return ResponseBodyWrapper.success();
@@ -452,7 +496,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         // 根据topicId 加questionId查出 题目的对战情况
         HeroLandCompetitionRecordQO heroLandQuestionQO = new HeroLandCompetitionRecordQO();
-        BeanUtil.copyProperties(qo,heroLandQuestionQO);
+        BeanUtil.copyProperties(qo, heroLandQuestionQO);
         heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
         heroLandQuestionQO.setNeedPage(false);
         heroLandQuestionQO.setUserId(qo.getUserId());

@@ -76,9 +76,10 @@ public class StatisticsTask {
      * 7 总场数
      * 0 15 10 * * ? *
      * 0 0/10 * * * ?
+     * 0/5 * * * *？
      *
      */
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(fixedDelay = 2000)
     @Transactional(rollbackFor = Exception.class)
     public void statistics() {
         log.info("start  statistics =================");
@@ -114,7 +115,8 @@ public class StatisticsTask {
                 if (CollectionUtils.isEmpty(totalSyncTotalScore)) {
                     continue;
                 }
-                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
+
+                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().filter(v -> v.getUserId().length() > 15 || v.getSubjectCode() == null).collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
 
                 totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet())));
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
@@ -132,18 +134,6 @@ public class StatisticsTask {
                 totalQo.setSubject2Topic(subject2Topic);
                 HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = new HeroLandTopicQuestionsPageRequest();
                 heroLandTopicQuestionsPageRequest.setTopicIds(totalQo.getTopicIds());
-
-                /*
-                 *  3 完成率
-                 */
-                List<HeroLandStatisticsDetailDP> completeRate = heroLandCompetitionRecordService.getCompleteRate(totalQo);
-
-                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDP : completeRate) {
-                    HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDP));
-                    if (dp != null) {
-                        dp.setCompleteRate(heroLandStatisticsTotalDP.getCompleteRate());
-                    }
-                }
 
                 /*
                  *
@@ -220,7 +210,7 @@ public class StatisticsTask {
 
                 values.forEach(v -> {
                     v.setHistory(false);
-                    if (!CollectionUtils.isEmpty(finalUserList.getData())) {
+                    if (finalUserList != null  && !CollectionUtils.isEmpty(finalUserList.getData())) {
                         finalUserList.getData().forEach(u -> {
                             if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
                                 v.setUserName(u.getUserName());

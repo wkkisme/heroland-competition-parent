@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HeroLandQuestionRecordDetailExtMapper extends HeroLandQuestionRecordDetailMapper {
 
-    List<HeroLandQuestionRecordDetailDP> selectByTopicIdsAndUserId(@Param("topicIds") List<String> topicIds,
+    List<HeroLandQuestionRecordDetail> selectByTopicIdsAndUserId(@Param("topicIds") List<String> topicIds,
                                                                    @Param("userId") String userId);
 
     void updateByRecordIdSelective(HeroLandQuestionRecordDetail updateConversion);

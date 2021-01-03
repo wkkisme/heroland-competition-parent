@@ -1,10 +1,18 @@
 package com.heroland.competition.filter;
 
 
+import com.platform.sso.client.sso.util.CookieUtils;
+import com.platform.sso.context.UserHolder;
+import com.platform.sso.context.UserHolderContext;
+import com.platform.sso.domain.dp.PlatformSysUserDP;
+import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import com.platform.sso.facade.result.RpcResult;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +29,6 @@ public class RouteCheckFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(RouteCheckFilter.class);
 
 
-    private String indexHtml;
-
-    private String patientHtml;
-
-    private String reportCenter;
-
     private String questionnaireIndexHtml;
 
     private String mainIndexHtml;
@@ -34,12 +36,10 @@ public class RouteCheckFilter implements Filter {
     private String docHtml;
 
 
-    private static List<String> STATIC_RESOURCES = Arrays.asList("css", "js", "jpg", "png", "svg");
-    private String serverHtml;
-
     private String kpiHtml;
-	
-    private String[] urls ={"/hcloud"};
+
+    @Resource
+    private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
 
     @Override
@@ -52,7 +52,20 @@ public class RouteCheckFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         //静态资源取消验证
-        String uri = req.getRequestURI();
+        try {
+            String sessionId = CookieUtils.getSessionId(req);
+            if (StringUtils.isNotBlank(sessionId)) {
+                RpcResult<PlatformSysUserDP> platformSysUserDPRpcResult = platformSsoUserServiceFacade.queryCurrent(sessionId);
+                PlatformSysUserDP data = platformSysUserDPRpcResult.getData();
+                UserHolder userHolder = new UserHolder();
+                userHolder.setOrgCode(data.getOrgCode());
+                userHolder.setUserCode(data.getUserId());
+                userHolder.setUserName(data.getUserName());
+                UserHolderContext.setUser(userHolder);
+            }
+        } catch (Exception e) {
+            log.error("获取user失败",e);
+        }
 
         chain.doFilter(request,response);
 
@@ -63,17 +76,6 @@ public class RouteCheckFilter implements Filter {
 
     }
 
-    public void setReportCenter(String reportCenter) {
-        this.reportCenter = reportCenter;
-    }
-
-    public void setPatientHtml(String patientHtml) {
-        this.patientHtml = patientHtml;
-    }
-
-    public void setIndexHtml(String indexHtml) {
-        this.indexHtml = indexHtml;
-    }
 
     public String getQuestionnaireIndexHtml() {
         return questionnaireIndexHtml;
@@ -81,9 +83,6 @@ public class RouteCheckFilter implements Filter {
 
     public void setQuestionnaireIndexHtml(String questionnaireIndexHtml) {
         this.questionnaireIndexHtml = questionnaireIndexHtml;
-    }
-    public void setServerHtml(String serverHtml) {
-        this.serverHtml = serverHtml;
     }
 
     public String getKpiHtml() {

@@ -47,4 +47,10 @@ public class HeroLandTopicQuestionForCourseRequest extends BaseQO implements Ser
      * 结束时间
      */
     private Date endTime;
+
+
+    /**
+     * 有效时间
+     */
+    private Date validTime;
 }
