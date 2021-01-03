@@ -5,9 +5,11 @@ import com.anycommon.response.common.ResponseBody;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.utils.IDGenerateUtils;
+import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailMapper;
 import com.heroland.competition.domain.dp.HeroLandCompetitionRecordDP;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
@@ -24,6 +26,9 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
 
     @Resource
     private HeroLandQuestionRecordDetailService heroLandQuestionRecordDetailService;
+
+    @Resource
+    private HeroLandQuestionRecordDetailMapper heroLandQuestionRecordDetailMapper;
 
     @Resource
     private RedisService redisService;
@@ -53,10 +58,10 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
             }
             // 答对才进入
             if (v.getCorrectAnswer()) {
-                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
-                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 60 * 60 * 24);
+                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getQuestionId(), 1);
+                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getQuestionId(), 60 * 60 * 24);
                 // 第一个进入答此题的人
-                v.setScore(Math.toIntExact(topic.getRegisterCount() - (rank - 1)));
+                v.setScore(Math.toIntExact(topic.getCountLimit() - (rank - 1)));
 
             } else {
                 v.setScore(0);
@@ -65,5 +70,10 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
         record.setRecordId(IDGenerateUtils.getIdByRandom(IDGenerateUtils.ModelEnum.DEFAULT) + "");
         heroLandQuestionRecordDetailService.addQuestionRecords(record.record2Detail());
         return ResponseBodyWrapper.successWrapper(record);
+    }
+
+
+    private int calculateScore(String userId, String topicId, Long questionId) {
+        return heroLandQuestionRecordDetailMapper.countCorrectAnswer(topicId, questionId, userId);
     }
 }
