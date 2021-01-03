@@ -290,40 +290,31 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     public void getComplate(HeroLandStatisticsTotalQO qo, List<HeroLandStatisticsDetailAll> detailAlls) {
-        List<HeroLandQuestionTopicListDto> topicsQuestions;
+        List<HerolandTopicQuestion> topicsQuestions;
         if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
-            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
             heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
-            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
+            topicsQuestions = heroLandQuestionService.getTopicsQuestionsSimple(heroLandTopicQuestionsQo);
 
         } else {
-            HeroLandTopicQuestionsQo heroLandTopicQuestionsQo = new HeroLandTopicQuestionsQo();
+            HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
             heroLandTopicQuestionsQo.setValidTime(new Date());
             heroLandTopicQuestionsQo.setType(qo.getType());
             heroLandTopicQuestionsQo.setCourseCode(qo.getSubjectCode());
             heroLandTopicQuestionsQo.setOrgCode(qo.getOrgCode());
             heroLandTopicQuestionsQo.setClassCode(qo.getClassCode());
-
-            topicsQuestions = heroLandQuestionService.getTopicsQuestions(heroLandTopicQuestionsQo);
+            topicsQuestions = heroLandQuestionService.getTopicsQuestionsSimple(heroLandTopicQuestionsQo);
 
         }
 
-
-        List<HeroLandQuestionTopicListDto> finalTopicsQuestions = topicsQuestions;
+        List<HerolandTopicQuestion> finalTopicsQuestions = topicsQuestions;
+        List<String> topicIds = finalTopicsQuestions.stream().map(HerolandTopicQuestion::getTopicId).map(String::valueOf).collect(Collectors.toList());
         detailAlls.forEach(v -> {
             if (CollectionUtils.isEmpty(finalTopicsQuestions)) {
                 v.setCompleteRate(0D);
                 return;
             }
-
-            List<List<HeroLandQuestionListForTopicDto>> collect = finalTopicsQuestions.stream().
-                    map(HeroLandQuestionTopicListDto::getQuestions).collect(Collectors.toList());
-            AtomicReference<List<String>> topicIds =new AtomicReference<>();
-            collect.forEach(s-> {
-                topicIds.set(s.stream().map(HeroLandQuestionListForTopicDto::getTopicId).map(String::valueOf).collect(Collectors.toList()));
-
-            });
-            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds.get(), v.getUserId());
+            List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
                 long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();

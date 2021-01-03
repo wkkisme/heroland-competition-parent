@@ -25,6 +25,8 @@ public interface HerolandTopicQuestionMapper {
     List<HerolandTopicQuestion> selectByTopics(@Param("topicIds") List<Long> topicIds,
                                                @Param("questionId") Long questionId);
 
+    List<HerolandTopicQuestion> selectByQo(HerolandTopicQuestionQo herolandTopicQuestionQo);
+
     int saveBatch(@Param("records") List<HerolandTopicQuestion> list);
 
     List<QuestionTopicDP> selectQuestionsByTopic(@Param("item") HerolandTopicQuestionQo herolandTopicQuestionQo);

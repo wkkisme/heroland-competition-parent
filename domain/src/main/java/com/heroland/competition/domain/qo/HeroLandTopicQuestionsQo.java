@@ -1,5 +1,6 @@
 package com.heroland.competition.domain.qo;
 
+import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,25 +30,30 @@ public class HeroLandTopicQuestionsQo extends BaseQO implements Serializable {
     /**
      * 机构code
      */
+    @MybatisCriteriaAnnotation
     private String orgCode;
 
     /**
      * 年级code
      */
+    @MybatisCriteriaAnnotation
     private String gradeCode;
 
     /**
      * 班级code
      */
+    @MybatisCriteriaAnnotation
     private String classCode;
 
     /**
      * 类型 0同步作业赛 1 寒假作业赛 2 暑假作业赛 3 应试赛 4 校级赛 5 世界赛
      */
+    @MybatisCriteriaAnnotation
     private Integer type;
     /**
      * 科目code
      */
+    @MybatisCriteriaAnnotation
     private String courseCode;
 
 
