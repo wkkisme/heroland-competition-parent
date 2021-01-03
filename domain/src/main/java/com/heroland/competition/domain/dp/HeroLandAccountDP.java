@@ -82,6 +82,15 @@ public class HeroLandAccountDP extends BaseDO implements Serializable {
     private Integer userStatus;
 
     private String topic;
+    private String topicType;
+
+    public String getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(String topicType) {
+        this.topicType = topicType;
+    }
 
     public String getTopic() {
         return topic;

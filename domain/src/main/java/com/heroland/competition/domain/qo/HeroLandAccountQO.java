@@ -38,6 +38,16 @@ public class HeroLandAccountQO extends BaseQO {
 
     private String accountId;
 
+    private Integer topicType;
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
+    }
+
     public String getAccountId() {
         return accountId;
     }
