@@ -252,13 +252,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             qo.setUserId(null);
         }
-
+        //  计算完成率
+        getComplate(qo, detailAlls);
 
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
-        //  计算完成率
-        getComplate(qo, detailAlls);
+
 
         if (qo.getType().equals(CompetitionEnum.SYNC.getType())) {
             // 同步作业赛时不需要班级排名
