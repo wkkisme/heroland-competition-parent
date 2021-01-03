@@ -298,7 +298,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         } else {
             HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
-            heroLandTopicQuestionsQo.setValidTime(new Date());
+            if (CompetitionEnum.SYNC.getType().equals(qo.getType())) {
+                heroLandTopicQuestionsQo.setValidTime(new Date());
+            }
             heroLandTopicQuestionsQo.setType(qo.getType());
             heroLandTopicQuestionsQo.setCourseCode(qo.getSubjectCode());
             heroLandTopicQuestionsQo.setOrgCode(qo.getOrgCode());
