@@ -20,9 +20,13 @@ import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.factory.RobotFactory;
 import com.heroland.competition.service.HeroLandAccountService;
+import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
@@ -66,6 +70,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Resource
     private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
 
+    @Resource
+    private HeroLandQuestionService heroLandQuestionService;
+
     @Value("${competition.defaultBalance:0}")
     private Long defaultBalance;
 
@@ -74,7 +81,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopic());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users = new LinkedHashSet<>();
-        Map<String, String> levelMap = getLevel(members);
+        Map<String, String> levelMap = getLevel(members,dp);
         members.forEach(userId -> {
             if (userId != null && !userId.equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
@@ -138,10 +145,13 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     }
 
     @NotNull
-    public Map<String, String> getLevel(Set<Object> members) {
+    public Map<String, String> getLevel(Set<Object> members,HeroLandAccountDP dp) {
         Map<String, String> levelMap = new HashMap<>();
         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
         heroLandStatisticsTotalQO.setUserIds(members.stream().map(String::valueOf).collect(Collectors.toList()));
+        HeroLandTopicPageRequest heroLandTopicGroupQO = new HeroLandTopicPageRequest();
+        heroLandTopicGroupQO.setTopicId(Long.valueOf(dp.getTopicId()));
+        heroLandStatisticsTotalQO.setType(heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType());
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
