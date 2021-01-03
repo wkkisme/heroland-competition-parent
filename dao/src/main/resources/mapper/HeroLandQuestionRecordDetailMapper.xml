@@ -94,6 +94,11 @@
     end_date, score, correct_answer, topic_id, subject_code, opponent_name, org_code, 
     type, qt_type, diff, history
   </sql>
+
+  <sql id="Simple_Column_List">
+    question_id,  user_id, topic_id
+  </sql>
+
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
@@ -555,4 +560,18 @@
       history = #{history,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="countCorrectAnswer"  resultType="java.lang.Integer">
+    select
+    count(distinct (user_id))
+    from heroland_question_record_detail
+    where question_id = #{questionId,jdbcType=BIGINT}
+     and topic_id = #{topicId,jdbcType=VARCHAR}
+     and correct_answer = 1
+     and is_deleted = 0
+     and user_id != #{userId,jdbcType=VARCHAR}
+  </select>
+
+
 </mapper>

@@ -235,4 +235,5 @@ public class HeroLandSchoolCompetitionImpl implements HeroLandCompetitionService
         heroLandCompetitionRecordService.updateCompetitionRecord(record);
         return ResponseBodyWrapper.successWrapper(record);
     }
+
 }

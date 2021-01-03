@@ -27,4 +27,5 @@ public class HeroLandWinterCompetitionImpl implements HeroLandCompetitionService
     public ResponseBody<HeroLandCompetitionRecordDP> doAnswer(HeroLandCompetitionRecordDP dp) {
         return CompetitionTopicFactory.get(CompetitionEnum.EXAM.getType()).doAnswer(dp);
     }
+
 }
