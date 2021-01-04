@@ -8,6 +8,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -86,7 +87,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         HeroLandTopicPageRequest heroLandTopicGroupQO = new HeroLandTopicPageRequest();
         heroLandTopicGroupQO.setTopicId(Long.valueOf(dp.getTopicId()));
 
-        Map<String, String> levelMap = getLevel(userIds,heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType());
+        Map<String, String> levelMap = getLevel(userIds,heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType(),dp.getUserId());
         members.forEach(userId -> {
             if (userId != null && !userId.equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
@@ -150,11 +151,14 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     }
 
     @NotNull
-    public Map<String, String> getLevel(List<String> userIds, Integer topicType) {
+    public Map<String, String> getLevel(List<String> userIds, Integer topicType,String currentUser) {
         Map<String, String> levelMap = new HashMap<>();
         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
         heroLandStatisticsTotalQO.setUserIds(userIds);
         heroLandStatisticsTotalQO.setType(topicType);
+        if (CompetitionEnum.WORLD.getType().equals(topicType)){
+            heroLandStatisticsTotalQO.setUserId(currentUser);
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
@@ -253,7 +257,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             account = heroLandAccountExtMapper.selectByUserId(userId);
 
             if(topicType != null) {
-                Map<String, String> level = getLevel(Collections.singletonList(userId), topicType);
+                Map<String, String> level = getLevel(Collections.singletonList(userId), topicType,userId);
                 String levelCode = level.get(userId);
                 if (HeroLevelEnum.ADVERSITY_HERO.name().equals(levelCode)) {
                     account.setLevelName("逆境英雄");
