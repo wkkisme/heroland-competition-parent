@@ -115,7 +115,7 @@ public class StatisticsTask {
                     continue;
                 }
 
-                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().filter(v -> v.getUserId().length() > 15 || v.getSubjectCode() != null).collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
+                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().filter(v -> v.getUserId().length() > 15 &&  v.getSubjectCode() != null).collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
 
                 totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet())));
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
