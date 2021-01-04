@@ -198,26 +198,27 @@ public class StatisticsTask {
 
                 // 查询人信息
                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList()));
+                platformSysUserQO.setNeedPage(false);
+                platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).distinct().collect(Collectors.toList()));
                 RpcResult<List<PlatformSysUserDP>> userList = null;
                 try {
                     userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                RpcResult<List<PlatformSysUserDP>> finalUserList = userList;
-
+                Map<String, PlatformSysUserDP> userMap = null;
+                if (userList != null  && !CollectionUtils.isEmpty(userList.getData())) {
+                    userMap = userList.getData().stream().collect(Collectors.toMap(PlatformSysUserDP::getUserId, Function.identity(), (o, n) -> o));
+                }
+                Map<String, PlatformSysUserDP> finalUserMap = userMap;
                 values.forEach(v -> {
                     v.setHistory(false);
-                    if (finalUserList != null  && !CollectionUtils.isEmpty(finalUserList.getData())) {
-                        finalUserList.getData().forEach(u -> {
-                            if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
-                                v.setUserName(u.getUserName());
-                            }
-//                            v.setOrgCode(u.getOrgCode());
-                        });
+                    if (!CollectionUtils.isEmpty(finalUserMap)) {
+                        PlatformSysUserDP platformSysUser = finalUserMap.get(v.getUserId());
+                        if (platformSysUser!=null){
+                            v.setUserName(platformSysUser.getUserName());
+                        }
                     }
-
                     if (!CollectionUtils.isEmpty(adminDataMap)) {
                         v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
                         v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getClassCode()).getDictValue() : "");
