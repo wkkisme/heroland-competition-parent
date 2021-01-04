@@ -230,8 +230,29 @@
             <groupId>com.platform.sso</groupId>
             <artifactId>platform-sso-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-    <!--        <dependency>-->
+
+        <!--        <dependency>-->
     <!--            <groupId>org.apache.curator</groupId>-->
     <!--            <artifactId>curator-framework</artifactId>-->
     <!--        </dependency>-->
