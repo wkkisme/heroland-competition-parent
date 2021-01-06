@@ -177,7 +177,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             if (size == 3){
                 levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
                 levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
-                levelMap.put(winRank.get(3).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
+                levelMap.put(winRank.get(2).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
             }else {
                 long ADVERSITY_HERO = Math.round(size * 0.25);
                 long SUPREME_HERO = Math.round(size * 0.75);
