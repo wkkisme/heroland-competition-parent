@@ -411,6 +411,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<HeroLandCompetitionRecord> heroLandCompetitionRecords = competitionRecordExtMapper.selectByTopicIdsAndInviterId(topicIds, qo.getUserId());
 
         AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMap = new AtomicReference<>();
+        AtomicReference<Map<String, List<HeroLandCompetitionRecord>>> competitionRecordMapBySubjectCode = new AtomicReference<>();
         AtomicReference<Map<String, List<HeroLandQuestionRecordDetail>>> questionRecordMap = new AtomicReference<>();
         if (CollUtil.isNotEmpty(heroLandCompetitionRecords)) {
             competitionRecordMap.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getTopicId)));
@@ -419,6 +420,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (CollUtil.isNotEmpty(heroLandQuestionRecordDetails)) {
                 questionRecordMap.set(heroLandQuestionRecordDetails.stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetail::getTopicId)));
             }
+            competitionRecordMapBySubjectCode.set(heroLandCompetitionRecords.stream().collect(Collectors.groupingBy(HeroLandCompetitionRecord::getSubjectCode)));
         }
         List<CompetitionCourseFinishStatisticDP> dps = new ArrayList<>();
         // 循环增加参数
@@ -433,7 +435,6 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             dp.setChapterCount(questionTopicStatistics.stream().map(q -> q.getChapterList().size()).reduce(0, Integer::sum));
             dp.setSectionCount(questionTopicStatistics.stream().map(q -> q.getSectionList().size()).reduce(0, Integer::sum));
             Map<Long, HeroLandQuestionTopicListForStatisticDto> statisticDtoMap = questionTopicStatistics.stream().collect(Collectors.toMap(HeroLandQuestionTopicListForStatisticDto::getId, Function.identity(), (o, n) -> n));
-
             if (MapUtil.isNotEmpty(competitionRecordMap.get())) {
 
                 statisticDtoMap.forEach((topicId, statisticDto) -> {
@@ -443,7 +444,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         // 胜率
                         BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
                         dp.setWinRate(winRate);
-                        dp.setFinishQuestion((int)competitionRecords.stream().map(HeroLandCompetitionRecord::getTopicId).distinct().count());
+
                     }
 
 //                    if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
@@ -454,6 +455,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 //                        }
 //                    }
                 });
+            }
+            if (MapUtil.isNotEmpty(competitionRecordMapBySubjectCode.get())){
+                List<HeroLandCompetitionRecord> heroLandCompetitionRecordsBySubjectCode = competitionRecordMapBySubjectCode.get().get(courseCode);
+                dp.setFinishQuestion((int)heroLandCompetitionRecordsBySubjectCode.stream().map(HeroLandCompetitionRecord::getTopicId).distinct().count());
+
             }
             dps.add(dp);
         });
