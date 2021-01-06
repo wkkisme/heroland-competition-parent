@@ -443,15 +443,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         // 胜率
                         BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
                         dp.setWinRate(winRate);
+                        dp.setFinishQuestion((int)competitionRecords.stream().map(HeroLandCompetitionRecord::getTopicId).distinct().count());
                     }
-                    if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
-                        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
-                        if (CollUtil.isNotEmpty(questionRecordDetails)) {
-                            // 完成情况
-                            dp.setFinishQuestion((int)questionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count());
-                        }
-                    }
-                    // TODO 完成多少节 不知道怎么统计
+
+//                    if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {
+//                        List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
+//                        if (CollUtil.isNotEmpty(questionRecordDetails)) {
+//                            // 完成情况
+//                            dp.setFinishQuestion((int)questionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count());
+//                        }
+//                    }
                 });
             }
             dps.add(dp);
