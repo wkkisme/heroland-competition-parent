@@ -448,7 +448,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                         List<HeroLandQuestionRecordDetail> questionRecordDetails = questionRecordMap.get().get(String.valueOf(topicId));
                         if (CollUtil.isNotEmpty(questionRecordDetails)) {
                             // 完成情况
-                            dp.setFinishQuestion(questionRecordDetails.size());
+                            dp.setFinishQuestion((int)questionRecordDetails.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count());
                         }
                     }
                     // TODO 完成多少节 不知道怎么统计

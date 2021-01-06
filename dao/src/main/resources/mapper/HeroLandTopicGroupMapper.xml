@@ -516,6 +516,7 @@
         ]]>
 
     </if>
+        order by gmt_create desc
   </select>
 
   <select id="selectByTypeAndState"  resultMap="BaseResultMap">
