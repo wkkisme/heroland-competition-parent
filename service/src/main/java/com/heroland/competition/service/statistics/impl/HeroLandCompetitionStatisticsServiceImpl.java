@@ -1,6 +1,7 @@
 package com.heroland.competition.service.statistics.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -290,6 +291,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     }
 
     public void getComplate(HeroLandStatisticsTotalQO qo, List<HeroLandStatisticsDetailAll> detailAlls) {
+        if (CollectionUtil.isEmpty(detailAlls)){
+            return;
+        }
         List<HerolandTopicQuestion> topicsQuestions;
         if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
             HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
