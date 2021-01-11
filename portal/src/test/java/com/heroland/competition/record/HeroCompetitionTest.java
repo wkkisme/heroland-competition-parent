@@ -1,8 +1,11 @@
 package com.heroland.competition.record;
 
+import com.alibaba.fastjson.JSON;
+import com.anycommon.response.common.ResponseBody;
 import com.google.common.collect.Lists;
 import com.heroland.competition.base.BaseServiceTest;
 import com.heroland.competition.common.enums.CompetitionEnum;
+import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
@@ -10,6 +13,7 @@ import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.result.RpcResult;
@@ -186,4 +190,15 @@ public class HeroCompetitionTest extends BaseServiceTest {
         return detailDP.getUserId() + detailDP.getSubjectCode();
     }
 
+    @Resource
+    private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+
+    @Test
+    public void  checkOrder(){
+        String s= "{\"startTime\":\"\",\"endTime\":\"\",\"pageIndex\":1,\"pageSize\":10,\"type\":0,\"courseCode\":\"CU-002\",\"userId\":\"2981497437383819656001\",\"topicIds\":[\"363\",\"351\",\"349\",\"315\",\"250\"],\"orgCode\":\"SH-611603590329919\"}";
+        HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = JSON.parseObject(s, HeroLandTopicQuestionsPageRequest.class);
+        ResponseBody<List<AnswerQuestionRecordStatisticDP>> answerQuestionRecordStatistic = heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(heroLandTopicQuestionsPageRequest);
+        System.out.println(answerQuestionRecordStatistic);
+
+    }
 }
