@@ -325,7 +325,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();
                 v.setCompleteRate(Math.min(v1, 1D));
-                v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
+                v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().filter(n->n.getScore() != null).mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
             } else {
                 v.setCompleteRate(0D);
                 v.setTotalScore(0);
