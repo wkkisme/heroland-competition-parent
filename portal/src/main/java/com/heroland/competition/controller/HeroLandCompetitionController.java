@@ -67,29 +67,7 @@ public class HeroLandCompetitionController {
         dp.setUserId(platformSsoUserServiceFacade.queryCurrent(CookieUtils.getSessionId(request)).getData().getUserId());
         log.info("doanswer{}", JSON.toJSONString(dp));
         ResponseBody<HeroLandCompetitionRecordDP> result = new ResponseBody<>();
-        result = CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
-        try {
-            // 通知所有人 可以被邀请了
-            if (result.isSuccess()) {
-                UserStatusDP userStatusDP = new UserStatusDP();
-                userStatusDP.setTopicId(dp.getTopicId());
-                userStatusDP.setStatus(UserStatusEnum.ONLINE.getStatus());
-                userStatusDP.setUserId(dp.getUserId());
-                userStatusDP.setOrgCode(dp.getOrgCode());
-                userStatusDP.setUserStatus(UserStatusEnum.ONLINE.getStatus());
-                rocketMQTemplate.syncSend("IM_LINE:CLUSTER", userStatusDP.toJSONString());
-                Object user = redisService.get("user:" + dp.getUserId());
-                OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
-                onlineUser.setUserStatus(UserStatusEnum.ONLINE.getStatus());
-                redisService.set("user:" + dp.getUserId(),JSON.toJSONString(onlineUser),1000 * 60 * 60 * 2);
-
-            }
-        } catch (Exception ignored) {
-        }
-        // 结束比赛，可被邀请
-        redisService.del(INVITE_KEY+ dp.getUserId());
-        redisService.set("inviting:"+dp.getUserId()+dp.getInviteRecordId(),"true",1000 * 60 * 60 * 2);
-        return result;
+        return CompetitionTopicFactory.get(dp.getTopicType()).doAnswer(dp);
     }
 
 //    @PostMapping("/score/calculate/{userId}")
