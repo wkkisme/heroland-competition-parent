@@ -123,6 +123,7 @@
         #{id}
       </foreach>
     </if>
+    order by id desc
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -516,6 +517,7 @@
         ]]>
 
     </if>
+        order by id desc
   </select>
 
   <select id="selectByTypeAndState"  resultMap="BaseResultMap">

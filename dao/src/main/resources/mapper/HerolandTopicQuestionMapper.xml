@@ -253,6 +253,7 @@
                 and htg.end_time <= #{item.endTime,jdbcType=TIMESTAMP}
             ]]>
     </if>
+    order by htq.id desc
   </select>
 
   <select id="selectByQo" resultMap="BaseResultMap">
@@ -274,6 +275,7 @@
 
 
     </where>
+    order by id desc
   </select>
 
 
