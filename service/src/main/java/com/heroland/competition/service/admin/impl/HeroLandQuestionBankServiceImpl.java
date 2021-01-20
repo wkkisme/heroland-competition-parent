@@ -461,7 +461,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             } catch (NumberFormatException ignored) {
             }
             try {
-                herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype()));
+                herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype().trim()));
             } catch (NumberFormatException ignored) {
             }
             try {
