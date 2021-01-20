@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
+import java.util.List;
 
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 
@@ -150,7 +151,17 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     private String topicId;
 
 
+    private List<String> topicIds;
+
     private HeroLandStatisticsDetailDP myselfRank;
+
+    public List<String> getTopicIds() {
+        return topicIds;
+    }
+
+    public void setTopicIds(List<String> topicIds) {
+        this.topicIds = topicIds;
+    }
 
     public HeroLandStatisticsDetailDP addDetailCheck() {
         AssertUtils.notBlank(userId);

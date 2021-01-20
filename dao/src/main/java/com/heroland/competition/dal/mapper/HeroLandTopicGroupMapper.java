@@ -22,7 +22,7 @@ public interface HeroLandTopicGroupMapper {
 
     HeroLandTopicGroup selectByPrimaryKey(Long id);
 
-    List<HeroLandTopicGroup> selectByPrimaryKeys(@Param("ids") List<Long> ids);
+    List<HeroLandTopicGroup> selectByPrimaryKeys(@Param("ids") List<Long> ids,@Param("type")Integer topicType);
 
     int updateByExampleSelective(@Param("record") HeroLandTopicGroup record, @Param("example") HeroLandTopicGroupExample example);
 

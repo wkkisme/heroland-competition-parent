@@ -123,6 +123,9 @@
         #{id}
       </foreach>
     </if>
+    <if test="type != null">
+      and type = #{type}
+    </if>
     order by id desc
   </select>
 
