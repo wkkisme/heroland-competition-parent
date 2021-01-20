@@ -676,6 +676,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             dto.setBankType(e.getBankType());
             dto.setYear(StringUtils.isEmpty(e.getYear()) ? "" : DateUtils.dateToYear(e.getYear()));
             dto.setId(e.getId());
+            dto.setQtId(e.getQtId());
             if (qtMap.containsKey(e.getId())) {
                 dto.setAnswer(qtMap.get(e.getId()).get(0).getAnswer());
                 dto.setOptionAnswer(qtMap.get(e.getId()).get(0).getOptionAnswer());
