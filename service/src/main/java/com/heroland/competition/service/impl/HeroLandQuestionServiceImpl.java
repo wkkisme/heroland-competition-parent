@@ -1215,6 +1215,15 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         return null;
     }
 
+    @Override
+    public List<HerolandTopicQuestion> getTopicsQuestionsSimple(HeroLandTopicGroupQO questionsQo) {
+        List<HeroLandTopicGroup> heroLandTopicGroups = heroLandTopicGroupMapper.selectByQuery(questionsQo);
+        if (heroLandTopicGroups == null){
+            return Lists.newArrayList();
+        }
+        return herolandTopicQuestionMapper.selectByTopics(heroLandTopicGroups.stream().map(HeroLandTopicGroup::getId).collect(Collectors.toList()), null);
+    }
+
     private String getTopicState(HeroLandTopicGroup heroLandTopicGroup) {
         String topicState = "";
         Date now = new Date();

@@ -253,6 +253,29 @@
                 and htg.end_time <= #{item.endTime,jdbcType=TIMESTAMP}
             ]]>
     </if>
+    order by htq.id desc
+  </select>
+
+  <select id="selectByQo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from heroland_topic_question
+    and is_deleted = 0
+    <where>
+      <if test="topicIds != null and topicIds.size > 0">
+        and topic_id IN (
+        <foreach collection="topicIds" item="topicId" index="index" separator=",">
+          #{topicId,jdbcType=BIGINT}
+        </foreach>
+        )
+      </if>
+      <if test="questionId != null">
+        and question_id = #{questionId,jdbcType=BIGINT}
+      </if>
+
+
+    </where>
+    order by id desc
   </select>
 
 

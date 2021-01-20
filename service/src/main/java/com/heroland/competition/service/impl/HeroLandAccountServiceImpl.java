@@ -8,6 +8,7 @@ import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.MybatisCriteriaConditionUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.heroland.competition.common.constant.RedisConstant;
+import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.common.enums.HeroLevelEnum;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.utils.AssertUtils;
@@ -15,19 +16,29 @@ import com.heroland.competition.dal.mapper.HeroLandAccountExtMapper;
 import com.heroland.competition.dal.pojo.HeroLandAccount;
 import com.heroland.competition.dal.pojo.HeroLandAccountExample;
 import com.heroland.competition.domain.dp.HeroLandAccountDP;
+import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.OnlineDP;
 import com.heroland.competition.domain.qo.HeroLandAccountManageQO;
 import com.heroland.competition.domain.qo.HeroLandAccountQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
+import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
+import com.heroland.competition.domain.request.HeroLandTopicPageRequest;
 import com.heroland.competition.domain.request.HerolandDiamRequest;
 import com.heroland.competition.factory.RobotFactory;
 import com.heroland.competition.service.HeroLandAccountService;
+import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import com.heroland.competition.service.diamond.HerolandDiamondService;
+import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.dp.PlatformSysUserDP;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
 import com.platform.sso.facade.result.RpcResult;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.docx4j.wml.P;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +69,12 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     @Resource
     private PlatformSsoUserServiceFacade platformSsoUserServiceFacade;
 
+    @Resource
+    private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
+
+    @Resource
+    private HeroLandQuestionService heroLandQuestionService;
+
     @Value("${competition.defaultBalance:0}")
     private Long defaultBalance;
 
@@ -66,15 +83,18 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopic());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users = new LinkedHashSet<>();
+        List<String> userIds = members.stream().map(String::valueOf).collect(Collectors.toList());
+        HeroLandTopicPageRequest heroLandTopicGroupQO = new HeroLandTopicPageRequest();
+        heroLandTopicGroupQO.setTopicId(Long.valueOf(dp.getTopicId()));
+
+        Map<String, String> levelMap = getLevel(userIds,heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType(),dp.getUserId());
         members.forEach(userId -> {
             if (userId != null && !userId.equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
                 // 如果为空去查下是否有这个人
                 if (user != null) {
                     OnlineDP onlineUser = JSON.parseObject(user.toString(), OnlineDP.class);
-                    if (StringUtils.isBlank(onlineUser.getLevel())){
-                        onlineUser.setLevel(HeroLevelEnum.ADVERSITY_HERO.name());
-                    }
+                    onlineUser.setLevel(levelMap.get(userId.toString()));
                     Set<Object> dps = null;
                     try {
                         dps = redisService.sMembers("recent_user:" + dp.getTopic() + userId);
@@ -130,6 +150,54 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         return objectResponseBody;
     }
 
+    @NotNull
+    public Map<String, String> getLevel(List<String> userIds, Integer topicType,String currentUser) {
+        Map<String, String> levelMap = new HashMap<>();
+        HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
+        heroLandStatisticsTotalQO.setUserIds(userIds);
+        heroLandStatisticsTotalQO.setType(topicType);
+        if (CompetitionEnum.WORLD.getType().equals(topicType)){
+            heroLandStatisticsTotalQO.setUserId(currentUser);
+        }
+        ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
+        if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
+            levelMap = new HashMap<>();
+            List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();
+
+            List<HeroLandStatisticsDetailDP> winRank = data.stream().sorted(Comparator.comparing(HeroLandStatisticsDetailDP::getWinRate)).collect(Collectors.toList());
+            int size = winRank.size();
+
+            if (size ==1){
+                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+            }else
+            if (size == 2){
+                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+            }else
+            if (size == 3){
+                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+                levelMap.put(winRank.get(2).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
+            }else {
+                long ADVERSITY_HERO = Math.round(size * 0.25);
+                long SUPREME_HERO = Math.round(size * 0.75);
+                for (int i = 0; i < winRank.size(); i++) {
+                    if (i <= ADVERSITY_HERO){
+                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+                    }else if (i <= SUPREME_HERO){
+                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+                    }else {
+                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
+                    }
+                }
+
+            }
+
+
+        }
+        return levelMap;
+    }
+
     @Override
     public ResponseBody<HeroLandAccountDP> getCurrentUserCompetition(HeroLandAccountDP dp) {
         try {
@@ -147,7 +215,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public ResponseBody<Boolean> saveAccount(HeroLandAccountDP dp) {
         try {
 
-            ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(dp.getUserId());
+            ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(dp.getUserId(),null);
             logger.info("accountByUserId:{}",JSON.toJSONString(accountByUserId));
             if (accountByUserId == null ||accountByUserId.getData() ==null ) {
                 heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance), new HeroLandAccount()));
@@ -183,10 +251,22 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     }
 
     @Override
-    public ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId) {
+    public ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId,Integer topicType) {
         HeroLandAccount account = null;
         try {
             account = heroLandAccountExtMapper.selectByUserId(userId);
+
+            if(topicType != null) {
+                Map<String, String> level = getLevel(Collections.singletonList(userId), topicType,userId);
+                String levelCode = level.get(userId);
+                if (HeroLevelEnum.ADVERSITY_HERO.name().equals(levelCode)) {
+                    account.setLevelName("逆境英雄");
+                } else if (HeroLevelEnum.SUPREME_HERO.name().equals(levelCode)) {
+                    account.setLevelName("至尊英雄");
+                } else {
+                    account.setLevelName("奋勇英雄");
+                }
+            }
         } catch (Exception e) {
             logger.error("", e);
             ResponseBodyWrapper.failSysException();

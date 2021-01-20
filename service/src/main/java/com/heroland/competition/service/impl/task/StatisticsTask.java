@@ -82,14 +82,13 @@ public class StatisticsTask {
     @Scheduled(fixedDelay = 2000)
     @Transactional(rollbackFor = Exception.class)
     public void statistics() {
-        log.info("start  statistics =================");
-        if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
-            log.info("start statistics is lock");
-            return;
-        }
-        // 1 先清除历史版本
-
         try {
+            log.info("start  statistics =================");
+            if (!redisService.setNx("statistics_redis_key", true, "PT1h")) {
+                log.info("start statistics is lock");
+                return;
+            }
+            // 1 先清除历史版本
             HeroLandStatisticsTotalQO qo = new HeroLandStatisticsTotalQO();
             heroLandCompetitionStatisticsService.deleteHistoryStatisticsTotalAndDetailByQO(qo);
 
@@ -116,7 +115,7 @@ public class StatisticsTask {
                     continue;
                 }
 
-                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().filter(v -> v.getUserId().length() > 15 || v.getSubjectCode() == null).collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
+                Map<String, HeroLandStatisticsDetailDP> mergeMap = totalSyncTotalScore.stream().filter(v -> v.getUserId().length() > 15 &&  v.getSubjectCode() != null).collect(Collectors.toMap(this::fetchUserKey, Function.identity(), (o, n) -> n));
 
                 totalQo.setTopicIds(new ArrayList<>(totalSyncTotalScore.stream().map(HeroLandStatisticsDetailDP::getTopicId).map(Long::valueOf).collect(Collectors.toSet())));
                 Map<String, String> topic2Subject = totalSyncTotalScore.stream().filter(v -> StringUtils.isNotBlank(v.getSubjectCode())).collect(Collectors.toMap(HeroLandStatisticsDetailDP::getTopicId, HeroLandStatisticsDetailDP::getSubjectCode, (o, n) -> o));
@@ -199,26 +198,27 @@ public class StatisticsTask {
 
                 // 查询人信息
                 PlatformSysUserQO platformSysUserQO = new PlatformSysUserQO();
-                platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).collect(Collectors.toList()));
+                platformSysUserQO.setNeedPage(false);
+                platformSysUserQO.setUserIds(values.stream().map(HeroLandStatisticsDetailDP::getUserId).distinct().collect(Collectors.toList()));
                 RpcResult<List<PlatformSysUserDP>> userList = null;
                 try {
                     userList = platformSsoUserServiceFacade.queryUserList(platformSysUserQO);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                RpcResult<List<PlatformSysUserDP>> finalUserList = userList;
-
+                Map<String, PlatformSysUserDP> userMap = null;
+                if (userList != null  && !CollectionUtils.isEmpty(userList.getData())) {
+                    userMap = userList.getData().stream().collect(Collectors.toMap(PlatformSysUserDP::getUserId, Function.identity(), (o, n) -> o));
+                }
+                Map<String, PlatformSysUserDP> finalUserMap = userMap;
                 values.forEach(v -> {
                     v.setHistory(false);
-                    if (finalUserList != null  && !CollectionUtils.isEmpty(finalUserList.getData())) {
-                        finalUserList.getData().forEach(u -> {
-                            if (v.getUserId().equalsIgnoreCase(u.getUserId())) {
-                                v.setUserName(u.getUserName());
-                            }
-//                            v.setOrgCode(u.getOrgCode());
-                        });
+                    if (!CollectionUtils.isEmpty(finalUserMap)) {
+                        PlatformSysUserDP platformSysUser = finalUserMap.get(v.getUserId());
+                        if (platformSysUser!=null){
+                            v.setUserName(platformSysUser.getUserName());
+                        }
                     }
-
                     if (!CollectionUtils.isEmpty(adminDataMap)) {
                         v.setGradeName(adminDataMap.containsKey(v.getGradeCode()) ? adminDataMap.get(v.getGradeCode()).getDictValue() : "");
                         v.setClassName(adminDataMap.containsKey(v.getClassCode()) ? adminDataMap.get(v.getClassCode()).getDictValue() : "");
@@ -227,8 +227,7 @@ public class StatisticsTask {
                     }
 
                 });
-                List<HeroLandStatisticsDetailDP> collect = values.stream().filter(v -> StringUtils.isNotBlank(v.getUserName())).collect(Collectors.toList());
-                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(collect));
+                heroLandCompetitionStatisticsService.saveStatisticsTotalAndDetail(null, new ArrayList<>(values));
             }
         } catch (Exception e) {
             log.error("", e);

@@ -73,7 +73,6 @@ public class TransactionManagerConfig {
         methodMap.put("remove*", requiredTx);
         methodMap.put("repair*", requiredTx);
         methodMap.put("binding*", requiredTx);
-        methodMap.put("cancel*", requiredTx);
         methodMap.put("invite*", requiredTx);
         methodMap.put("do*", requiredTx);
         methodMap.put("calculate*", requiredTx);

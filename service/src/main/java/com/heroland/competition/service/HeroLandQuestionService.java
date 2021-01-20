@@ -1,8 +1,10 @@
 package com.heroland.competition.service;
 
 import com.heroland.competition.common.pageable.PageResponse;
+import com.heroland.competition.dal.pojo.HerolandTopicQuestion;
 import com.heroland.competition.domain.dp.*;
 import com.heroland.competition.domain.dto.*;
+import com.heroland.competition.domain.qo.HeroLandTopicGroupQO;
 import com.heroland.competition.domain.qo.HeroLandTopicQuestionsQo;
 import com.heroland.competition.domain.request.*;
 
@@ -93,4 +95,7 @@ public interface HeroLandQuestionService{
     HeroLandTopicForWDto topicWForStudent(TopicWForStudentRequest request);
 
     HeroLandTopicForWDto topicWForStudentLastJoined(TopicWForStudentJoinedRequest request);
+
+    List<HerolandTopicQuestion> getTopicsQuestionsSimple(HeroLandTopicGroupQO questionsQo);
+
 }

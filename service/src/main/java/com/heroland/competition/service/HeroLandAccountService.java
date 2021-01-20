@@ -47,7 +47,7 @@ public interface HeroLandAccountService {
      * @param qo
      * @return
      */
-    ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId);
+    ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId,Integer topicType);
 
 
     /**

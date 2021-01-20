@@ -53,25 +53,8 @@ public class HeroLandAccountController {
     @RequestMapping("/queryAccount")
     public ResponseBody<HeroLandAccountDP> getAccount(@RequestBody HeroLandAccountQO qo) {
         ResponseBody<HeroLandAccountDP> result = new ResponseBody<HeroLandAccountDP>();
-        ResponseBody<HeroLandAccountDP> account = heroLandAccountService.getAccountByUserId(qo.getUserId());
+        ResponseBody<HeroLandAccountDP> account = heroLandAccountService.getAccountByUserId(qo.getUserId(),qo.getTopicType());
         HeroLandAccountDP data = account.getData();
-        if (data != null) {
-            /*
-            ADVERSITY_HERO 逆境英雄
-COURAGEOUS_HERO 奋勇英雄
-SUPREME_HERO 至尊英雄
-             */
-            if (data.getLevelScore() < courageousHero) {
-                data.setLevelCode("ADVERSITY_HERO");
-                data.setLevelName("逆境英雄");
-            } else if (data.getLevelScore() > courageousHero) {
-                data.setLevelCode("SUPREME_HERO");
-                data.setLevelName("至尊英雄");
-            } else {
-                data.setLevelName("奋勇英雄");
-                data.setLevelCode("ADVERSITY_HERO");
-            }
-        }
         result.setData(data);
         return result;
     }
