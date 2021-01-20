@@ -6,6 +6,7 @@ import com.heroland.competition.common.enums.InviteStatusEnum;
 import com.heroland.competition.domain.dp.HeroLandInviteRecordDP;
 import com.heroland.competition.domain.qo.HeroLandInviteRecordQO;
 import com.heroland.competition.service.HeroLandInviteRecordService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -43,6 +44,9 @@ public class InviteRecordConsumer  implements RocketMQListener<HeroLandInviteRec
         if (!CollectionUtils.isEmpty(inviteData)){
 
             HeroLandInviteRecordDP dp = inviteData.get(0);
+            if (StringUtils.isBlank(dp.getSubjectCode())) {
+                dp.setSubjectCode(message.getSubjectCode());
+            }
             if (InviteStatusEnum.WAITING.getStatus().equals(dp.getStatus())){
                 dp.setStatusRemark("自动同意");
                 heroLandInviteRecordService.agreeInvite(dp);

@@ -248,6 +248,7 @@ public class HeroLandInviteRecordServiceImpl implements HeroLandInviteRecordServ
             heroLandCompetitionRecordDP.setInviteRecordId(dp.getRecordId());
             heroLandCompetitionRecordDP.setOpponentLevel(dp.getOpponentLevel());
             heroLandCompetitionRecordDP.setInviteLevel(dp.getInviteLevel());
+            heroLandCompetitionRecordDP.setSubjectCode(dp.getSubjectCode());
             ResponseBody<String> stringResponseBody = heroLandCompetitionRecordService.addCompetitionRecord(heroLandCompetitionRecordDP);
             logger.info("recordid -------》：{}", dp.getRecordId());
             redisService.set("competition-record:" + dp.getRecordId(), heroLandCompetitionRecordDP, 180000);
