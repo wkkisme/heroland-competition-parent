@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.anycommon.poi.word.Question;
 import com.anycommon.poi.word.WordFileService;
 import com.anycommon.response.common.ResponseBody;
+import com.anycommon.response.expception.AppSystemException;
 import com.anycommon.response.utils.BeanUtil;
 import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.github.pagehelper.Page;
@@ -403,6 +404,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
                     toBank(bankType, questions);
                 } catch (Exception e) {
                     log.error("导入异常",e);
+                    if (e instanceof AppSystemException){
+                        throw e;
+                    }
                     throw new RuntimeException("导入异常");
                 }
 
