@@ -283,7 +283,7 @@ public class HerolandTopicJoinUserServiceImpl implements HerolandTopicJoinUserSe
         Page<HeroLandTopicGroup> dataPage = null;
         if (!Objects.equals(userDPS.get(0).getType(), 0) ){
             dataPage = PageHelper.startPage(qo.getPageIndex(), qo.getPageSize(), true).doSelectPage(
-                    () -> heroLandTopicGroupMapper.selectByTypeAndState(qo.getTopicType(), qo.getTopicState()));
+                    () -> heroLandTopicGroupMapper.selectByTypeAndStateAndPart(qo.getTopicType(), qo.getTopicState(), qo.getOrgCode(), null));
 
         }else {
             //如果是世界赛，只需要看到年级，不需要学校

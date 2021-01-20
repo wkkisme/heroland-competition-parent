@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.heroland.competition.common.enums.HerolandErrMsgEnum;
 import com.heroland.competition.common.pageable.PageResponse;
 import com.heroland.competition.common.utils.BeanCopyUtils;
+import com.heroland.competition.dal.mapper.HeroLandTopicGroupMapper;
 import com.heroland.competition.dal.pojo.HeroLandTopicGroup;
 import com.heroland.competition.domain.dp.HeroLandTopicGroupDP;
 import com.heroland.competition.domain.dp.HerolandTopicGroupPartDP;
@@ -17,6 +18,7 @@ import com.heroland.competition.domain.qo.HerolandTopicCanSeeQO;
 import com.heroland.competition.domain.qo.HerolandTopicHeaderTeacherCanAssignQO;
 import com.heroland.competition.domain.request.*;
 import com.heroland.competition.service.HeroLandQuestionService;
+import com.heroland.competition.service.HeroLandTopicGroupService;
 import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.HerolandTopicJoinUserService;
 import com.platform.sso.client.sso.util.CookieUtils;
@@ -51,6 +53,9 @@ public class HeroLandTopicQuestionController {
 
     @Resource
     private HeroLandQuestionService heroLandQuestionService;
+
+    @Resource
+    private HeroLandTopicGroupMapper heroLandTopicGroupMapper;
 
     @Resource
     private HerolandTopicGroupPartService herolandTopicGroupPartService;
@@ -202,8 +207,15 @@ public class HeroLandTopicQuestionController {
         roleCheck(servletRequest, 4);
         if (CollectionUtils.isEmpty(request.getSchoolCourses())){
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
+            if (Objects.isNull(request.getType())){
+                HeroLandTopicGroup heroLandTopicGroup = heroLandTopicGroupMapper.selectByPrimaryKey(request.getId());
+                if (Objects.nonNull(heroLandTopicGroup)){
+                    request.setType(heroLandTopicGroup.getType());
+                }
+            }
             request.getSchoolCourses().stream().forEach(e -> {
                 HerolandTopicGroupPartDP dp = BeanCopyUtils.copyByJSON(request, HerolandTopicGroupPartDP.class);
+                dp.setTopicType(request.getType());
                 dp.setTopicId(request.getId());
                 list.add(dp);
             });

@@ -74,7 +74,7 @@ public class HerolandTopicGroupPartExample {
     }
 
     /**
-     * heroland_topic_group_part 2020-08-17
+     * heroland_topic_group_part 2021-01-20
      */
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
@@ -234,6 +234,66 @@ public class HerolandTopicGroupPartExample {
 
         public Criteria andTopicIdNotBetween(Long value1, Long value2) {
             addCriterion("topic_id not between", value1, value2, "topicId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeIsNull() {
+            addCriterion("topic_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeIsNotNull() {
+            addCriterion("topic_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeEqualTo(Integer value) {
+            addCriterion("topic_type =", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotEqualTo(Integer value) {
+            addCriterion("topic_type <>", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeGreaterThan(Integer value) {
+            addCriterion("topic_type >", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("topic_type >=", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeLessThan(Integer value) {
+            addCriterion("topic_type <", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("topic_type <=", value, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeIn(List<Integer> values) {
+            addCriterion("topic_type in", values, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotIn(List<Integer> values) {
+            addCriterion("topic_type not in", values, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeBetween(Integer value1, Integer value2) {
+            addCriterion("topic_type between", value1, value2, "topicType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopicTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("topic_type not between", value1, value2, "topicType");
             return (Criteria) this;
         }
 
@@ -849,7 +909,7 @@ public class HerolandTopicGroupPartExample {
     }
 
     /**
-     * heroland_topic_group_part 2020-08-17
+     * heroland_topic_group_part 2021-01-20
      */
     public static class Criterion {
         private String condition;
