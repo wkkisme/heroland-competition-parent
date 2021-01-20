@@ -216,6 +216,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             request.getSchoolCourses().stream().forEach(e -> {
                 HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
                 partDP.setTopicId(topicId);
+                partDP.setTopicType(TopicTypeConstants.IntegerER_SCHOOL_COMPETITION);
                 list.add(partDP);
             });
             herolandTopicGroupPartService.addBatchDepartment(list);
@@ -256,6 +257,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             request.getGradeCoursesForWorld().stream().forEach(e -> {
                 HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
                 partDP.setTopicId(topicId);
+                partDP.setTopicType(TopicTypeConstants.WORLD_COMPETITION);
                 list.add(partDP);
             });
             herolandTopicGroupPartService.addBatchDepartment(list);

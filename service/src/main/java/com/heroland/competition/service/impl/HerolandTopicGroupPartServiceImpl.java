@@ -47,6 +47,7 @@ public class HerolandTopicGroupPartServiceImpl implements HerolandTopicGroupPart
         herolandTopicGroupPartDPs.forEach(e -> {
             HerolandTopicGroupPart part = new HerolandTopicGroupPart();
             part.setTopicId(e.getTopicId());
+            part.setTopicType(e.getTopicType());
             part.setOrgCode(e.getOrgCode());
             part.setGradeCode(e.getGradeCode());
             part.setCourseCode(e.getCourseCode());

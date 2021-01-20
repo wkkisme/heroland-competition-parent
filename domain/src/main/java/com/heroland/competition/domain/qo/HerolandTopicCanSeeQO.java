@@ -34,4 +34,11 @@ public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
      * 还未开始的 NOTSTART
      */
     private String topicState;
+
+
+    /**
+     * 学校编号
+     * 同等与schoolCode
+     */
+    private String schoolDtos;
 }

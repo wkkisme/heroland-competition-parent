@@ -14,8 +14,14 @@ import java.util.List;
 public class HeroLandQuestionBankListForTopicDto implements Serializable {
 
     /**
+     * 题目的主键id
      */
     private Long id;
+
+    /**
+     * 题目的全局id
+     */
+    private String qtId;
 
     /**
      * 年级

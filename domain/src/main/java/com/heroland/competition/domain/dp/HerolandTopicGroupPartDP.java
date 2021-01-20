@@ -14,6 +14,13 @@ public class HerolandTopicGroupPartDP extends BaseDO implements Serializable {
     @ApiModelProperty(value="topicIdheroland_topic_group表的id")
     private Long topicId;
 
+
+    /**
+     * 赛事类型
+     */
+    @ApiModelProperty(value="topicType赛事类型")
+    private Integer topicType;
+
     /**
      * 机构code
      */
@@ -121,5 +128,13 @@ public class HerolandTopicGroupPartDP extends BaseDO implements Serializable {
      */
     public void setCourseCode(String courseCode) {
         this.courseCode = courseCode == null ? null : courseCode.trim();
+    }
+
+    public Integer getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(Integer topicType) {
+        this.topicType = topicType;
     }
 }

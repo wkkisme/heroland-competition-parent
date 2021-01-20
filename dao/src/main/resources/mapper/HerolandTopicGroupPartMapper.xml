@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.heroland.competition.dal.pojo.HerolandTopicGroupPart">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="topic_id" jdbcType="BIGINT" property="topicId" />
+    <result column="topic_type" jdbcType="INTEGER" property="topicType" />
     <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
     <result column="grade_code" jdbcType="VARCHAR" property="gradeCode" />
     <result column="class_code" jdbcType="VARCHAR" property="classCode" />
@@ -73,13 +74,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, topic_id, org_code, grade_code, class_code, course_code, creator, modifier, gmt_create, 
-    gmt_modified, is_deleted
+    id, topic_id, topic_type, org_code, grade_code, class_code, course_code, creator, 
+    modifier, gmt_create, gmt_modified, is_deleted
   </sql>
 
+
   <sql id="Insert_Column_List">
-        topic_id, org_code,grade_code,class_code, course_code
+        topic_id, topic_type, org_code,grade_code,class_code, course_code
     </sql>
+
 
   <select id="selectByExample" parameterType="com.heroland.competition.dal.pojo.HerolandTopicGroupPartExample" resultMap="BaseResultMap">
     select
@@ -115,14 +118,14 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into heroland_topic_group_part (topic_id, org_code, grade_code, 
-      class_code, course_code, creator, 
-      modifier, gmt_create, gmt_modified, 
-      is_deleted)
-    values (#{topicId,jdbcType=BIGINT}, #{orgCode,jdbcType=VARCHAR}, #{gradeCode,jdbcType=VARCHAR}, 
-      #{classCode,jdbcType=VARCHAR}, #{courseCode,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
-      #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
-      #{isDeleted,jdbcType=BIT})
+    insert into heroland_topic_group_part (topic_id, topic_type, org_code, 
+      grade_code, class_code, course_code, 
+      creator, modifier, gmt_create, 
+      gmt_modified, is_deleted)
+    values (#{topicId,jdbcType=BIGINT}, #{topicType,jdbcType=INTEGER}, #{orgCode,jdbcType=VARCHAR}, 
+      #{gradeCode,jdbcType=VARCHAR}, #{classCode,jdbcType=VARCHAR}, #{courseCode,jdbcType=VARCHAR}, 
+      #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.heroland.competition.dal.pojo.HerolandTopicGroupPart">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -132,6 +135,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="topicId != null">
         topic_id,
+      </if>
+      <if test="topicType != null">
+        topic_type,
       </if>
       <if test="orgCode != null">
         org_code,
@@ -164,6 +170,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="topicId != null">
         #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="topicType != null">
+        #{topicType,jdbcType=INTEGER},
       </if>
       <if test="orgCode != null">
         #{orgCode,jdbcType=VARCHAR},
@@ -209,6 +218,9 @@
       <if test="record.topicId != null">
         topic_id = #{record.topicId,jdbcType=BIGINT},
       </if>
+      <if test="record.topicType != null">
+        topic_type = #{record.topicType,jdbcType=INTEGER},
+      </if>
       <if test="record.orgCode != null">
         org_code = #{record.orgCode,jdbcType=VARCHAR},
       </if>
@@ -245,6 +257,7 @@
     update heroland_topic_group_part
     set id = #{record.id,jdbcType=BIGINT},
       topic_id = #{record.topicId,jdbcType=BIGINT},
+      topic_type = #{record.topicType,jdbcType=INTEGER},
       org_code = #{record.orgCode,jdbcType=VARCHAR},
       grade_code = #{record.gradeCode,jdbcType=VARCHAR},
       class_code = #{record.classCode,jdbcType=VARCHAR},
@@ -263,6 +276,9 @@
     <set>
       <if test="topicId != null">
         topic_id = #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="topicType != null">
+        topic_type = #{topicType,jdbcType=INTEGER},
       </if>
       <if test="orgCode != null">
         org_code = #{orgCode,jdbcType=VARCHAR},
@@ -297,6 +313,7 @@
   <update id="updateByPrimaryKey" parameterType="com.heroland.competition.dal.pojo.HerolandTopicGroupPart">
     update heroland_topic_group_part
     set topic_id = #{topicId,jdbcType=BIGINT},
+      topic_type = #{topicType,jdbcType=INTEGER},
       org_code = #{orgCode,jdbcType=VARCHAR},
       grade_code = #{gradeCode,jdbcType=VARCHAR},
       class_code = #{classCode,jdbcType=VARCHAR},
@@ -309,12 +326,14 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+
   <insert id="batchInsert" parameterType="java.util.List">
     insert into heroland_topic_group_part
-    (<include refid="Insert_Column_List"/>)
+    (<include refid="Insert_Column_List" />)
     values
-    <foreach collection="records" item="item" index="index" separator=",">
+    <foreach collection="records" index="index" item="item" separator=",">
       (#{item.topicId,jdbcType=BIGINT},
+      #{item.topicType,jdbcType=INTEGER},
       #{item.orgCode,jdbcType=VARCHAR},
       #{item.gradeCode,jdbcType=VARCHAR},
       #{item.classCode,jdbcType=VARCHAR},
@@ -323,23 +342,23 @@
     </foreach>
   </insert>
 
-  <update id="batchDeleteById" >
+  <update id="batchDeleteById">
     update heroland_topic_group_part
     set
       is_deleted = 1
     where id IN (
-    <foreach collection="ids" item="id" index="index" separator=",">
+    <foreach collection="ids" index="index" item="id" separator=",">
       #{id,jdbcType=BIGINT}
     </foreach>
     )
   </update>
 
-  <update id="batchDeleteByTopicIds" >
+  <update id="batchDeleteByTopicIds">
     update heroland_topic_group_part
     set
     is_deleted = 1
     where topic_id IN (
-    <foreach collection="topicIds" item="topicId" index="index" separator=",">
+    <foreach collection="topicIds" index="index" item="topicId" separator=",">
       #{topicId,jdbcType=BIGINT}
     </foreach>
     )
