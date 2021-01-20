@@ -37,7 +37,8 @@ public class HerolandTopicCanSeeQO extends BaseQO implements Serializable {
 
 
     /**
-     * 学校
+     * 学校编号
+     * 同等与schoolCode
      */
-    private String orgCode;
+    private String schoolDtos;
 }
