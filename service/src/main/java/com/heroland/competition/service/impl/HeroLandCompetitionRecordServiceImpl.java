@@ -76,6 +76,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
             heroLandCompetitionRecord.setClassCode(heroLandTopicGroup.getClassCode());
             heroLandCompetitionRecord.setGradeCode(heroLandTopicGroup.getGradeCode());
             heroLandCompetitionRecord.setOrgCode(heroLandTopicGroup.getOrgCode());
+            heroLandCompetitionRecord.setSubjectCode(heroLandTopicGroup.getCourseCode());
             heroLandCompetitionRecordExtMapper.insert(heroLandCompetitionRecord);
             result.setData(recordId);
             logger.info("返回比赛数据:{}", JSONObject.toJSONString(result));
