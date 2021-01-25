@@ -30,6 +30,12 @@ public class HerolandQuestionBankRequest implements Serializable {
      */
     private Long passageId;
 
+    /**
+     * 不知道是啥
+     * 可暂时不管
+     */
+    private String passage;
+
 
 
     /**
@@ -134,6 +140,12 @@ public class HerolandQuestionBankRequest implements Serializable {
      * 为赛事而区分
      */
     private Integer bankType;
+
+    /**
+     * 相似题id
+     * qtId
+     */
+    private List<String> optionZList = Lists.newArrayList();
 
     /**
      * 关联知识点

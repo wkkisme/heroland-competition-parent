@@ -18,11 +18,13 @@
     <result column="analysis" jdbcType="VARCHAR" property="analysis" />
     <result column="information" jdbcType="VARCHAR" property="information" />
     <result column="similar_qt" jdbcType="VARCHAR" property="similarQt" />
+    <result column="passage" jdbcType="VARCHAR" property="passage" />
+    <result column="option_z" jdbcType="VARCHAR" property="optionZ" />
 
   </resultMap>
   <sql id="Base_Column_List">
     id, creator, modifier, gmt_create, gmt_modified, is_deleted, qb_id,  `option`,
-    option_answer, answer, parse, storm_answer,analysis,information,similar_qt
+    option_answer, answer, parse, storm_answer,analysis,information,similar_qt,passage, option_z
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -84,8 +86,12 @@
       <if test="similarQt != null">
         similar_qt,
       </if>
-
-
+      <if test="passage != null">
+        passage,
+      </if>
+      <if test="optionZ != null">
+        `option_z`,
+      </if>
 
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -131,6 +137,12 @@
       </if>
       <if test="similarQt != null">
         #{similarQt,jdbcType=VARCHAR},
+      </if>
+      <if test="passage != null">
+        #{passage,jdbcType=VARCHAR},
+      </if>
+      <if test="optionZ != null">
+        #{optionZ,jdbcType=VARCHAR},
       </if>
 
     </trim>
@@ -181,6 +193,12 @@
       </if>
       <if test="similarQt != null">
         similar_qt = #{similarQt,jdbcType=VARCHAR},
+      </if>
+      <if test="passage != null">
+        passage = #{passage,jdbcType=VARCHAR},
+      </if>
+      <if test="optionZ != null">
+        `option_z` = #{optionZ,jdbcType=VARCHAR},
       </if>
 
     </set>

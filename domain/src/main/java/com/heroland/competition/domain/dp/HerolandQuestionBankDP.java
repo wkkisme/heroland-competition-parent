@@ -148,6 +148,24 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
      */
     private List<String> similarQt = Lists.newArrayList();
 
+    /**
+     * 相似题id
+     * qtId
+     */
+    private String optionZ;
+
+    /**
+     * 相似题id
+     * qtId 列表形式
+     */
+    private List<String> optionZList = Lists.newArrayList();
+
+    /**
+     * 不知道是啥
+     * 可暂时不管
+     */
+    private String passage;
+
 
     public HerolandQuestionBankDP checkAndBuildBeforeCreate(){
         if (!StringUtils.isEmpty(year)) {

@@ -37,4 +37,17 @@ public class HerolandQuestionBankDetail extends BaseDO {
     private String information;
 
     private String similarQt;
+
+
+    /**
+     * 相似题id
+     * qtId
+     */
+    private String optionZ;
+
+    /**
+     * 不知道是啥
+     * 可暂时不管
+     */
+    private String passage;
 }
