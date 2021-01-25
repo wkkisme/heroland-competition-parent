@@ -150,15 +150,10 @@ public class HerolandQuestionBankDP extends BaseDO implements Serializable {
 
     /**
      * 相似题id
-     * qtId
+     * qtId 多个用逗号隔开
      */
     private String optionZ;
 
-    /**
-     * 相似题id
-     * qtId 列表形式
-     */
-    private List<String> optionZList = Lists.newArrayList();
 
     /**
      * 不知道是啥

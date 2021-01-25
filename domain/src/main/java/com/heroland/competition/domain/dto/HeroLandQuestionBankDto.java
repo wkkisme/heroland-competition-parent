@@ -140,7 +140,7 @@ public class HeroLandQuestionBankDto implements Serializable {
      * 相似题id
      * qtId
      */
-    private List<String> optionZList;
+    private String optionZ;
 
     /**
      * 不知道是啥

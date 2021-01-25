@@ -112,11 +112,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         detail.setInformation(dp.getInformation());
         detail.setSimilarQt(JSON.toJSONString(dp.getSimilarQt()));
         detail.setPassage(dp.getPassage());
-        if (!StringUtils.isEmpty(dp.getOptionZ())){
-            detail.setOptionZ(dp.getOptionZ());
-        }else {
-            detail.setOptionZ(JSON.toJSONString(dp.getOptionZList()));
-        }
+        detail.setOptionZ(dp.getOptionZ());
         herolandQuestionBankDetailMapper.insertSelective(detail);
         if (!CollectionUtils.isEmpty(dp.getKnowledges())) {
             List<HerolandKnowledgeRefer> list = Lists.newArrayList();
@@ -296,9 +292,7 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDto.setParse(byQtId.get(0).getParse());
             bankDto.setAnalysis(byQtId.get(0).getAnalysis());
             bankDto.setInformation(byQtId.get(0).getInformation());
-            if (!StringUtils.isEmpty(byQtId.get(0).getOptionZ())){
-                bankDto.setOptionZList(JSON.parseArray(byQtId.get(0).getOptionZ(), String.class));
-            }
+            bankDto.setOptionZ(byQtId.get(0).getOptionZ());
             bankDto.setPassage(byQtId.get(0).getPassage());
         }
         bankDto.setKnowledges(dtoList);

@@ -143,9 +143,9 @@ public class HerolandQuestionBankRequest implements Serializable {
 
     /**
      * 相似题id
-     * qtId
+     * qtId 多个用逗号隔开
      */
-    private List<String> optionZList = Lists.newArrayList();
+    private String optionZ;
 
     /**
      * 关联知识点

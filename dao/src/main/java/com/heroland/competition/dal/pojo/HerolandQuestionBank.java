@@ -67,7 +67,7 @@ public class HerolandQuestionBank {
      * 相似题id
      * qtId
      */
-    private List<String> optionZ = Lists.newArrayList();
+    private String optionZ;
 
     /**
      * 不知道是啥
