@@ -83,6 +83,8 @@ public class HeroLandAdminKnowledgeController {
     @org.springframework.web.bind.annotation.ResponseBody
     ResponseBody<List<HerolandKnowledgeDto>> pageQuery(@RequestBody HerolandKnowledgeQO qo){
         ResponseBody<List<HerolandKnowledgeDto>> result = new ResponseBody<>();
+        //todo 现在知识点在数据库没有难度
+        qo.setDiff(null);
         PageResponse<HerolandKnowledgeDto> pageResponse = herolandKnowledgeService.pageQuery(qo);
         result.setData(pageResponse.getItems());
         Pagination pagination = new Pagination();

@@ -111,6 +111,8 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
         detail.setStormAnswer(dp.getStormAnswer());
         detail.setInformation(dp.getInformation());
         detail.setSimilarQt(JSON.toJSONString(dp.getSimilarQt()));
+        detail.setPassage(dp.getPassage());
+        detail.setOptionZ(dp.getOptionZ());
         herolandQuestionBankDetailMapper.insertSelective(detail);
         if (!CollectionUtils.isEmpty(dp.getKnowledges())) {
             List<HerolandKnowledgeRefer> list = Lists.newArrayList();
@@ -148,6 +150,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDP.setStorage(e.getStorage());
             bankDP.setInformation(e.getInformation());
             bankDP.setBankType(e.getBankType());
+            bankDP.setPassage(e.getPassage());
+            bankDP.setOptionZ(e.getOption_z());
+
             try {
 //                if (!StringUtils.isEmpty(e.getKnowledgeId())) {
 //                    List<Long> knowledges = Arrays.asList(e.getKnowledgeId().split(",")).stream().map(NumberUtils::parseLong).distinct().collect(Collectors.toList());
@@ -287,6 +292,8 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             bankDto.setParse(byQtId.get(0).getParse());
             bankDto.setAnalysis(byQtId.get(0).getAnalysis());
             bankDto.setInformation(byQtId.get(0).getInformation());
+            bankDto.setOptionZ(byQtId.get(0).getOptionZ());
+            bankDto.setPassage(byQtId.get(0).getPassage());
         }
         bankDto.setKnowledges(dtoList);
         return bankDto;
@@ -731,6 +738,9 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
     private HeroLandQuestionBankDto getAdminData(HerolandQuestionBank bank) {
         HeroLandQuestionBankDto bankDto = BeanCopyUtils.copyByJSON(bank, HeroLandQuestionBankDto.class);
         bankDto.setGrade(bank.getGradeCode());
+        bankDto.setStorage(bank.getStorage());
+        bankDto.setThink(bank.getThink());
+        bankDto.setPassageId(bank.getPassageId());
         bankDto.setYear(StringUtils.isEmpty(bank.getYear()) ? "" : DateUtils.dateToYear(bank.getYear()));
         List<String> keys = Lists.newArrayList();
         keys.add(bank.getCourse());

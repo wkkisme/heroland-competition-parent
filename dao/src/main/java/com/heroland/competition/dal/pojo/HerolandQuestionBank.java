@@ -1,10 +1,12 @@
 package com.heroland.competition.dal.pojo;
 
 import com.anycommon.response.common.BaseDO;
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -60,6 +62,18 @@ public class HerolandQuestionBank {
      * 为赛事而区分
      */
     private Integer bankType;
+
+    /**
+     * 相似题id
+     * qtId
+     */
+    private String optionZ;
+
+    /**
+     * 不知道是啥
+     * 可暂时不管
+     */
+    private String passage;
 
 
     private Long id;
