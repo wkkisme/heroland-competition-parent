@@ -6,9 +6,11 @@ import com.google.common.collect.Lists;
 import com.heroland.competition.base.BaseServiceTest;
 import com.heroland.competition.common.enums.CompetitionEnum;
 import com.heroland.competition.domain.dp.AnswerQuestionRecordStatisticDP;
+import com.heroland.competition.domain.dp.CompetitionCourseFinishStatisticDP;
 import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.dto.HeroLandTopicDto;
+import com.heroland.competition.domain.qo.CourseFinishStatisticQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
 import com.heroland.competition.domain.request.HeroLandTopicQuestionsPageRequest;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
@@ -195,10 +197,13 @@ public class HeroCompetitionTest extends BaseServiceTest {
 
     @Test
     public void  checkOrder(){
-        String s= "{\"startTime\":\"\",\"endTime\":\"\",\"pageIndex\":1,\"pageSize\":10,\"type\":0,\"courseCode\":\"CU-002\",\"userId\":\"2981497437383819656001\",\"topicIds\":[\"363\",\"351\",\"349\",\"315\",\"250\"],\"orgCode\":\"SH-611603590329919\"}";
+        String s= "{\"type\":0,\"classCode\":\"CA-611611150051537\",\"gradeCode\":\"GA_006\",\"userId\":\"3235234182347096454001\",\"startTime\":\"\",\"endTime\":\"\",\"orgCode\":\"SH-61161114982262\"}";
         HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = JSON.parseObject(s, HeroLandTopicQuestionsPageRequest.class);
-        ResponseBody<List<AnswerQuestionRecordStatisticDP>> answerQuestionRecordStatistic = heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(heroLandTopicQuestionsPageRequest);
-        System.out.println(answerQuestionRecordStatistic);
+//        ResponseBody<List<AnswerQuestionRecordStatisticDP>> answerQuestionRecordStatistic = heroLandCompetitionStatisticsService.getAnswerQuestionRecordStatistic(heroLandTopicQuestionsPageRequest);
+//        System.out.println(answerQuestionRecordStatistic);
 
+        CourseFinishStatisticQO courseFinishStatisticQO = JSON.parseObject(s, CourseFinishStatisticQO.class);
+        ResponseBody<List<CompetitionCourseFinishStatisticDP>> courseFinishStatistic = heroLandCompetitionStatisticsService.getCourseFinishStatistic(courseFinishStatisticQO);
+        System.out.println(courseFinishStatistic);
     }
 }
