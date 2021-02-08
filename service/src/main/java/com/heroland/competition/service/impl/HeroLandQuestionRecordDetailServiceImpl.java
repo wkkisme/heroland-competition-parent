@@ -10,8 +10,10 @@ import com.heroland.competition.dal.mapper.HeroLandQuestionRecordDetailExtMapper
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetail;
 import com.heroland.competition.dal.pojo.HeroLandQuestionRecordDetailExample;
 import com.heroland.competition.domain.dp.HeroLandQuestionRecordDetailDP;
+import com.heroland.competition.domain.dp.HerolandBasicDataDP;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
+import com.heroland.competition.service.admin.HeroLandAdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,6 +38,9 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
 
     @Resource
     private HeroLandQuestionRecordDetailExtMapper questionRecordDetailExtMapper;
+
+    @Resource
+    private HeroLandAdminService heroLandAdminService;
 
     @Override
     public ResponseBody<String> addQuestionRecord(HeroLandQuestionRecordDetailDP recordDetailDP) {
@@ -139,6 +145,17 @@ public class HeroLandQuestionRecordDetailServiceImpl implements HeroLandQuestion
             logger.error("", e);
             ResponseBodyWrapper.failSysException();
         }
+
+        List<String> keys = Lists.newArrayList();
+        keys.addAll(heroLandQuestions.stream().map(HeroLandQuestionRecordDetail::getSubjectCode).collect(Collectors.toList()));
+        List<HerolandBasicDataDP> dictInfoByKeys = heroLandAdminService.getDictInfoByKeys(keys);
+        Map<String, List<HerolandBasicDataDP>> data = dictInfoByKeys.stream().collect(Collectors.groupingBy(HerolandBasicDataDP::getDictKey));
+        heroLandQuestions.forEach(e -> {
+            if (data.containsKey(e.getSubjectCode())){
+                e.setSubjectName(data.get(e.getSubjectCode()).get(0).getDictValue());
+            }
+        });
+
 
         return ResponseBodyWrapper.successListWrapper(heroLandQuestions, count, qo, HeroLandQuestionRecordDetailDP.class);
     }

@@ -108,6 +108,12 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
     private String subjectCode;
 
     /**
+     * 科目名称
+     */
+    @ApiModelProperty(value = "subjectCode科目code")
+    private String subjectName;
+
+    /**
      * 对手名字
      */
     @ApiModelProperty(value = "opponentName对手名字")
@@ -475,5 +481,13 @@ public class HeroLandQuestionRecordDetailDP extends BaseDO implements Serializab
 
     public void setDiff(Integer diff) {
         this.diff = diff;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }

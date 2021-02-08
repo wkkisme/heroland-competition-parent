@@ -98,6 +98,13 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
     @ApiModelProperty(value="subjectCode科目code")
     private String subjectCode;
 
+
+    /**
+     * 科目名称
+     */
+    @ApiModelProperty(value = "subjectCode科目code")
+    private String subjectName;
+
     /**
      * 对手名字
      */
@@ -473,5 +480,13 @@ public class HeroLandQuestionRecordDetail extends BaseDO implements Serializable
      */
     public void setHistory(Boolean history) {
         this.history = history;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
     }
 }
