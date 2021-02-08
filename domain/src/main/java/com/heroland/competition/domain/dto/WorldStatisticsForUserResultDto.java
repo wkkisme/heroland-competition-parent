@@ -21,21 +21,21 @@ public class WorldStatisticsForUserResultDto implements Serializable {
     @ApiModelProperty(value="userIduserid")
     private String userId;
 
-    /**
-     * 姓名
-     */
-    @ApiModelProperty(value="userName姓名")
-    private String userName;
+//    /**
+//     * 姓名
+//     */
+//    @ApiModelProperty(value="userName姓名")
+//    private String userName;
 
-    /**
-     * 学校code
-     */
-    private String schoolCode;
-
-    /**
-     * 学校name
-     */
-    private String schoolName;
+//    /**
+//     * 学校code
+//     */
+//    private String schoolCode;
+//
+//    /**
+//     * 学校name
+//     */
+//    private String schoolName;
 
     /**
      * 总分数
@@ -43,11 +43,11 @@ public class WorldStatisticsForUserResultDto implements Serializable {
     @ApiModelProperty(value="totalScore总分数")
     private Integer totalScore;
 
-    /**
-     * 排名
-     */
-    @ApiModelProperty(value="totalRank排名")
-    private Integer totalRank;
+//    /**
+//     * 排名
+//     */
+//    @ApiModelProperty(value="totalRank排名")
+//    private Integer totalRank;
 
     /**
      * 得分率
@@ -67,11 +67,11 @@ public class WorldStatisticsForUserResultDto implements Serializable {
     @ApiModelProperty(value="winRate胜率")
     private Double winRate;
 
-    /**
-     * 总时长单位s
-     */
-    @ApiModelProperty(value="totalTime总时长单位s")
-    private Integer totalTime;
+//    /**
+//     * 总时长单位s
+//     */
+//    @ApiModelProperty(value="totalTime总时长单位s")
+//    private Integer totalTime;
 
     /**
      * 平均分
@@ -79,16 +79,16 @@ public class WorldStatisticsForUserResultDto implements Serializable {
     @ApiModelProperty(value="averageScore平均分")
     private Double averageScore;
 
-    /**
-     * 年级code
-     */
-    @ApiModelProperty(value="gradeCode年级code")
-    private String gradeCode;
-
-    /**
-     * 年级名称
-     */
-    @ApiModelProperty(value="gradeName年级名称")
-    private String gradeName;
+//    /**
+//     * 年级code
+//     */
+//    @ApiModelProperty(value="gradeCode年级code")
+//    private String gradeCode;
+//
+//    /**
+//     * 年级名称
+//     */
+//    @ApiModelProperty(value="gradeName年级名称")
+//    private String gradeName;
 
 }
