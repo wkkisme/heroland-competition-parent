@@ -175,5 +175,16 @@ public class HeroLandCompetitionStatisticsController {
         return heroLandCompetitionStatisticsService.worldStatisticResult(qo);
     }
 
+    /**
+     * 世界赛榜单的顶部统计数据
+     * 根据近一年比赛的数据做的统计
+     * @param qo
+     * @return
+     */
+    @PostMapping("/worldStatisticsForUser")
+    ResponseBody<WorldStatisticsForUserResultDto> worldStatisticsForUser(@RequestBody WorldStatisticsQO qo) {
+        return heroLandCompetitionStatisticsService.worldStatisticsResultForUser(qo);
+    }
+
 
 }

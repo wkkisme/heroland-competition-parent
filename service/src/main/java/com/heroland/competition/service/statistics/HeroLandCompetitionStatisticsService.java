@@ -101,4 +101,6 @@ public interface HeroLandCompetitionStatisticsService {
     ResponseBody<List<WorldStatisticResultDto>> worldStatisticResult(WorldStatisticQO qo);
 
     Boolean deleteHistoryStatisticsTotalAndDetailByQO(HeroLandStatisticsTotalQO qo);
+
+    ResponseBody<WorldStatisticsForUserResultDto> worldStatisticsResultForUser(WorldStatisticsQO qo);
 }

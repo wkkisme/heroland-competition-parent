@@ -932,4 +932,35 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         heroLandStatisticsDetailExtMapper.deleteByExample(heroLandStatisticsDetailExample);
         return true;
     }
+
+    @Override
+    public ResponseBody<WorldStatisticsForUserResultDto> worldStatisticsResultForUser(WorldStatisticsQO qo) {
+        HerolandStatisticsWordExample example = new HerolandStatisticsWordExample();
+        HerolandStatisticsWordExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(qo.getUserId()).andIsDeletedEqualTo(false).andStatisticTypeEqualTo(TopicJoinConstant.statisic_type_total);
+        List<HerolandStatisticsWord> herolandStatisticsWords = herolandStatisticsWordMapper.selectByExample(example);
+        long count = herolandStatisticsWordMapper.countByExample(example);
+        ResponseBody<WorldStatisticsForUserResultDto> responseBody = new ResponseBody<>();
+        if (count > 0){
+            WorldStatisticsForUserResultDto resultDto = new WorldStatisticsForUserResultDto();
+            double totalAnswerRightRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getAnswerRightRate())).mapToDouble(HerolandStatisticsWord::getAnswerRightRate).sum();
+            resultDto.setAnswerRightRate((totalAnswerRightRate/count));
+
+
+            double totalAverageScore = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getAverageScore())).mapToDouble(HerolandStatisticsWord::getAverageScore).sum();
+            resultDto.setAverageScore((totalAverageScore/count));
+
+            double totalCompleteRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getCompleteRate())).mapToDouble(HerolandStatisticsWord::getCompleteRate).sum();
+            resultDto.setCompleteRate((totalCompleteRate/count));
+
+            double totalWinRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getWinRate())).mapToDouble(HerolandStatisticsWord::getWinRate).sum();
+            resultDto.setWinRate((totalWinRate/count));
+
+            Integer totalScore = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getTotalScore())).mapToInt(HerolandStatisticsWord::getTotalScore).sum();
+            resultDto.setTotalScore((int)(totalScore/ count));
+            responseBody.setData(resultDto);
+
+        }
+        return responseBody;
+    }
 }
