@@ -469,12 +469,17 @@ public class HeroLandQuestionBankServiceImpl implements HeroLandQuestionBankServ
             }
             try {
                 herolandQuestionBankImportDP.setQtype(Integer.parseInt(v.getQtype().trim()));
-            } catch (NumberFormatException ignored) {
-                log.error("",ignored);
+            } catch (NumberFormatException e) {
+                log.error("",e);
             }
             try {
                 herolandQuestionBankImportDP.setThink(Integer.parseInt(v.getThink()));
             } catch (NumberFormatException ignored) {
+            }
+            String pinjie = "<br />";
+
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(v.getPassage()) && org.apache.commons.lang3.StringUtils.isNotBlank(v.getQuestion())){
+                herolandQuestionBankImportDP.setQuestion(v.getQuestion() + pinjie + v.getPassage());
             }
             checkBankFromImport(herolandQuestionBankImportDP);
             List<Long> knowledgeIds = handleKnowlwdgeFromImportQuestion(herolandQuestionBankImportDP);
