@@ -58,8 +58,8 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
             }
             // 答对才进入
             if (v.getCorrectAnswer()) {
-                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getQuestionId(), 1);
-                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getQuestionId(), 60 * 60 * 24);
+                Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
+                redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 60 * 60 * 24);
                 // 第一个进入答此题的人
                 v.setScore(Math.toIntExact(topic.getCountLimit() - (rank - 1)));
 
