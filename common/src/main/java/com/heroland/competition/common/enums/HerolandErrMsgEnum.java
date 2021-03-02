@@ -20,7 +20,7 @@ public enum HerolandErrMsgEnum {
 
 
 
-    ERROR_PARAM("70100", "同一类型下不支持相同编号"),
+    ERROR_PARAM("70100", "学校编号必须唯一"),
     ERROR_NAME("70100", "同一基础数据类型下已存在相同名称数据"),
 
     ERROR_TIME("70101", "时间参数不正确"),
