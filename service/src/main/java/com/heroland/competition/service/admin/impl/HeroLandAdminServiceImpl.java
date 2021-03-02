@@ -107,9 +107,9 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         }
         try {
             List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodesAndValue(Lists.newArrayList(dp.getCode()), dp.getDictValue());
-            if (!CollectionUtils.isEmpty(herolandBasicData)){
-                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_NAME.getErrorMessage());
-            }
+//            if (!CollectionUtils.isEmpty(herolandBasicData)){
+//                ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_NAME.getErrorMessage());
+//            }
 
             HerolandBasicData basicData = BeanUtil.updateConversion(dp.checkAndBuildBeforeUpdate(), new HerolandBasicData());
             result.setData(herolandBasicDataMapper.updateByPrimaryKeySelective(basicData) > 0);
