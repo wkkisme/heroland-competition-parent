@@ -101,7 +101,7 @@ public class HeroLandAdminServiceImpl implements HeroLandAdminService {
         if (StringUtils.isNotBlank(dp.getBizNo())){
             HerolandBasicData basicData = herolandBasicDataMapper.selectByPrimaryKey(dp.getId());
             List<HerolandBasicData> herolandBasicData = herolandBasicDataMapper.selectByCodeAndBizNo(basicData.getCode(), dp.getBizNo());
-            if (!CollectionUtils.isEmpty(herolandBasicData) && herolandBasicData.get(0).getId() != dp.getId()){
+            if (!CollectionUtils.isEmpty(herolandBasicData) && !herolandBasicData.get(0).getId().equals(dp.getId())){
                 ResponseBodyWrapper.failException(HerolandErrMsgEnum.ERROR_PARAM.getErrorMessage());
             }
         }
