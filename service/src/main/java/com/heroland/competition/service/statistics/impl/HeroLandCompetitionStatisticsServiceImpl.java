@@ -332,12 +332,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
                 long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
+                long right = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getCorrectAnswer).count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();
+                double rightRate = (double) right / (double) heroLandQuestionRecordDetailDPS.size();
                 v.setCompleteRate(Math.min(v1, 1D));
+                v.setAnswerRightRate(Math.min(rightRate, 1D));
                 v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().filter(n->n.getScore() != null).mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
             } else {
                 v.setCompleteRate(0D);
                 v.setTotalScore(0);
+                v.setAnswerRightRate(0D);
             }
 
         });

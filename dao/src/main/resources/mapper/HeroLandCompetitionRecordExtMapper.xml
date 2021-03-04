@@ -157,7 +157,7 @@
     </select>
     <select id="getDetailCount" resultMap="StatisticsMap">
 
-        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code,subject_code
+        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code,subject_code,correct_answer
         from heroland_question_record_detail
         where is_deleted =0 and history = 0
         <if test="ifCorrectAnswer == true">
