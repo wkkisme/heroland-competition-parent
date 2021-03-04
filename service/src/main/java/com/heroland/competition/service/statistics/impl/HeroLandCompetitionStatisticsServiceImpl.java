@@ -457,7 +457,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     if (CollUtil.isNotEmpty(competitionRecords)) {
                         long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(Objects::nonNull).filter(c -> Integer.valueOf(0).equals(c)).count();
                         // 胜率
-                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
+                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(heroLandCompetitionRecords.size()), 2, RoundingMode.HALF_UP);
                         dp.setWinRate(winRate);
 
                     }

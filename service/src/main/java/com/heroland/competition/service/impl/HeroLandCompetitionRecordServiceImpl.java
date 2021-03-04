@@ -325,11 +325,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                                     totalCount = totalCount + questions.get(0).getTotalCount();
                                 }
                             }
-                            calRate(v, totalCount);
                         } else {
                             totalCount = topics.size();
-                            calRate(v, totalCount);
                         }
+                        calRate(v, totalCount);
                     }
                 } else {
 
