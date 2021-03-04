@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 @Data
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
-public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
+public class HeroLandStatisticsTotalQO extends HeroLandStatisticsAllQO implements Serializable {
     /**
      * 学校机构code 必传
      */
@@ -160,18 +160,11 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private Boolean queryAll;
 
-    private List<String> topicIds;
+    private List<Long> topicIds;
 
     public Integer resultInvite;
     public Integer resultOpponent;
 
-    public List<String> getTopicIds() {
-        return topicIds;
-    }
-
-    public void setTopicIds(List<String> topicIds) {
-        this.topicIds = topicIds;
-    }
 
     public Boolean getQueryAll() {
         return queryAll;

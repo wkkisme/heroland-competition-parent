@@ -6,12 +6,14 @@ import com.heroland.competition.common.enums.GroupByEnum;
 import com.heroland.competition.common.enums.OrderByEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
+@Data
 public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
     /**
      * 学校机构code 必传
@@ -118,13 +120,6 @@ public class HeroLandStatisticsAllQO extends BaseQO implements Serializable {
         this.topic2Subject = topic2Subject;
     }
 
-    public List<Long> getTopicIds() {
-        return topicIds;
-    }
-
-    public void setTopicIds(List<Long> topicIds) {
-        this.topicIds = topicIds;
-    }
 
     public Boolean getIfCorrectAnswer() {
         return ifCorrectAnswer;

@@ -306,7 +306,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<HerolandTopicQuestion> topicsQuestions;
         if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
             HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
-            heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
+            heroLandTopicQuestionsQo.setTopicIds(new ArrayList<>(qo.getTopicIds()));
             topicsQuestions = heroLandQuestionService.getTopicsQuestionsSimple(heroLandTopicQuestionsQo);
 
         } else {

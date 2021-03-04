@@ -259,12 +259,12 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             if(topicType != null) {
                 Map<String, String> level = getLevel(Collections.singletonList(userId), topicType,userId);
                 String levelCode = level.get(userId);
-                if (HeroLevelEnum.ADVERSITY_HERO.name().equals(levelCode)) {
-                    account.setLevelName("逆境英雄");
+                if (HeroLevelEnum.COURAGEOUS_HERO.name().equals(levelCode)) {
+                    account.setLevelName("奋勇英雄");
                 } else if (HeroLevelEnum.SUPREME_HERO.name().equals(levelCode)) {
                     account.setLevelName("至尊英雄");
                 } else {
-                    account.setLevelName("奋勇英雄");
+                    account.setLevelName("逆境英雄");
                 }
             }
         } catch (Exception e) {
