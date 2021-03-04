@@ -154,8 +154,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public Map<String, String> getLevel(List<String> userIds, Integer topicType,String currentUser) {
         Map<String, String> levelMap = new HashMap<>();
         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
-        heroLandStatisticsTotalQO.setUserIds(userIds);
+//        heroLandStatisticsTotalQO.setUserIds(userIds);
         heroLandStatisticsTotalQO.setType(topicType);
+        heroLandStatisticsTotalQO.setNeedPage(false);
         if (CompetitionEnum.WORLD.getType().equals(topicType)){
             heroLandStatisticsTotalQO.setUserId(currentUser);
         }
