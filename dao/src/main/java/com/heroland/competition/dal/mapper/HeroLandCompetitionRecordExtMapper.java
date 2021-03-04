@@ -24,7 +24,7 @@ public interface HeroLandCompetitionRecordExtMapper extends HeroLandCompetitionR
 
     List<HeroLandStatisticsDetailAll> getCompleteRate(HeroLandStatisticsAllQO qo);
 
-    List<HeroLandStatisticsDetailAll> getWinRate(HeroLandStatisticsAllQO qo);
+    List<HeroLandStatisticsDetailAll> getWinRate(HeroLandStatisticsTotalQO qo);
 
     List<HeroLandStatisticsDetailAll> getTotalTime(HeroLandStatisticsAllQO qo);
 

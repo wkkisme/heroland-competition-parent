@@ -148,16 +148,16 @@ public class StatisticsTask {
                     }
                 }
 
-                /*
-                 *5 胜率
-                 */
-                List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
-                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
-                    HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
-                    if (dp != null) {
-                        dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
-                    }
-                }
+//                /*
+//                 *5 胜率
+//                 */
+//                List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
+//                for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
+//                    HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
+//                    if (dp != null) {
+//                        dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
+//                    }
+//                }
 
                 /*
                  * 6 总时长

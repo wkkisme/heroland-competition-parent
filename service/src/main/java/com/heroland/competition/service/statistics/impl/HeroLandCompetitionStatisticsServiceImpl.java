@@ -256,6 +256,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //  计算完成率
         getComplate(qo, detailAlls);
 
+        // 计算胜率
+
+        List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(qo);
+        if (!CollectionUtils.isEmpty(winRate )){
+            Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
+            detailAlls.forEach(v->{
+                v.setWinRate(winRates.get(v.getUserId()));
+            });
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);

@@ -22,6 +22,7 @@ import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.platfrom.payment.dto.PayOrderDTO;
@@ -368,7 +369,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO qo) {
+    public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsTotalQO qo) {
         try {
 
 
