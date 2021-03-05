@@ -14,7 +14,7 @@
     <!-- 定义日志文件 输出位置 -->
     <property name="log.home_dir" value="../logs/"/>
     <!-- 日志最大的历史 180 个 -->
-    <property name="log.maxHistory" value="180"/>
+    <property name="log.maxHistory" value="10"/>
     <property name="log.level" value="info"/>
 
 
@@ -55,7 +55,7 @@
             -->
             <maxHistory>${log.maxHistory}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>2MB</MaxFileSize>
+                <MaxFileSize>1MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
@@ -85,7 +85,7 @@
             <fileNamePattern>${log.home_dir}/${app.name}/warn-%d{yyyyMMdd}-%i.log</fileNamePattern>
             <maxHistory>${log.maxHistory}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>2MB</MaxFileSize>
+                <MaxFileSize>1MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
@@ -106,7 +106,7 @@
             <fileNamePattern>${log.home_dir}/${app.name}/info-%d{yyyyMMdd}-%i.log</fileNamePattern>
             <maxHistory>${log.maxHistory}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>2MB</MaxFileSize>
+                <MaxFileSize>1MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
@@ -127,7 +127,7 @@
             <fileNamePattern>${log.home_dir}/${app.name}/debug-%d{yyyyMMdd}-%i.log</fileNamePattern>
             <maxHistory>${log.maxHistory}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>100MB</MaxFileSize>
+                <MaxFileSize>1MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
@@ -148,7 +148,7 @@
             <fileNamePattern>${log.home_dir}/${app.name}/trace-%d{yyyyMMdd}-%i.log</fileNamePattern>
             <maxHistory>${log.maxHistory}</maxHistory>
             <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <MaxFileSize>2MB</MaxFileSize>
+                <MaxFileSize>1MB</MaxFileSize>
             </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
         <encoder>
