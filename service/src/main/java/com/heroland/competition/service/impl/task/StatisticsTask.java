@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  *
  * @author wangk
  */
-@Component
+//@Component
 @Slf4j
 public class StatisticsTask {
     @Resource
