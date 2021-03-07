@@ -83,7 +83,6 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopic());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users = new LinkedHashSet<>();
-        List<String> userIds = members.stream().map(String::valueOf).collect(Collectors.toList());
         HeroLandTopicPageRequest heroLandTopicGroupQO = new HeroLandTopicPageRequest();
         heroLandTopicGroupQO.setTopicId(Long.valueOf(dp.getTopicId()));
 
@@ -272,7 +271,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             account = heroLandAccountExtMapper.selectByUserId(userId);
 
             if(topicType != null) {
-                Map<String, String> level = getLevel(new HeroLandAccountQO(), topicType, userId);
+                Map<String, String> level = getLevel(qo, topicType, userId);
                 String levelCode = level.get(userId);
                 if (HeroLevelEnum.COURAGEOUS_HERO.name().equals(levelCode)) {
                     account.setLevelName("奋勇英雄");
