@@ -61,7 +61,7 @@ public class CompetitionCourseFinishStatisticDP extends BaseDO implements Serial
     /**
      * 胜率
      */
-    private BigDecimal winRate;
+    private Double winRate;
 
     /**
      * 课数
