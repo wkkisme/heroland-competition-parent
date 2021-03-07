@@ -36,9 +36,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -149,33 +147,38 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         ResponseBody<List<PlatformSysUserClassDP>> listResponseBody = platformSsoUserClassServiceFacade.queryUserClassList(platformSysUserQO);
         if (!listResponseBody.isSuccess() || CollectionUtils.isEmpty(listResponseBody.getData())) {
             return result;
-        }
-        if (CollectionUtils.isEmpty(request.getDepartmentCode())) {
-            List<PlatformSysUserClassDP> allClassData = listResponseBody.getData();
-            list = processClassInfo(allClassData, request);
         } else {
-            //默认以年级作为参数
-            if (StringUtils.isEmpty(request.getDepartmentType())) {
-                request.setDepartmentType("GA");
-            }
-            //查询参数不为空
-            switch (request.getDepartmentType()) {
-                //暂时不根据班级去查
-                case "CA":
-                    List<PlatformSysUserClassDP> classInfoByClass = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getClassCode())).collect(Collectors.toList());
-                    list = processClassInfo(classInfoByClass, request);
 
-                    break;
-                case "GA":
-                    List<PlatformSysUserClassDP> classInfoByGrades = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getGradeCode())).collect(Collectors.toList());
-                    list = processClassInfo(classInfoByGrades, request);
-                    break;
+            List<PlatformSysUserClassDP> data = listResponseBody.getData();
+            // 兼容
+            data = (List<PlatformSysUserClassDP>) data.stream().collect(Collectors.toMap(PlatformSysUserClassDP::getGradeCode, Function.identity(), (o, n) -> n)).values();
+            //
+            if (CollectionUtils.isEmpty(request.getDepartmentCode())) {
+                list = processClassInfo(data, request);
+            } else {
+                //默认以年级作为参数
+                if (StringUtils.isEmpty(request.getDepartmentType())) {
+                    request.setDepartmentType("GA");
+                }
+                //查询参数不为空
+                switch (request.getDepartmentType()) {
+                    //暂时不根据班级去查
+                    case "CA":
+                        List<PlatformSysUserClassDP> classInfoByClass = data.stream().filter(e -> request.getDepartmentCode().contains(e.getClassCode())).collect(Collectors.toList());
+                        list = processClassInfo(classInfoByClass, request);
 
-                //暂时不根据学校去查
-                case "SH":
-                    List<PlatformSysUserClassDP> classInfoByOrgs = listResponseBody.getData().stream().filter(e -> request.getDepartmentCode().contains(e.getOrgCode())).collect(Collectors.toList());
-                    list = processClassInfo(classInfoByOrgs, request);
-                    break;
+                        break;
+                    case "GA":
+                        List<PlatformSysUserClassDP> classInfoByGrades = data.stream().filter(e -> request.getDepartmentCode().contains(e.getGradeCode())).collect(Collectors.toList());
+                        list = processClassInfo(classInfoByGrades, request);
+                        break;
+
+                    //暂时不根据学校去查
+                    case "SH":
+                        List<PlatformSysUserClassDP> classInfoByOrgs = data.stream().filter(e -> request.getDepartmentCode().contains(e.getOrgCode())).collect(Collectors.toList());
+                        list = processClassInfo(classInfoByOrgs, request);
+                        break;
+                }
             }
         }
         result.setData(list);
@@ -217,7 +220,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             classQO.setClassCode(e.getClassCode());
             classQO.setUserType(0);
             ResponseBody<Long> responseBody = platformSsoUserClassServiceFacade.queryUserClassCount(classQO);
-            if (responseBody.isSuccess()){
+            if (responseBody.isSuccess()) {
                 infoDto.setClassHasStudentCount(NumberUtils.parseInt(responseBody.getData()));
             }
 
