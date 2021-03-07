@@ -331,7 +331,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
-                long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
+                long count = heroLandQuestionRecordDetailDPS.stream().collect(Collectors.groupingBy(this::getTopicIdAndQtId)).entrySet().size();
                 long right = heroLandQuestionRecordDetailDPS.stream().filter(HeroLandQuestionRecordDetail::getCorrectAnswer).count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();
                 double rightRate = (double) right / (double) heroLandQuestionRecordDetailDPS.size();
@@ -347,6 +347,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         });
     }
 
+    private String getTopicIdAndQtId(HeroLandQuestionRecordDetail detail){
+        return detail.getTopicId() + detail.getQuestionId();
+    }
     private ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetailForWorld(HeroLandStatisticsTotalQO qo) {
         ResponseBody<List<HeroLandStatisticsDetailDP>> pageResult = new ResponseBody<>();
         List<HeroLandStatisticsDetailDP> list = Lists.newArrayList();
