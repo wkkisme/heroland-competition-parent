@@ -6,6 +6,7 @@ import com.heroland.competition.common.utils.IDGenerateUtils;
 import com.xiaoju.uemc.tinyid.client.utils.TinyId;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 import static com.heroland.competition.common.utils.IDGenerateUtils.ModelEnum.DEFAULT;
 
 @ApiModel(value = "com.heroland.competition.dal.pojo.HeroLandStatisticsDetail")
+@Data
 public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
     /**
      * userid
@@ -153,6 +155,7 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
 
     private List<String> topicIds;
 
+    private Boolean correctAnswer;
     private HeroLandStatisticsDetailDP myselfRank;
 
     public List<String> getTopicIds() {

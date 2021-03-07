@@ -11,9 +11,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  **/
-@Ignore // NOTE 自动测试忽略此类
-@RunWith(SpringRunner.class)  //使用junit4进行测试
-@SpringBootTest(classes = HeroLandApplication.class)
+//@Ignore // NOTE 自动测试忽略此类
+//@RunWith(SpringRunner.class)  //使用junit4进行测试
+//@SpringBootTest(classes = HeroLandApplication.class)
 //@ContextConfiguration(locations = {"classpath:redis-dev-standalone.properties"}) //加载配置文件
 public class BaseServiceTest {
     // 测试用户

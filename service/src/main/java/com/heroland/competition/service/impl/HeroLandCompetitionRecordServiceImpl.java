@@ -22,6 +22,7 @@ import com.heroland.competition.domain.dp.HeroLandStatisticsDetailDP;
 import com.heroland.competition.domain.qo.HeroLandCompetitionRecordQO;
 import com.heroland.competition.domain.qo.HeroLandQuestionQO;
 import com.heroland.competition.domain.qo.HeroLandStatisticsAllQO;
+import com.heroland.competition.domain.qo.HeroLandStatisticsTotalQO;
 import com.heroland.competition.service.HeroLandCompetitionRecordService;
 import com.heroland.competition.service.HeroLandQuestionRecordDetailService;
 import com.platfrom.payment.dto.PayOrderDTO;
@@ -324,11 +325,10 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
                                     totalCount = totalCount + questions.get(0).getTotalCount();
                                 }
                             }
-                            calRate(v, totalCount);
                         } else {
                             totalCount = topics.size();
-                            calRate(v, totalCount);
                         }
+                        calRate(v, totalCount);
                     }
                 } else {
 
@@ -368,7 +368,7 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
     }
 
     @Override
-    public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO qo) {
+    public List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsTotalQO qo) {
         try {
 
 
@@ -376,21 +376,21 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
              * 再查出总的
              */
             List<HeroLandStatisticsDetailAll> totalCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetch));
+            Map<String, List<HeroLandStatisticsDetailAll>> totalCountMap = totalCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetchUser));
             /*
              * 先查出正确的
              */
             qo.setResultInvite(0);
             qo.setResultOpponent(1);
             List<HeroLandStatisticsDetailAll> rightCount = heroLandCompetitionRecordExtMapper.getWinRate(qo);
-            Map<String, List<HeroLandStatisticsDetailAll>> rightCountMap = rightCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetch));
+            Map<String, List<HeroLandStatisticsDetailAll>> rightCountMap = rightCount.stream().filter(e -> e.getSubjectCode() != null).collect(Collectors.groupingBy(this::fetchUser));
 
 
-            //  计算胜率，正确的/总答题数
+            //  计算胜率，正确的/总比赛数
             for (HeroLandStatisticsDetailAll heroLandStatisticsDetailDp : rightCount) {
                 for (HeroLandStatisticsDetailAll landStatisticsDetailDp : totalCount) {
-                    List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(this.fetch(landStatisticsDetailDp));
-                    List<HeroLandStatisticsDetailAll> heroLandStatisticsDetailAlls = rightCountMap.get(this.fetch(landStatisticsDetailDp));
+                    List<HeroLandStatisticsDetailAll> alls = totalCountMap.get(this.fetchUser(landStatisticsDetailDp));
+                    List<HeroLandStatisticsDetailAll> heroLandStatisticsDetailAlls = rightCountMap.get(this.fetchUser(landStatisticsDetailDp));
                     if (CollectionUtils.isEmpty(alls) || CollectionUtils.isEmpty(heroLandStatisticsDetailAlls)) {
                         if (heroLandStatisticsDetailDp.getUserId().equals(landStatisticsDetailDp.getUserId())) {
                             double v = (double) heroLandStatisticsDetailDp.getRightCount() / (double) landStatisticsDetailDp.getRightCount();
@@ -471,5 +471,8 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
 
     public String fetch(HeroLandStatisticsDetailAll all){
         return all.getOrgCode() + all.getSubjectCode();
+    }
+    public String fetchUser(HeroLandStatisticsDetailAll all){
+        return all.getOrgCode() + all.getSubjectCode() +all.getUserId();
     }
 }

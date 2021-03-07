@@ -154,8 +154,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public Map<String, String> getLevel(List<String> userIds, Integer topicType,String currentUser) {
         Map<String, String> levelMap = new HashMap<>();
         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
-        heroLandStatisticsTotalQO.setUserIds(userIds);
+//        heroLandStatisticsTotalQO.setUserIds(userIds);
         heroLandStatisticsTotalQO.setType(topicType);
+        heroLandStatisticsTotalQO.setNeedPage(false);
         if (CompetitionEnum.WORLD.getType().equals(topicType)){
             heroLandStatisticsTotalQO.setUserId(currentUser);
         }
@@ -163,8 +164,17 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
             List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();
+            List<HeroLandStatisticsDetailDP> result = new ArrayList<>();
+            Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
+            collect.forEach((k,v)->{
+                double winRate = v.stream().mapToDouble(HeroLandStatisticsDetailDP::getWinRate).average().getAsDouble();
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+                heroLandStatisticsDetailDP.setUserId(k);
+                heroLandStatisticsDetailDP.setWinRate(winRate);
+                result.add(heroLandStatisticsDetailDP);
 
-            List<HeroLandStatisticsDetailDP> winRank = data.stream().sorted(Comparator.comparing(HeroLandStatisticsDetailDP::getWinRate)).collect(Collectors.toList());
+            });
+            List<HeroLandStatisticsDetailDP> winRank = result.stream().sorted(Comparator.comparing(HeroLandStatisticsDetailDP::getWinRate)).collect(Collectors.toList());
             int size = winRank.size();
 
             if (size ==1){
@@ -259,12 +269,12 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             if(topicType != null) {
                 Map<String, String> level = getLevel(Collections.singletonList(userId), topicType,userId);
                 String levelCode = level.get(userId);
-                if (HeroLevelEnum.ADVERSITY_HERO.name().equals(levelCode)) {
-                    account.setLevelName("逆境英雄");
+                if (HeroLevelEnum.COURAGEOUS_HERO.name().equals(levelCode)) {
+                    account.setLevelName("奋勇英雄");
                 } else if (HeroLevelEnum.SUPREME_HERO.name().equals(levelCode)) {
                     account.setLevelName("至尊英雄");
                 } else {
-                    account.setLevelName("奋勇英雄");
+                    account.setLevelName("逆境英雄");
                 }
             }
         } catch (Exception e) {

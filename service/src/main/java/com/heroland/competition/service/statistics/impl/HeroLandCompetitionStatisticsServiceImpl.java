@@ -256,6 +256,15 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //  计算完成率
         getComplate(qo, detailAlls);
 
+        // 计算胜率
+
+        List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(qo);
+        if (!CollectionUtils.isEmpty(winRate )){
+            Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
+            detailAlls.forEach(v->{
+                v.setWinRate(winRates.get(v.getUserId()));
+            });
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
@@ -297,7 +306,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         List<HerolandTopicQuestion> topicsQuestions;
         if (!CollectionUtils.isEmpty(qo.getTopicIds())) {
             HeroLandTopicGroupQO heroLandTopicQuestionsQo = new HeroLandTopicGroupQO();
-            heroLandTopicQuestionsQo.setTopicIds(qo.getTopicIds().stream().map(Long::valueOf).collect(Collectors.toList()));
+            heroLandTopicQuestionsQo.setTopicIds(new ArrayList<>(qo.getTopicIds()));
             topicsQuestions = heroLandQuestionService.getTopicsQuestionsSimple(heroLandTopicQuestionsQo);
 
         } else {
@@ -323,12 +332,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
                 long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
+                long right = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getCorrectAnswer).count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();
+                double rightRate = (double) right / (double) heroLandQuestionRecordDetailDPS.size();
                 v.setCompleteRate(Math.min(v1, 1D));
+                v.setAnswerRightRate(Math.min(rightRate, 1D));
                 v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().filter(n->n.getScore() != null).mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
             } else {
                 v.setCompleteRate(0D);
                 v.setTotalScore(0);
+                v.setAnswerRightRate(0D);
             }
 
         });
@@ -448,7 +461,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     if (CollUtil.isNotEmpty(competitionRecords)) {
                         long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(Objects::nonNull).filter(c -> Integer.valueOf(0).equals(c)).count();
                         // 胜率
-                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(competitionRecords.size()), 2, RoundingMode.HALF_UP);
+                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(heroLandCompetitionRecords.size()), 2, RoundingMode.HALF_UP);
                         dp.setWinRate(winRate);
 
                     }

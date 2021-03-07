@@ -96,7 +96,7 @@ public interface HeroLandCompetitionRecordService {
 
     List<HeroLandStatisticsDetailDP> getCompleteRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 
-    List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
+    List<HeroLandStatisticsDetailDP> getWinRate(HeroLandStatisticsTotalQO heroLandStatisticsTotalQO);
 
     List<HeroLandStatisticsDetailDP> getTotalTime(HeroLandStatisticsAllQO heroLandStatisticsTotalQO);
 

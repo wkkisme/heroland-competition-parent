@@ -155,7 +155,7 @@
 
         </if>
         <if test="queryAll != null">
-            group by subject_code
+            group by user_id,subject_code
         </if>
         ORDER BY rank ${orderType}
         <if test="startRow != null and startRow != -1 and pageSize != null">

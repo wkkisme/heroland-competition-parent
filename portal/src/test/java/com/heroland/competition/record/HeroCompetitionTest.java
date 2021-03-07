@@ -36,7 +36,7 @@ public class HeroCompetitionTest extends BaseServiceTest {
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
     @Resource
     private HeroLandQuestionService heroLandQuestionService;
-    @Test
+//    @Test
     public void test(){
 
         for (CompetitionEnum value : CompetitionEnum.values()) {
@@ -95,16 +95,16 @@ public class HeroCompetitionTest extends BaseServiceTest {
                 }
             }
 
-            /*
-             *5 胜率
-             */
-            List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
-            for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
-                HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
-                if (dp != null) {
-                    dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
-                }
-            }
+//            /*
+//             *5 胜率
+//             */
+//            List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
+//            for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
+//                HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
+//                if (dp != null) {
+//                    dp.setWinRate(heroLandStatisticsTotalDp.getWinRate());
+//                }
+//            }
 
             /*
              * 6 总时长
@@ -195,7 +195,7 @@ public class HeroCompetitionTest extends BaseServiceTest {
     @Resource
     private HeroLandCompetitionStatisticsService heroLandCompetitionStatisticsService;
 
-    @Test
+//    @Test
     public void  checkOrder(){
         String s= "{\"type\":0,\"classCode\":\"CA-611611150051537\",\"gradeCode\":\"GA_006\",\"userId\":\"3235234182347096454001\",\"startTime\":\"\",\"endTime\":\"\",\"orgCode\":\"SH-61161114982262\"}";
         HeroLandTopicQuestionsPageRequest heroLandTopicQuestionsPageRequest = JSON.parseObject(s, HeroLandTopicQuestionsPageRequest.class);

@@ -1,6 +1,7 @@
 package com.heroland.competition.service.impl.task;
 
 import com.anycommon.cache.service.RedisService;
+import com.anycommon.response.utils.BeanUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heroland.competition.common.enums.CompetitionEnum;
@@ -148,10 +149,12 @@ public class StatisticsTask {
                     }
                 }
 
-                /*
-                 *5 胜率
-                 */
-                List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(totalQo);
+//                /*
+//                 *5 胜率
+//                 */
+                HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
+                BeanUtil.copyProperties(totalQo,heroLandStatisticsTotalQO);
+                List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(heroLandStatisticsTotalQO);
                 for (HeroLandStatisticsDetailDP heroLandStatisticsTotalDp : winRate) {
                     HeroLandStatisticsDetailDP dp = mergeMap.get(this.fetchUserKey(heroLandStatisticsTotalDp));
                     if (dp != null) {

@@ -7,13 +7,14 @@ import com.heroland.competition.common.enums.OrderByEnum;
 import com.heroland.competition.common.utils.AssertUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
+@Data
 @ApiModel(value="com.heroland.competition.dal.pojo.HeroLandStatisticsTotal")
-public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
+public class HeroLandStatisticsTotalQO extends HeroLandStatisticsAllQO implements Serializable {
     /**
      * 学校机构code 必传
      */
@@ -159,15 +160,11 @@ public class HeroLandStatisticsTotalQO extends BaseQO implements Serializable {
 
     private Boolean queryAll;
 
-    private List<String> topicIds;
+    private List<Long> topicIds;
 
-    public List<String> getTopicIds() {
-        return topicIds;
-    }
+    public Integer resultInvite;
+    public Integer resultOpponent;
 
-    public void setTopicIds(List<String> topicIds) {
-        this.topicIds = topicIds;
-    }
 
     public Boolean getQueryAll() {
         return queryAll;

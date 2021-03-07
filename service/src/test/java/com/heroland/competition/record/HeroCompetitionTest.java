@@ -12,7 +12,7 @@ import java.util.List;
 public class HeroCompetitionTest extends BaseServiceTest {
     @Resource
     private HeroLandCompetitionRecordService heroLandCompetitionRecordService;
-    @Test
+//    @Test
     public void test(){
         List<HeroLandStatisticsDetailDP> answerRightRate = heroLandCompetitionRecordService.getAnswerRightRate(new HeroLandStatisticsAllQO());
 

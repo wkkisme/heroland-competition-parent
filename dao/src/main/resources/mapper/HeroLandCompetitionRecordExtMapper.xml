@@ -157,7 +157,7 @@
     </select>
     <select id="getDetailCount" resultMap="StatisticsMap">
 
-        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code,subject_code
+        select count(*) right_count,user_id ,grade_code ,class_code,topic_id,org_code,subject_code,correct_answer
         from heroland_question_record_detail
         where is_deleted =0 and history = 0
         <if test="ifCorrectAnswer == true">
@@ -217,6 +217,18 @@
             and result =#{resultInvite}
 
         </if>
+          <if test="orgCode != null">
+            and org_code =#{orgCode}
+
+        </if>
+          <if test="subjectCode != null">
+            and subject_code =#{subjectCode}
+
+        </if>
+          <if test="type != null">
+            and topic_type =#{type}
+
+        </if>
         <if test="topicIds != null and topicIds.size() > 0">
             and topic_id in
             <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
@@ -245,6 +257,18 @@
         </if>
         <if test="resultOpponent != null">
             and result =#{resultOpponent}
+
+        </if>
+        <if test="orgCode != null">
+            and org_code =#{orgCode}
+
+        </if>
+        <if test="subjectCode != null">
+            and subject_code =#{subjectCode}
+
+        </if>
+        <if test="type != null">
+            and topic_type =#{type}
 
         </if>
         <if test="topicIds != null and topicIds.size() > 0">
