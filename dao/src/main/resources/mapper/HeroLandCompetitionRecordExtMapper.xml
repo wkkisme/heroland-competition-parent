@@ -70,7 +70,7 @@
 
         GROUP BY
         <if test="groupByType == true">
-           `topic_type`
+            `topic_type`
         </if>
 
         <if test="groupByInviteId == true">
@@ -95,7 +95,7 @@
 
 
         GROUP BY
-        <if test="groupByType == true" >
+        <if test="groupByType == true">
             `topic_type`
         </if>
 
@@ -195,7 +195,7 @@
 
     <select id="getWinRate" resultMap="StatisticsMap">
         <!--        0 邀请方胜利。1 被邀请方胜利。2 平局且都答对，3平局且都答错-->
-        select   user_id , type
+        select user_id , type
         ,class_code ,grade_code ,org_code ,subject_code
         , sum(right_count) right_count
         from(
@@ -217,15 +217,15 @@
             and result =#{resultInvite}
 
         </if>
-          <if test="orgCode != null">
+        <if test="orgCode != null">
             and org_code =#{orgCode}
 
         </if>
-          <if test="subjectCode != null">
+        <if test="subjectCode != null">
             and subject_code =#{subjectCode}
 
         </if>
-          <if test="type != null">
+        <if test="type != null">
             and topic_type =#{type}
 
         </if>
@@ -286,7 +286,8 @@
     <select id="getTotalTime" resultMap="StatisticsMap">
 
 
-        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time,org_code ,user_id,subject_code from
+        select (sum(UNIX_TIMESTAMP(end_date))- sum(UNIX_TIMESTAMP(begin_date))) total_time,org_code
+        ,user_id,subject_code from
         heroland_question_record_detail
 
         where is_deleted = 0
@@ -296,15 +297,16 @@
                 #{topicId}
             </foreach>
         </if>
-       <if test="user_id != null ">
-           user_id = #{userId}
-       </if>
+        <if test="user_id != null ">
+            user_id = #{userId}
+        </if>
         <if test="type != null ">
-           type = #{type}
-       </if>
+            type = #{type}
+        </if>
 
-
-        GROUP BY user_id ,subject_code
+        <if test="user_id == null ">
+            GROUP BY user_id ,subject_code
+        </if>
 
 
     </select>
@@ -312,16 +314,16 @@
             resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
-        where record_id = #{recordId} and is_deleted = 0
-        limit 1
+        where record_id = #{recordId}
+          and is_deleted = 0 limit 1
     </select>
     <select id="selectByTopicIdAndInviteIdAndOpponentId"
             resultMap="com.heroland.competition.dal.mapper.HeroLandCompetitionRecordMapper.BaseResultMap">
         select *
         from heroland_competition_record
         where topic_id = #{topicId}
-        and invite_id = #{inviteId}
-        and opponent_id = #{opponentId}
+          and invite_id = #{inviteId}
+          and opponent_id = #{opponentId}
     </select>
 
     <select id="selectByRecordQO"
@@ -375,12 +377,11 @@
         </if>
 
         <if test="topicIds != null and topicIds.size()>0">
-           and  topic_id in
+            and topic_id in
             <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
                 #{topicId}
             </foreach>
         </if>
-
 
 
         order by id desc
@@ -440,7 +441,7 @@
 
 
         <if test="topicIds != null and topicIds.size()>0">
-            and  topic_id in
+            and topic_id in
             <foreach collection="topicIds" open="(" separator="," close=")" index="i" item="topicId">
                 #{topicId}
             </foreach>
@@ -456,7 +457,7 @@
         from heroland_competition_record
 
         where invite_record_id = #{inviteRecordId}
-        and is_deleted  =  0
+        and is_deleted = 0
         limit 1
 
 
