@@ -215,6 +215,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
             PlatformSysUserClassQO classQO = new PlatformSysUserClassQO();
             classQO.setClassCode(e.getClassCode());
+            classQO.setUserType(0);
             ResponseBody<Long> responseBody = platformSsoUserClassServiceFacade.queryUserClassCount(classQO);
             if (responseBody.isSuccess()){
                 infoDto.setClassHasStudentCount(NumberUtils.parseInt(responseBody.getData()));
