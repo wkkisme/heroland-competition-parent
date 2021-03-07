@@ -296,6 +296,13 @@
                 #{topicId}
             </foreach>
         </if>
+       <if test="user_id != null ">
+           user_id = #{userId}
+       </if>
+        <if test="type != null ">
+           type = #{type}
+       </if>
+
 
         GROUP BY user_id ,subject_code
 

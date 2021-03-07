@@ -33,6 +33,7 @@ import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -263,6 +264,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
             detailAlls.forEach(v->{
                 v.setWinRate(winRates.get(v.getUserId()));
+            });
+        }
+        List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(qo);
+        if (!CollectionUtils.isEmpty(totalTime )){
+            Map<String, Integer> winRates = totalTime.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getTotalTime,(o, v)->v));
+            detailAlls.forEach(v->{
+                v.setTotalTime(winRates.get(v.getUserId()));
             });
         }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
