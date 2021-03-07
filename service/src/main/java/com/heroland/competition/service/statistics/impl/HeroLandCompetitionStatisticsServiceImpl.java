@@ -461,6 +461,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                     if (CollUtil.isNotEmpty(competitionRecords)) {
                         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
                         BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
+                        heroLandStatisticsTotalQO.setClassCode(qo.getClassCode());
+                        heroLandStatisticsTotalQO.setSubjectCode(qo.getCourseCode());
+                        heroLandStatisticsTotalQO.setOrgCode(qo.getOrgCode());
+                        heroLandStatisticsTotalQO.setTopicIds(dp.getTopicIds());
                         List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(heroLandStatisticsTotalQO);
 
                         if (!CollectionUtils.isEmpty(winRate)) {
