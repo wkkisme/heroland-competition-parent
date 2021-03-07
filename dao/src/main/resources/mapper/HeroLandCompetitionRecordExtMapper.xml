@@ -298,10 +298,10 @@
             </foreach>
         </if>
         <if test="userId != null ">
-            user_id = #{userId}
+           and  user_id = #{userId}
         </if>
         <if test="type != null ">
-            type = #{type}
+            and type = #{type}
         </if>
 
         <if test="userId == null ">
