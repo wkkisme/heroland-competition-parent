@@ -165,7 +165,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             levelMap = new HashMap<>();
             List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();
             List<HeroLandStatisticsDetailDP> result = new ArrayList<>();
-            Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
+            Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().filter(v->v.getUserId() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
             collect.forEach((k,v)->{
                 double winRate = v.stream().mapToDouble(HeroLandStatisticsDetailDP::getWinRate).average().getAsDouble();
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
