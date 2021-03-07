@@ -6,6 +6,7 @@ import com.anycommon.response.utils.ResponseBodyWrapper;
 import com.google.common.collect.Lists;
 import com.heroland.competition.common.constants.AdminFieldEnum;
 import com.heroland.competition.common.utils.AssertUtils;
+import com.heroland.competition.common.utils.NumberUtils;
 import com.heroland.competition.dal.mapper.HeroLandClassMapper;
 import com.heroland.competition.dal.mapper.HeroLandUserClassMapper;
 import com.heroland.competition.dal.pojo.HeroLandClass;
@@ -211,8 +212,14 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
             infoDto.setGradeName(adminDataMap.containsKey(infoDto.getGradeCode()) ? adminDataMap.get(infoDto.getGradeCode()).getDictValue() : "");
             infoDto.setOrgName(adminDataMap.containsKey(infoDto.getOrgCode()) ? adminDataMap.get(infoDto.getOrgCode()).getDictValue() : "");
             infoDto.setClassDefaultStudentCount(ca.containsKey(infoDto.getClassCode()) ? ca.get(infoDto.getClassCode()) : 0);
-            //todo
-            infoDto.setClassHasStudentCount(98);
+
+            PlatformSysUserClassQO classQO = new PlatformSysUserClassQO();
+            classQO.setClassCode(e.getClassCode());
+            ResponseBody<Long> responseBody = platformSsoUserClassServiceFacade.queryUserClassCount(classQO);
+            if (responseBody.isSuccess()){
+                infoDto.setClassHasStudentCount(NumberUtils.parseInt(responseBody.getData()));
+            }
+
             list.add(infoDto);
         });
         return list;
