@@ -303,6 +303,9 @@
         <if test="type != null ">
             and type = #{type}
         </if>
+        <if test="subjectCode != null ">
+            and subject_code = #{subjectCode}
+        </if>
 
         <if test="userId == null ">
             GROUP BY user_id ,subject_code
