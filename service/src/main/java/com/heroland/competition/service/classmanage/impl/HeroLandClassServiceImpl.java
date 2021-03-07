@@ -289,6 +289,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
         PlatformSysUserQO userQO = new PlatformSysUserQO();
         List<String> userIds = classList.stream().map(PlatformSysUserClassDP::getUserId).collect(Collectors.toList());
         userQO.setUserIds(userIds);
+        userQO.setNeedPage(false);
         RpcResult<List<PlatformSysUserDP>> listRpcResult = platformSsoUserServiceFacade.queryUserList(userQO);
         result.setData(listRpcResult.getData() == null ? Lists.newArrayList() : listRpcResult.getData());
         result.setPage(classListWrapper.getPage());
