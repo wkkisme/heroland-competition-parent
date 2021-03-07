@@ -156,13 +156,13 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
 //        heroLandStatisticsTotalQO.setUserIds(userIds);
         heroLandStatisticsTotalQO.setType(topicType);
         heroLandStatisticsTotalQO.setNeedPage(false);
+
+        BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
         if (CompetitionEnum.WORLD.getType().equals(topicType)){
             heroLandStatisticsTotalQO.setUserId(currentUser);
         }else {
             heroLandStatisticsTotalQO.setUserId(null);
         }
-        BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
-        heroLandStatisticsTotalQO.setUserId(null);
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
