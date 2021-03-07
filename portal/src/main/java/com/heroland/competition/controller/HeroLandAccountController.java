@@ -53,7 +53,7 @@ public class HeroLandAccountController {
     @RequestMapping("/queryAccount")
     public ResponseBody<HeroLandAccountDP> getAccount(@RequestBody HeroLandAccountQO qo) {
         ResponseBody<HeroLandAccountDP> result = new ResponseBody<HeroLandAccountDP>();
-        ResponseBody<HeroLandAccountDP> account = heroLandAccountService.getAccountByUserId(qo.getUserId(),qo.getTopicType());
+        ResponseBody<HeroLandAccountDP> account = heroLandAccountService.getAccountByUserId(qo);
         HeroLandAccountDP data = account.getData();
         result.setData(data);
         return result;
