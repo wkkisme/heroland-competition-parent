@@ -151,7 +151,8 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
 
             List<PlatformSysUserClassDP> data = listResponseBody.getData();
             // 兼容
-            data = (List<PlatformSysUserClassDP>) data.stream().collect(Collectors.toMap(PlatformSysUserClassDP::getGradeCode, Function.identity(), (o, n) -> n)).values();
+            Collection<PlatformSysUserClassDP> values = data.stream().collect(Collectors.toMap(PlatformSysUserClassDP::getGradeCode, Function.identity(), (o, n) -> n)).values();
+            data = new ArrayList<>(values);
             //
             if (CollectionUtils.isEmpty(request.getDepartmentCode())) {
                 list = processClassInfo(data, request);
