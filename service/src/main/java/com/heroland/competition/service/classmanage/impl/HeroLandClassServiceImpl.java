@@ -280,6 +280,7 @@ public class HeroLandClassServiceImpl implements HeroLandClassService {
     public ResponseBody<List<PlatformSysUserDP>> getClassUser(PlatformSysUserClassQO qo) {
         ResponseBody<List<PlatformSysUserDP>> result = new ResponseBody<>();
         ResponseBody<List<PlatformSysUserClassDP>> classListWrapper = platformSsoUserClassServiceFacade.queryUserClassList(qo);
+        qo.setNeedPage(false);
 
         List<PlatformSysUserClassDP> classList = classListWrapper.getData();
         if (CollectionUtils.isEmpty(classList)) {
