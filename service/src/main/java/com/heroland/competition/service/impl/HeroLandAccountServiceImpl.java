@@ -162,6 +162,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             heroLandStatisticsTotalQO.setUserId(null);
         }
         BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
+        heroLandStatisticsTotalQO.setUserId(null);
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
