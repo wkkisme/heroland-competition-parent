@@ -33,6 +33,7 @@ import com.heroland.competition.service.HerolandTopicGroupPartService;
 import com.heroland.competition.service.statistics.HeroLandCompetitionStatisticsService;
 import com.platform.sso.domain.qo.PlatformSysUserQO;
 import com.platform.sso.facade.PlatformSsoUserServiceFacade;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -265,6 +266,13 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 v.setWinRate(winRates.get(v.getUserId()));
             });
         }
+        List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(qo);
+        if (!CollectionUtils.isEmpty(totalTime )){
+            Map<String, Integer> winRates = totalTime.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getTotalTime,(o, v)->v));
+            detailAlls.forEach(v->{
+                v.setTotalTime(winRates.get(v.getUserId()));
+            });
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
@@ -331,7 +339,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetailDPS = questionRecordDetailExtMapper.selectByTopicIdsAndUserId(topicIds, v.getUserId());
             if (!CollectionUtils.isEmpty(heroLandQuestionRecordDetailDPS)) {
-                long count = heroLandQuestionRecordDetailDPS.stream().map(HeroLandQuestionRecordDetail::getQuestionId).distinct().count();
+                long count = heroLandQuestionRecordDetailDPS.stream().collect(Collectors.groupingBy(this::getTopicIdAndQtId)).entrySet().size();
                 long right = heroLandQuestionRecordDetailDPS.stream().filter(HeroLandQuestionRecordDetail::getCorrectAnswer).count();
                 double v1 = (double) count / (double) finalTopicsQuestions.size();
                 double rightRate = (double) right / (double) heroLandQuestionRecordDetailDPS.size();
@@ -347,6 +355,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         });
     }
 
+    private String getTopicIdAndQtId(HeroLandQuestionRecordDetail detail){
+        return detail.getTopicId() + detail.getQuestionId();
+    }
     private ResponseBody<List<HeroLandStatisticsDetailDP>> getCompetitionsDetailForWorld(HeroLandStatisticsTotalQO qo) {
         ResponseBody<List<HeroLandStatisticsDetailDP>> pageResult = new ResponseBody<>();
         List<HeroLandStatisticsDetailDP> list = Lists.newArrayList();
@@ -459,11 +470,18 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 statisticDtoMap.forEach((topicId, statisticDto) -> {
                     List<HeroLandCompetitionRecord> competitionRecords = competitionRecordMap.get().get(String.valueOf(topicId));
                     if (CollUtil.isNotEmpty(competitionRecords)) {
-                        long winCount = competitionRecords.stream().map(HeroLandCompetitionRecord::getResult).filter(Objects::nonNull).filter(c -> Integer.valueOf(0).equals(c)).count();
-                        // 胜率
-                        BigDecimal winRate = new BigDecimal(winCount).divide(new BigDecimal(heroLandCompetitionRecords.size()), 2, RoundingMode.HALF_UP);
-                        dp.setWinRate(winRate);
+                        HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
+                        BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
+                        heroLandStatisticsTotalQO.setClassCode(qo.getClassCode());
+                        heroLandStatisticsTotalQO.setSubjectCode(qo.getCourseCode());
+                        heroLandStatisticsTotalQO.setOrgCode(qo.getOrgCode());
+                        heroLandStatisticsTotalQO.setTopicIds(dp.getTopicIds());
+                        List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(heroLandStatisticsTotalQO);
 
+                        if (!CollectionUtils.isEmpty(winRate)) {
+                            Map<String, Double> collect = winRate.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getWinRate, (o, n) -> n));
+                            dp.setWinRate(collect.get(qo.getUserId()));
+                        }
                     }
 
 //                    if (ObjectUtil.isNotNull(questionRecordMap.get()) && CollUtil.isNotEmpty(questionRecordMap.get())) {

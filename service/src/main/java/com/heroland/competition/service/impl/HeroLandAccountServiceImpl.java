@@ -83,11 +83,10 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         Set<Object> members = redisService.sMembers(RedisConstant.ONLINE_KEY + dp.getTopic());
         ResponseBody<Set<OnlineDP>> objectResponseBody = new ResponseBody<>();
         Set<OnlineDP> users = new LinkedHashSet<>();
-        List<String> userIds = members.stream().map(String::valueOf).collect(Collectors.toList());
         HeroLandTopicPageRequest heroLandTopicGroupQO = new HeroLandTopicPageRequest();
         heroLandTopicGroupQO.setTopicId(Long.valueOf(dp.getTopicId()));
 
-        Map<String, String> levelMap = getLevel(userIds,heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType(),dp.getUserId());
+        Map<String, String> levelMap = getLevel(new HeroLandAccountQO(),heroLandQuestionService.getTopic(heroLandTopicGroupQO).getType(),dp.getUserId());
         members.forEach(userId -> {
             if (userId != null && !userId.equals(dp.getUserId()) && StringUtils.isNotBlank(userId.toString())) {
                 Object user = redisService.get("user:" + userId);
@@ -151,21 +150,25 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     }
 
     @NotNull
-    public Map<String, String> getLevel(List<String> userIds, Integer topicType,String currentUser) {
+    public Map<String, String> getLevel(HeroLandAccountQO qo, Integer topicType,String currentUser) {
         Map<String, String> levelMap = new HashMap<>();
         HeroLandStatisticsTotalQO heroLandStatisticsTotalQO = new HeroLandStatisticsTotalQO();
 //        heroLandStatisticsTotalQO.setUserIds(userIds);
         heroLandStatisticsTotalQO.setType(topicType);
         heroLandStatisticsTotalQO.setNeedPage(false);
+
+        BeanUtil.copyProperties(qo,heroLandStatisticsTotalQO);
         if (CompetitionEnum.WORLD.getType().equals(topicType)){
             heroLandStatisticsTotalQO.setUserId(currentUser);
+        }else {
+            heroLandStatisticsTotalQO.setUserId(null);
         }
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
             List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();
             List<HeroLandStatisticsDetailDP> result = new ArrayList<>();
-            Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
+            Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().filter(v->v.getUserId() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
             collect.forEach((k,v)->{
                 double winRate = v.stream().mapToDouble(HeroLandStatisticsDetailDP::getWinRate).average().getAsDouble();
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
@@ -225,7 +228,9 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     public ResponseBody<Boolean> saveAccount(HeroLandAccountDP dp) {
         try {
 
-            ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(dp.getUserId(),null);
+            HeroLandAccountQO qo = new HeroLandAccountQO();
+            BeanUtil.copyProperties(dp,qo);
+            ResponseBody<HeroLandAccountDP> accountByUserId = getAccountByUserId(qo);
             logger.info("accountByUserId:{}",JSON.toJSONString(accountByUserId));
             if (accountByUserId == null ||accountByUserId.getData() ==null ) {
                 heroLandAccountExtMapper.insertSelective(BeanUtil.insertConversion(dp.addCheck(defaultBalance), new HeroLandAccount()));
@@ -261,13 +266,15 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
     }
 
     @Override
-    public ResponseBody<HeroLandAccountDP> getAccountByUserId(String userId,Integer topicType) {
+    public ResponseBody<HeroLandAccountDP> getAccountByUserId(HeroLandAccountQO qo) {
         HeroLandAccount account = null;
         try {
+            String userId = qo.getUserId();
+            Integer topicType = qo.getTopicType();
             account = heroLandAccountExtMapper.selectByUserId(userId);
 
             if(topicType != null) {
-                Map<String, String> level = getLevel(Collections.singletonList(userId), topicType,userId);
+                Map<String, String> level = getLevel(qo, topicType, userId);
                 String levelCode = level.get(userId);
                 if (HeroLevelEnum.COURAGEOUS_HERO.name().equals(levelCode)) {
                     account.setLevelName("奋勇英雄");

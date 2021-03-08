@@ -5,6 +5,7 @@ import com.anycommon.response.annotation.MybatisCriteriaAnnotation;
 import com.anycommon.response.common.BaseQO;
 import com.anycommon.response.utils.MybatisCriteriaMethodEnum;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @date 2020/6/30
  */
 
+@Data
 public class HeroLandAccountQO extends BaseQO {
     /**
      * userId用户id 必须
@@ -40,6 +42,11 @@ public class HeroLandAccountQO extends BaseQO {
 
     private Integer topicType;
 
+    private String orgCode;
+
+    private String classCode;
+
+    private String gradeCode;
     public Integer getTopicType() {
         return topicType;
     }
