@@ -496,7 +496,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (MapUtil.isNotEmpty(competitionRecordMapBySubjectCode.get())){
                 List<HeroLandCompetitionRecord> heroLandCompetitionRecordsBySubjectCode = competitionRecordMapBySubjectCode.get().get(courseCode);
                 if (heroLandCompetitionRecordsBySubjectCode != null) {
-                    dp.setFinishQuestion((int) heroLandCompetitionRecordsBySubjectCode.stream().map(HeroLandCompetitionRecord::getTopicId).distinct().count());
+                    dp.setFinishQuestion((int) heroLandCompetitionRecordsBySubjectCode.stream().map(HeroLandCompetitionRecord::getTopicId).count());
                 }
 
             }
