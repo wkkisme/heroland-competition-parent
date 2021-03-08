@@ -1136,13 +1136,25 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
                         herolandTopicJoinUserMapper.selectByExample(example);
                 //如果有报名的，弹出最近的
                 if (!CollectionUtils.isEmpty(herolandTopicJoinUsers)){
-                    HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
-                    if (heroLandTopicGroup != null){
-                        HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
-                        heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
-                        heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
-                        return heroLandTopicForWDto;
+                    List<Long> hasJoinedGroup = herolandTopicJoinUsers.stream().map(HerolandTopicJoinUser::getTopicId).distinct().collect(Collectors.toList());
+                    List<HeroLandTopicGroup> groups = Lists.newArrayList();
+                    hasJoinedGroup.stream().forEach(e -> {
+                        if(topicGroupMap.containsKey(e)){
+                            groups.add(topicGroupMap.get(e));
+                        }
+                    });
+                    HeroLandTopicForWDto process = process(groups, request.getUserId());
+                    if (Objects.nonNull(process) && Objects.equals(process.getStudentFinishState(), TopicJoinConstant.UNFINISHED)){
+                        return process;
                     }
+//
+//                    HeroLandTopicGroup heroLandTopicGroup = topicGroupMap.get(herolandTopicJoinUsers.get(0).getTopicId());
+//                    if (heroLandTopicGroup != null){
+//                        HeroLandTopicForWDto heroLandTopicForWDto = BeanCopyUtils.copyByJSON(heroLandTopicGroup, HeroLandTopicForWDto.class);
+//                        heroLandTopicForWDto.setStudentJoinState(TopicJoinConstant.JOIND);
+//                        heroLandTopicForWDto.setTopicId(heroLandTopicGroup.getId());
+//                        return heroLandTopicForWDto;
+//                    }
                 }
             }
         }
@@ -1163,6 +1175,7 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
             criteria1.andUserIdEqualTo(userId);
             List<HeroLandQuestionRecordDetail> heroLandQuestionRecordDetails = heroLandQuestionRecordDetailMapper.selectByExample(example1);
             if (CollectionUtils.isEmpty(heroLandQuestionRecordDetails)){
+                heroLandTopicForWDto.setStudentFinishState(TopicJoinConstant.UNFINISHED);
                 forWDto = heroLandTopicForWDto;
                 return forWDto;
             }
