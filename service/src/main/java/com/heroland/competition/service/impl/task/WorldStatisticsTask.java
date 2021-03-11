@@ -254,8 +254,9 @@ public class WorldStatisticsTask {
             wordDP.setAverageScore((wordDP.getTotalScore() * 1.0/questionCount));
             //排名,等所有的人员计算出来后才能排名
 
-            //得分率
-            wordDP.setCompleteRate((wordDP.getTotalScore() * 1.0 / (questionCount * topicGroup.getCountLimit())));
+            //完成率
+//            wordDP.setCompleteRate((wordDP.getTotalScore() * 1.0 / (questionCount * topicGroup.getCountLimit())));
+            wordDP.setCompleteRate((entry.getValue().size()) * 1.0/questionCount);
             //正确率
             long correctCount = entry.getValue().stream().filter(e -> Objects.equals(e.getCorrectAnswer(), Boolean.TRUE)).count();
             wordDP.setAnswerRightRate(correctCount * 1.0 / questionCount);
@@ -288,8 +289,9 @@ public class WorldStatisticsTask {
         //平均分
         totalWorld.setAverageScore((totalWorld.getTotalScore() * 1.0/totalQtNum));
         //排名,不提供，有可能需要根据分数，正确率啥的排
-        //得分率
-        totalWorld.setCompleteRate((totalWorld.getTotalScore() * 1.0 / (totalQtNum * topicGroup.getCountLimit())));
+        //完成率
+//        totalWorld.setCompleteRate((totalWorld.getTotalScore() * 1.0 / (totalQtNum * topicGroup.getCountLimit())));
+        totalWorld.setCompleteRate( heroLandQuestionRecordDetails.size() * 1.0 / totalQtNum);
         //正确率 按照科目进行平均
         double totalCorrectRate = dto.getWordDPS().stream().mapToDouble(HerolandStatisticsWordDP::getAnswerRightRate).sum();
         int subjectCount = (int)subjectQuestionCountMap.keySet().stream().map(String::toString).count();
