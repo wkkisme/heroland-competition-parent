@@ -169,43 +169,55 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();
             List<HeroLandStatisticsDetailDP> result = new ArrayList<>();
             Map<String, List<HeroLandStatisticsDetailDP>> collect = data.stream().filter(v->v.getUserId() != null).collect(Collectors.groupingBy(HeroLandStatisticsDetailDP::getUserId));
-            collect.forEach((k,v)->{
+            Map<String, String> finalLevelMap = levelMap;
+            collect.forEach((k, v)->{
                 double winRate = v.stream().mapToDouble(HeroLandStatisticsDetailDP::getWinRate).average().getAsDouble();
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
                 heroLandStatisticsDetailDP.setUserId(k);
                 heroLandStatisticsDetailDP.setWinRate(winRate);
+                if (winRate <= 0.25D ){
+                    finalLevelMap.put(k,HeroLevelEnum.ADVERSITY_HERO.name());
+                }else if (winRate >= 0.75D){
+                    finalLevelMap.put(k,HeroLevelEnum.SUPREME_HERO.name());
+                }else {
+                    finalLevelMap.put(k,HeroLevelEnum.COURAGEOUS_HERO.name());
+                }
                 result.add(heroLandStatisticsDetailDP);
 
             });
-            List<HeroLandStatisticsDetailDP> winRank = result.stream().sorted(Comparator.comparing(HeroLandStatisticsDetailDP::getWinRate)).collect(Collectors.toList());
-            int size = winRank.size();
 
-            if (size ==1){
-                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
-            }else
-            if (size == 2){
-                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
-                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
-            }else
-            if (size == 3){
-                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
-                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
-                levelMap.put(winRank.get(2).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
-            }else {
-                long ADVERSITY_HERO = Math.round(size * 0.25);
-                long SUPREME_HERO = Math.round(size * 0.75);
-                for (int i = 0; i < winRank.size(); i++) {
-                    if (i <= ADVERSITY_HERO){
-                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
-                    }else if (i <= SUPREME_HERO){
-                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
-                    }else {
-                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
-                    }
-                }
 
-            }
 
+//            List<HeroLandStatisticsDetailDP> winRank = result.stream().sorted(Comparator.comparing(HeroLandStatisticsDetailDP::getWinRate)).collect(Collectors.toList());
+//            int size = winRank.size();
+//
+//            if (size ==1){
+//                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+//            }else
+//            if (size == 2){
+//                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+//                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+//            }else
+//            if (size == 3){
+//                levelMap.put(winRank.get(0).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+//                levelMap.put(winRank.get(1).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+//                levelMap.put(winRank.get(2).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
+//            }else {
+//                long ADVERSITY_HERO = Math.round(size * 0.25);
+//                long SUPREME_HERO = Math.round(size * 0.75);
+//                for (int i = 0; i < winRank.size(); i++) {
+//                    if (i <= ADVERSITY_HERO){
+//                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.ADVERSITY_HERO.name());
+//                    }else if (i <= SUPREME_HERO){
+//                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.COURAGEOUS_HERO.name());
+//                    }else {
+//                        levelMap.put(winRank.get(i).getUserId(),HeroLevelEnum.SUPREME_HERO.name());
+//                    }
+//                }
+//
+//            }
+
+            return finalLevelMap;
 
         }
         return levelMap;

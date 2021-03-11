@@ -345,10 +345,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 double rightRate = (double) right / (double) heroLandQuestionRecordDetailDPS.size();
                 v.setCompleteRate(Math.min(v1, 1D));
                 v.setAnswerRightRate(Math.min(rightRate, 1D));
-                v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().filter(n->n.getScore() != null).mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
+//                v.setTotalScore(heroLandQuestionRecordDetailDPS.stream().filter(n->n.getScore() != null).mapToInt(HeroLandQuestionRecordDetail::getScore).sum());
             } else {
                 v.setCompleteRate(0D);
-                v.setTotalScore(0);
+//                v.setTotalScore(0);
                 v.setAnswerRightRate(0D);
             }
 
@@ -496,7 +496,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             if (MapUtil.isNotEmpty(competitionRecordMapBySubjectCode.get())){
                 List<HeroLandCompetitionRecord> heroLandCompetitionRecordsBySubjectCode = competitionRecordMapBySubjectCode.get().get(courseCode);
                 if (heroLandCompetitionRecordsBySubjectCode != null) {
-                    dp.setFinishQuestion((int) heroLandCompetitionRecordsBySubjectCode.stream().map(HeroLandCompetitionRecord::getTopicId).distinct().count());
+                    dp.setFinishQuestion((int) heroLandCompetitionRecordsBySubjectCode.stream().map(HeroLandCompetitionRecord::getTopicId).count());
                 }
 
             }
