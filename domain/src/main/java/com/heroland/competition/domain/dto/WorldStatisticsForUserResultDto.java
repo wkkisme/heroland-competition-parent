@@ -50,7 +50,7 @@ public class WorldStatisticsForUserResultDto implements Serializable {
 //    private Integer totalRank;
 
     /**
-     * 得分率
+     * 完成率
      */
     @ApiModelProperty(value="completeRate得分率")
     private Double completeRate;
@@ -65,7 +65,15 @@ public class WorldStatisticsForUserResultDto implements Serializable {
      * 胜率
      */
     @ApiModelProperty(value="winRate胜率")
+    @Deprecated
     private Double winRate;
+
+
+    /**
+     * mvp次数
+     */
+    private Integer mvpNum;
+
 
 //    /**
 //     * 总时长单位s

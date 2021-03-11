@@ -984,11 +984,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             double totalCompleteRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getCompleteRate())).mapToDouble(HerolandStatisticsWord::getCompleteRate).sum();
             resultDto.setCompleteRate((totalCompleteRate/count));
 
-            double totalWinRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getWinRate())).mapToDouble(HerolandStatisticsWord::getWinRate).sum();
-            resultDto.setWinRate((totalWinRate/count));
+//            double totalWinRate = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getWinRate())).mapToDouble(HerolandStatisticsWord::getWinRate).sum();
+//            resultDto.setWinRate((totalWinRate/count));
 
             Integer totalScore = herolandStatisticsWords.stream().filter(e -> Objects.nonNull(e.getTotalScore())).mapToInt(HerolandStatisticsWord::getTotalScore).sum();
             resultDto.setTotalScore((int)(totalScore/ count));
+
+            long mvpNum = herolandStatisticsWords.stream().filter(e -> Objects.equals(1, e.getTotalRank())).distinct().count();
+            resultDto.setMvpNum((int)mvpNum);
             responseBody.setData(resultDto);
 
         }
