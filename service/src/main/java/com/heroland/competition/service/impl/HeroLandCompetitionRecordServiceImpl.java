@@ -473,6 +473,6 @@ public class HeroLandCompetitionRecordServiceImpl implements HeroLandCompetition
         return all.getOrgCode() + all.getSubjectCode();
     }
     public String fetchUser(HeroLandStatisticsDetailAll all){
-        return all.getOrgCode() + all.getSubjectCode() +all.getUserId();
+        return all.getOrgCode() +all.getUserId();
     }
 }
