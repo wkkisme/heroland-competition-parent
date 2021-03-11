@@ -261,9 +261,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(qo);
         if (!CollectionUtils.isEmpty(winRate )){
-            Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(HeroLandStatisticsDetailDP::getUserId, HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
+            Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(k->k.getUserId()+k.getOrgCode()+k.getSubjectCode(), HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
             detailAlls.forEach(v->{
-                v.setWinRate(winRates.get(v.getUserId()));
+                v.setWinRate(winRates.get(v.getUserId()+v.getOrgCode()+v.getSubjectCode()));
             });
         }
         List<HeroLandStatisticsDetailDP> totalTime = heroLandCompetitionRecordService.getTotalTime(qo);
@@ -279,6 +279,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
                 heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
                 res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
 
             }
