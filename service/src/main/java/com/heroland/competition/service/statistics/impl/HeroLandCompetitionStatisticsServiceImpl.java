@@ -285,8 +285,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
             }
             detailAlls.forEach((k)->{
-                k.setWinRate(res.get(k.getUserId()).getWinRate());
-
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
+                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
+                k.setTotalScore(heroLandStatisticsDetailDP.getTotalScore());
+                k.setCompleteRate(heroLandStatisticsDetailDP.getCompleteRate());
             });
         }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
