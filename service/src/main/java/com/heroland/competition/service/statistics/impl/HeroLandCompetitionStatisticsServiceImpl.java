@@ -382,7 +382,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         criteria.andUserIdEqualTo(qo.getUserId());
 
-        if (CollectionUtils.isEmpty(qo.getTopicIds())){
+        if (!CollectionUtils.isEmpty(qo.getTopicIds())){
             criteria.andTopicIdIn(qo.getTopicIds());
         }
 
