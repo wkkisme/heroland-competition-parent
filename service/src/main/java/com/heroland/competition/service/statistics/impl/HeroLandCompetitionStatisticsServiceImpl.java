@@ -273,24 +273,24 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 v.setTotalTime(winRates.get(v.getUserId()));
             });
         }
-//        if (!CollectionUtils.isEmpty(detailAlls )){
-//            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
-//            Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
-//            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
-//                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+        if (!CollectionUtils.isEmpty(detailAlls )){
+            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
+            Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
+            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-//                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
-//                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
-//
-//            }
-//            detailAlls.forEach((k)->{
-//                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
+                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
+
+            }
+            detailAlls.forEach((k)->{
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
 //                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
-//                k.setTotalScore(heroLandStatisticsDetailDP.getTotalScore());
+                k.setTotalScore(heroLandStatisticsDetailDP.getTotalScore());
 //                k.setCompleteRate(heroLandStatisticsDetailDP.getCompleteRate());
-//            });
-//        }
+            });
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
