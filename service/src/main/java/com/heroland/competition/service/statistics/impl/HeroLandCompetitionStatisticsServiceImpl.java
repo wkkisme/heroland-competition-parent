@@ -382,6 +382,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         criteria.andUserIdEqualTo(qo.getUserId());
 
+        if (CollectionUtils.isEmpty(qo.getTopicIds())){
+            criteria.andTopicIdIn(qo.getTopicIds());
+        }
+
+
         List<HerolandStatisticsWord> words = herolandStatisticsWordMapper.selectByExample(example);
 
         if (CollectionUtils.isEmpty(words)) {
