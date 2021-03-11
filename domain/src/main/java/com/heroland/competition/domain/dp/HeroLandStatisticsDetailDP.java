@@ -108,6 +108,11 @@ public class HeroLandStatisticsDetailDP extends BaseDO implements Serializable {
      */
     private Long classRank;
 
+    /**
+     * 世界赛排名第一的次数
+     */
+    private Integer mvpNum;
+
 
     /**
      * 总场次

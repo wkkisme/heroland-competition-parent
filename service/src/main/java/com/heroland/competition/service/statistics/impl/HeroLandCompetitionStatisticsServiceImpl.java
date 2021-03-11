@@ -402,7 +402,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         //总时长
         totalWorld.setTotalTime(words.stream().mapToInt(HerolandStatisticsWord::getTotalTime).sum());
         totalWorld.setRank((words.stream().mapToLong(HerolandStatisticsWord::getTotalRank).sum() / words.size()));
-        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / words.size()));
+//        totalWorld.setWinRate((words.stream().mapToDouble(HerolandStatisticsWord::getWinRate).sum() / words.size()));
+
+        long mvpNum = words.stream().filter(e -> Objects.equals(1, e.getTotalRank())).distinct().count();
+        totalWorld.setMvpNum((int)mvpNum);
+
         totalWorld.setTotalGames(words.size());
         list.add(totalWorld);
 
