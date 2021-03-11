@@ -273,6 +273,20 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 v.setTotalTime(winRates.get(v.getUserId()));
             });
         }
+        if (!CollectionUtils.isEmpty(detailAlls )){
+            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
+            Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
+            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
+                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
+
+            }
+            detailAlls.forEach((k)->{
+                k.setWinRate(res.get(k.getUserId()).getWinRate());
+
+            });
+        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
