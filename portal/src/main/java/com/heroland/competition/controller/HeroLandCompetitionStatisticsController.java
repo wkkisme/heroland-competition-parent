@@ -59,7 +59,9 @@ public class HeroLandCompetitionStatisticsController {
             ResponseBodyWrapper.failException(ErrMsgEnum.PLEASE_LOGIN.getErrorMessage());
         }
         qo.setCurrentUserId(data.getUserId());
-        qo.setClassCode(data.getClassCode());
+        if (qo.getType() != 4) {
+            qo.setClassCode(data.getClassCode());
+        }
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
 
