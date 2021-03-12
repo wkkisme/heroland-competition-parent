@@ -245,7 +245,20 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         if (qo.getSubjectCode() == null) {
             qo.setQueryAll(true);
         }
+        Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+        if (!CollectionUtils.isEmpty(detailAlls )){
+            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
+
+            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+//                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+//                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
+                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
+            }
+
+        }
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
@@ -253,6 +266,14 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 detailAlls.add(0, myRank.get(0));
             }
             qo.setUserId(null);
+        }
+        if (!CollectionUtils.isEmpty(detailAlls )) {
+            detailAlls.forEach((k) -> {
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
+//                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
+                k.setTotalScore(heroLandStatisticsDetailDP.getTotalScore());
+//                k.setCompleteRate(heroLandStatisticsDetailDP.getCompleteRate());
+            });
         }
         //  计算完成率
         getComplate(qo, detailAlls);
@@ -273,24 +294,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 v.setTotalTime(winRates.get(v.getUserId()));
             });
         }
-        if (!CollectionUtils.isEmpty(detailAlls )){
-            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
-            Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
-            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
-                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
-//                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
-//                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
-                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
 
-            }
-            detailAlls.forEach((k)->{
-                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
-//                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
-                k.setTotalScore(heroLandStatisticsDetailDP.getTotalScore());
-//                k.setCompleteRate(heroLandStatisticsDetailDP.getCompleteRate());
-            });
-        }
         ResponseBody<List<HeroLandStatisticsDetailDP>> result = ResponseBodyWrapper
                 .successListWrapper(detailAlls,
                         heroLandStatisticsDetailExtMapper.countStatisticsByRank(qo), qo, HeroLandStatisticsDetailDP.class);
