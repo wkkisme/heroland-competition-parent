@@ -53,6 +53,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author mac
@@ -253,8 +254,9 @@ public class HeroLandQuestionServiceImpl implements HeroLandQuestionService {
         }
         Long topicId = id;
         if (!CollectionUtils.isEmpty(request.getGradeCoursesForWorld())){
+            Stream<HerolandTopicAddSchoolCourseForWorldRequest> distinct = request.getGradeCoursesForWorld().stream().distinct();
             List<HerolandTopicGroupPartDP> list = Lists.newArrayList();
-            request.getGradeCoursesForWorld().stream().forEach(e -> {
+            distinct.forEach(e -> {
                 HerolandTopicGroupPartDP partDP = BeanCopyUtils.copyByJSON(e, HerolandTopicGroupPartDP.class);
                 partDP.setTopicId(topicId);
                 partDP.setTopicType(TopicTypeConstants.WORLD_COMPETITION);
