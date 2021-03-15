@@ -61,7 +61,7 @@ public class HeroLandWorldCompetitionService implements HeroLandCompetitionServi
                 Long rank = redisService.incr(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 1);
                 redisService.expire(questionKey + record.getTopicId() + record.getDetails().get(0).getId(), 60 * 60 * 24);
                 // 第一个进入答此题的人
-                v.setScore(Math.toIntExact(topic.getCountLimit() - (rank - 1)));
+                v.setScore(Math.toIntExact(topic.getRegisterCount() - (rank - 1)));
 
             } else {
                 v.setScore(0);
