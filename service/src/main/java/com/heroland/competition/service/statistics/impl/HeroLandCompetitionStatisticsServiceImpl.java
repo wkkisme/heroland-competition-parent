@@ -248,12 +248,16 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
         if (!CollectionUtils.isEmpty(detailAlls )){
-            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
+            HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
+            BeanUtil.copyProperties(qo,heroLandQuestionQO);
+            heroLandQuestionQO.setNeedPage(false);
+            ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
+            Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
-            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
+            for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
                 res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
             }
