@@ -163,7 +163,10 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
         }else {
             heroLandStatisticsTotalQO.setUserId(null);
         }
+        long i = System.currentTimeMillis();
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
+        long e = System.currentTimeMillis();
+        logger.info("competitionsDetail耗时{}",e - i);
         if (competitionsDetail !=null && !CollectionUtils.isEmpty(competitionsDetail.getData())){
             levelMap = new HashMap<>();
             List<HeroLandStatisticsDetailDP> data = competitionsDetail.getData();

@@ -246,7 +246,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setQueryAll(true);
         }
         Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
+        long i =  System.currentTimeMillis();
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+        long e =  System.currentTimeMillis();
+        logger.info("detailAlls耗时{}",e - i);
         if (!CollectionUtils.isEmpty(detailAlls )){
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
             BeanUtil.copyProperties(qo,heroLandQuestionQO);
@@ -257,7 +260,11 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             heroLandQuestionQO.setUserId(qo.getUserId());
             heroLandQuestionQO.setClassCode(null);
             heroLandQuestionQO.setHistory(null);
+
+            long i1 =  System.currentTimeMillis();
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
+            long e2 =  System.currentTimeMillis();
+            logger.info("competitionsDetail耗时{}",e2 - i1);
             if (!CollectionUtils.isEmpty(questionRecord .getData() )) {
                 Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
@@ -273,7 +280,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
         }
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
+            long i3 =  System.currentTimeMillis();
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
+            long e3 =  System.currentTimeMillis();
+            logger.info("competitionsDetail耗时{}",e3 - i3);
             if (!CollectionUtils.isEmpty(myRank)) {
                 detailAlls.add(0, myRank.get(0));
             }
@@ -334,8 +344,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             });
 
             return result;
-        } catch (Exception e) {
-            log.error("", e);
+        } catch (Exception ex) {
+            log.error("", ex);
             ResponseBodyWrapper.failSysException();
         }
         return null;
