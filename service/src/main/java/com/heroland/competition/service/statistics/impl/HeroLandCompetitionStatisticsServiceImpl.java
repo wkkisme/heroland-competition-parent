@@ -249,21 +249,22 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
     
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
       
-        if (!CollectionUtils.isEmpty(detailAlls )){
+        if (!CollectionUtils.isEmpty(detailAlls )) {
             Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
-            BeanUtil.copyProperties(qo,heroLandQuestionQO);
+            BeanUtil.copyProperties(qo, heroLandQuestionQO);
             heroLandQuestionQO.setNeedPage(false);
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
             for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
-            for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
-                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+                for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
+                    HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
-                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
+                    heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+                    heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
-                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
+                    res.put(stringListEntry.getKey(), heroLandStatisticsDetailDP);
+                }
             }
         }
 
@@ -278,7 +279,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             qo.setUserId(null);
         }
-        if (!CollectionUtils.isEmpty(detailAlls ) && qo.getNeedScore() != null && qo.getNeedScore()) {
+        if (!CollectionUtils.isEmpty(detailAlls )) {
             detailAlls.forEach((k) -> {
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
 //                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
