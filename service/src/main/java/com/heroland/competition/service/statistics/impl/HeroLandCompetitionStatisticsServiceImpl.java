@@ -291,7 +291,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             }
             qo.setUserId(null);
         }
-        if (!CollectionUtils.isEmpty(detailAlls )) {
+        if (!CollectionUtils.isEmpty(detailAlls ) && qo.getNeedScore() != null && qo.getNeedScore()) {
             detailAlls.forEach((k) -> {
                 HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = res.get(k.getUserId());
 //                k.setWinRate(heroLandStatisticsDetailDP.getWinRate());
