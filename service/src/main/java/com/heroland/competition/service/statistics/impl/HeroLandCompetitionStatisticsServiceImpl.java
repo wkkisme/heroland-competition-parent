@@ -246,40 +246,27 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             qo.setQueryAll(true);
         }
         Map<String, HeroLandStatisticsDetailDP> res = new HashMap<>();
-        long i =  System.currentTimeMillis();
+    
         List<HeroLandStatisticsDetailAll> detailAlls = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
-        long e =  System.currentTimeMillis();
-        logger.info("detailAlls耗时{}",e - i);
-        if (!CollectionUtils.isEmpty(detailAlls )) {
+      
+        if (!CollectionUtils.isEmpty(detailAlls )){
+            Map<String, List<HeroLandStatisticsDetailAll>> collect = detailAlls.stream().collect(Collectors.groupingBy(HeroLandStatisticsDetailAll::getUserId));
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
-            BeanUtil.copyProperties(qo, heroLandQuestionQO);
+            BeanUtil.copyProperties(qo,heroLandQuestionQO);
             heroLandQuestionQO.setNeedPage(false);
-            if (qo.getTopicIds() != null) {
-                heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
-            }
-            heroLandQuestionQO.setUserId(qo.getUserId());
-            heroLandQuestionQO.setClassCode(null);
-            heroLandQuestionQO.setHistory(null);
-            heroLandQuestionQO.setNeedScore(qo.getNeedScore());
-            if (heroLandQuestionQO.getNeedScore() != null && heroLandQuestionQO.getNeedScore()) {
-                long i1 = System.currentTimeMillis();
-                ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
-                long e2 = System.currentTimeMillis();
-                logger.info("questionRecord耗时{}", e2 - i1);
-                if (!CollectionUtils.isEmpty(questionRecord.getData())) {
-                    Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
-
-                    for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
-                        HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+            ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
+            Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
+            for (Map.Entry<String, List<HeroLandStatisticsDetailAll>> stringListEntry : collect.entrySet()) {
+            for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
+                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                        heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().filter(v -> v.getScore() != null).mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandStatisticsDetailAll::getTotalScore).sum());
+                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
-                        res.put(stringListEntry.getKey(), heroLandStatisticsDetailDP);
-                    }
-
-                }
+                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
             }
         }
+
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
             long i3 =  System.currentTimeMillis();
