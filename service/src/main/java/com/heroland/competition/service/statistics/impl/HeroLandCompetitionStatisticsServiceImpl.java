@@ -264,7 +264,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             long i1 =  System.currentTimeMillis();
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             long e2 =  System.currentTimeMillis();
-            logger.info("competitionsDetail耗时{}",e2 - i1);
+            logger.info("questionRecord耗时{}",e2 - i1);
             if (!CollectionUtils.isEmpty(questionRecord .getData() )) {
                 Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
@@ -283,7 +283,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             long i3 =  System.currentTimeMillis();
             List<HeroLandStatisticsDetailAll> myRank = heroLandStatisticsDetailExtMapper.selectStatisticsByRank(qo);
             long e3 =  System.currentTimeMillis();
-            logger.info("competitionsDetail耗时{}",e3 - i3);
+            logger.info("myRank耗时{}",e3 - i3);
             if (!CollectionUtils.isEmpty(myRank)) {
                 detailAlls.add(0, myRank.get(0));
             }
@@ -302,7 +302,10 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
 
         // 计算胜率
 
+        long i4 =  System.currentTimeMillis();
         List<HeroLandStatisticsDetailDP> winRate = heroLandCompetitionRecordService.getWinRate(qo);
+        long e4 =  System.currentTimeMillis();
+        logger.info("winRate耗时{}",e4 - i4);
         if (!CollectionUtils.isEmpty(winRate )){
             Map<String, Double> winRates = winRate.stream().collect(Collectors.toMap(k->k.getUserId()+k.getOrgCode()+k.getSubjectCode(), HeroLandStatisticsDetailDP::getWinRate,(o,v)->v));
             detailAlls.forEach(v->{
