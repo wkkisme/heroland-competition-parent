@@ -254,6 +254,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
             heroLandQuestionQO.setUserId(qo.getUserId());
             heroLandQuestionQO.setClassCode(null);
+            heroLandQuestionQO.setHistory(null);
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
