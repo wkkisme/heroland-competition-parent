@@ -251,6 +251,8 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
             BeanUtil.copyProperties(qo,heroLandQuestionQO);
             heroLandQuestionQO.setNeedPage(false);
+            heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
+            heroLandQuestionQO.setUserId(qo.getUserId());
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
             Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
