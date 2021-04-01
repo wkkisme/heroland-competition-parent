@@ -258,16 +258,18 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             heroLandQuestionQO.setClassCode(null);
             heroLandQuestionQO.setHistory(null);
             ResponseBody<List<HeroLandQuestionRecordDetailDP>> questionRecord = heroLandQuestionRecordDetailService.getQuestionRecord(heroLandQuestionQO);
-            Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
+            if (!CollectionUtils.isEmpty(questionRecord .getData() )) {
+                Map<String, List<HeroLandQuestionRecordDetailDP>> collect = questionRecord.getData().stream().collect(Collectors.groupingBy(HeroLandQuestionRecordDetailDP::getUserId));
 
-            for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
-                HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
+                for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
+                    HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
+                    heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
-                res.put(stringListEntry.getKey(),heroLandStatisticsDetailDP);
-            }
+                    res.put(stringListEntry.getKey(), heroLandStatisticsDetailDP);
+                }
 
+            }
         }
         if (qo.getUserId() == null) {
             qo.setUserId(qo.getCurrentUserId());
