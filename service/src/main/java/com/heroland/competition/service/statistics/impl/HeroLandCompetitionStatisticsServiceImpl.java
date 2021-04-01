@@ -264,7 +264,7 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
                 for (Map.Entry<String, List<HeroLandQuestionRecordDetailDP>> stringListEntry : collect.entrySet()) {
                     HeroLandStatisticsDetailDP heroLandStatisticsDetailDP = new HeroLandStatisticsDetailDP();
 //                heroLandStatisticsDetailDP.setWinRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getWinRate).average().getAsDouble());
-                    heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
+                    heroLandStatisticsDetailDP.setTotalScore(stringListEntry.getValue().stream().filter(v->v.getScore() != null).mapToInt(HeroLandQuestionRecordDetailDP::getScore).sum());
 //                heroLandStatisticsDetailDP.setCompleteRate(stringListEntry.getValue().stream().mapToDouble(HeroLandStatisticsDetailAll::getCompleteRate).average().getAsDouble());
                     res.put(stringListEntry.getKey(), heroLandStatisticsDetailDP);
                 }
