@@ -62,6 +62,7 @@ public class HeroLandCompetitionStatisticsController {
         if (qo.getType() != 4) {
             qo.setClassCode(data.getClassCode());
         }
+        qo.setNeedScore(true);
         return heroLandCompetitionStatisticsService.getCompetitionsDetail(qo);
     }
 

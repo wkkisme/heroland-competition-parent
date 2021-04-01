@@ -78,6 +78,7 @@ public class HeroLandQuestionQO extends BaseQO {
 
     private Boolean history;
 
+    private Boolean needScore;
 
     public HeroLandQuestionQO querySynCheck() {
 

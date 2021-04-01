@@ -165,6 +165,15 @@ public class HeroLandStatisticsTotalQO extends HeroLandStatisticsAllQO implement
     public Integer resultInvite;
     public Integer resultOpponent;
 
+    public Boolean needScore;
+
+    public Boolean getNeedScore() {
+        return needScore;
+    }
+
+    public void setNeedScore(Boolean needScore) {
+        this.needScore = needScore;
+    }
 
     public Boolean getQueryAll() {
         return queryAll;

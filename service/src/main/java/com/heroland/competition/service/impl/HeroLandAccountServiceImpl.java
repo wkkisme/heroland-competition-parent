@@ -164,6 +164,7 @@ public class HeroLandAccountServiceImpl implements HeroLandAccountService {
             heroLandStatisticsTotalQO.setUserId(null);
         }
         long i = System.currentTimeMillis();
+        heroLandStatisticsTotalQO.setNeedScore(false);
         ResponseBody<List<HeroLandStatisticsDetailDP>> competitionsDetail = heroLandCompetitionStatisticsService.getCompetitionsDetail(heroLandStatisticsTotalQO);
         long e = System.currentTimeMillis();
         logger.info("competitionsDetail耗时{}",e - i);
