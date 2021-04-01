@@ -251,7 +251,9 @@ public class HeroLandCompetitionStatisticsServiceImpl implements HeroLandCompeti
             HeroLandQuestionQO heroLandQuestionQO = new HeroLandQuestionQO();
             BeanUtil.copyProperties(qo,heroLandQuestionQO);
             heroLandQuestionQO.setNeedPage(false);
-            heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
+            if (qo.getTopicIds() != null) {
+                heroLandQuestionQO.setTopicIds(new HashSet<>(qo.getTopicIds()));
+            }
             heroLandQuestionQO.setUserId(qo.getUserId());
             heroLandQuestionQO.setClassCode(null);
             heroLandQuestionQO.setHistory(null);
